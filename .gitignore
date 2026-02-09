@@ -1,0 +1,11 @@
+# Fichiers compilés
+out/
+*.class
+
+# Fichiers de configurationb Intellij
+.idea/
+*.iml
+*.iws
+
+# Fichiers système
+.DS_STORE
