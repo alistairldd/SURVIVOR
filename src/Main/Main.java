@@ -1,9 +1,9 @@
 package Main;
 
-import Controleur.Controleur;
+import Controleur.Jeu;
 
 public class Main {
     public static void main(String[] args) {
-        new Controleur();
+        new Jeu();
     }
 }
