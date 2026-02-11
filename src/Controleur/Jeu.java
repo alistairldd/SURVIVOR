@@ -2,6 +2,7 @@ package Controleur;
 
 import Modele.Modele;
 import Vue.Vue;
+import Vue.VueCarte;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,8 +44,10 @@ public class Jeu {
         // Ajout de composants dans le panneau droite
         panelDroite.add(new JLabel("Menu de Contrôle"));
 
+
+
         // init vue principale
-        vue = new Vue();
+        vue = new Vue(modele);
         vue.add(new JLabel("Le jeu le vrai"));
         // on ajoute les éléments en précisant les zones du BorderLayout
         maFenetre.add(vue, BorderLayout.CENTER);

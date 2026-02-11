@@ -8,8 +8,10 @@ package Vue;
  */
 
 import Controleur.controleurSouris;
+import Modele.Modele;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Vue extends JPanel {
 
@@ -17,8 +19,13 @@ public class Vue extends JPanel {
     private int positionX;
     private int positionY;
 
+    // Vues
+    private final VueCarte vueCarte;
+
+
     // Constructeur de la classe Vue, il initialise les données de la vue.
-    public Vue() {
+    public Vue(Modele modele) {
+        this.vueCarte = new VueCarte(modele);
         positionX = 0;
         positionY = 0;
     }
@@ -34,5 +41,11 @@ public class Vue extends JPanel {
     public int getPositionY() {return positionY;}
 
     public void setPositionY(int positionY) {this.positionY = positionY;}
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        vueCarte.dessiner(g);
+    }
 
 }
