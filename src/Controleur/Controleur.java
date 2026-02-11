@@ -6,5 +6,12 @@ package Controleur;
 * de la vue et pour mettre à jour le modèle en conséquence. Elle est également utilisée pour gérer les threads du contrôleur.
  */
 
+import Modele.Modele;
+import Vue.Vue;
+
+import javax.swing.*;
+
 public class Controleur {
+
+
 }

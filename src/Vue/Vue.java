@@ -7,5 +7,32 @@ package Vue;
 *
  */
 
-public class Vue {
+import Controleur.controleurSouris;
+
+import javax.swing.*;
+
+public class Vue extends JPanel {
+
+    // Position du joueur
+    private int positionX;
+    private int positionY;
+
+    // Constructeur de la classe Vue, il initialise les données de la vue.
+    public Vue() {
+        positionX = 0;
+        positionY = 0;
+    }
+
+    /* ---- GETTERS ET SETTERS ---- */
+
+    // Position du joueur
+
+    public int getPositionX() {return positionX;}
+
+    public void setPositionX(int positionX) {this.positionX = positionX;}
+
+    public int getPositionY() {return positionY;}
+
+    public void setPositionY(int positionY) {this.positionY = positionY;}
+
 }
