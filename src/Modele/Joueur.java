@@ -7,7 +7,7 @@ public class Joueur {
     private static int positionY;
 
     // Constructeur de la classe Joueur, il initialise les données du joueur.
-    public Joueur() {
+    public Joueur() { // on initialise la position en 0,0 dans le modèle
         positionX = 0;
         positionY = 0;
     }
