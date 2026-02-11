@@ -8,4 +8,11 @@ package Modele;
 *
  */
 public class Modele {
+
+    private Joueur joueur;
+
+    // Constructeur de la classe Modele, il initialise les données du modèle.
+    public Modele() {
+        this.joueur = new Joueur();
+    }
 }

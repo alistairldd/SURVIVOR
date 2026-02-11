@@ -13,7 +13,7 @@ public class VueCarte {
     }
 
 
-    protected void dessiner(Graphics g) {
+    protected void dessiner(Graphics g, int xCentre, int yCentre) {
         g.setColor(Color.green);
         g.fillRect(0,0,2000,2000);
     }
