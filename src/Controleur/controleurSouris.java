@@ -3,6 +3,7 @@ package Controleur;
 import Modele.Modele;
 import Vue.Vue;
 
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -16,7 +17,11 @@ public class controleurSouris implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        if (SwingUtilities.isRightMouseButton(e)){
+            int x = e.getX();
+            int y = e.getY();
+            modele.deplaceJoueur(x, y);
+        }
     }
 
     @Override
