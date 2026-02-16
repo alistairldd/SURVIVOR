@@ -13,11 +13,15 @@ public class Modele {
 
     private final int tailleCarte = 100;
 
+    private Jour leJour;
+
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
 
         this.joueur = new Joueur();
-        Jour jour = new Jour();
+
+        // Initialisation du jour et de la nuit
+        leJour = new Jour();
     }
 
     public void deplaceX(int x) {
@@ -49,5 +53,10 @@ public class Modele {
     public void deplaceJoueur(int x, int y){
         deplaceX(x);
         deplaceY(y);
+    }
+
+
+    public Jour getJour(){
+        return leJour;
     }
 }
