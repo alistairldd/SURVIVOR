@@ -15,7 +15,9 @@ public class Modele {
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
+
         this.joueur = new Joueur();
+        Jour jour = new Jour();
     }
 
     public void deplaceX(int x) {

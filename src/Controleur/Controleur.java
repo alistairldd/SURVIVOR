@@ -13,5 +13,12 @@ import javax.swing.*;
 
 public class Controleur {
 
+    private Modele monModele;
+    private Vue maVue;
 
+    public Controleur(Modele modele, Vue vue){
+        monModele = modele;
+        maVue = vue;
+
+    }
 }

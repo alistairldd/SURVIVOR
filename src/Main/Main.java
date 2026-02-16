@@ -1,9 +1,17 @@
 package Main;
 
-import Controleur.Jeu;
+
+
+import Modele.Modele;
+import Vue.Vue;
+import Controleur.Controleur;
 
 public class Main {
+
+
     public static void main(String[] args) {
-        new Jeu();
+        Modele monModele = new Modele();
+        Vue maVue = new Vue(monModele);
+        new Controleur(monModele, maVue);
     }
 }
