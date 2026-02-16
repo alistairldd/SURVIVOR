@@ -2,6 +2,10 @@ package Modele;
 
 import java.util.ArrayList;
 
+import static Modele.Map.HAUTEUR_MAP;
+import static Modele.Map.LARGEUR_MAP;
+import static Vue.VueJoueur.TAILLE;
+
 public class Joueur {
 
     //Stats du joueur
@@ -15,8 +19,8 @@ public class Joueur {
 
     // Constructeur de la classe Joueur, il initialise les données du joueur.
     public Joueur() { // on initialise la position en 0,0 dans le modèle
-        positionX = 0;
-        positionY = 0;
+        positionX = LARGEUR_MAP/2;
+        positionY = HAUTEUR_MAP/2;
         hp = 100;
         attack = 10;
         inventaire = new ArrayList<>();
@@ -38,12 +42,13 @@ public class Joueur {
         inventaire.add(item);
     }
 
+    // Getter pour la position X du joueur
     public static int getPositionX() {return positionX;}
-
+    // Getter pour la position Y du joueur
     public static int getPositionY() {return positionY;}
-
+    // Setter pour la position X du joueur
     public void setPositionX(int positionX) {Joueur.positionX = positionX;}
-
+    // Setter pour la position Y du joueur
     public void setPositionY(int positionY) {Joueur.positionY = positionY;}
 
 
@@ -51,15 +56,15 @@ public class Joueur {
     // elle prend en paramètre le déplacement en x,
     // elle met à jour la position du joueur en x.
     public void deplaceX(int x) {
-
-        if (x >= -Modele.getTailleCarte() && x <= Modele.getTailleCarte()) {
+        // On vérifie que le déplacement en x est dans les limites de la carte, sinon on le met à la limite.
+        if (x >= 10+TAILLE/2 && x <= LARGEUR_MAP) {
             this.setPositionX(x);
         }
-        else if (x <= -Modele.getTailleCarte()) {
-            this.setPositionX(-Modele.getTailleCarte());
+        else if (x <= 10+TAILLE/2) {
+            this.setPositionX(10+TAILLE/2);
         }
         else {
-            this.setPositionX(Modele.getTailleCarte());
+            this.setPositionX(LARGEUR_MAP);
         }
     }
 
@@ -67,14 +72,15 @@ public class Joueur {
     // elle prend en paramètre le déplacement en y,
     // elle met à jour la position du joueur en y.
     public void deplaceY(int y) {
-        if (y >= -Modele.getTailleCarte() && y <= Modele.getTailleCarte()) {
+        // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
+        if (y >= 10+TAILLE/2 && y <= Map.HAUTEUR_MAP) {
             this.setPositionY(y);
         }
-        else if (y <= -Modele.getTailleCarte()) {
-            this.setPositionY(-Modele.getTailleCarte());
+        else if (y <= 10+TAILLE/2) {
+            this.setPositionY(10+TAILLE/2);
         }
         else {
-            this.setPositionY(Modele.getTailleCarte());
+            this.setPositionY(Map.HAUTEUR_MAP);
         }
     }
 

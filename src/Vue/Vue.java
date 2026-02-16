@@ -59,6 +59,8 @@ public class Vue extends JPanel {
         this.vueCarte = new VueCarte(modele);
         this.vueJoueur = new VueJoueur();
 
+        this.addMouseListener(new controleurSouris(this, modele));
+
         this.modele = modele;
         new Redessine (this, modele);
         this.vueRessource = new VueRessource();
@@ -78,12 +80,10 @@ public class Vue extends JPanel {
         int mi_hauteur = getHeight() / 2;
 
 
-        System.out.println("Position du joueur dans vue: (" + posX + ", " + posY + ")");
 
         //vueCarte.dessiner(g, mi_largeur, mi_hauteur);
         //vueJoueur.dessiner(g, mi_largeur, mi_hauteur);
 
-        vueCarte.dessiner(g);
 
         // 1. Dessiner le fond
         vueCarte.dessiner(g);
@@ -94,11 +94,8 @@ public class Vue extends JPanel {
 
             // Calcul de la position relative :
             // Centre écran + Position Ressource - Position Joueur
-            int x = mi_largeur + r.getPositionX() - Joueur.getPositionX();
-            int y = mi_hauteur + r.getPositionY() - Joueur.getPositionY();
-
             // On demande à VueRessource de dessiner CETTE ressource à CES coordonnées
-            vueRessource.dessinerRessource(g, r, x, y);
+            vueRessource.dessinerRessource(g, r, r.getPositionX(), r.getPositionY());
         }
 
         // 3. Dessiner le joueur (toujours au centre)

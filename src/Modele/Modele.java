@@ -13,9 +13,6 @@ public class Modele {
     private static Map map;
     private Ressource ressource;
 
-    private static final int tailleCarte = 2000;
-
-
     private Jour leJour;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
@@ -32,11 +29,6 @@ public class Modele {
         return map;
     }
 
-
-    // Getter de la carte
-    public static int getTailleCarte() {
-        return tailleCarte;
-    }
 
     // Getter du joueur
     public Joueur getJoueur() {
