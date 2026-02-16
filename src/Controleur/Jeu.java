@@ -39,7 +39,7 @@ public class Jeu {
         // creation du panneau de droite
         JPanel panelDroite = new JPanel();
         panelDroite.setPreferredSize(new Dimension(300,0));
-        panelDroite.setBackground(Color.RED); // Couleur de fond pour différencier le panneau            <- On peut modifier la couleur ici
+        panelDroite.setBackground(new Color (74, 9, 9)); // Couleur de fond pour différencier le panneau            <- On peut modifier la couleur ici
 
         // Ajout de composants dans le panneau droite
         panelDroite.add(new JLabel("Menu de Contrôle"));
