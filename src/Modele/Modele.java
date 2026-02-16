@@ -10,12 +10,20 @@ package Modele;
 public class Modele {
 
     private Joueur joueur;
+    private static Map map;
+    private Ressource ressource;
 
     private final int tailleCarte = 100;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
+
         this.joueur = new Joueur();
+        this.map = new Map();
+    }
+
+    public static Map getMap() {
+        return map;
     }
 
     public void deplaceX(int x) {
