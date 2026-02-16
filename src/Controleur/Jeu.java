@@ -17,9 +17,8 @@ public class Jeu {
 
     public Jeu() {
         initaliserFenetre();
-
-        initialiserVue();
         initialiserModele();
+        initialiserVue();
         initialiserControleur();
 
         maFenetre.setVisible(true);
@@ -63,8 +62,8 @@ public class Jeu {
         modele = new Modele();
      }
 
-        private void initialiserControleur(){
-            new controleurSouris(modele);
-        }
 
+     private void initialiserControleur(){
+        vue.addMouseListener(new controleurSouris(vue, modele));
+    }
 }

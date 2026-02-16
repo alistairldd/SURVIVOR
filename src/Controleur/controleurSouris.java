@@ -10,23 +10,28 @@ import java.awt.event.MouseListener;
 public class controleurSouris implements MouseListener {
 
     private Modele modele;
+    private Vue vue;
 
-    public controleurSouris(Modele modele) {
+
+    public controleurSouris(Vue vue, Modele modele) {
+
         this.modele = modele;
+        this.vue = vue;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (SwingUtilities.isRightMouseButton(e)){
-            int x = e.getX();
-            int y = e.getY();
-            modele.deplaceJoueur(x, y);
-        }
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        System.out.println("Clic détecté à la position : (" + e.getX() + ", " + e.getY() + ")");
+        if (SwingUtilities.isRightMouseButton(e)){
+            int x = e.getX();
+            int y = e.getY();
+            modele.getJoueur().deplaceJoueur(x, y);
+        }
     }
 
     @Override

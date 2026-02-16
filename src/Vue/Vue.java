@@ -20,10 +20,15 @@ public class Vue extends JPanel {
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
 
+    private final Modele modele;
+
     // Constructeur de la classe Vue, il initialise les données de la vue.
     public Vue(Modele modele) {
         this.vueCarte = new VueCarte(modele);
         this.vueJoueur = new VueJoueur();
+
+        this.modele = modele;
+        new Redessine (this, modele);
     }
 
     /* ---- GETTERS ET SETTERS ---- */
@@ -31,16 +36,23 @@ public class Vue extends JPanel {
 
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paint(Graphics g) {
 
-        super.paintComponent(g);
+        super.paint(g);
 
         int mi_largeur = getWidth() / 2;
         int mi_hauteur = getHeight() / 2;
 
+        int posX = Joueur.getPositionX();
+        int posY = Joueur.getPositionY();
 
-        vueCarte.dessiner(g, mi_largeur, mi_hauteur);
-        vueJoueur.dessiner(g, mi_largeur, mi_hauteur);
+        System.out.println("Position du joueur dans vue: (" + posX + ", " + posY + ")");
+
+        //vueCarte.dessiner(g, mi_largeur, mi_hauteur);
+        //vueJoueur.dessiner(g, mi_largeur, mi_hauteur);
+
+        vueCarte.dessiner(g);
+        vueJoueur.dessiner(g);
     }
 
 }
