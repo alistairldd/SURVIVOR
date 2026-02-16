@@ -10,13 +10,26 @@ package Modele;
 public class Modele {
 
     private Joueur joueur;
+    private static Map map;
+    private Ressource ressource;
 
-    private static final int tailleCarte = 1120;
+    private static final int tailleCarte = 2000;
 
+
+    private Jour leJour;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
+
         this.joueur = new Joueur();
+
+        // Initialisation du jour et de la nuit
+        leJour = new Jour();
+        this.map = new Map();
+    }
+
+    public static Map getMap() {
+        return map;
     }
 
 
@@ -30,4 +43,9 @@ public class Modele {
         return joueur;
     }
 
+
+
+    public Jour getJour(){
+        return leJour;
+    }
 }
