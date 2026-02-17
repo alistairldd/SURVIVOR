@@ -17,6 +17,9 @@ public class Joueur {
     private static int positionX;
     private static int positionY;
 
+    // Déplacement
+    private static DeplaceJoueur threadActuel = null;
+
     // Constructeur de la classe Joueur, il initialise les données du joueur.
     public Joueur() { // on initialise la position en 0,0 dans le modèle
         positionX = LARGEUR_MAP/2;
@@ -83,13 +86,22 @@ public class Joueur {
             setPositionY(Map.HAUTEUR_MAP);
         }
     }
-
+    /*
     // Méthode pour déplacer le joueur, elle prend
     // en paramètre les déplacements en x et en y,
     // elle met à jour la position du joueur et affiche la nouvelle position du joueur.
     public void deplaceJoueur(int x, int y){
         deplaceX(x);
         deplaceY(y);
+    }
+    */
+
+    public static void setThreadActuel(DeplaceJoueur thread) {
+        // Si un thread tourne déjà, on l'arrête
+        if (threadActuel != null && threadActuel.isAlive()) {
+            threadActuel.interrupt();
+        }
+        threadActuel = thread;
     }
 
 }

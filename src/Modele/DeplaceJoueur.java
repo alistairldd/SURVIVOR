@@ -8,12 +8,11 @@ public class DeplaceJoueur extends Thread {
     public DeplaceJoueur(int destX, int destY) {
         this.destX = destX;
         this.destY = destY;
-        this.start();
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             int posX = Joueur.getPositionX();
             int posY = Joueur.getPositionY();
 
@@ -33,7 +32,7 @@ public class DeplaceJoueur extends Thread {
             else if (posY < destY) {
                 Joueur.deplaceY(Math.min(posY + VITESSE, destY));
             } else if (posY > destY) {
-                Joueur.deplaceY(Math.max(posY - VITESSE, destY)); // Correction du signe ici !
+                Joueur.deplaceY(Math.max(posY - VITESSE, destY));
             }
 
             try {

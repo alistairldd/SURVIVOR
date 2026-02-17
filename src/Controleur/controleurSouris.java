@@ -43,8 +43,9 @@ public class controleurSouris implements MouseListener {
             int destY = camY + y;
 
             // Déplacer le joueur vers la position de destination
-            new DeplaceJoueur(destX, destY);
-
+            DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY);
+            Joueur.setThreadActuel(deplacement);
+            deplacement.start();
             //modele.getJoueur().deplaceJoueur(destX, destY);
         }
     }
