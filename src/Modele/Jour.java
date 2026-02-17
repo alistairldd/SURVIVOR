@@ -77,9 +77,4 @@ public class Jour extends Thread{
         }
     }
 
-    /* Main pour tester la classe Jour */
-    public static void main(String[] args) {
-        Jour jour = new Jour();
-
-    }
 }
