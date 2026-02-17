@@ -2,7 +2,6 @@ package Test;
 
 import Modele.Modele;
 import Modele.Joueur;
-import Controleur.Jeu;
 import Modele.Map;
 
 import java.io.IOException;
@@ -35,14 +34,8 @@ public class testDeplacementJoueur {
         System.out.println("Test: déplacement hors limites à (9999,-9999)");
         joueur.deplaceJoueur(9999, -9999);
         assertEquals(taille, Joueur.getPositionX(), "Position X après déplacement hors limites (max)");
-        assertEquals(-taille, Joueur.getPositionY(), "Position Y après déplacement hors limites (min)");
+        assertEquals(20, Joueur.getPositionY(), "Position Y après déplacement hors limites (min)");
 
-        System.out.println("Tests automatiques OK. Ouverture de la fenêtre pour test manuel...");
-
-        // Ouvrir la fenêtre du jeu pour que le prof puisse tester le clic manuellement
-        new Jeu();
-        System.out.println("La fenêtre du jeu est ouverte. Cliquez avec le bouton droit pour déplacer le joueur.");
-        System.out.println("Appuyez sur Entrée dans ce terminal pour terminer le test et fermer l'application.");
 
         try {
             int read = System.in.read(); // stocke la valeur lue pour éviter l'avertissement

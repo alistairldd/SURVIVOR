@@ -32,6 +32,7 @@ public class Vue extends JPanel {
     public Vue(Modele modele) {
         /* Initialisation de la fenêtre principale de l'application, elle est utilisée pour afficher les composants de la vue. */
         maFenetre = new JFrame("survivor");
+        maFenetre.setVisible(true);
         maFenetre.setExtendedState(JFrame.MAXIMIZED_BOTH); // Met la fenêtre en plein écran
         maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ferme l'application lorsque la fenêtre est fermée
         maFenetre.setLayout(new BorderLayout()); // Utilise un BorderLayout pour organiser les composants
@@ -50,10 +51,6 @@ public class Vue extends JPanel {
         // on ajoute les éléments en précisant les zones du BorderLayout
         maFenetre.add(this, BorderLayout.CENTER);
         maFenetre.add(panelDroite, BorderLayout.EAST);
-
-        maFenetre.pack();
-        maFenetre.setVisible(true);
-
 
 
         this.vueCarte = new VueCarte(modele);
