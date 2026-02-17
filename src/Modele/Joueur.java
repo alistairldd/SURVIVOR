@@ -47,40 +47,40 @@ public class Joueur {
     // Getter pour la position Y du joueur
     public static int getPositionY() {return positionY;}
     // Setter pour la position X du joueur
-    public void setPositionX(int positionX) {Joueur.positionX = positionX;}
+    public static void setPositionX(int positionX) {Joueur.positionX = positionX;}
     // Setter pour la position Y du joueur
-    public void setPositionY(int positionY) {Joueur.positionY = positionY;}
+    public static void setPositionY(int positionY) {Joueur.positionY = positionY;}
 
 
     // Méthode pour déplacer le joueur en x,
     // elle prend en paramètre le déplacement en x,
     // elle met à jour la position du joueur en x.
-    public void deplaceX(int x) {
+    public static void deplaceX(int x) {
         // On vérifie que le déplacement en x est dans les limites de la carte, sinon on le met à la limite.
         if (x >= 10+TAILLE/2 && x <= LARGEUR_MAP) {
-            this.setPositionX(x);
+            setPositionX(x);
         }
         else if (x <= 10+TAILLE/2) {
-            this.setPositionX(10+TAILLE/2);
+            setPositionX(10+TAILLE/2);
         }
         else {
-            this.setPositionX(LARGEUR_MAP);
+            setPositionX(LARGEUR_MAP);
         }
     }
 
     // Méthode pour déplacer le joueur en y,
     // elle prend en paramètre le déplacement en y,
     // elle met à jour la position du joueur en y.
-    public void deplaceY(int y) {
+    public static void deplaceY(int y) {
         // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
         if (y >= 10+TAILLE/2 && y <= Map.HAUTEUR_MAP) {
-            this.setPositionY(y);
+            setPositionY(y);
         }
         else if (y <= 10+TAILLE/2) {
-            this.setPositionY(10+TAILLE/2);
+            setPositionY(10+TAILLE/2);
         }
         else {
-            this.setPositionY(Map.HAUTEUR_MAP);
+            setPositionY(Map.HAUTEUR_MAP);
         }
     }
 
@@ -90,7 +90,8 @@ public class Joueur {
     public void deplaceJoueur(int x, int y){
         deplaceX(x);
         deplaceY(y);
-        System.out.println("Position du joueur : (" + Joueur.getPositionX() + ", " + Joueur.getPositionY() + ")");
     }
 
 }
+
+

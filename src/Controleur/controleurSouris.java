@@ -3,6 +3,7 @@ package Controleur;
 import Modele.Modele;
 import Vue.Vue;
 import Modele.Joueur;
+import Modele.DeplaceJoueur;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -42,7 +43,9 @@ public class controleurSouris implements MouseListener {
             int destY = camY + y;
 
             // Déplacer le joueur vers la position de destination
-            modele.getJoueur().deplaceJoueur(destX, destY);
+            new DeplaceJoueur(destX, destY);
+
+            //modele.getJoueur().deplaceJoueur(destX, destY);
         }
     }
 
