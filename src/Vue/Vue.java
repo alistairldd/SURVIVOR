@@ -17,40 +17,42 @@ import java.awt.*;
 
 public class Vue extends JPanel {
 
+    // Taille de la fenêtre principale de l'application, elle est utilisée pour définir la taille de la fenêtre.
+    public final static int LARGEUR = 1500;
+    public final static int HAUTEUR = 900;
 
+
+    // Fenêtre principale de l'application, elle est utilisée pour afficher les composants de la vue.
     private JFrame maFenetre;
 
-
     // Vues
+    private final VueHUD vueHUD;
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
     private final VueRessource vueRessource;
 
     private final Modele modele;
 
+
+
     // Constructeur de la classe Vue, il initialise les données de la vue.
     public Vue(Modele modele) {
         /* Initialisation de la fenêtre principale de l'application, elle est utilisée pour afficher les composants de la vue. */
         maFenetre = new JFrame("survivor");
-        maFenetre.setVisible(true);
+        maFenetre.setPreferredSize(new Dimension(LARGEUR,HAUTEUR));
         maFenetre.setExtendedState(JFrame.MAXIMIZED_BOTH); // Met la fenêtre en plein écran
         maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ferme l'application lorsque la fenêtre est fermée
         maFenetre.setLayout(new BorderLayout()); // Utilise un BorderLayout pour organiser les composants
         maFenetre.setResizable(false);
 
-
-        // creation du panneau de droite
-        JPanel panelDroite = new JPanel();
-        panelDroite.setPreferredSize(new Dimension(300,0));
-        panelDroite.setBackground(new Color (74, 9, 9)); // Couleur de fond pour différencier le panneau            <- On peut modifier la couleur ici
-
+        /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
+        this.vueHUD = new VueHUD(modele);
         // Ajout de composants dans le panneau droite
-        panelDroite.add(new JLabel("Menu de Contrôle"));
 
         this.add(new JLabel("Le jeu le vrai"));
         // on ajoute les éléments en précisant les zones du BorderLayout
         maFenetre.add(this, BorderLayout.CENTER);
-        maFenetre.add(panelDroite, BorderLayout.EAST);
+        maFenetre.add(vueHUD, BorderLayout.EAST);
 
 
         this.vueCarte = new VueCarte(modele);
@@ -61,11 +63,18 @@ public class Vue extends JPanel {
         this.modele = modele;
         new Redessine (this, modele);
         this.vueRessource = new VueRessource();
+
+
+        maFenetre.pack();
+        maFenetre.setVisible(true);
     }
 
     /* ---- GETTERS ET SETTERS ---- */
 
-
+    /* Getter pour l'HUD */
+    public VueHUD getVueHUD() {
+        return vueHUD;
+    }
 
 
 

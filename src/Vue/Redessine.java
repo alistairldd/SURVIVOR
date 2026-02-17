@@ -6,11 +6,13 @@ public class Redessine extends Thread {
      * le délai entre chaque redessinage est défini par la constante DELAY
      * le thread s'exécute en continu tant que l'application est ouverte*/
     private Vue vue;
+    private VueHUD vueHUD;
     public final static int DELAY = 50;
 
     /*constructeur*/
     public Redessine(Vue vue, Modele.Modele modele) {
         this.vue = vue;
+        this.vueHUD = vue.getVueHUD();
         this.start();
     }
 
@@ -19,6 +21,7 @@ public class Redessine extends Thread {
     public void run() {
         while(true){
             vue.repaint();
+            vueHUD.repaint();
             try {
                 Thread.sleep(DELAY);
             } catch (InterruptedException e) {

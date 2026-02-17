@@ -13,7 +13,7 @@ public class Modele {
     private static Map map;
     private Ressource ressource;
 
-    private Jour leJour;
+    private CycleJourNuit leCycleJourNuit;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
@@ -21,9 +21,12 @@ public class Modele {
         this.joueur = new Joueur();
 
         // Initialisation du jour et de la nuit
-        leJour = new Jour();
+        leCycleJourNuit = new CycleJourNuit();
+
         this.map = new Map();
     }
+
+    /*---- GETTERS ET SETTERS ---- */
 
     public static Map getMap() {
         return map;
@@ -35,9 +38,8 @@ public class Modele {
         return joueur;
     }
 
-
-
-    public Jour getJour(){
-        return leJour;
-    }
+    // Getter du cycle jour/nuit
+        public CycleJourNuit getLeCycleJourNuit() {
+            return leCycleJourNuit;
+        }
 }

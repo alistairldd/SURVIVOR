@@ -1,12 +1,12 @@
 package Test;
 
-import Modele.Jour;
+import Modele.CycleJourNuit;
 
-public class testJour {
+public class testCycle {
 
     /* Main pour tester la classe Jour */
     public static void main(String[] args) {
-        Jour jour = new Jour();
+        CycleJourNuit cycle = new CycleJourNuit();
 
     }
 }
