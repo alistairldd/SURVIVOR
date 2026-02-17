@@ -2,6 +2,7 @@ package Controleur;
 
 import Modele.Modele;
 import Vue.Vue;
+import Modele.Joueur;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -28,9 +29,20 @@ public class controleurSouris implements MouseListener {
     public void mousePressed(MouseEvent e) {
         System.out.println("Clic détecté à la position : (" + e.getX() + ", " + e.getY() + ")");
         if (SwingUtilities.isRightMouseButton(e)){
+            // Récupérer les coordonnées du clic
             int x = e.getX();
             int y = e.getY();
-            modele.getJoueur().deplaceJoueur(x, y);
+
+            // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
+            int camX = Joueur.getPositionX() - vue.getWidth() / 2;
+            int camY = Joueur.getPositionY() - vue.getHeight() / 2;
+
+            // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
+            int destX = camX + x;
+            int destY = camY + y;
+
+            // Déplacer le joueur vers la position de destination
+            modele.getJoueur().deplaceJoueur(destX, destY);
         }
     }
 

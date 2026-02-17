@@ -68,35 +68,36 @@ public class Vue extends JPanel {
 
 
 
+
     @Override
-    public void paint(Graphics g) {
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Nettoie l'écran
+        Graphics2D g2d = (Graphics2D) g;
 
-        super.paint(g);
+        // --- CALCUL DE LA CAMÉRA ---
+        // On veut que le joueur soit au centre du panneau (this)
+        // camX/Y représentent le coin haut-gauche de ce que l'on voit dans le monde
+        int camX = Joueur.getPositionX() - (getWidth() / 2);
+        int camY = Joueur.getPositionY() - (getHeight() / 2);
 
-        int mi_largeur = getWidth() / 2;
-        int mi_hauteur = getHeight() / 2;
+        // --- DÉBUT DE LA ZONE MONDE ---
+        // On demande à Graphics de décaler tout ce qu'on va dessiner ensuite
+        g2d.translate(-camX, -camY);
 
-
-
-        //vueCarte.dessiner(g, mi_largeur, mi_hauteur);
-        //vueJoueur.dessiner(g, mi_largeur, mi_hauteur);
-
-
-        // 1. Dessiner le fond
-        vueCarte.dessiner(g);
+        // 1. Dessiner le fond (VueCarte doit dessiner de 0,0 à LargeurMap, HauteurMap)
+        vueCarte.dessiner(g2d);
 
         // 2. Dessiner les ressources
-        // On récupère la liste des ressources de la map
+        // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         for (Ressource r : Modele.getMap().getRessources()) {
-
-            // Calcul de la position relative :
-            // Centre écran + Position Ressource - Position Joueur
-            // On demande à VueRessource de dessiner CETTE ressource à CES coordonnées
-            vueRessource.dessinerRessource(g, r, r.getPositionX(), r.getPositionY());
+            vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY());
         }
 
-        // 3. Dessiner le joueur (toujours au centre)
-        vueJoueur.dessiner(g);
-    }
+        // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
+        // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
+        vueJoueur.dessiner(g2d);
 
+        // --- FIN DE LA ZONE MONDE ---
+        g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin
+    }
 }
