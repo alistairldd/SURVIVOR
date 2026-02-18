@@ -14,16 +14,16 @@ public class Joueur {
     private static ArrayList<Object> inventaire;
 
     // Position
-    private static int positionX;
-    private static int positionY;
+    private static double positionX;
+    private static double positionY;
 
     // Déplacement
     private static DeplaceJoueur threadActuel = null;
 
     // Constructeur de la classe Joueur, il initialise les données du joueur.
     public Joueur() { // on initialise la position en 0,0 dans le modèle
-        positionX = LARGEUR_MAP/2;
-        positionY = HAUTEUR_MAP/2;
+        positionX = (double) LARGEUR_MAP /2;
+        positionY = (double) HAUTEUR_MAP /2;
         hp = 100;
         attack = 10;
         inventaire = new ArrayList<>();
@@ -46,19 +46,19 @@ public class Joueur {
     }
 
     // Getter pour la position X du joueur
-    public static int getPositionX() {return positionX;}
+    public synchronized static double getPositionX() {return positionX;}
     // Getter pour la position Y du joueur
-    public static int getPositionY() {return positionY;}
+    public synchronized static double getPositionY() {return positionY;}
     // Setter pour la position X du joueur
-    public static void setPositionX(int positionX) {Joueur.positionX = positionX;}
+    public synchronized static void setPositionX(double positionX) {Joueur.positionX = positionX;}
     // Setter pour la position Y du joueur
-    public static void setPositionY(int positionY) {Joueur.positionY = positionY;}
+    public synchronized static void setPositionY(double positionY) {Joueur.positionY = positionY;}
 
 
     // Méthode pour déplacer le joueur en x,
     // elle prend en paramètre le déplacement en x,
     // elle met à jour la position du joueur en x.
-    public static void deplaceX(int x) {
+    public synchronized static void deplaceX(double x) {
         // On vérifie que le déplacement en x est dans les limites de la carte, sinon on le met à la limite.
         if (x >= 10+TAILLE/2 && x <= LARGEUR_MAP) {
             setPositionX(x);
@@ -74,7 +74,7 @@ public class Joueur {
     // Méthode pour déplacer le joueur en y,
     // elle prend en paramètre le déplacement en y,
     // elle met à jour la position du joueur en y.
-    public static void deplaceY(int y) {
+    public synchronized static void deplaceY(double y) {
         // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
         if (y >= 10+TAILLE/2 && y <= Map.HAUTEUR_MAP) {
             setPositionY(y);
@@ -86,15 +86,7 @@ public class Joueur {
             setPositionY(Map.HAUTEUR_MAP);
         }
     }
-    /*
-    // Méthode pour déplacer le joueur, elle prend
-    // en paramètre les déplacements en x et en y,
-    // elle met à jour la position du joueur et affiche la nouvelle position du joueur.
-    public void deplaceJoueur(int x, int y){
-        deplaceX(x);
-        deplaceY(y);
-    }
-    */
+
 
     public static void setThreadActuel(DeplaceJoueur thread) {
         // Si un thread tourne déjà, on l'arrête

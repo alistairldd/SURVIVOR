@@ -83,11 +83,15 @@ public class Vue extends JPanel {
         super.paintComponent(g); // Nettoie l'écran
         Graphics2D g2d = (Graphics2D) g;
 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // AMÉLIORE LA PRÉCISION DES POSITIONS
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
         // --- CALCUL DE LA CAMÉRA ---
         // On veut que le joueur soit au centre du panneau (this)
         // camX/Y représentent le coin haut-gauche de ce que l'on voit dans le monde
-        int camX = Joueur.getPositionX() - (getWidth() / 2);
-        int camY = Joueur.getPositionY() - (getHeight() / 2);
+        double camX = Joueur.getPositionX() - ((double) getWidth() / 2);
+        double camY = Joueur.getPositionY() - ((double) getHeight() / 2);
 
         // --- DÉBUT DE LA ZONE MONDE ---
         // On demande à Graphics de décaler tout ce qu'on va dessiner ensuite

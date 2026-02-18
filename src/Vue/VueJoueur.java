@@ -14,10 +14,10 @@ public class VueJoueur {
 
     // Méthode pour dessiner le joueur sur la carte
     public void dessiner(Graphics g) {
-        int posX = Joueur.getPositionX();
-        int posY = Joueur.getPositionY();
+        double posX = Joueur.getPositionX();
+        double posY = Joueur.getPositionY();
         g.setColor(Color.black);
-        g.fillOval(posX - TAILLE/2, posY - TAILLE/2 , TAILLE, TAILLE);
+        g.fillOval((int) posX - TAILLE/2, (int) posY - TAILLE/2 , TAILLE, TAILLE);
     }
 
 }

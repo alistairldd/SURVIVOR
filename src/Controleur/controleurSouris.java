@@ -35,12 +35,12 @@ public class controleurSouris implements MouseListener {
             int y = e.getY();
 
             // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
-            int camX = Joueur.getPositionX() - vue.getWidth() / 2;
-            int camY = Joueur.getPositionY() - vue.getHeight() / 2;
+            double camX = Joueur.getPositionX() - (double) vue.getWidth() / 2;
+            double camY = Joueur.getPositionY() - (double) vue.getHeight() / 2;
 
             // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
-            int destX = camX + x;
-            int destY = camY + y;
+            double destX = camX + x;
+            double destY = camY + y;
 
             // Déplacer le joueur vers la position de destination
             DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY);

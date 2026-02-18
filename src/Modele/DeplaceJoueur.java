@@ -1,11 +1,11 @@
 package Modele;
 
 public class DeplaceJoueur extends Thread {
-    private final int destX;
-    private final int destY;
+    private final double destX;
+    private final double destY;
     private final int VITESSE = 10; // Plus facile à régler ici
 
-    public DeplaceJoueur(int destX, int destY) {
+    public DeplaceJoueur(double destX, double destY) {
         this.destX = destX;
         this.destY = destY;
     }
@@ -13,27 +13,29 @@ public class DeplaceJoueur extends Thread {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            int posX = Joueur.getPositionX();
-            int posY = Joueur.getPositionY();
+            double posX = Joueur.getPositionX();
+            double posY = Joueur.getPositionY();
 
-            // Vérification si on est arrivé (pour sortir de la boucle)
             if (posX == destX && posY == destY) break;
 
-            // Déplacement X
-            if (posX < destX) {
-                // Math.min évite de dépasser la cible
-                Joueur.deplaceX(Math.min(posX + VITESSE, destX));
-            } else if (posX > destX) {
-                // Math.max évite de dépasser la cible vers le bas
-                Joueur.deplaceX(Math.max(posX - VITESSE, destX));
+            double dx = destX - posX;
+            double dy = destY - posY;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > VITESSE){
+                // Normalisation du vecteur de déplacement
+                double moveX = (dx / distance) * VITESSE;
+                double moveY = (dy / distance) * VITESSE;
+
+                Joueur.deplaceX(posX + moveX);
+                Joueur.deplaceY(posY + moveY);
             }
 
-            // Déplacement Y (exécuté après ou en même temps selon ton choix)
-            else if (posY < destY) {
-                Joueur.deplaceY(Math.min(posY + VITESSE, destY));
-            } else if (posY > destY) {
-                Joueur.deplaceY(Math.max(posY - VITESSE, destY));
+            else {
+                Joueur.deplaceX(destX);
+                Joueur.deplaceY(destY);
             }
+
 
             try {
                 Thread.sleep(50);

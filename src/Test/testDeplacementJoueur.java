@@ -21,22 +21,22 @@ public class testDeplacementJoueur {
         // Réinitialiser la position du joueur
         joueur.setPositionX(0);
         joueur.setPositionY(0);
-        assertEquals(0, Joueur.getPositionX(), "Position X initiale");
-        assertEquals(0, Joueur.getPositionY(), "Position Y initiale");
+        assertEquals(0, (int) Joueur.getPositionX(), "Position X initiale");
+        assertEquals(0, (int) Joueur.getPositionY(), "Position Y initiale");
 
         // Simuler un clic dans la carte
         System.out.println("Test: déplacement à (100,150)");
         joueur.deplaceX(100);
         joueur.deplaceY(150);
-        assertEquals(100, Joueur.getPositionX(), "Position X après déplacement");
-        assertEquals(150, Joueur.getPositionY(), "Position Y après déplacement");
+        assertEquals(100, (int) Joueur.getPositionX(), "Position X après déplacement");
+        assertEquals(150, (int) Joueur.getPositionY(), "Position Y après déplacement");
 
         // Simuler un clic hors limites pour vérifier la saturation
         System.out.println("Test: déplacement hors limites à (9999,-9999)");
         joueur.deplaceX(9999);
         joueur.deplaceY(-9999);
-        assertEquals(taille, Joueur.getPositionX(), "Position X après déplacement hors limites (max)");
-        assertEquals(20, Joueur.getPositionY(), "Position Y après déplacement hors limites (min)");
+        assertEquals(taille, (int) Joueur.getPositionX(), "Position X après déplacement hors limites (max)");
+        assertEquals(20, (int) Joueur.getPositionY(), "Position Y après déplacement hors limites (min)");
 
 
         try {

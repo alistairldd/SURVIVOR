@@ -19,8 +19,8 @@ public class VueCarte {
 
         // On applique la même logique de caméra que pour les ressources :
         // Centre Ecran + Position Objet - Position Joueur
-        int x = coinHautGaucheMapX - Joueur.getPositionX();
-        int y = coinHautGaucheMapY - Joueur.getPositionY();
+        double x = coinHautGaucheMapX - Joueur.getPositionX();
+        double y = coinHautGaucheMapY - Joueur.getPositionY();
 
         g.setColor(new Color(0, 101, 0));
 
