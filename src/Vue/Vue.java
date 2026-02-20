@@ -97,16 +97,16 @@ public class Vue extends JPanel {
         g2d.setColor(Color.RED);
         g2d.drawRect(0, 0, tailleMinimap, tailleMinimap); // Dessine la bordure de la mini carte
 
+        for (Ressource r : Modele.getMap().getRessources()) {
+            int resX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
+            int resY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
+            VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
+        }
+
         g2d.setColor(Color.BLACK);
         int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
         int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionY()); // idem
         g2d.fillOval(posX,posY, 5, 5);
-
-        for (Ressource r : Modele.getMap().getRessources()) {
-            int resX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
-            int resY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap, r.getPositionY()); // idem
-            VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
-        }
 
     }
 
@@ -136,7 +136,7 @@ public class Vue extends JPanel {
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         for (Ressource r : Modele.getMap().getRessources()) {
-            VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
+            vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
