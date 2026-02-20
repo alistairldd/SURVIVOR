@@ -11,6 +11,7 @@ import Modele.Joueur;
 import Controleur.controleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
+import Modele.Map;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +44,7 @@ public class Vue extends JPanel {
         maFenetre.setExtendedState(JFrame.MAXIMIZED_BOTH); // Met la fenêtre en plein écran
         maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ferme l'application lorsque la fenêtre est fermée
         maFenetre.setLayout(new BorderLayout()); // Utilise un BorderLayout pour organiser les composants
-        maFenetre.setResizable(false);
+        maFenetre.setResizable(true);
 
         /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
         this.vueHUD = new VueHUD(modele);
@@ -77,6 +78,38 @@ public class Vue extends JPanel {
     }
 
 
+    protected void dessineMinimap(Graphics2D g2d) {
+        // On peut dessiner une mini carte en haut à droite, qui montre la position du joueur et des ressources par rapport à la carte entière.
+        // On peut faire ça en dessinant un petit rectangle qui représente la carte entière,
+        // puis en dessinant un point pour le joueur et des points pour les ressources,
+        // en utilisant les mêmes coordonnées que pour le monde, mais en les adaptant à la taille de la mini carte.
+        // Par exemple, si la mini carte fait 200x200 pixels, et que la carte entière fait
+        // 2000x2000 pixels, alors on peut dessiner le joueur à (joueurX / 10, joueurY / 10)
+        // sur la mini carte, et les ressources à (ressourceX / 10, ressourceY / 10).
+        // On peut aussi dessiner une bordure autour de la mini carte pour la différencier du
+        // reste de l'interface.
+
+        int tailleMinimap = 300;
+
+        g2d.translate(getWidth() - tailleMinimap-10, 10); // On se place en haut à droite pour dessiner la mini carte
+        g2d.setColor(new Color(50,70,50)); // du gris pour le fond de la mini carte
+        g2d.fillRect(0, 0, tailleMinimap, tailleMinimap); // Dessine le fond de la mini carte
+        g2d.setColor(Color.RED);
+        g2d.drawRect(0, 0, tailleMinimap, tailleMinimap); // Dessine la bordure de la mini carte
+
+        g2d.setColor(Color.BLACK);
+        int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
+        int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionY()); // idem
+        g2d.fillOval(posX,posY, 5, 5);
+
+        for (Ressource r : Modele.getMap().getRessources()) {
+            int resX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
+            int resY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap, r.getPositionY()); // idem
+            VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
+        }
+
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -103,7 +136,7 @@ public class Vue extends JPanel {
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         for (Ressource r : Modele.getMap().getRessources()) {
-            vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY());
+            VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
@@ -112,5 +145,9 @@ public class Vue extends JPanel {
 
         // --- FIN DE LA ZONE MONDE ---
         g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin
+
+
+        dessineMinimap(g2d);
+
     }
 }

@@ -14,7 +14,7 @@ public class Map {
         this.largeur = LARGEUR_MAP;
         this.hauteur = HAUTEUR_MAP;
         this.ressources = new ArrayList<>();
-        this.ressources = Ressource.genereRessources(100);
+        this.ressources = Ressource.genereRessources(50);
     }
 
     public ArrayList<Ressource> getRessources() {

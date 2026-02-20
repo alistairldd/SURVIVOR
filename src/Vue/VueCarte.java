@@ -31,4 +31,5 @@ public class VueCarte {
         g.setColor(Color.RED);
         g.drawRect(10, 10, Map.LARGEUR_MAP, Map.HAUTEUR_MAP);
     }
+
 }

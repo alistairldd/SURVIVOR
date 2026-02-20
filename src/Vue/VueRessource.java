@@ -10,9 +10,14 @@ public class VueRessource {
     }
 
     // MODIFICATION : On ajoute les paramètres 'Ressource r', 'x', et 'y'
-    public void dessinerRessource(Graphics g, Ressource r, int x, int y) {
+    public static void dessinerRessource(Graphics g, Ressource r, int x, int y, boolean minimap) {
         Color[] col = {new Color(0, 255, 0), new Color(53, 53, 53), new Color(120, 46, 0)}; // Vert, Gris, Orange
         int taille = 20;
+
+        if (minimap){
+            // Si on dessine sur la minimap, on réduit la taille des ressources
+            taille = 4;
+        }
 
         int type = r.getType();
 

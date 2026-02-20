@@ -39,7 +39,12 @@ public class Modele {
     }
 
     // Getter du cycle jour/nuit
-        public CycleJourNuit getLeCycleJourNuit() {
+    public CycleJourNuit getLeCycleJourNuit() {
             return leCycleJourNuit;
-        }
+}
+
+    public int map(int debut, int fin, int valDebut, int valFin, int val){
+        return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
+    }
+
 }
