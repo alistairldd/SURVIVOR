@@ -36,14 +36,14 @@ public class VueJourNuit{
         }
     }
 
-    public void dessiner (Graphics g) {
+    public void dessiner (Graphics g, int hauteurEcran) {
 
         // Dessiner le jour et la nuit
         if (leCycle.isDay()) {
             // Dessine le jour en centrant l'image dans le panneau en bas
-            g.drawImage(soleil, (VueHUD.LARGEUR - TAILLE_LS) / 2, VueHUD.HAUTEUR - TAILLE_LS, TAILLE_LS, TAILLE_LS, null);
+            g.drawImage(soleil, (VueHUD.LARGEUR - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null);
         } else {
-            g.drawImage(lune, (VueHUD.LARGEUR - TAILLE_LS) / 2, VueHUD.HAUTEUR - TAILLE_LS, TAILLE_LS, TAILLE_LS, null); // Cercle pour la nuit
+            g.drawImage(lune, (VueHUD.LARGEUR - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null); // Cercle pour la nuit
         }
 
         /* Affiche le temps restant pour la phase actuelle */
@@ -51,6 +51,6 @@ public class VueJourNuit{
         // Augmente la taille de la police pour une meilleure visibilité
         g.setFont(new Font("Arial", Font.BOLD, 20));
         // Centrer le texte en bas du panneau
-        g.drawString("Temps restant: " + leCycle.getTempsRestant() + "s", (VueHUD.LARGEUR - TAILLE_LS) / 2 + 30, VueHUD.HAUTEUR - TAILLE_LS - 10);
+        g.drawString("Temps restant: " + leCycle.getTempsRestant() + "s", (VueHUD.LARGEUR - TAILLE_LS) / 2 + 30, hauteurEcran- TAILLE_LS - 10);
     }
 }

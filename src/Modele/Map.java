@@ -3,8 +3,8 @@ package Modele;
 import java.util.ArrayList;
 
 public class Map {
-    public static final int LARGEUR_MAP = 1600;
-    public static final int HAUTEUR_MAP = 1100;
+    public static final int LARGEUR_MAP = 3000;
+    public static final int HAUTEUR_MAP = 3000;
 
     private int largeur;
     private int hauteur;

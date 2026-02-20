@@ -18,8 +18,8 @@ import java.awt.*;
 public class Vue extends JPanel {
 
     // Taille de la fenêtre principale de l'application, elle est utilisée pour définir la taille de la fenêtre.
-    public final static int LARGEUR = 1500;
-    public final static int HAUTEUR = 900;
+    public final static int LARGEUR = 1920;
+    public final static int HAUTEUR = 1080;
 
 
     // Fenêtre principale de l'application, elle est utilisée pour afficher les composants de la vue.

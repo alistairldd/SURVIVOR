@@ -2,8 +2,12 @@ package Vue;
 
 import Modele.Modele;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /*
  * La classe de la vue du HUD, elle est utilisée pour afficher les informations du joueur et les ressources.
@@ -13,9 +17,6 @@ import java.awt.*;
 public class VueHUD extends JPanel {
 
     public final static int LARGEUR = 300;
-    public final static int HAUTEUR = Vue.HAUTEUR;
-
-
 
     private Modele modele;
 
@@ -26,7 +27,7 @@ public class VueHUD extends JPanel {
     public VueHUD(Modele modele) {
 
         /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
-        this.setPreferredSize(new Dimension(LARGEUR, HAUTEUR)); // Définit la taille préférée du panneau
+        this.setPreferredSize(new Dimension(LARGEUR, getHeight())); // Définit la taille préférée du panneau
         this.setBackground(new Color(0, 255, 255)); // Définit la couleur de fond du panneau
         this.setLayout(new BorderLayout());
 
@@ -36,12 +37,11 @@ public class VueHUD extends JPanel {
 
     /* ---- GETTERS ET SETTERS ---- */
 
-
     // Dessiner les éléments du HUD
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        vueJourNuit.dessiner(g);
+        vueJourNuit.dessiner(g, getHeight());
         if (modele.getLeCycleJourNuit().isDay()){
             this.setBackground(new Color(0, 255, 255));
 
