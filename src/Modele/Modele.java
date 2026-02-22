@@ -10,10 +10,10 @@ package Modele;
 public class Modele {
 
     private Joueur joueur;
+    private static Map map;
+    private Ressource ressource;
 
-    private final int tailleCarte = 100;
-
-    private Jour leJour;
+    private CycleJourNuit leCycleJourNuit;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
@@ -21,42 +21,30 @@ public class Modele {
         this.joueur = new Joueur();
 
         // Initialisation du jour et de la nuit
-        leJour = new Jour();
+        leCycleJourNuit = new CycleJourNuit();
+
+        this.map = new Map();
     }
 
-    public void deplaceX(int x) {
-        int nouvellePositionX = Joueur.getPositionX() + x;
-        if (nouvellePositionX >= -tailleCarte && nouvellePositionX <= tailleCarte) {
-            joueur.setPositionX(nouvellePositionX);
-        }
-        else if (nouvellePositionX <= -tailleCarte) {
-            joueur.setPositionX(-tailleCarte);
-        }
-        else {
-            joueur.setPositionX(tailleCarte);
-        }
-    }
+    /*---- GETTERS ET SETTERS ---- */
 
-    public void deplaceY(int y) {
-        int nouvellePositionY = Joueur.getPositionY() + y;
-        if (nouvellePositionY >= -tailleCarte && nouvellePositionY <= tailleCarte) {
-            joueur.setPositionY(nouvellePositionY);
-        }
-        else if (nouvellePositionY <= -tailleCarte) {
-            joueur.setPositionX(-tailleCarte);
-        }
-        else {
-            joueur.setPositionX(tailleCarte);
-        }
-    }
-
-    public void deplaceJoueur(int x, int y){
-        deplaceX(x);
-        deplaceY(y);
+    public static Map getMap() {
+        return map;
     }
 
 
-    public Jour getJour(){
-        return leJour;
+    // Getter du joueur
+    public Joueur getJoueur() {
+        return joueur;
     }
+
+    // Getter du cycle jour/nuit
+    public CycleJourNuit getLeCycleJourNuit() {
+            return leCycleJourNuit;
+}
+
+    public int map(int debut, int fin, int valDebut, int valFin, int val){
+        return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
+    }
+
 }

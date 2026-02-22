@@ -6,20 +6,18 @@ import java.awt.*;
 
 public class VueJoueur {
 
-    // Position du joueur
-    private int positionX;
-    private int positionY;
+    public static final int TAILLE = 20;
 
-    // Constructeur de la classe VueJoueur, il initialise les données du joueur.
+    // Constructeur de la classe VueJoueur
     public VueJoueur() {
-        positionX = Joueur.getPositionX();
-        positionY = Joueur.getPositionY();
     }
 
-    public void dessiner(Graphics g, int xCentre, int yCentre) {
-        int taille = 20;
+    // Méthode pour dessiner le joueur sur la carte
+    public void dessiner(Graphics g) {
+        double posX = Joueur.getPositionX();
+        double posY = Joueur.getPositionY();
         g.setColor(Color.black);
-        g.fillOval(xCentre - taille/2, yCentre - taille/2, taille, taille);
+        g.fillOval((int) posX - TAILLE/2, (int) posY - TAILLE/2 , TAILLE, TAILLE);
     }
 
 }
