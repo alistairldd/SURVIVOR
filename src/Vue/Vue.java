@@ -58,18 +58,22 @@ public class Vue extends JPanel {
         maFenetre.add(this, BorderLayout.CENTER);
         maFenetre.add(vueHUD, BorderLayout.EAST);
 
-
+        // Initialisation des vues du monde, elles sont utilisées pour afficher les éléments du monde (carte, joueur, ressources, bâtiments).
         this.vueCarte = new VueCarte(modele);
         this.vueJoueur = new VueJoueur();
 
+        // Initialisation des contrôleurs de la vue,
+        // ils sont utilisés pour recevoir les événements de l'utilisateur et pour les transmettre au contrôleur.
         this.addMouseListener(new ControleurSouris(this, modele));
         this.addKeyListener(new ControleurClavier(this, modele));
         ControleurSouris controleurSouris = new ControleurSouris(this, modele);
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);
 
+        // Initialisation de la vue de l'arme, elle est utilisée pour afficher l'arme du joueur.
         this.vueArme = new VueArme(controleurSouris, this);
 
+        // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.
         this.modele = modele;
         new Redessine (this, modele);
         this.vueRessource = new VueRessource();
