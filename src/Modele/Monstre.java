@@ -1,5 +1,6 @@
 package Modele;
 
+import java.util.ArrayList;
 
 /* * classe représentant les monstres du jeu
  * elle peut être utilisée pour créer différents types de monstres avec des comportements variés
