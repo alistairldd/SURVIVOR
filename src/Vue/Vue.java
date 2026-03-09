@@ -7,7 +7,7 @@ import Modele.Joueur;
 * et pour les transmettre au contrôleur. Elle est également utilisée pour gérer les threads de la vue.
 *
  */
-
+import Controleur.controleurClavier;
 import Controleur.controleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
@@ -62,6 +62,7 @@ public class Vue extends JPanel {
         this.vueJoueur = new VueJoueur();
 
         this.addMouseListener(new controleurSouris(this, modele));
+        this.addKeyListener(new controleurClavier(this, modele));
 
         this.modele = modele;
         new Redessine (this, modele);
@@ -71,6 +72,9 @@ public class Vue extends JPanel {
 
         maFenetre.pack();
         maFenetre.setVisible(true);
+
+        this.setFocusable(true); // Permet à la vue de recevoir des touches
+        this.requestFocusInWindow(); // Demande le focus dès l'ouverture
     }
 
     /* ---- GETTERS ET SETTERS ---- */

@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import static Modele.Map.HAUTEUR_MAP;
 import static Modele.Map.LARGEUR_MAP;
 import static Vue.VueJoueur.TAILLE;
+import static java.lang.Math.abs;
+import static java.lang.System.in;
 
 public class Joueur {
 
     //Stats du joueur
     private static int hp;
     private static int attack;
-    private static ArrayList<Object> inventaire;
+    private static ArrayList<Ressource> inventaire;
 
     // Position
     private static double positionX;
@@ -37,11 +39,11 @@ public class Joueur {
 
     public void setAttack(int attack) {Joueur.attack = attack;}
 
-    public static ArrayList<Object> getInventaire() {
+    public static ArrayList<Ressource> getInventaire() {
         return inventaire;
     }
 
-    public static void addToInventaire(Object item) {
+    public static void addToInventaire(Ressource item) {
         inventaire.add(item);
     }
 
@@ -84,6 +86,20 @@ public class Joueur {
         }
         else {
             setPositionY(Map.HAUTEUR_MAP);
+        }
+    }
+
+
+
+    // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
+    public void ramasse_ressource(ArrayList<Ressource> ressourcesDispo){
+        for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
+            Ressource r = ressourcesDispo.get(i);
+            if (abs(r.getPositionY() - positionY) <= 30 && abs(r.getPositionX() - positionX)<= 30){// à modifier à terme (zone d'interaction du joueur)
+                addToInventaire(r);
+                ressourcesDispo.remove(i);
+                System.out.println(inventaire);
+            }
         }
     }
 

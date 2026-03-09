@@ -8,7 +8,7 @@ public class Map {
 
     private int largeur;
     private int hauteur;
-    private ArrayList<Ressource> ressources;
+    private static ArrayList<Ressource> ressources;
     private ArrayList<Batiment> batiments;
 
     public Map() {
@@ -27,7 +27,10 @@ public class Map {
         this.batiments.add(new Tower(largeur/2 - 100, hauteur/2 - 100));
     }
 
-    public ArrayList<Ressource> getRessources() {
+    // supprime une ressource de la map
+    public void deleteResources(Ressource ressource){ this.ressources.remove(ressource);}
+
+    public static ArrayList<Ressource> getRessources() {
         return ressources;
     }
 
