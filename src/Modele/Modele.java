@@ -21,10 +21,12 @@ public class Modele {
 
         this.joueur = new Joueur();
 
+        map = new Map();
+
         // Initialisation du jour et de la nuit
         leCycleJourNuit = new CycleJourNuit();
 
-        this.map = new Map();
+
     }
 
     /*---- GETTERS ET SETTERS ---- */

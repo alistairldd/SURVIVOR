@@ -7,8 +7,8 @@ import Modele.Joueur;
 * et pour les transmettre au contrôleur. Elle est également utilisée pour gérer les threads de la vue.
 *
  */
-import Controleur.controleurClavier;
-import Controleur.controleurSouris;
+import Controleur.ControleurClavier;
+import Controleur.ControleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
 import Modele.Batiment;
@@ -62,8 +62,8 @@ public class Vue extends JPanel {
         this.vueCarte = new VueCarte(modele);
         this.vueJoueur = new VueJoueur();
 
-        this.addMouseListener(new controleurSouris(this, modele));
-        this.addKeyListener(new controleurClavier(this, modele));
+        this.addMouseListener(new ControleurSouris(this, modele));
+        this.addKeyListener(new ControleurClavier(this, modele));
         ControleurSouris controleurSouris = new ControleurSouris(this, modele);
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);

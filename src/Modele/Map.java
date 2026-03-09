@@ -33,7 +33,7 @@ public class Map {
     // supprime une ressource de la map
     public void deleteResources(Ressource ressource){ this.ressources.remove(ressource);}
 
-    public static ArrayList<Ressource> getRessources() {
+    public ArrayList<Ressource> getRessources() {
         return ressources;
     }
 
