@@ -11,6 +11,7 @@ import Modele.Joueur;
 import Controleur.controleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
+import Modele.Batiment;
 import Modele.Map;
 
 import javax.swing.*;
@@ -31,6 +32,7 @@ public class Vue extends JPanel {
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
     private final VueRessource vueRessource;
+    private final VueBatiment vueBatiment;
 
     private final Modele modele;
 
@@ -64,6 +66,7 @@ public class Vue extends JPanel {
         this.modele = modele;
         new Redessine (this, modele);
         this.vueRessource = new VueRessource();
+        this.vueBatiment = new VueBatiment();
 
 
         maFenetre.pack();
@@ -108,6 +111,12 @@ public class Vue extends JPanel {
         int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionY()); // idem
         g2d.fillOval(posX,posY, 5, 5);
 
+        for (Batiment b : Modele.getMap().getBatiments()) {
+            int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, b.getX());
+            int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, b.getY());
+            VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
+        }
+
     }
 
 
@@ -143,6 +152,10 @@ public class Vue extends JPanel {
         // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
         vueJoueur.dessiner(g2d);
 
+        // 4. Dessiner les bâtiments
+        for (Batiment b : Modele.getMap().getBatiments()) {
+            vueBatiment.dessinerBatiment(g2d, b, b.getX(), b.getY(), false);
+        }
         // --- FIN DE LA ZONE MONDE ---
         g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin
 

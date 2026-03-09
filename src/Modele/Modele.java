@@ -12,6 +12,7 @@ public class Modele {
     private Joueur joueur;
     private static Map map;
     private Ressource ressource;
+    private Batiment batiment;
 
     private CycleJourNuit leCycleJourNuit;
 

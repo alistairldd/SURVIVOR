@@ -16,36 +16,47 @@ public class CycleJourNuit extends Thread {
     // Nombre de ticks (frames) par cycle
     public final static int TICKS_PAR_CYCLE = DUREE_CYCLE * FPS;
 
-    // Indique si c'est le jour (true) ou la nuit (false)
-    private boolean jour = true;
+
 
     // Compteur de frames pour le cycle actuel
-    private int framesInCurrentCycle = 0;
+    private int framesInCurrentCycleJour = 0;
+
+    private int framesInCurrentCycleNuit = 0;
+
+    private UpdateJN updateJN = new UpdateJN();
 
     // Constructeur qui démarre le thread du cycle jour/nuit
     public CycleJourNuit() {
         this.start();
     }
 
-    // Getter pour savoir si c'est le jour ou la nuit
-    public boolean isDay() {
-        return jour;
-    }
-
     @Override
     public void run() {
         while (true) {
-            update(); // Gère le timer
-
-            // Logique spécifique au jour ou à la nuit
-            if (jour) {
-                updateDayLogic();
+            boolean jour = updateJN.isDay();
+            if (updateJN.isDay()) {
+                // Gère le timer
+                framesInCurrentCycleJour++;
+                if (framesInCurrentCycleJour >= TICKS_PAR_CYCLE) {
+                    framesInCurrentCycleJour = 0;
+                    updateJN.changeNuit(); // On bascule
+                } else {
+                    updateJN.updateJour(); // Logique spécifique au jour
+                    if (framesInCurrentCycleJour % FPS == 0) { // Affiche le temps restant toutes les secondes
+                        System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestantJour() + "s" + " - Frames dans le cycle: " + framesInCurrentCycleJour + "/" + TICKS_PAR_CYCLE);
+                    }
+                }
             } else {
-                updateNightLogic(); // Monstres, attaques
-            }
-
-            if (framesInCurrentCycle % FPS == 0) { // Affiche le temps restant toutes les secondes
-                System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestant() + "s" + " - Frames dans le cycle: " + framesInCurrentCycle + "/" + TICKS_PAR_CYCLE);
+                framesInCurrentCycleNuit++;
+                if (framesInCurrentCycleNuit >= TICKS_PAR_CYCLE) {
+                    jour = !jour; // On bascule
+                    framesInCurrentCycleNuit = 0;
+                } else {
+                    updateJN.updateNuit(); // Logique spécifique à la nuit
+                    if (framesInCurrentCycleNuit % FPS == 0) { // Affiche le temps restant toutes les secondes
+                        System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestantNuit() + "s" + " - Frames dans le cycle: " + framesInCurrentCycleNuit + "/" + TICKS_PAR_CYCLE);
+                    }
+                }
             }
 
             try {
@@ -56,25 +67,30 @@ public class CycleJourNuit extends Thread {
 
     /* Met à jour le timer du cycle jour/nuit, bascule entre le jour et la nuit lorsque le temps est écoulé.*/
     private void update() {
-        framesInCurrentCycle++;
-        if (framesInCurrentCycle >= TICKS_PAR_CYCLE) {
-            jour = !jour; // On bascule
-            framesInCurrentCycle = 0;
+
+    }
+
+    public int getTempsRestant() {
+        if (updateJN.isDay()) {
+            return getTempsRestantJour();
+        } else {
+            return getTempsRestantNuit();
         }
     }
 
     // Getter pour le temps restant dans la phase actuelle (en secondes)
-    public int getTempsRestant() {
-        return DUREE_CYCLE - (framesInCurrentCycle / FPS);
+    public int getTempsRestantJour() {
+        return DUREE_CYCLE - (framesInCurrentCycleJour / FPS);
     }
 
-    // Tout ce qu'il se passe le jour
-    public void updateDayLogic() {
-
+    // Getter pour le temps restant dans la phase actuelle (en secondes)
+    public int getTempsRestantNuit() {
+        return DUREE_CYCLE - (framesInCurrentCycleNuit / FPS);
     }
 
-    // Tout ce qu'il se passe la nuit
-    public void updateNightLogic() {
-
+    public boolean isDay() {
+        return updateJN.isDay();
     }
+
+
 }
