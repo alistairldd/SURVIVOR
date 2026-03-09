@@ -136,7 +136,7 @@ public class Vue extends JPanel {
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         for (Ressource r : Modele.getMap().getRessources()) {
-            vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
+            VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)

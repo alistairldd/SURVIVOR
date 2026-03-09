@@ -13,8 +13,11 @@ public class Map {
     public Map() {
         this.largeur = LARGEUR_MAP;
         this.hauteur = HAUTEUR_MAP;
+        ressources = new ArrayList<>();
+    }
+
+    public void viderRessources() {
         this.ressources = new ArrayList<>();
-        this.ressources = Ressource.genereRessources(50);
     }
 
     public ArrayList<Ressource> getRessources() {

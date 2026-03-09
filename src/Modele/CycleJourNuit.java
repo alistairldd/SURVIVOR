@@ -36,9 +36,13 @@ public class CycleJourNuit extends Thread {
     public void run() {
         while (true) {
             update(); // Gère le timer
-
             // Logique spécifique au jour ou à la nuit
             if (jour) {
+                System.out.println(framesInCurrentCycle);
+                if (framesInCurrentCycle == 1){ // On appelle updateDayOnce() seulement au début de chaque jour, pas à chaque frame
+                    updateDayOnce(); // Appelé une seule fois au début de chaque jour
+                }
+                else {}
                 updateDayLogic();
             } else {
                 updateNightLogic(); // Monstres, attaques
@@ -70,11 +74,14 @@ public class CycleJourNuit extends Thread {
 
     // Tout ce qu'il se passe le jour
     public void updateDayLogic() {
+    }
 
+    public void updateDayOnce(){
+        Ressource.genereRessources(Ressource.NB_RESSOURCES); // Génère de nouvelles ressources chaque jour
     }
 
     // Tout ce qu'il se passe la nuit
     public void updateNightLogic() {
-
+        Ressource.viderRessources(); // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
     }
 }
