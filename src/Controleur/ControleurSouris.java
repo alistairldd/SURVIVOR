@@ -8,14 +8,17 @@ import Modele.DeplaceJoueur;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class controleurSouris implements MouseListener {
+public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     private Modele modele;
     private Vue vue;
 
+    private int mouseX = 0;
+    private int mouseY = 0;
 
-    public controleurSouris(Vue vue, Modele modele) {
+    public ControleurSouris(Vue vue, Modele modele) {
 
         this.modele = modele;
         this.vue = vue;
@@ -26,9 +29,9 @@ public class controleurSouris implements MouseListener {
 
     }
 
+
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("Clic détecté à la position : (" + e.getX() + ", " + e.getY() + ")");
         if (SwingUtilities.isRightMouseButton(e)){
             // Récupérer les coordonnées du clic
             int x = e.getX();
@@ -63,5 +66,26 @@ public class controleurSouris implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+    }
+
+    // Getters pour les coordonnées de la souris
+
+    public int getMX(){
+        return this.mouseX;
+    }
+
+    public int getMY(){
+        return this.mouseY;
     }
 }

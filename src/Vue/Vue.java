@@ -8,7 +8,7 @@ import Modele.Joueur;
 *
  */
 
-import Controleur.controleurSouris;
+import Controleur.ControleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
 import Modele.Map;
@@ -30,6 +30,7 @@ public class Vue extends JPanel {
     private final VueHUD vueHUD;
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
+    private final VueArme vueArme;
     private final VueRessource vueRessource;
 
     private final Modele modele;
@@ -59,7 +60,11 @@ public class Vue extends JPanel {
         this.vueCarte = new VueCarte(modele);
         this.vueJoueur = new VueJoueur();
 
-        this.addMouseListener(new controleurSouris(this, modele));
+        ControleurSouris controleurSouris = new ControleurSouris(this, modele);
+        this.addMouseListener(controleurSouris);
+        this.addMouseMotionListener(controleurSouris);
+
+        this.vueArme = new VueArme(controleurSouris, this);
 
         this.modele = modele;
         new Redessine (this, modele);
@@ -142,7 +147,7 @@ public class Vue extends JPanel {
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
         // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
         vueJoueur.dessiner(g2d);
-
+        vueArme.dessiner(g2d);
         // --- FIN DE LA ZONE MONDE ---
         g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin
 

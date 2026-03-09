@@ -12,6 +12,7 @@ public class Joueur {
     private static int hp;
     private static int attack;
     private static ArrayList<Object> inventaire;
+    private Arme armeEquipee;
 
     // Position
     private static double positionX;
@@ -27,6 +28,7 @@ public class Joueur {
         hp = 100;
         attack = 10;
         inventaire = new ArrayList<>();
+        armeEquipee = new Epee();
     }
 
     public static int getHp() {return hp;}

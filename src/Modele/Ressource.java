@@ -26,6 +26,9 @@ public class Ressource {
     }
 
     public static void genereRessources(int nbRessources) {
+        /*
+        Cette méthode génère un nombre donné de ressources aléatoires sur la carte.
+         */
         Map carte = Modele.getMap();
         carte.viderRessources();
 
@@ -35,6 +38,11 @@ public class Ressource {
     }
 
     public static void viderRessources() {
+        /*
+        Cette méthode vide la liste des ressources de la carte,
+        utilisée à chaque changement de jour pour forcer les joueurs à se
+        déplacer et à chercher de nouvelles ressources.
+         */
         Modele.getMap().viderRessources();
     }
 

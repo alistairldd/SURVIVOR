@@ -13,11 +13,11 @@ public class VueJoueur {
     }
 
     // Méthode pour dessiner le joueur sur la carte
-    public void dessiner(Graphics g) {
+    public void dessiner(Graphics g2d) {
         double posX = Joueur.getPositionX();
         double posY = Joueur.getPositionY();
-        g.setColor(Color.black);
-        g.fillOval((int) posX - TAILLE/2, (int) posY - TAILLE/2 , TAILLE, TAILLE);
+        g2d.setColor(Color.black);
+        g2d.fillOval((int) posX - TAILLE/2, (int) posY - TAILLE/2 , TAILLE, TAILLE);
     }
 
 }

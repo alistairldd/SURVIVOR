@@ -17,7 +17,6 @@ public class CycleJourNuit extends Thread {
     public final static int TICKS_PAR_CYCLE = DUREE_CYCLE * FPS;
 
 
-
     // Compteur de frames pour le cycle actuel
     private int framesInCurrentCycleJour = 0;
 
@@ -32,6 +31,7 @@ public class CycleJourNuit extends Thread {
 
     @Override
     public void run() {
+        updateJN.changeJour(); // Commence par le jour
         while (true) {
             boolean jour = updateJN.isDay();
             if (updateJN.isDay()) {
@@ -49,7 +49,7 @@ public class CycleJourNuit extends Thread {
             } else {
                 framesInCurrentCycleNuit++;
                 if (framesInCurrentCycleNuit >= TICKS_PAR_CYCLE) {
-                    jour = !jour; // On bascule
+                    updateJN.changeJour();
                     framesInCurrentCycleNuit = 0;
                 } else {
                     updateJN.updateNuit(); // Logique spécifique à la nuit
@@ -78,9 +78,6 @@ public class CycleJourNuit extends Thread {
         return DUREE_CYCLE - (framesInCurrentCycleJour / FPS);
     }
 
-    // Tout ce qu'il se passe le jour
-    public void updateDayLogic() {
-    }
     // Getter pour le temps restant dans la phase actuelle (en secondes)
     public int getTempsRestantNuit() {
         return DUREE_CYCLE - (framesInCurrentCycleNuit / FPS);
