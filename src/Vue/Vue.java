@@ -7,10 +7,11 @@ import Modele.Joueur;
 * et pour les transmettre au contrôleur. Elle est également utilisée pour gérer les threads de la vue.
 *
  */
-
-import Controleur.controleurSouris;
+import Controleur.ControleurClavier;
+import Controleur.ControleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
+import Modele.Batiment;
 import Modele.Map;
 import Modele.Monstre;
 
@@ -31,7 +32,9 @@ public class Vue extends JPanel {
     private final VueHUD vueHUD;
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
+    private final VueArme vueArme;
     private final VueRessource vueRessource;
+    private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
 
     private final Modele modele;
@@ -57,21 +60,35 @@ public class Vue extends JPanel {
         maFenetre.add(this, BorderLayout.CENTER);
         maFenetre.add(vueHUD, BorderLayout.EAST);
 
-
+        // Initialisation des vues du monde, elles sont utilisées pour afficher les éléments du monde (carte, joueur, ressources, bâtiments).
         this.vueCarte = new VueCarte(modele);
         this.vueJoueur = new VueJoueur();
 
-        this.addMouseListener(new controleurSouris(this, modele));
+        // Initialisation des contrôleurs de la vue,
+        // ils sont utilisés pour recevoir les événements de l'utilisateur et pour les transmettre au contrôleur.
+        this.addMouseListener(new ControleurSouris(this, modele));
+        this.addKeyListener(new ControleurClavier(this, modele));
+        ControleurSouris controleurSouris = new ControleurSouris(this, modele);
+        this.addMouseListener(controleurSouris);
+        this.addMouseMotionListener(controleurSouris);
 
+        // Initialisation de la vue de l'arme, elle est utilisée pour afficher l'arme du joueur.
+        this.vueArme = new VueArme(controleurSouris, this);
+
+        // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.
         this.modele = modele;
         new Redessine (this, modele);
         this.vueRessource = new VueRessource();
+        this.vueBatiment = new VueBatiment();
 
         this.vueMonstre = new VueMonstre();
 
 
         maFenetre.pack();
         maFenetre.setVisible(true);
+
+        this.setFocusable(true); // Permet à la vue de recevoir des touches
+        this.requestFocusInWindow(); // Demande le focus dès l'ouverture
     }
 
     /* ---- GETTERS ET SETTERS ---- */
@@ -112,6 +129,12 @@ public class Vue extends JPanel {
         int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionY()); // idem
         g2d.fillOval(posX,posY, 5, 5);
 
+        for (Batiment b : Modele.getMap().getBatiments()) {
+            int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, b.getX());
+            int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, b.getY());
+            VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
+        }
+
         for (Monstre m : modele.getMonstres()) {
             int monstreX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
             int monstreY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, m.getY()); // idem
@@ -146,13 +169,18 @@ public class Vue extends JPanel {
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         for (Ressource r : Modele.getMap().getRessources()) {
-            vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
+            VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
         // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
         vueJoueur.dessiner(g2d);
 
+        // 4. Dessiner les bâtiments
+        for (Batiment b : Modele.getMap().getBatiments()) {
+            vueBatiment.dessinerBatiment(g2d, b, b.getX(), b.getY(), false);
+        }
+        vueArme.dessiner(g2d);
         // 4. Dessiner les monstres (si on en a)
         for (Monstre m : modele.getMonstres()) {
             vueMonstre.dessiner(g2d, m, m.getX(), m.getY(), false);

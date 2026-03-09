@@ -14,22 +14,25 @@ public class UpdateJN {
     public boolean isDay() {
         return jour;
     }
+    
 
-
-    // Méthode pour changer au jour
+    // Méthode pour changer au jour (appelé une seule fois)
     public void changeJour(){
         // Logique pour changer au jour
         jour = true;
         // Supprimer les monstres
         monGestionnaireMonstres.clearMonstres();
+        Ressource.genereRessources(Ressource.NB_RESSOURCES); // On génére de nouvelles ressources
+
     }
 
-    // Méthode pour changer à la nuit
+    // Méthode pour changer à la nuit (appelé une seule fois)
     public void changeNuit() {
         // Logique pour changer à la nuit, comme faire apparaître les monstres
         jour = false;
         // Créer les monstres
         monGestionnaireMonstres.genererMonstre(100); // Génère 5 monstres pour la nuit
+        Ressource.viderRessources(); // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
     }
 
     // Méthode à boucler le jour

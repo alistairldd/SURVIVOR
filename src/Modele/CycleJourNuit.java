@@ -42,7 +42,7 @@ public class CycleJourNuit extends Thread {
                 if (framesInCurrentCycleJour >= TICKS_PAR_CYCLE) {
                     // Réinitialise le compteur de frames pour le jour
                     framesInCurrentCycleJour = 0;
-                    updateJN.changeNuit(); // On bascule à la nuit
+                    updateJN.changeNuit(); // On bascule
                 } else {
                     updateJN.updateJour(); // Logique spécifique au jour
                     if (framesInCurrentCycleJour % FPS == 0) { // Affiche le temps restant toutes les secondes
@@ -70,7 +70,6 @@ public class CycleJourNuit extends Thread {
             } catch (InterruptedException e) { e.printStackTrace(); }
         }
     }
-
 
     public int getTempsRestant() {
         if (updateJN.isDay()) {
