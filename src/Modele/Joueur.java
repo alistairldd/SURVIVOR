@@ -6,7 +6,6 @@ import static Modele.Map.HAUTEUR_MAP;
 import static Modele.Map.LARGEUR_MAP;
 import static Vue.VueJoueur.TAILLE;
 import static java.lang.Math.abs;
-import static java.lang.System.in;
 
 public class Joueur {
 
@@ -15,6 +14,7 @@ public class Joueur {
     private static int attack;
     private static ArrayList<Ressource> inventaire;
     private Arme armeEquipee;
+    private Modele modele;
 
     // Position
     private static double positionX;
@@ -24,13 +24,14 @@ public class Joueur {
     private static DeplaceJoueur threadActuel = null;
 
     // Constructeur de la classe Joueur, il initialise les données du joueur.
-    public Joueur() { // on initialise la position en 0,0 dans le modèle
+    public Joueur(Modele modele) { // on initialise la position en 0,0 dans le modèle
         positionX = (double) LARGEUR_MAP /2;
         positionY = (double) HAUTEUR_MAP /2;
         hp = 100;
         attack = 10;
         inventaire = new ArrayList<>();
         armeEquipee = new Epee();
+        this.modele = modele;
     }
 
     public static int getHp() {return hp;}
@@ -80,21 +81,21 @@ public class Joueur {
     // elle met à jour la position du joueur en y.
     public synchronized static void deplaceY(double y) {
         // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
-        if (y >= 10+TAILLE/2 && y <= Map.HAUTEUR_MAP) {
+        if (y >= 10+TAILLE/2 && y <= HAUTEUR_MAP) {
             setPositionY(y);
         }
         else if (y <= 10+TAILLE/2) {
             setPositionY(10+TAILLE/2);
         }
         else {
-            setPositionY(Map.HAUTEUR_MAP);
+            setPositionY(HAUTEUR_MAP);
         }
     }
 
 
 
     // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
-    public void ramasse_ressource(ArrayList<Ressource> ressourcesDispo){
+    public void ramasseRessource(ArrayList<Ressource> ressourcesDispo){
         for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
             Ressource r = ressourcesDispo.get(i);
             if (abs(r.getPositionY() - positionY) <= 30 && abs(r.getPositionX() - positionX)<= 30){// à modifier à terme (zone d'interaction du joueur)
@@ -105,6 +106,17 @@ public class Joueur {
         }
     }
 
+    public ArrayList<Monstre> proxyMonstre(){
+        ArrayList<Monstre> monstresProx = null;
+        for (Monstre m : modele.getMonstres()) {
+            if (abs(m.getY() - positionY) <= 30 && abs(m.getX() - positionX)<= 30){// à modifier à terme (zone d'interaction du joueur)
+
+                monstresProx.add(m);
+            }
+        }
+        return monstresProx;
+    }
+
 
     public static void setThreadActuel(DeplaceJoueur thread) {
         // Si un thread tourne déjà, on l'arrête
@@ -112,6 +124,10 @@ public class Joueur {
             threadActuel.interrupt();
         }
         threadActuel = thread;
+    }
+
+    public void attaquer(Monstre monstre) {
+        monstre.setHp(monstre.getHp()-attack);
     }
 
 }

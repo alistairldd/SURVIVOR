@@ -21,7 +21,7 @@ public class Modele {
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
 
-        this.joueur = new Joueur();
+        this.joueur = new Joueur(this);
 
         map = new Map();
 
