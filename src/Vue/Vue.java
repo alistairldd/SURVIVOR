@@ -12,6 +12,7 @@ import Controleur.controleurSouris;
 import Modele.Modele;
 import Modele.Ressource;
 import Modele.Map;
+import Modele.Monstre;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,7 @@ public class Vue extends JPanel {
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
     private final VueRessource vueRessource;
+    private final VueMonstre vueMonstre;
 
     private final Modele modele;
 
@@ -64,6 +66,8 @@ public class Vue extends JPanel {
         this.modele = modele;
         new Redessine (this, modele);
         this.vueRessource = new VueRessource();
+
+        this.vueMonstre = new VueMonstre();
 
 
         maFenetre.pack();
@@ -108,6 +112,12 @@ public class Vue extends JPanel {
         int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionY()); // idem
         g2d.fillOval(posX,posY, 5, 5);
 
+        for (Monstre m : modele.getMonstres()) {
+            int monstreX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
+            int monstreY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, m.getY()); // idem
+            vueMonstre.dessiner(g2d, m, monstreX, monstreY, true);
+        }
+
     }
 
 
@@ -142,6 +152,11 @@ public class Vue extends JPanel {
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
         // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
         vueJoueur.dessiner(g2d);
+
+        // 4. Dessiner les monstres (si on en a)
+        for (Monstre m : modele.getMonstres()) {
+            vueMonstre.dessiner(g2d, m, m.getX(), m.getY(), false);
+        }
 
         // --- FIN DE LA ZONE MONDE ---
         g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin

@@ -1,6 +1,8 @@
 package Modele;
 
 
+import java.util.ArrayList;
+
 /*
 * La clase générale du modèle, elle contient les classes de données et les méthodes pour manipuler ces données.
 * Elle est utilisée pour stocker les données de l'application et pour effectuer des opérations sur ces données.
@@ -42,6 +44,10 @@ public class Modele {
     public CycleJourNuit getLeCycleJourNuit() {
             return leCycleJourNuit;
 }
+
+    public ArrayList<Monstre> getMonstres() {
+        return leCycleJourNuit.getUpdateJN().getMonstres();
+    }
 
     public int map(int debut, int fin, int valDebut, int valFin, int val){
         return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;

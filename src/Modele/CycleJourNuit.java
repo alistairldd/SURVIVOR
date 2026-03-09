@@ -32,14 +32,17 @@ public class CycleJourNuit extends Thread {
 
     @Override
     public void run() {
+        updateJN.changeJour(); // Commence par le jour
         while (true) {
             boolean jour = updateJN.isDay();
             if (updateJN.isDay()) {
                 // Gère le timer
                 framesInCurrentCycleJour++;
+                // Si on a atteint la fin du cycle de jour, on bascule à la nuit
                 if (framesInCurrentCycleJour >= TICKS_PAR_CYCLE) {
+                    // Réinitialise le compteur de frames pour le jour
                     framesInCurrentCycleJour = 0;
-                    updateJN.changeNuit(); // On bascule
+                    updateJN.changeNuit(); // On bascule à la nuit
                 } else {
                     updateJN.updateJour(); // Logique spécifique au jour
                     if (framesInCurrentCycleJour % FPS == 0) { // Affiche le temps restant toutes les secondes
@@ -47,10 +50,13 @@ public class CycleJourNuit extends Thread {
                     }
                 }
             } else {
+                // Gère le timer
                 framesInCurrentCycleNuit++;
+                // Si on a atteint la fin du cycle de nuit, on bascule au jour
                 if (framesInCurrentCycleNuit >= TICKS_PAR_CYCLE) {
-                    jour = !jour; // On bascule
+                    // Réinitialise le compteur de frames pour la nuit
                     framesInCurrentCycleNuit = 0;
+                    updateJN.changeJour(); // On bascule au jour
                 } else {
                     updateJN.updateNuit(); // Logique spécifique à la nuit
                     if (framesInCurrentCycleNuit % FPS == 0) { // Affiche le temps restant toutes les secondes
@@ -65,10 +71,6 @@ public class CycleJourNuit extends Thread {
         }
     }
 
-    /* Met à jour le timer du cycle jour/nuit, bascule entre le jour et la nuit lorsque le temps est écoulé.*/
-    private void update() {
-
-    }
 
     public int getTempsRestant() {
         if (updateJN.isDay()) {
@@ -92,5 +94,9 @@ public class CycleJourNuit extends Thread {
         return updateJN.isDay();
     }
 
+    // Getter updateJN
+    public UpdateJN getUpdateJN() {
+        return updateJN;
+    }
 
 }

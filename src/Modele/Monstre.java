@@ -17,17 +17,22 @@ public abstract class Monstre {
     // points d'attaque du monstre
     private int attack;
 
+    // portée d'attaque du monstre
+    private int portee;
+
     // position du monstre sur la carte
-    private double x,y;
+    protected int x,y;
 
     // vitesse de déplacement du monstre
     private double vitesse;
 
     // Constructeur de la classe Monstre, il initialise les données du monstre.
-    public Monstre(String nom, int hp, int attack) {
+    public Monstre(String nom, int hp, int attack, int portee, int vitesse) {
         this.nom = nom;
         this.hp = hp;
         this.attack = attack;
+        this.portee = portee;
+        this.vitesse = vitesse;
     }
 
     // Getters et setters pour les attributs du monstre
@@ -45,10 +50,14 @@ public abstract class Monstre {
     // Setter Attack
     public void setAttack(int attack) { this.attack = attack; }
 
-    // Getters pour la position du monstre
-    public double getX() { return x; }
+    // Getter Portée
+    public int getPortee() { return portee; }
 
-    public double getY() { return y; }
+    // Getters pour la position du monstre
+    public int getX() { return x; }
+
+    public int getY() { return y; }
+
 
     /* Méthode pour calculer la distance entre le monstre et une position cible, elle prend en paramètre les coordonnées de la position cible et retourne la distance entre le monstre et cette position. */
     public double distanceVers(double cibleX, double cibleY) {
