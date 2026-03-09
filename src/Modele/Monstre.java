@@ -9,7 +9,7 @@ public abstract class Monstre {
     // Attributs du monstre
 
     // nom du monstre
-    private String nom;
+    private final String nom;
 
     // points de vie du monstre
     private int hp;
@@ -30,16 +30,22 @@ public abstract class Monstre {
         this.attack = attack;
     }
 
+    // Getters et setters pour les attributs du monstre
     public String getNom() { return nom; }
 
+    // Getter HP
     public int getHp() { return hp; }
 
+    // Setter HP
     public void setHp(int hp) { this.hp = hp; }
 
+    // Getter Attack
     public int getAttack() { return attack; }
 
+    // Setter Attack
     public void setAttack(int attack) { this.attack = attack; }
 
+    // Getters pour la position du monstre
     public double getX() { return x; }
 
     public double getY() { return y; }
