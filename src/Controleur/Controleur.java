@@ -20,5 +20,9 @@ public class Controleur {
         monModele = modele;
         maVue = vue;
 
+        ControleurSouris controleurSouris = new ControleurSouris(vue, modele);
+        this.maVue.addMouseListener(controleurSouris);
+        this.maVue.addMouseMotionListener(controleurSouris);
+
     }
 }

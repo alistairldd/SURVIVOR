@@ -1,5 +1,7 @@
 package Modele;
 
+import Controleur.ControleurSouris;
+
 import java.util.ArrayList;
 
 import static Modele.Map.HAUTEUR_MAP;
@@ -15,6 +17,7 @@ public class Joueur {
     private static ArrayList<Ressource> inventaire;
     private Arme armeEquipee;
     private Modele modele;
+    private ControleurSouris controleurSouris;
 
     // Position
     private static double positionX;
@@ -107,9 +110,14 @@ public class Joueur {
     }
 
     public ArrayList<Monstre> proxyMonstre(){
-        ArrayList<Monstre> monstresProx = null;
+        /*
+            Cette méthode retourne une liste de monstres qui sont à proximité du joueur.
+            Elle parcourt la liste des monstres du modèle et ajoute à la liste des monstres proches ceux qui sont à une distance
+            inférieure ou égale à 30 pixels du joueur en x et en y.
+         */
+        ArrayList<Monstre> monstresProx = new ArrayList<Monstre>();
         for (Monstre m : modele.getMonstres()) {
-            if (abs(m.getY() - positionY) <= 30 && abs(m.getX() - positionX)<= 30){// à modifier à terme (zone d'interaction du joueur)
+            if (abs(m.getY() - positionY) <= 30 && abs(m.getX() - positionX)<= 30){ // à modifier à terme (zone d'interaction du joueur)
 
                 monstresProx.add(m);
             }
@@ -118,16 +126,52 @@ public class Joueur {
     }
 
 
+
+
+    public void attaquer(double angleAttaque) {
+        /*
+            Cette méthode permet au joueur d'attaquer les monstres qui sont à proximité.
+            Elle prend en paramètre les coordonnées de la souris, elle calcule l'angle entre le joueur et la souris,
+            puis elle parcourt la liste des monstres du modèle et applique les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée.
+         */
+
+        // Récupérer les caractéristiques de l'arme équipée
+        double portee = armeEquipee.getPortee();
+        double angle = armeEquipee.getAngle();
+
+        // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
+        for (Monstre m : modele.getMonstres()) {
+
+            // Calculer la distance entre le joueur et le monstre en x et en y
+            double distance = Math.hypot(m.getX() - positionX, m.getY() - positionY);
+
+            // Vérifier si le monstre est à portée de l'arme
+            if (distance <= portee) {
+                // Calculer l'angle entre le joueur et le monstre
+                double angleMonstre = Math.atan2(m.getY() - positionY, m.getX() - positionX);
+
+                // Vérifier si le monstre est dans l'angle d'attaque
+                double diffAngle = angleMonstre - angleAttaque;
+                diffAngle = Math.atan2(Math.sin(diffAngle), Math.cos(diffAngle));
+
+                // Si la différence est dans notre cône
+                if (Math.abs(diffAngle) <= angle / 2) {
+                    // On applique les dégâts
+                    m.setHp(m.getHp() - attack);
+                    System.out.println("Monstre touché ! HP restant : " + m.getHp());
+                }
+            }
+        }
+    }
+
+
+
     public static void setThreadActuel(DeplaceJoueur thread) {
         // Si un thread tourne déjà, on l'arrête
         if (threadActuel != null && threadActuel.isAlive()) {
             threadActuel.interrupt();
         }
         threadActuel = thread;
-    }
-
-    public void attaquer(Monstre monstre) {
-        monstre.setHp(monstre.getHp()-attack);
     }
 
 }

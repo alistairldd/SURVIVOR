@@ -36,13 +36,15 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
-            // Récupérer les monstres à proximité du joueur
-            ArrayList<Monstre> monstresProx = modele.getJoueur().proxyMonstre();
-            // Attaquer le premier monstre de la liste s'il y en a au moins un
-            if (monstresProx.size() > 0) {
-                // Attaquer le monstre
-                modele.getJoueur().attaquer(monstresProx.get(0));
-            }
+            // Attaquer
+            System.out.println("Attaque lancée");
+
+            int centerX = vue.getWidth() / 2;
+            int centerY = vue.getHeight() / 2;
+
+            double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
+
+            modele.getJoueur().attaquer(angleAttaque);
         }
         if (SwingUtilities.isRightMouseButton(e)){
             // Récupérer les coordonnées du clic

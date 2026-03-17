@@ -1,6 +1,8 @@
 package Modele;
 
 
+import Controleur.ControleurSouris;
+
 import java.util.ArrayList;
 
 /*
@@ -27,8 +29,6 @@ public class Modele {
 
         // Initialisation du jour et de la nuit
         leCycleJourNuit = new CycleJourNuit();
-
-
     }
 
     /*---- GETTERS ET SETTERS ---- */
