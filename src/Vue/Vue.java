@@ -72,17 +72,16 @@ public class Vue extends JPanel {
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);
 
-        // Initialisation de la vue de l'arme, elle est utilisée pour afficher l'arme du joueur.
-        this.vueArme = new VueArme(controleurSouris, this);
 
         // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.
         this.modele = modele;
         new Redessine (this, modele);
+
+        // Initialisation des vues du monde, elles sont utilisées pour afficher les éléments du monde (carte, joueur, ressources, bâtiments).
         this.vueRessource = new VueRessource();
         this.vueBatiment = new VueBatiment();
-
         this.vueMonstre = new VueMonstre();
-
+        this.vueArme = new VueArme(controleurSouris, this, modele);
 
         maFenetre.pack();
         maFenetre.setVisible(true);
@@ -192,5 +191,9 @@ public class Vue extends JPanel {
 
         dessineMinimap(g2d);
 
+    }
+
+    public VueArme getVueArme() {
+        return vueArme;
     }
 }

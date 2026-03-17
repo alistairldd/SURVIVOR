@@ -36,15 +36,18 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
-            // Attaquer
-            System.out.println("Attaque lancée");
 
+            // Récupérer les coordonnées de la souris
             int centerX = vue.getWidth() / 2;
             int centerY = vue.getHeight() / 2;
 
+            // Calculer l'angle entre le joueur et la souris
             double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
 
+            // Attaquer dans la direction de la souris
             modele.getJoueur().attaquer(angleAttaque);
+
+            vue.getVueArme().declancherAnimation();
         }
         if (SwingUtilities.isRightMouseButton(e)){
             // Récupérer les coordonnées du clic

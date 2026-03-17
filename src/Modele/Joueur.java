@@ -61,7 +61,8 @@ public class Joueur {
     public synchronized static void setPositionX(double positionX) {Joueur.positionX = positionX;}
     // Setter pour la position Y du joueur
     public synchronized static void setPositionY(double positionY) {Joueur.positionY = positionY;}
-
+    // Getter pour l'arme équipée du joueur
+    public Arme getArmeEquipee() {return armeEquipee;}
 
     // Méthode pour déplacer le joueur en x,
     // elle prend en paramètre le déplacement en x,
