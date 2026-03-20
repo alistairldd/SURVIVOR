@@ -37,7 +37,8 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                 int centerY = vue.getHeight() / 2;
 
                 double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
-                j.attaquer(angleAttaque);
+                // Attaquer dans la direction de la souris
+                modele.joueurAttaque(angleAttaque);
                 j.setDernierTempsAttaque();
                 int cadence = j.getArmeEquipee().getCadence();
                 AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence);
@@ -46,6 +47,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             }
         }
     }
+
 
 
     @Override

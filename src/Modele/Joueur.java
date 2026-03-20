@@ -40,11 +40,11 @@ public class Joueur {
         this.modele = modele;
     }
 
-    public  int getHp() {return hp;}
+    public int getHp() {return hp;}
 
     public void setHp(int hp) {this.hp = hp;}
 
-    public int getAttack() {return attack;}
+    public int getAttack() {return this.attack;}
 
     public void setAttack(int attack) {this.attack = attack;}
 
@@ -129,41 +129,6 @@ public class Joueur {
         return monstresProx;
     }
 
-    public void attaquer(double angleAttaque) {
-        /*
-            Cette méthode permet au joueur d'attaquer les monstres qui sont à proximité.
-            Elle prend en paramètre les coordonnées de la souris, elle calcule l'angle entre le joueur et la souris,
-            puis elle parcourt la liste des monstres du modèle et applique les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée.
-         */
-
-        // Récupérer les caractéristiques de l'arme équipée
-        double portee = armeEquipee.getPortee();
-        double angle = armeEquipee.getAngle();
-
-        // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
-        for (Monstre m : modele.getMonstres()) {
-
-            // Calculer la distance entre le joueur et le monstre en x et en y
-            double distance = Math.hypot(m.getX() - positionX, m.getY() - positionY);
-
-            // Vérifier si le monstre est à portée de l'arme
-            if (distance <= portee) {
-                // Calculer l'angle entre le joueur et le monstre
-                double angleMonstre = Math.atan2(m.getY() - positionY, m.getX() - positionX);
-
-                // Vérifier si le monstre est dans l'angle d'attaque
-                double diffAngle = angleMonstre - angleAttaque;
-                diffAngle = Math.atan2(Math.sin(diffAngle), Math.cos(diffAngle));
-
-                // Si la différence est dans notre cône
-                if (Math.abs(diffAngle) <= angle / 2) {
-                    // On applique les dégâts
-                    m.setHp(m.getHp() - attack);
-                    System.out.println("Monstre touché ! HP restant : " + m.getHp());
-                }
-            }
-        }
-    }
 
     public boolean peutAttaquer(){
         /*

@@ -61,4 +61,8 @@ public class GestionnaireMonstres {
     public void clearMonstres() {
         monstres.clear();
     }
+
+    public void tuer(Monstre m) {
+        monstres.remove(m);
+    }
 }

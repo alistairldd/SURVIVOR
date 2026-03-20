@@ -8,6 +8,9 @@ import java.util.ArrayList;
 public abstract class Monstre {
 
     // Attributs du monstre
+    private static int compteurID = 0; // Compteur pour générer des IDs uniques
+
+    private final int id; // ID unique du monstre
 
     // nom du monstre
     private final String nom;
@@ -27,8 +30,11 @@ public abstract class Monstre {
     // vitesse de déplacement du monstre
     private double vitesse;
 
+    private boolean isDead = false;
+
     // Constructeur de la classe Monstre, il initialise les données du monstre.
     public Monstre(String nom, int hp, int attack, int portee, int vitesse) {
+        this.id = compteurID++; // Attribue un ID unique au monstre et incrémente le compteur
         this.nom = nom;
         this.hp = hp;
         this.attack = attack;
@@ -44,6 +50,8 @@ public abstract class Monstre {
 
     // Setter HP
     public void setHp(int hp) { this.hp = hp; }
+
+    public void perdreHp(int hpPerdus) { this.hp -= hpPerdus; }
 
     // Getter Attack
     public int getAttack() { return attack; }
