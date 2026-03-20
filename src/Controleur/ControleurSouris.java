@@ -5,7 +5,7 @@ import Vue.Vue;
 import Modele.Joueur;
 import Modele.DeplaceJoueur;
 import Modele.Monstre;
-
+import Modele.AnimationArme;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -29,26 +29,28 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)){
 
+            Joueur j = modele.getJoueur();
+            if (j.peutAttaquer()){
+                int centerX = vue.getWidth() / 2;
+                int centerY = vue.getHeight() / 2;
+
+                double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
+                j.attaquer(angleAttaque);
+                j.setDernierTempsAttaque();
+                int cadence = j.getArmeEquipee().getCadence();
+                AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence);
+                vue.getVueArme().setEnAnimation(true);
+                animation.start();
+            }
+        }
     }
 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)){
 
-            // Récupérer les coordonnées de la souris
-            int centerX = vue.getWidth() / 2;
-            int centerY = vue.getHeight() / 2;
-
-            // Calculer l'angle entre le joueur et la souris
-            double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
-
-            // Attaquer dans la direction de la souris
-            modele.getJoueur().attaquer(angleAttaque);
-
-            vue.getVueArme().declancherAnimation();
-        }
         if (SwingUtilities.isRightMouseButton(e)){
             // Récupérer les coordonnées du clic
             int x = e.getX();

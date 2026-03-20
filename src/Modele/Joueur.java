@@ -12,12 +12,15 @@ import static java.lang.Math.abs;
 public class Joueur {
 
     //Stats du joueur
-    private static int hp;
-    private static int attack;
+    private int hp;
+    private int attack;
     private static ArrayList<Ressource> inventaire;
     private Arme armeEquipee;
     private Modele modele;
     private ControleurSouris controleurSouris;
+
+    // Attaque
+    private long dernierTempsAttaque = 0;
 
     // Position
     private static double positionX;
@@ -37,13 +40,13 @@ public class Joueur {
         this.modele = modele;
     }
 
-    public static int getHp() {return hp;}
+    public  int getHp() {return hp;}
 
-    public void setHp(int hp) {Joueur.hp = hp;}
+    public void setHp(int hp) {this.hp = hp;}
 
-    public static int getAttack() {return attack;}
+    public int getAttack() {return attack;}
 
-    public void setAttack(int attack) {Joueur.attack = attack;}
+    public void setAttack(int attack) {this.attack = attack;}
 
     public static ArrayList<Ressource> getInventaire() {
         return inventaire;
@@ -126,9 +129,6 @@ public class Joueur {
         return monstresProx;
     }
 
-
-
-
     public void attaquer(double angleAttaque) {
         /*
             Cette méthode permet au joueur d'attaquer les monstres qui sont à proximité.
@@ -165,10 +165,27 @@ public class Joueur {
         }
     }
 
+    public boolean peutAttaquer(){
+        /*
+            Cette méthode vérifie si le joueur peut attaquer,
+            c'est à dire si le temps écoulé depuis la dernière attaque est supérieur ou égal au cooldown de l'arme équipée.
+         */
+        long tempsActuel = System.currentTimeMillis();
+        long cooldown = armeEquipee.getCadence(); // Convertir le cooldown en millisecondes
+        return (tempsActuel - dernierTempsAttaque) >= cooldown;
+    }
 
+    public void setDernierTempsAttaque() {
+        /*
+            Cette méthode met à jour le temps de la dernière attaque du joueur en le définissant à l'heure actuelle.
+         */
+        this.dernierTempsAttaque = System.currentTimeMillis();
+    }
 
     public static void setThreadActuel(DeplaceJoueur thread) {
         // Si un thread tourne déjà, on l'arrête
+        // utilisé pour le déplacement du joueur, pour éviter que plusieurs threads de déplacement soient actifs en même temps,
+        // ce qui pourrait causer des problèmes de synchronisation et de performance.
         if (threadActuel != null && threadActuel.isAlive()) {
             threadActuel.interrupt();
         }

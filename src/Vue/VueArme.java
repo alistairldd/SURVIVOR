@@ -12,9 +12,8 @@ public class VueArme {
     private Modele modele;
     private Vue vue;
 
-    private boolean enAnimation = false; // Indique si une animation de tir est en cours
-    private int progressionAnim = 0; // Progression de l'animation
-    private final int DUREE_ANIM = 15; // Durée maximale de l'animation
+    private double angleOffsetAnimation = 0; // angle de décalage pour l'animation d'attaque
+    private boolean enAnimation = false; // indique si l'animation d'attaque est en
 
     // Constructeur de la classe VueArme
     public VueArme(ControleurSouris controleurSouris, Vue vue, Modele modele) {
@@ -23,16 +22,17 @@ public class VueArme {
         this.vue = vue;
     }
 
-    public void declancherAnimation(){
-        /*
-            * Cette méthode déclenche l'animation de tir de l'arme. Elle est appelée lorsque le joueur attaque.
-            * Si une animation est déjà en cours, elle ne fait rien. Sinon, elle réinitialise la progression de l'animation et indique qu'une animation est en cours.
-         */
-        if (!enAnimation) {
-            enAnimation = true;
-            progressionAnim = 0;
-        }
+
+    public void setAngleOffsetAnimation(double offset) {
+        this.angleOffsetAnimation = offset;
     }
+
+    public void setEnAnimation(boolean b) {
+        this.enAnimation = b;
+    }
+
+
+
 
     // methode pour dessiner l'arme sur la carte
     public void dessiner(Graphics g) {
@@ -67,29 +67,12 @@ public class VueArme {
 
         int rayon = 20; // distance entre le joueur et l'arme
 
-        if (enAnimation){
-            // On calcule un ration entre le début et la fin
-            double ratio = (double) progressionAnim / DUREE_ANIM;
-
-            // On veut que l'épée aille de -45° à +45° pendant l'animation, on calcule donc un angle de décalage en fonction du ratio
-            double angleDébut = -Math.PI / 4; // -45°
-            double angleFin = Math.PI / 4; // +45°
-            angleOffset = angleDébut + ratio * (angleFin - angleDébut);
-
-            // On incrémente l'animation
-            progressionAnim++;
-
-            if (progressionAnim >= DUREE_ANIM) {
-                enAnimation = false; // Fin de l'animation
-            }
-        }
-
         // Dessiner l'arme
         g2d.setColor(Color.GRAY);
 
         // On utilise les transformations pour dessiner l'arme à la bonne position et avec le bon angle
         g2d.translate(posJoueurX, posJoueurY);
-        g2d.rotate(angle + angleOffset);
+        g2d.rotate(angle + angleOffsetAnimation);
 
         // On dessine un rectangle centré sur le joueur, à une distance de rayon, avec une taille de TAILLE
         g2d.fillRect(rayon,-TAILLE/2, portee, TAILLE);

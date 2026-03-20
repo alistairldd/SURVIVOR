@@ -3,7 +3,7 @@ package Modele;
 public class Epee extends Arme {
 
     public Epee() {
-        super("Epee", 10, 75, 1, Math.PI / 3);
+        super("Epee", 10, 75, 500, Math.PI / 3);
     }
 
     @Override
