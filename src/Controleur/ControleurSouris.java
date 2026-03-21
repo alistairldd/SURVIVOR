@@ -13,7 +13,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-// Classe qui gère les événements de la souris
+/**
+ * Contrôleur dédié à la gestion des événements de la souris.
+ * Gère les interactions fondamentales du joueur : l'attaque (clic gauche),
+ * le déplacement (clic droit), et l'orientation de l'arme (mouvement).
+ */
 public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     private Modele modele;
@@ -31,6 +35,13 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     }
 
+    /**
+     * Gère les clics de la souris.
+     * Sur un clic gauche : Vérifie le temps de recharge (cooldown) de l'arme. Si l'attaque est possible,
+     * calcule l'angle de tir depuis le centre de l'écran, applique les dégâts via le modèle
+     * et déclenche le Thread d'animation de l'arme côté Vue.
+     * * @param e L'événement de clic de souris capturé.
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
@@ -55,8 +66,13 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
         }
     }
 
-
-
+    /**
+     * Gère la pression des boutons de la souris.
+     * Sur un clic droit : Convertit les coordonnées du clic à l'écran en coordonnées "Monde"
+     * (en appliquant l'offset de la caméra centré sur le joueur), puis lance un Thread autonome
+     * (DeplaceJoueur) pour gérer le mouvement de manière fluide.
+     * * @param e L'événement de pression de souris capturé.
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)){
@@ -100,6 +116,12 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     }
 
+    /**
+     * Met à jour en continu les coordonnées de la souris.
+     * Ces coordonnées sont lues par la VueArme pour orienter le dessin de l'arme en temps réel
+     * vers le curseur de l'utilisateur.
+     * * @param e L'événement de mouvement de souris capturé.
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX();

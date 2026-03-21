@@ -10,9 +10,14 @@ public class VueInventaire {
 
     public void dessiner(Graphics g, int yDebut, Joueur joueur) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Arial", Font.BOLD, 18));
 
+        // --- MODIFICATION : Couleur adaptative ---
+        boolean isDay = joueur.getModele().getLeCycleJourNuit().isDay();
+        Color couleurTexte = isDay ? Color.BLACK : Color.WHITE;
+        g2d.setColor(couleurTexte);
+        // -----------------------------------------
+
+        g2d.setFont(new Font("Arial", Font.BOLD, 18));
         g2d.drawString("INVENTAIRE", xOffset, yDebut);
 
         ArrayList<Ressource> inventaire = joueur.getInventaire();

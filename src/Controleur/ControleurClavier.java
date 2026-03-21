@@ -7,6 +7,11 @@ import Modele.Map;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Contrôleur dédié à la gestion des événements du clavier.
+ * Fait le pont entre les frappes spécifiques de l'utilisateur et les actions du joueur
+ * sur son environnement (interactions avec les ressources et les bâtiments).
+ */
 public class ControleurClavier implements KeyListener {
 
     private Modele modele;
@@ -25,6 +30,12 @@ public class ControleurClavier implements KeyListener {
 
     }
 
+    /**
+     * Détecte les touches enfoncées et déclenche les actions métier correspondantes.
+     * - Touche 'E' : Ordonne au joueur de vérifier les collisions avec les ressources pour les ajouter à son inventaire.
+     * - Touche 'T' : Ordonne au joueur de lancer la construction d'une tour défensive (vérification des prérequis gérée par le modèle).
+     * * @param e L'événement de touche de clavier capturé.
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         System.out.println("Action : La touche E a été pressée !");

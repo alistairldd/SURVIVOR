@@ -51,10 +51,10 @@ public class VueHUD extends JPanel {
         vueInventaire.dessiner(g, 40, modele.getJoueur());
         vueJourNuit.dessiner(g, getHeight());
         if (modele.getLeCycleJourNuit().isDay()){
-            this.setBackground(new Color(0, 255, 255));
+            this.setBackground(new Color(112, 216, 255));
 
         } else {
-            this.setBackground(new Color(0, 0, 153));
+            this.setBackground(new Color(0, 13, 89));
         }
 
     }

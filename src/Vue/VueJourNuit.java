@@ -42,12 +42,13 @@ public class VueJourNuit{
         if (leCycle.isDay()) {
             // Dessine le jour en centrant l'image dans le panneau en bas
             g.drawImage(soleil, (VueHUD.LARGEUR - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null);
+            g.setColor(Color.BLACK);
         } else {
             g.drawImage(lune, (VueHUD.LARGEUR - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null); // Cercle pour la nuit
+            g.setColor(Color.WHITE);
         }
 
         /* Affiche le temps restant pour la phase actuelle */
-        g.setColor(Color.BLACK);
         // Augmente la taille de la police pour une meilleure visibilité
         g.setFont(new Font("Arial", Font.BOLD, 20));
         // Centrer le texte en bas du panneau
