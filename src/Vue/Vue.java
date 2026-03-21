@@ -37,6 +37,7 @@ public class Vue extends JPanel {
     private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
 
+
     // Modèle
     private final Modele modele;
 
