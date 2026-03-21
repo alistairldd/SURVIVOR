@@ -46,7 +46,7 @@ public class CycleJourNuit extends Thread {
                 } else {
                     updateJN.updateJour(); // Logique spécifique au jour
                     if (framesInCurrentCycleJour % FPS == 0) { // Affiche le temps restant toutes les secondes
-                        System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestantJour() + "s" + " - Frames dans le cycle: " + framesInCurrentCycleJour + "/" + TICKS_PAR_CYCLE);
+                        //System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestantJour() + "s" + " - Frames dans le cycle: " + framesInCurrentCycleJour + "/" + TICKS_PAR_CYCLE);
                     }
                 }
             } else {
@@ -60,7 +60,7 @@ public class CycleJourNuit extends Thread {
                 } else {
                     updateJN.updateNuit(); // Logique spécifique à la nuit
                     if (framesInCurrentCycleNuit % FPS == 0) { // Affiche le temps restant toutes les secondes
-                        System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestantNuit() + "s" + " - Frames dans le cycle: " + framesInCurrentCycleNuit + "/" + TICKS_PAR_CYCLE);
+                        //System.out.println("Jour " + jour + " - Temps restant: " + getTempsRestantNuit() + "s" + " - Frames dans le cycle: " + framesInCurrentCycleNuit + "/" + TICKS_PAR_CYCLE);
                     }
                 }
             }

@@ -24,6 +24,7 @@ public class Map {
         this.batiments.add(maTourBlessee); // On l'ajoute à la liste
 
         this.batiments.add(new Tower(largeur/2 - 100, hauteur/2 - 100));
+        this.batiments.add(new Tower(largeur/2,  70));
     }
 
     public void viderRessources() {

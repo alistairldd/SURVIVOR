@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import Modele.Batiment;
 import Modele.HQ;
 import Modele.Tower;
+import Modele.Monstre; // Import nécessaire !
 
 public class VueBatiment {
 
@@ -42,21 +43,16 @@ public class VueBatiment {
 
             // --- DESSIN DU CERCLE DE PORTÉE ---
             if (!minimap) {
-                // On utilise directement la portée brute, sans multiplicateur
                 int portee = t.getRange();
 
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
 
                 if (t.getHp() <= 0.1 * t.BASE_HP) {
-                    // Si la tour a perdu des points de vie, on la dessine en rouge
                     g2d.setColor(Color.RED);
                 } else {
-                    // Sinon, elle est en bon état, on la dessine en cyan
                     g2d.setColor(Color.CYAN);
                 }
 
-                // Puisque (x, y) est maintenant le vrai centre de la tour,
-                // on dessine le cercle directement autour de ce point (x, y).
                 g2d.fillOval(x - portee, y - portee, portee * 2, portee * 2);
 
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
@@ -68,14 +64,54 @@ public class VueBatiment {
 
             // --- DESSIN DE LA TOUR ---
             if (t.getHp() <= 0.1 * t.BASE_HP) {
-                // Si la tour a perdu des points de vie, on la dessine en rouge
                 g2d.setColor(Color.RED);
             } else {
-                // Sinon, elle est en bon état, on la dessine en cyan
-            g2d.setColor(Color.CYAN);
+                g2d.setColor(Color.CYAN);
             }
-            // On décale le carré pour le centrer sur (x, y)
             g2d.fillRect(x - demiTaille, y - demiTaille, taille, taille);
+
+
+            // =====================================================================
+            // --- AJOUT : EFFET D'ATTAQUE (Traînée et Boule) ---
+            // =====================================================================
+            if (!minimap) {
+                Monstre cible = t.getMonstreCible();
+
+                // On affiche l'effet uniquement pendant 150ms après le tir
+                if (cible != null && (System.currentTimeMillis() - t.getDernierTempsAttaque() < 150)) {
+
+                    int cibleX = cible.getX(); // Centre X du monstre
+                    int cibleY = cible.getY(); // Centre Y du monstre
+                    int tailleProjectile = 8;
+
+                    // -- CALCUL DES COORDONNÉES --
+                    double dx = cibleX - x;
+                    double dy = cibleY - y;
+                    double distance = Math.hypot(dx, dy);
+
+                    if (distance > 10) { // Sécurité
+
+                        // 1. Calculer le centre de la boule jaune (on recule de 15px avant le monstre)
+                        int posBouleX = cibleX - (int)(dx * 15 / distance);
+                        int posBouleY = cibleY - (int)(dy * 15 / distance);
+
+                        // 2. Dessiner la trajectoire/traînée (MODIFIÉ : JAUNE et S'ARRÊTE À LA BOULE)
+                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)); // Translucide (comme avant)
+                        g2d.setColor(Color.YELLOW); // MODIFICATION : Même couleur que la boule !
+                        g2d.setStroke(new BasicStroke(3));
+                        // MODIFICATION : On trace du centre de la tour (x,y) vers le centre de la boule (posBouleX, posBouleY)
+                        g2d.drawLine(x, y, posBouleX, posBouleY);
+
+                        // 3. Dessiner la "boule" (le projectile)
+                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // Opaque
+                        // La couleur est déjà YELLOW par l'étape précédente
+                        g2d.fillOval(posBouleX - (tailleProjectile/2), posBouleY - (tailleProjectile/2), tailleProjectile, tailleProjectile);
+                    }
+
+                    g2d.setStroke(new BasicStroke(1)); // Reset du trait
+                }
+            }
+            // =====================================================================
 
         } else {
             // Bâtiment générique

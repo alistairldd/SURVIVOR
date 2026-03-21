@@ -29,6 +29,11 @@ public class Modele {
 
         // Initialisation du jour et de la nuit
         leCycleJourNuit = new CycleJourNuit();
+
+        // Dans le constructeur de Modele.java
+        // Dans Modele.java, à la fin du constructeur public Modele() { ... }
+        ThreadBatiments threadBatiments = new ThreadBatiments(this);
+        threadBatiments.start();
     }
 
     /*---- GETTERS ET SETTERS ---- */
