@@ -13,10 +13,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
+// Classe qui gère les événements de la souris
 public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     private Modele modele;
     private Vue vue;
+    private Joueur joueur;
 
     private int mouseX = 0;
     private int mouseY = 0;
@@ -25,6 +27,8 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
         this.modele = modele;
         this.vue = vue;
+        this.joueur = modele.getJoueur();
+
     }
 
     @Override
@@ -55,23 +59,22 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-
         if (SwingUtilities.isRightMouseButton(e)){
             // Récupérer les coordonnées du clic
             int x = e.getX();
             int y = e.getY();
 
             // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
-            double camX = Joueur.getPositionX() - (double) vue.getWidth() / 2;
-            double camY = Joueur.getPositionY() - (double) vue.getHeight() / 2;
+            double camX = joueur.getPositionX() - (double) vue.getWidth() / 2;
+            double camY = joueur.getPositionY() - (double) vue.getHeight() / 2;
 
             // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
             double destX = camX + x;
             double destY = camY + y;
 
             // Déplacer le joueur vers la position de destination
-            DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY);
-            Joueur.setThreadActuel(deplacement);
+            DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
+            joueur.setThreadActuel(deplacement);
             deplacement.start();
             //modele.getJoueur().deplaceJoueur(destX, destY);
         }

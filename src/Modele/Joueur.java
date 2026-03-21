@@ -16,15 +16,15 @@ public class Joueur {
     private int attack;
     private static ArrayList<Ressource> inventaire;
     private Arme armeEquipee;
-    private Modele modele;
+    private final Modele modele;
     private ControleurSouris controleurSouris;
 
     // Attaque
     private long dernierTempsAttaque = 0;
 
     // Position
-    private static double positionX;
-    private static double positionY;
+    private double positionX;
+    private double positionY;
 
     // Déplacement
     private static DeplaceJoueur threadActuel = null;
@@ -48,29 +48,29 @@ public class Joueur {
 
     public void setAttack(int attack) {this.attack = attack;}
 
-    public static ArrayList<Ressource> getInventaire() {
+    public ArrayList<Ressource> getInventaire() {
         return inventaire;
     }
 
-    public static void addToInventaire(Ressource item) {
+    public void addToInventaire(Ressource item) {
         inventaire.add(item);
     }
 
     // Getter pour la position X du joueur
-    public synchronized static double getPositionX() {return positionX;}
+    public synchronized double getPositionX() {return positionX;}
     // Getter pour la position Y du joueur
-    public synchronized static double getPositionY() {return positionY;}
+    public synchronized double getPositionY() {return positionY;}
     // Setter pour la position X du joueur
-    public synchronized static void setPositionX(double positionX) {Joueur.positionX = positionX;}
+    public synchronized void setPositionX(double positionX) {this.positionX = positionX;}
     // Setter pour la position Y du joueur
-    public synchronized static void setPositionY(double positionY) {Joueur.positionY = positionY;}
+    public synchronized void setPositionY(double positionY) {this.positionY = positionY;}
     // Getter pour l'arme équipée du joueur
     public Arme getArmeEquipee() {return armeEquipee;}
 
     // Méthode pour déplacer le joueur en x,
     // elle prend en paramètre le déplacement en x,
     // elle met à jour la position du joueur en x.
-    public synchronized static void deplaceX(double x) {
+    public synchronized void deplaceX(double x) {
         // On vérifie que le déplacement en x est dans les limites de la carte, sinon on le met à la limite.
         if (x >= 10+TAILLE/2 && x <= LARGEUR_MAP) {
             setPositionX(x);
@@ -86,7 +86,7 @@ public class Joueur {
     // Méthode pour déplacer le joueur en y,
     // elle prend en paramètre le déplacement en y,
     // elle met à jour la position du joueur en y.
-    public synchronized static void deplaceY(double y) {
+    public synchronized void deplaceY(double y) {
         // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
         if (y >= 10+TAILLE/2 && y <= HAUTEUR_MAP) {
             setPositionY(y);
@@ -147,7 +147,7 @@ public class Joueur {
         this.dernierTempsAttaque = System.currentTimeMillis();
     }
 
-    public static void setThreadActuel(DeplaceJoueur thread) {
+    public void setThreadActuel(DeplaceJoueur thread) {
         // Si un thread tourne déjà, on l'arrête
         // utilisé pour le déplacement du joueur, pour éviter que plusieurs threads de déplacement soient actifs en même temps,
         // ce qui pourrait causer des problèmes de synchronisation et de performance.

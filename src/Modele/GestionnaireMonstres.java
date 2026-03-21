@@ -62,7 +62,17 @@ public class GestionnaireMonstres {
         monstres.clear();
     }
 
-    public void tuer(Monstre m) {
-        monstres.remove(m);
+    public void supprimerMonstresMorts (){
+        List<Monstre> monstresMorts = new ArrayList<>();
+        for (Monstre m : monstres) {
+            if (m.getHp() <= 0) {
+                monstresMorts.add(m);
+            }
+        }
+        for (Monstre m : monstresMorts) {
+            monstres.remove(m);
+        }
     }
+
 }
+

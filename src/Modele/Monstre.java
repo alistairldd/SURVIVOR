@@ -42,6 +42,11 @@ public abstract class Monstre {
         this.vitesse = vitesse;
     }
 
+    // Getter id
+
+
+    public int getId() { return id; }
+
     // Getters et setters pour les attributs du monstre
     public String getNom() { return nom; }
 

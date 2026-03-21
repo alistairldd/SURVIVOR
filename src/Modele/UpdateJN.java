@@ -42,13 +42,8 @@ public class UpdateJN {
 
     // Méthode à boucler la nuit
     public void updateNuit() {
-        // Logique pour tuer les monstres qui n'ont plus de vie
-        ArrayList<Monstre> monstres = monGestionnaireMonstres.getMonstres();
-        for (Monstre m: monstres) {
-            if (m.getHp() <= 0) {
-                monGestionnaireMonstres.tuer(m);
-            }
-        }
+        // Supprime les monstres morts.
+        monGestionnaireMonstres.supprimerMonstresMorts();
 
     }
 

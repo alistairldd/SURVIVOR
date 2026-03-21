@@ -6,9 +6,11 @@ import java.awt.*;
 public class VueCarte {
 
     private final Modele modele;
+    private final Joueur joueur;
 
     public VueCarte(Modele modele) {
         this.modele = modele;
+        this.joueur = modele.getJoueur();
     }
 
     protected void dessiner(Graphics g) {
@@ -19,8 +21,8 @@ public class VueCarte {
 
         // On applique la même logique de caméra que pour les ressources :
         // Centre Ecran + Position Objet - Position Joueur
-        double x = coinHautGaucheMapX - Joueur.getPositionX();
-        double y = coinHautGaucheMapY - Joueur.getPositionY();
+        double x = coinHautGaucheMapX - joueur.getPositionX();
+        double y = coinHautGaucheMapY - joueur.getPositionY();
 
         g.setColor(new Color(0, 101, 0));
 

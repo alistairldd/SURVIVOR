@@ -100,7 +100,7 @@ public class Modele {
                 if (Math.abs(diffAngle) <= angle / 2) {
                     // On applique les dégâts
                     m.perdreHp( joueur.getAttack());
-                    System.out.println("Monstre touché ! HP restant : " + m.getHp());
+                    System.out.println("Monstre touché ! " + m.getId() + "  HP restant : " + m.getHp());
                 }
             }
         }

@@ -37,6 +37,7 @@ public class Vue extends JPanel {
     private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
 
+    // Modèle
     private final Modele modele;
 
 
@@ -116,18 +117,19 @@ public class Vue extends JPanel {
         g2d.setColor(Color.RED);
         g2d.drawRect(0, 0, tailleMinimap, tailleMinimap); // Dessine la bordure de la mini carte
 
-        for (Ressource r : Modele.getMap().getRessources()) {
+        for (Ressource r : modele.getMap().getRessources()) {
             int resX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
             int resY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
             VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
         }
 
         g2d.setColor(Color.BLACK);
-        int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
-        int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) Joueur.getPositionY()); // idem
+        Joueur joueur = modele.getJoueur();
+        int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getPositionX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
+        int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getPositionY()); // idem
         g2d.fillOval(posX,posY, 5, 5);
 
-        for (Batiment b : Modele.getMap().getBatiments()) {
+        for (Batiment b : modele.getMap().getBatiments()) {
             int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, b.getX());
             int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, b.getY());
             VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
@@ -154,8 +156,9 @@ public class Vue extends JPanel {
         // --- CALCUL DE LA CAMÉRA ---
         // On veut que le joueur soit au centre du panneau (this)
         // camX/Y représentent le coin haut-gauche de ce que l'on voit dans le monde
-        double camX = Joueur.getPositionX() - ((double) getWidth() / 2);
-        double camY = Joueur.getPositionY() - ((double) getHeight() / 2);
+        Joueur joueur = modele.getJoueur();
+        double camX = joueur.getPositionX() - ((double) getWidth() / 2);
+        double camY = joueur.getPositionY() - ((double) getHeight() / 2);
 
         // --- DÉBUT DE LA ZONE MONDE ---
         // On demande à Graphics de décaler tout ce qu'on va dessiner ensuite
@@ -166,16 +169,16 @@ public class Vue extends JPanel {
 
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
-        for (Ressource r : Modele.getMap().getRessources()) {
+        for (Ressource r : modele.getMap().getRessources()) {
             VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
         // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
-        vueJoueur.dessiner(g2d);
+        vueJoueur.dessiner(g2d, joueur);
 
         // 4. Dessiner les bâtiments
-        for (Batiment b : Modele.getMap().getBatiments()) {
+        for (Batiment b : modele.getMap().getBatiments()) {
             vueBatiment.dessinerBatiment(g2d, b, b.getX(), b.getY(), false);
         }
         vueArme.dessiner(g2d);
