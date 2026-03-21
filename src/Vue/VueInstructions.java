@@ -22,7 +22,8 @@ public class VueInstructions {
         String[] instructions = {
                 "• CLIC DROIT : Se déplacer",
                 "• CLIC GAUCHE : Attaquer",
-                "• TOUCHE E : Ramasser ressource"
+                "• TOUCHE E : Ramasser ressource",
+                "• TOUCHE T : Construire tour (coût : 4 Bois, 4 Pierres, 2 Fer, 1 Or)"
         };
 
         for (int i = 0; i < instructions.length; i++) {
