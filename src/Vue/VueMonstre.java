@@ -5,8 +5,15 @@ import Modele.Monstre;
 
 import java.awt.*;
 
+/**
+ * Responsable du dessin d'un ennemi (Monstre) sur la carte.
+ * Affiche son avatar physique (un carré rouge) et un indicateur visuel
+ * de sa zone de menace (portée d'attaque).
+ */
 public class VueMonstre {
+    // Taille physique de l'ennemi sur l'écran principal
     public static final int TAILLE = 30;
+    // Taille drastiquement réduite pour que le monstre soit juste un point rouge sur la minimap
     public static final int TAILLE_MINIMAP = 10;
 
     // Constructeur de la classe VueMonstre
@@ -14,32 +21,56 @@ public class VueMonstre {
 
     }
 
+    /**
+     * Dessine le monstre et son cercle d'aggro.
+     * @param g Contexte graphique (Caméra déjà appliquée).
+     * @param monstre Les données de l'ennemi à afficher (position, portée).
+     * @param posX Position X (monde ou minimap).
+     * @param posY Position Y (monde ou minimap).
+     * @param minimap Indique si on doit utiliser le format réduit.
+     */
     public void dessiner(Graphics g, Monstre monstre, int posX, int posY, boolean minimap) {
 
 
+        // Crée un calque indépendant pour manipuler la transparence sans casser les autres dessins
         Graphics2D g2d = (Graphics2D) g.create();
+        // Lisse les bords (utile surtout pour le cercle de portée)
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         //Centrage du monstre
+        // Choix de la taille selon la destination du dessin (Écran de jeu ou Radar)
         int taille = minimap ? TAILLE_MINIMAP : TAILLE;
+        // Rouge = Danger (Couleur classique des ennemis)
         g2d.setColor(Color.RED);
-        // On décale la position du monstre pour le centrer par rapport à sa taille
+        // On décale la position du monstre pour le centrer par rapport à sa taille (soustrait la moitié de la largeur/hauteur)
         g2d.fillRect((int) posX - taille / 2, (int) posY - taille / 2, taille, taille);
 
         // Dessin du cercle de portée du monstre
+        // On ne surcharge pas la minimap avec les cercles de portée, on ne les dessine que sur la vue principale
         if (!minimap) {
+            // Prépare une couleur rouge avec une base de transparence manuelle (bien que l'AlphaComposite gère déjà l'opacité)
             g2d.setColor(new Color(255, 0, 0, 50)); // Rouge transparent
+            // Lit la portée d'attaque de ce monstre spécifique
             int portee = (int) monstre.getPortee();
+
+            // Applique une opacité très faible (20%) pour le fond de la zone
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
 
             // on dessine le cercle directement autour de ce point (x, y).
+            // - portee permet de décaler l'origine du cercle en haut à gauche pour que le centre du cercle tombe pile sur le monstre
             g2d.fillOval(posX - portee, posY - portee, portee * 2, portee * 2);
 
+            // Remonte l'opacité à 60% pour bien marquer la bordure extérieure de la zone
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+            // Trait d'une épaisseur de 2 pixels
             g2d.setStroke(new BasicStroke(2));
+            // Dessine juste le contour
             g2d.drawOval(posX - portee, posY - portee, portee * 2, portee * 2);
 
+            // Restaure l'opacité maximale (100%) par propreté avant de détruire le contexte
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
+
+        // (Note: g2d.dispose() serait recommandé ici en fin de méthode pour libérer la mémoire du calque créé).
     }
 }

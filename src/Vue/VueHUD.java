@@ -14,25 +14,38 @@ import java.io.IOException;
  * Elle est utilisée dans la classe Vue pour afficher les informations du joueur et les ressources.
  *
  */
+/**
+ * Panneau latéral de l'interface utilisateur (Heads-Up Display).
+ * Il regroupe l'inventaire, les instructions de jeu, et l'indicateur visuel du cycle Jour/Nuit.
+ * Il est indépendant du système de Caméra de la Vue principale.
+ */
 public class VueHUD extends JPanel {
 
+    // Largeur fixe allouée au panneau latéral sur l'écran
     public final static int LARGEUR = 300;
 
+    // Référence au modèle pour lire l'état du jeu (cycle, inventaire du joueur)
     private Modele modele;
 
     /* Vue du jour et de la nuit, elle est utilisée pour afficher l'état du jour et de la nuit. */
+    // Sous-panneaux gérant des sections spécifiques de l'interface
     private VueJourNuit vueJourNuit;
     private VueInventaire vueInventaire;
     private VueInstructions vueInstructions;
 
 
+    /**
+     * Configure le panneau latéral et instancie ses composants textuels et graphiques.
+     * @param modele Le modèle global.
+     */
     public VueHUD(Modele modele) {
 
         /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
-        this.setPreferredSize(new Dimension(LARGEUR, getHeight())); // Définit la taille préférée du panneau
-        this.setBackground(new Color(0, 255, 255)); // Définit la couleur de fond du panneau
+        this.setPreferredSize(new Dimension(LARGEUR, getHeight())); // Définit la taille préférée du panneau (fixe en largeur, flexible en hauteur)
+        this.setBackground(new Color(0, 255, 255)); // Définit la couleur de fond du panneau (cyan par défaut)
         this.setLayout(new BorderLayout());
 
+        // Sauvegarde le modèle et prépare les sous-vues spécialisées
         this.modele = modele;
         vueJourNuit = new VueJourNuit(modele.getLeCycleJourNuit());
         this.vueInventaire = new VueInventaire();
@@ -43,17 +56,29 @@ public class VueHUD extends JPanel {
     /* ---- GETTERS ET SETTERS ---- */
 
     // Dessiner les éléments du HUD
+    /**
+     * Méthode appelée à chaque rafraîchissement (déclenché par Redessine).
+     * Modifie l'ambiance globale du panneau et appelle les sous-vues pour dessiner les textes et images.
+     */
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        super.paintComponent(g); // Nettoie le panneau avec la couleur de fond actuelle
+
+        // Demande à la vue des instructions de s'afficher un peu plus bas (Y=200)
         vueInstructions.dessiner(g, 200, modele.getJoueur());
-        // Dessin de l'inventaire en haut du HUD
+        // Dessin de l'inventaire en haut du HUD (Y=40)
         vueInventaire.dessiner(g, 40, modele.getJoueur());
+        // Affiche l'image lune/soleil tout en bas du panneau
         vueJourNuit.dessiner(g, getHeight());
+
+        // --- GESTION DE L'AMBIANCE VISUELLE ---
+        // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
         if (modele.getLeCycleJourNuit().isDay()){
+            // Bleu ciel clair pour le jour
             this.setBackground(new Color(112, 216, 255));
 
         } else {
+            // Bleu très sombre pour la nuit
             this.setBackground(new Color(0, 13, 89));
         }
 

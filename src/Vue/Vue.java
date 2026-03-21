@@ -2,10 +2,10 @@ package Vue;
 
 import Modele.Joueur;
 /*
-* La classe générale de la vue, elle contient les classes de données et les méthodes pour manipuler ces données.
-* Elle est utilisée pour afficher les données de l'application et pour recevoir les événements de l'utilisateur
-* et pour les transmettre au contrôleur. Elle est également utilisée pour gérer les threads de la vue.
-*
+ * La classe générale de la vue, elle contient les classes de données et les méthodes pour manipuler ces données.
+ * Elle est utilisée pour afficher les données de l'application et pour recevoir les événements de l'utilisateur
+ * et pour les transmettre au contrôleur. Elle est également utilisée pour gérer les threads de la vue.
+ *
  */
 import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
@@ -18,6 +18,11 @@ import Modele.Monstre;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Fenêtre et zone de dessin principale du jeu.
+ * Gère la fenêtre (JFrame), instancie toutes les sous-vues (Joueur, Monstres, Carte),
+ * et s'occupe de la logique de Caméra (centrage sur le joueur) et de la Minimap.
+ */
 public class Vue extends JPanel {
 
     // Taille de la fenêtre principale de l'application, elle est utilisée pour définir la taille de la fenêtre.
@@ -29,6 +34,7 @@ public class Vue extends JPanel {
     private JFrame maFenetre;
 
     // Vues
+    // Déclaration de tous les "pinceaux" spécifiques responsables de dessiner chaque type d'entité
     private final VueHUD vueHUD;
     private final VueCarte vueCarte;
     private final VueJoueur vueJoueur;
@@ -50,16 +56,20 @@ public class Vue extends JPanel {
         maFenetre.setPreferredSize(new Dimension(LARGEUR,HAUTEUR));
         maFenetre.setExtendedState(JFrame.MAXIMIZED_BOTH); // Met la fenêtre en plein écran
         maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ferme l'application lorsque la fenêtre est fermée
-        maFenetre.setLayout(new BorderLayout()); // Utilise un BorderLayout pour organiser les composants
+        maFenetre.setLayout(new BorderLayout()); // Utilise un BorderLayout pour organiser les composants (Centre + Bords)
         maFenetre.setResizable(true);
 
         /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
         this.vueHUD = new VueHUD(modele);
         // Ajout de composants dans le panneau droite
 
+        // Ajoute un titre temporaire (souvent recouvert ou caché)
         this.add(new JLabel("Le jeu le vrai"));
+
         // on ajoute les éléments en précisant les zones du BorderLayout
+        // Place la zone de jeu au milieu (occupe tout l'espace disponible)
         maFenetre.add(this, BorderLayout.CENTER);
+        // Place l'interface utilisateur statique sur la droite
         maFenetre.add(vueHUD, BorderLayout.EAST);
 
         // Initialisation des vues du monde, elles sont utilisées pour afficher les éléments du monde (carte, joueur, ressources, bâtiments).
@@ -69,13 +79,18 @@ public class Vue extends JPanel {
         // Initialisation des contrôleurs de la vue,
         // ils sont utilisés pour recevoir les événements de l'utilisateur et pour les transmettre au contrôleur.
         ControleurSouris controleurSouris = new ControleurSouris(this, modele);
+        // Abonne le JPanel principal aux clics de souris
         this.addMouseListener(controleurSouris);
+        // Abonne le JPanel principal aux mouvements de souris (pour viser)
         this.addMouseMotionListener(controleurSouris);
+        // Abonne le JPanel aux touches du clavier
         this.addKeyListener(new ControleurClavier(this, modele));
 
 
         // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.
         this.modele = modele;
+
+        // Lance le moteur de rendu (qui va appeler paintComponent en boucle)
         new Redessine (this, modele);
 
         // Initialisation des vues du monde, elles sont utilisées pour afficher les éléments du monde (carte, joueur, ressources, bâtiments).
@@ -84,9 +99,12 @@ public class Vue extends JPanel {
         this.vueMonstre = new VueMonstre();
         this.vueArme = new VueArme(controleurSouris, this, modele);
 
+        // Demande à la fenêtre de calculer la taille de tous ses composants
         maFenetre.pack();
+        // Affiche enfin la fenêtre à l'écran
         maFenetre.setVisible(true);
 
+        // Indispensable pour que le KeyListener fonctionne : le panneau doit avoir le "focus"
         this.setFocusable(true); // Permet à la vue de recevoir des touches
         this.requestFocusInWindow(); // Demande le focus dès l'ouverture
     }
@@ -99,6 +117,12 @@ public class Vue extends JPanel {
     }
 
 
+    /**
+     * Dessine une carte miniature (radar) en haut à droite de l'écran.
+     * Transforme les coordonnées du monde réel (3000x3000) en coordonnées locales pour
+     * les faire rentrer dans un carré de 300x300 pixels.
+     * @param g2d Le contexte graphique sur lequel dessiner.
+     */
     protected void dessineMinimap(Graphics2D g2d) {
         // On peut dessiner une mini carte en haut à droite, qui montre la position du joueur et des ressources par rapport à la carte entière.
         // On peut faire ça en dessinant un petit rectangle qui représente la carte entière,
@@ -110,32 +134,42 @@ public class Vue extends JPanel {
         // On peut aussi dessiner une bordure autour de la mini carte pour la différencier du
         // reste de l'interface.
 
+        // Taille en pixels du radar affiché à l'écran
         int tailleMinimap = 300;
 
+        // Déplace l'origine de dessin de la minimap en haut à droite (largeur de l'écran - taille de la map - 10px de marge)
         g2d.translate(getWidth() - tailleMinimap-10, 10); // On se place en haut à droite pour dessiner la mini carte
+
+        // --- DESSIN DU FOND ---
         g2d.setColor(new Color(50,70,50)); // du gris pour le fond de la mini carte
         g2d.fillRect(0, 0, tailleMinimap, tailleMinimap); // Dessine le fond de la mini carte
         g2d.setColor(Color.RED);
         g2d.drawRect(0, 0, tailleMinimap, tailleMinimap); // Dessine la bordure de la mini carte
 
+        // --- DESSIN DES RESSOURCES ---
         for (Ressource r : modele.getMap().getRessources()) {
+            // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
             int resX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
             int resY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
             VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
         }
 
+        // --- DESSIN DU JOUEUR ---
         g2d.setColor(Color.BLACK);
         Joueur joueur = modele.getJoueur();
         int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getPositionX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
         int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getPositionY()); // idem
+        // Dessine un petit point noir pour le joueur
         g2d.fillOval(posX,posY, 5, 5);
 
+        // --- DESSIN DES BÂTIMENTS ---
         for (Batiment b : modele.getMap().getBatiments()) {
             int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, b.getX());
             int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, b.getY());
             VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
         }
 
+        // --- DESSIN DES MONSTRES ---
         for (Monstre m : modele.getMonstres()) {
             int monstreX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
             int monstreY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, m.getY()); // idem
@@ -145,11 +179,18 @@ public class Vue extends JPanel {
     }
 
 
+    /**
+     * Cœur du rendu graphique appelé par le Thread Redessine.
+     * C'est ici que s'opère la "magie" de la Caméra : plutôt que de déplacer le joueur
+     * sur l'écran, on déplace tout le calque de dessin dans le sens inverse du joueur.
+     */
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); // Nettoie l'écran
+        super.paintComponent(g); // Nettoie l'écran (remplit avec la couleur de fond)
+        // Convertit l'outil de base Graphics en Graphics2D, beaucoup plus puissant (rotations, translations, alpha)
         Graphics2D g2d = (Graphics2D) g;
 
+        // Lisse les bords des dessins (anti-aliasing) pour un rendu plus net
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // AMÉLIORE LA PRÉCISION DES POSITIONS
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
@@ -158,11 +199,13 @@ public class Vue extends JPanel {
         // On veut que le joueur soit au centre du panneau (this)
         // camX/Y représentent le coin haut-gauche de ce que l'on voit dans le monde
         Joueur joueur = modele.getJoueur();
+        // Calcule le décalage pour centrer la vue exactement sur la position absolue du joueur
         double camX = joueur.getPositionX() - ((double) getWidth() / 2);
         double camY = joueur.getPositionY() - ((double) getHeight() / 2);
 
         // --- DÉBUT DE LA ZONE MONDE ---
         // On demande à Graphics de décaler tout ce qu'on va dessiner ensuite
+        // C'est ce qui donne l'illusion que le joueur avance dans le décor
         g2d.translate(-camX, -camY);
 
         // 1. Dessiner le fond (VueCarte doit dessiner de 0,0 à LargeurMap, HauteurMap)
@@ -170,6 +213,7 @@ public class Vue extends JPanel {
 
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
+        // La translation de la caméra s'occupe de les afficher au bon endroit sur l'écran
         for (Ressource r : modele.getMap().getRessources()) {
             VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
@@ -180,18 +224,25 @@ public class Vue extends JPanel {
 
         // 4. Dessiner les bâtiments
         for (Batiment b : modele.getMap().getBatiments()) {
+            // Passe le relais à la sous-vue spécialisée avec les coordonnées absolues
             vueBatiment.dessinerBatiment(g2d, b, b.getX(), b.getY(), false);
         }
+
+        // Dessine l'arme du joueur par-dessus le reste
         vueArme.dessiner(g2d);
-        // 4. Dessiner les monstres (si on en a)
+
+        // 5. Dessiner les monstres (si on en a)
         for (Monstre m : modele.getMonstres()) {
             vueMonstre.dessiner(g2d, m, m.getX(), m.getY(), false);
         }
 
         // --- FIN DE LA ZONE MONDE ---
+        // Annule l'effet de caméra pour revenir aux coordonnées de l'écran fixes (0,0 en haut à gauche de la fenêtre)
+        // Indispensable avant de dessiner des éléments d'interface qui ne doivent pas bouger avec le joueur (comme la minimap)
         g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin
 
 
+        // Dessine l'interface radar par-dessus le monde
         dessineMinimap(g2d);
 
     }
