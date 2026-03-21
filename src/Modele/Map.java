@@ -38,7 +38,7 @@ public class Map {
         // Ajoute le bâtiment central (HQ) à la liste globale
         this.batiments.add(new HQ());
 
-        //test en vif
+        //Petit test
         // On stocke la tour dans une variable avant de l'ajouter
         Tower maTourBlessee = new Tower(largeur/2 + 100, hauteur/2+100);
         // On modifie ses PV pour tester visuellement le changement d'état (ex: barre de vie rouge)
