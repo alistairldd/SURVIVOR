@@ -23,6 +23,7 @@ public class VueHUD extends JPanel {
     /* Vue du jour et de la nuit, elle est utilisée pour afficher l'état du jour et de la nuit. */
     private VueJourNuit vueJourNuit;
     private VueInventaire vueInventaire;
+    private VueInstructions vueInstructions;
 
 
     public VueHUD(Modele modele) {
@@ -35,6 +36,8 @@ public class VueHUD extends JPanel {
         this.modele = modele;
         vueJourNuit = new VueJourNuit(modele.getLeCycleJourNuit());
         this.vueInventaire = new VueInventaire();
+        this.vueInstructions = new VueInstructions();
+
     }
 
     /* ---- GETTERS ET SETTERS ---- */
@@ -43,6 +46,7 @@ public class VueHUD extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        vueInstructions.dessiner(g, 200, modele.getJoueur());
         // Dessin de l'inventaire en haut du HUD
         vueInventaire.dessiner(g, 40, modele.getJoueur());
         vueJourNuit.dessiner(g, getHeight());
