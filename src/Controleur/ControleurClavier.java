@@ -32,6 +32,9 @@ public class ControleurClavier implements KeyListener {
             modele.getJoueur().ramasseRessource(map.getRessources()) ;
 
         }
+        if (e.getKeyCode() == KeyEvent.VK_T) {
+            modele.getJoueur().construireTour();
+        }
     }
 
     @Override

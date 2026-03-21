@@ -3,7 +3,7 @@ package Modele;
 import static Vue.VueJoueur.TAILLE;
 
 public class Ressource {
-    public static final int[] TYPE_RESSOURCE = {0, 1, 2, 3}; // 0 : bois, 1 : pierre, 2 : fer, 3: or, 4 : redstone
+    public static final int[] TYPE_RESSOURCE = {0, 1, 2, 3}; // 0 : bois, 1 : pierre, 2 : fer, 3: or
     public static final int NB_RESSOURCES = 20;
 
     private int positionX;
@@ -23,6 +23,12 @@ public class Ressource {
 
         int index = (int) (Math.random() * TYPE_RESSOURCE.length);
         this.type = TYPE_RESSOURCE[index];
+    }
+
+    public  Ressource(int i) {
+        this.type = i;
+        this.positionX = 0;
+        this.positionY = 0;
     }
 
     public static void genereRessources(int nbRessources) {

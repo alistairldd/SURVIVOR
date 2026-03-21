@@ -72,7 +72,7 @@ public class VueBatiment {
 
 
             // =====================================================================
-            // --- AJOUT : EFFET D'ATTAQUE (Traînée et Boule) ---
+            // --- AJOUT : EFFET D'ATTAQUE (Traînée et Boule touchant le bord) ---
             // =====================================================================
             if (!minimap) {
                 Monstre cible = t.getMonstreCible();
@@ -84,27 +84,39 @@ public class VueBatiment {
                     int cibleY = cible.getY(); // Centre Y du monstre
                     int tailleProjectile = 8;
 
+                    // --- AJOUT : Taille du monstre pour l'intersection ---
+                    // Supposons que ton monstre est un carré de 24 pixels.
+                    // Remplace par la vraie valeur si disponible (ex: cible.getTaille())
+                    int tailleMonstre = 24;
+                    int demiTailleMonstre = tailleMonstre / 2;
+
                     // -- CALCUL DES COORDONNÉES --
                     double dx = cibleX - x;
                     double dy = cibleY - y;
                     double distance = Math.hypot(dx, dy);
 
-                    if (distance > 10) { // Sécurité
+                    if (distance > 1) { // Sécurité
 
-                        // 1. Calculer le centre de la boule jaune (on recule de 15px avant le monstre)
-                        int posBouleX = cibleX - (int)(dx * 15 / distance);
-                        int posBouleY = cibleY - (int)(dy * 15 / distance);
+                        // --- AJOUT : Calcul du point d'impact sur le bord du carré ---
+                        // On cherche le facteur 't' d'intersection avec les bords
+                        double tx = (dx == 0) ? Double.MAX_VALUE : Math.abs(demiTailleMonstre / dx);
+                        double ty = (dy == 0) ? Double.MAX_VALUE : Math.abs(demiTailleMonstre / dy);
+                        double tIntersection = Math.min(tx, ty); // On prend la première intersection trouvée
 
-                        // 2. Dessiner la trajectoire/traînée (MODIFIÉ : JAUNE et S'ARRÊTE À LA BOULE)
-                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f)); // Translucide (comme avant)
-                        g2d.setColor(Color.YELLOW); // MODIFICATION : Même couleur que la boule !
+                        // Coordonnées du centre de la boule (exactement sur le bord du monstre)
+                        // Note : '1 - tIntersection' car le vecteur dx part de la tour, on recule vers l'arrière
+                        int posBouleX = (int) (x + dx * (1 - tIntersection));
+                        int posBouleY = (int) (y + dy * (1 - tIntersection));
+
+                        // 2. Dessiner la trajectoire/traînée (JAUNE, translucent)
+                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                        g2d.setColor(Color.YELLOW);
                         g2d.setStroke(new BasicStroke(3));
-                        // MODIFICATION : On trace du centre de la tour (x,y) vers le centre de la boule (posBouleX, posBouleY)
+                        // On trace du centre de la tour (x,y) vers le centre de la boule (bords du monstre)
                         g2d.drawLine(x, y, posBouleX, posBouleY);
 
-                        // 3. Dessiner la "boule" (le projectile)
-                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)); // Opaque
-                        // La couleur est déjà YELLOW par l'étape précédente
+                        // 3. Dessiner la "boule" (le projectile jaune, opaque)
+                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
                         g2d.fillOval(posBouleX - (tailleProjectile/2), posBouleY - (tailleProjectile/2), tailleProjectile, tailleProjectile);
                     }
 

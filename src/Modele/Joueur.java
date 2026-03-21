@@ -36,6 +36,12 @@ public class Joueur {
         hp = 100;
         attack = 10;
         inventaire = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            inventaire.add(new Ressource(0));
+            inventaire.add(new Ressource(1));
+            inventaire.add(new Ressource(2));
+            inventaire.add(new Ressource(3));
+        }
         armeEquipee = new Epee();
         this.modele = modele;
     }
@@ -157,6 +163,71 @@ public class Joueur {
         threadActuel = thread;
     }
 
+    // ==========================================================
+    // --- SYSTÈME DE CONSTRUCTION ---
+    // ==========================================================
+
+    public boolean construireTour() {
+        /*
+            Cette méthode permet de construire une Tower à la position du joueur.
+            Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)
+        */
+
+        // 1. On compte ce qu'il y a dans l'inventaire
+        int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
+        for (Ressource r : inventaire) {
+            switch (r.getType()) {
+                case 0: nbBois++; break;   // Bois
+                case 1: nbPierre++; break; // Pierre
+                case 2: nbFer++; break;    // Fer
+                case 3: nbOr++; break;     // Or
+            }
+        }
+
+        // 2. On vérifie si on a les quantités suffisantes
+        if (nbBois >= 4 && nbPierre >= 4 && nbFer >= 2 && nbOr >= 1) {
+
+            // 3. On consomme (retire) les ressources de l'inventaire
+            consommerRessource(0, 4); // Retire 4 Bois
+            consommerRessource(1, 4); // Retire 4 Pierre
+            consommerRessource(2, 2); // Retire 2 Fer
+            consommerRessource(3, 1); // Retire 1 Or
+
+            // 4. On crée la tour à la position actuelle du joueur (conversion double -> int)
+            Tower nouvelleTour = new Tower((int) positionX, (int) positionY);
+
+            // La tour a directement tous ses PV max grâce à son constructeur
+
+            // 5. On l'ajoute à la liste des bâtiments de la carte
+            Modele.getMap().getBatiments().add(nouvelleTour);
+
+            System.out.println("Tour construite avec succès en (" + (int)positionX + ", " + (int)positionY + ") !");
+            System.out.println("Inventaire restant : " + inventaire.size() + " objets.");
+            return true;
+
+        } else {
+            System.out.println("Ressources insuffisantes pour construire une tour !");
+            System.out.println("Il te faut : 4 Bois, 4 Pierre, 2 Fer, 1 Or.");
+            return false;
+        }
+    }
+
+    private void consommerRessource(int type, int quantiteARetirer) {
+        /*
+            Méthode utilitaire qui parcourt l'inventaire à l'envers pour retirer
+            un nombre précis d'une ressource donnée sans faire bugger la liste.
+        */
+        int supprimes = 0;
+        for (int i = inventaire.size() - 1; i >= 0; i--) {
+            if (inventaire.get(i).getType() == type) {
+                inventaire.remove(i);
+                supprimes++;
+                if (supprimes == quantiteARetirer) {
+                    break; // On a retiré la quantité voulue, on s'arrête
+                }
+            }
+        }
+    }
 }
 
 
