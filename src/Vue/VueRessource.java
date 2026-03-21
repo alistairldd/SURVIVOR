@@ -11,7 +11,7 @@ public class VueRessource {
 
     // MODIFICATION : On ajoute les paramètres 'Ressource r', 'x', et 'y'
     public static void dessinerRessource(Graphics g, Ressource r, int x, int y, boolean minimap) {
-        Color[] col = {new Color(109,71,49), new Color(123,123,125), new Color(218, 165, 32), new Color(200,0,0)}; // marron, gris, jaune
+        Color[] col = {new Color(109,71,49), new Color(123,123,125),  new Color(182, 182, 182), new Color(218, 165, 32)}; // marron, gris, jaune
         int taille = 20;
 
         if (minimap){
