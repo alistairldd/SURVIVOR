@@ -171,7 +171,14 @@ public class Joueur {
         /*
             Cette méthode permet de construire une Tower à la position du joueur.
             Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)
+            Condition : Uniquement pendant la nuit !
         */
+
+        // 0. Vérification du cycle jour/nuit (Impossible de construire le jour)
+        if (!modele.getLeCycleJourNuit().isDay()) {
+            System.out.println("Impossible de construire une tour le jour ! Attendez la tombée de la nuit.");
+            return false; // On annule la construction
+        }
 
         // 1. On compte ce qu'il y a dans l'inventaire
         int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
