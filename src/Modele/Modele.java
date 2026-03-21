@@ -63,7 +63,7 @@ public class Modele {
 
     // Attaque du joueur
     public void joueurAttaque(double angleAttaque) {
-                /*
+         /*
             Cette méthode permet au joueur d'attaquer les monstres qui sont à proximité.
             Elle prend en paramètre les coordonnées de la souris, elle calcule l'angle entre le joueur et la souris,
             puis elle parcourt la liste des monstres du modèle et applique les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée.
@@ -73,8 +73,10 @@ public class Modele {
         double portee = joueur.getArmeEquipee().getPortee();
         double angle = joueur.getArmeEquipee().getAngle();
         // Récupérer la position du joueur
-        double positionX = Joueur.getPositionX();
-        double positionY = Joueur.getPositionY();
+        double positionX = this.joueur.getPositionX();
+        double positionY = this.joueur.getPositionY();
+
+
         // Récupérer les monstres
         ArrayList<Monstre> monstres = getMonstres();
 
@@ -92,6 +94,7 @@ public class Modele {
                 // Vérifier si le monstre est dans l'angle d'attaque
                 double diffAngle = angleMonstre - angleAttaque;
                 diffAngle = Math.atan2(Math.sin(diffAngle), Math.cos(diffAngle));
+
 
                 // Si la différence est dans notre cône
                 if (Math.abs(diffAngle) <= angle / 2) {

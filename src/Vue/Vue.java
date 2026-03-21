@@ -66,11 +66,10 @@ public class Vue extends JPanel {
 
         // Initialisation des contrôleurs de la vue,
         // ils sont utilisés pour recevoir les événements de l'utilisateur et pour les transmettre au contrôleur.
-        this.addMouseListener(new ControleurSouris(this, modele));
-        this.addKeyListener(new ControleurClavier(this, modele));
         ControleurSouris controleurSouris = new ControleurSouris(this, modele);
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);
+        this.addKeyListener(new ControleurClavier(this, modele));
 
 
         // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.

@@ -37,6 +37,9 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                 int centerY = vue.getHeight() / 2;
 
                 double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
+
+                System.out.println("angleAttaque=" + angleAttaque + " mouse=(" + mouseX + "," + mouseY + ")");
+
                 // Attaquer dans la direction de la souris
                 modele.joueurAttaque(angleAttaque);
                 j.setDernierTempsAttaque();
