@@ -23,7 +23,7 @@ public class VueInstructions {
                 "• CLIC DROIT : Se déplacer",
                 "• CLIC GAUCHE : Attaquer",
                 "• TOUCHE E : Ramasser ressource",
-                "• TOUCHE T : Construire tour (coût : 4 Bois, 4 Pierres, 2 Fer, 1 Or)"
+                "• TOUCHE T : Construire tour"
         };
 
         for (int i = 0; i < instructions.length; i++) {
