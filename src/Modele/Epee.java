@@ -1,5 +1,10 @@
 package Modele;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Implémentation concrète d'une arme : l'Épée.
  * Elle hérite de la classe abstraite Arme et définit ses propres statistiques
@@ -11,6 +16,8 @@ public class Epee extends Arme {
      * Constructeur par défaut de l'Épée.
      * Fait appel au constructeur de la classe parente (super) pour injecter ses constantes.
      */
+
+
     public Epee() {
         // Appelle le constructeur de "Arme" avec les valeurs :
         // Nom: "Epee"
@@ -18,6 +25,7 @@ public class Epee extends Arme {
         // Portée: 100 pixels
         // Cadence: 500 millisecondes (0.5s entre chaque coup)
         // Angle: PI/3 radians (environ 60 degrés, crée un cône d'attaque assez large)
+
         super("Epee", 10, 100, 500, Math.PI / 3);
     }
 

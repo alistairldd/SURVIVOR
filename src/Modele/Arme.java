@@ -1,5 +1,7 @@
 package Modele;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Classe abstraite définissant la base de toute arme équipable par le joueur.
  * Centralise les statistiques utilisées par le Modèle pour calculer les collisions
@@ -17,6 +19,8 @@ public abstract class Arme {
     private int cadence;
     // Angle d'ouverture du cône d'attaque (en radians)
     private double angle;
+    // Image représentant l'arme (optionnel, peut être utilisé pour l'affichage)
+    private BufferedImage image;
 
     /**
      * Constructeur de base d'une arme.
@@ -33,6 +37,7 @@ public abstract class Arme {
         this.portee = portee;
         this.cadence = cadence;
         this.angle = angle;
+        this.image = image;
     }
 
     // Retourne la puissance d'attaque de l'arme

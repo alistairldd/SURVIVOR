@@ -1,9 +1,14 @@
 package Vue;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 import Controleur.ControleurSouris;
 import Modele.Arme;
 import Modele.Modele;
+
+import javax.imageio.ImageIO;
 
 /**
  * Gère l'affichage dynamique de l'arme du joueur.
@@ -27,11 +32,24 @@ public class VueArme {
     // Flag pour afficher ou non la portée de l'arme (cône d'attaque)
     private boolean affPortee = false; // affiche la portée de l'arme (c
 
+    private BufferedImage image;
+
     // Constructeur de la classe VueArme
     public VueArme(ControleurSouris controleurSouris, Vue vue, Modele modele) {
         this.controleurSouris = controleurSouris;
         this.modele = modele;
         this.vue = vue;
+
+        Arme armeEquipee = modele.getJoueur().getArmeEquipee();
+        // Charger l'image de l'arme depuis le disque dur (optionnel, peut être utilisé pour un affichage plus détaillé)
+        try {
+            image = ImageIO.read(new File("src/images/" + armeEquipee.getNom() + ".png"));
+        } catch (java.io.IOException e) {
+            // Si le fichier n'est pas trouvé, on peut choisir de ne pas afficher d'image ou de dessiner une forme générique à la place
+            e.printStackTrace();
+            System.out.println("Erreur : Impossible de charger l'image de l'arme.");
+        }
+
     }
 
     public boolean getAffPortee() {
@@ -72,6 +90,9 @@ public class VueArme {
 
         // Crée une copie du contexte graphique pour ne pas affecter le reste des dessins avec nos rotations
         Graphics2D g2d = (Graphics2D) g.create();
+
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
 
         // Récupère les caractéristiques physiques de l'arme pour l'affichage (notamment sa longueur/portée)
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
@@ -131,7 +152,9 @@ public class VueArme {
         // 3. On dessine un simple rectangle horizontal.
         // Puisque le calque a été tourné, ce rectangle pointera naturellement vers la souris.
         // On le décale de "rayon" sur l'axe X pour l'éloigner du corps, et on centre son épaisseur (Y = -TAILLE/2)
-        g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE);
+        // g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE); ça c'était pour le test au début
+
+        g2d.drawImage(image, 10, -12, 90,25, null);
 
         // Libère la mémoire et annule les translations/rotations pour les prochains dessins
         g2d.dispose();
