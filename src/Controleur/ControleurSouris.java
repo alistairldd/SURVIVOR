@@ -59,7 +59,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                 modele.joueurAttaque(angleAttaque);
                 j.setDernierTempsAttaque();
                 int cadence = j.getArmeEquipee().getCadence();
-                AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence);
+                AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
                 vue.getVueArme().setEnAnimation(true);
                 animation.start();
             }

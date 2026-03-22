@@ -3,6 +3,7 @@ package Controleur;
 import Modele.Modele;
 import Vue.Vue;
 import Modele.Map;
+import Vue.VueArme;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -45,6 +46,10 @@ public class ControleurClavier implements KeyListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_T) {
             modele.getJoueur().construireTour();
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_C) {
+            vue.getVueArme().setAffPortee(!vue.getVueArme().getAffPortee()); // bascule l'affichage de la portée de l'arme
         }
     }
 

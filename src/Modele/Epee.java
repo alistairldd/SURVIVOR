@@ -15,10 +15,10 @@ public class Epee extends Arme {
         // Appelle le constructeur de "Arme" avec les valeurs :
         // Nom: "Epee"
         // Dégâts: 10
-        // Portée: 75 pixels
+        // Portée: 100 pixels
         // Cadence: 500 millisecondes (0.5s entre chaque coup)
         // Angle: PI/3 radians (environ 60 degrés, crée un cône d'attaque assez large)
-        super("Epee", 10, 75, 500, Math.PI / 3);
+        super("Epee", 10, 100, 500, Math.PI / 3);
     }
 
     // Récupère la valeur des dégâts définis dans la classe parente

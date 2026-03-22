@@ -49,7 +49,8 @@ public class VueInstructions {
                 "• CLIC DROIT : Se déplacer",
                 "• CLIC GAUCHE : Attaquer",
                 "• TOUCHE E : Ramasser ressource",
-                "• TOUCHE T : Construire tour"
+                "• TOUCHE T : Construire tour",
+                "• TOUCHE C : Afficher le rayon de l'attaque"
         };
 
         // Boucle pour afficher chaque instruction ligne par ligne

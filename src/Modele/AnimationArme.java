@@ -16,15 +16,18 @@ public class AnimationArme extends Thread{
     private int duree;
     // Intervalle de rafraîchissement (en ms) entre chaque image de l'animation pour un rendu fluide
     private int pas = 15;
+    private Modele modele;
 
     /**
      * @param vueArme L'instance graphique de l'arme qui subira la rotation.
-     * @param duree La durée totale de l'animation (généralement calquée sur le cooldown/cadence de l'arme).
+     * @param duree   La durée totale de l'animation (généralement calquée sur le cooldown/cadence de l'arme).
+     * @param modele
      */
-    public AnimationArme(VueArme vueArme, int duree) {
+    public AnimationArme(VueArme vueArme, int duree, Modele modele) {
         // Initialisation des paramètres de l'animation
         this.duree = duree;
         this.vueArme = vueArme;
+        this.modele = modele;
     }
 
     /**
@@ -40,7 +43,8 @@ public class AnimationArme extends Thread{
          * Lorsque le ratio est de 1, l'offset est de π/4 (l'arme est en position d'attaque).
          */
         // Calcule l'angle exact en fonction de l'avancement (balayage d'un angle de 90 degrés, soit PI/2)
-        return (-Math.PI/4) + (ratio * Math.PI/2);
+        double angle = modele.getJoueur().getArmeEquipee().getAngle();
+        return (-angle/2) + (ratio * angle);
     }
 
     /**

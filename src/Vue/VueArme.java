@@ -22,14 +22,24 @@ public class VueArme {
 
     // Angle supplémentaire ajouté artificiellement par le Thread d'animation lors d'un coup
     private double angleOffsetAnimation = 0; // angle de décalage pour l'animation d'attaque
-    // Flag (drapeau) indiquant si une animation est en cours
+    // Flag indiquant si une animation est en cours
     private boolean enAnimation = false; // indique si l'animation d'attaque est en
+    // Flag pour afficher ou non la portée de l'arme (cône d'attaque)
+    private boolean affPortee = false; // affiche la portée de l'arme (c
 
     // Constructeur de la classe VueArme
     public VueArme(ControleurSouris controleurSouris, Vue vue, Modele modele) {
         this.controleurSouris = controleurSouris;
         this.modele = modele;
         this.vue = vue;
+    }
+
+    public boolean getAffPortee() {
+        return affPortee;
+    }
+
+    public void setAffPortee(boolean b) {
+        affPortee = b;
     }
 
 
@@ -66,6 +76,7 @@ public class VueArme {
         // Récupère les caractéristiques physiques de l'arme pour l'affichage (notamment sa longueur/portée)
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
         int portee = (int) armeEquipee.getPortee();
+        double ouvertureCone = armeEquipee.getAngle();
 
         // Récupérer la position du joueur (point d'origine de l'arme)
         int posJoueurX = (int) modele.getJoueur().getPositionX();
@@ -86,19 +97,41 @@ public class VueArme {
         // Distance radiale pour ne pas dessiner l'arme DANS le joueur, mais juste à côté (dans sa main)
         int rayon = 20; // distance entre le joueur et l'arme
 
+
+        // Déplace le point d'origine du dessin (0,0) sur les coordonnées absolues du joueur
+        g2d.translate(posJoueurX, posJoueurY);
+        // Pivote l'ensemble du calque autour de ce nouveau point (0,0) selon l'angle de la souris
+        g2d.rotate(angle);
+
+        if (affPortee) {
+            // Dessiner un cône semi-transparent pour représenter la zone d'attaque de l'arme
+            g2d.setColor(new Color(0, 150, 255, 60));
+
+            // La méthode fillArc prend des degrés. On convertit l'ouverture (ex: PI/3 -> 60°)
+            int arcAngle = (int) Math.toDegrees(ouvertureCone);
+
+            // Pour que la souris soit pile au milieu du cône, on commence à dessiner
+            // à la moitié de l'angle en négatif (ex: de -30° à +30°)
+            int startAngle = -arcAngle / 2;
+
+            // fillArc dessine dans un rectangle englobant. Pour un cercle de rayon "portee" centré sur (0,0),
+            // le coin supérieur gauche est à (-portee, -portee) et sa taille est (portee*2, portee*2)
+            g2d.fillArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
+
+            // Optionnel : un petit trait de contour bleu foncé pour faire plus propre
+            g2d.setColor(new Color(0, 100, 255, 150));
+            g2d.drawArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
+            // On dessine aussi deux lignes pour relier le joueur au bord de l'arc
+            g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle))));
+            g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle + arcAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle + arcAngle))));
+        }
+        g2d.rotate( angleOffsetAnimation); // Applique la rotation d'animation
         // Dessiner l'arme (couleur générique grise)
         g2d.setColor(Color.GRAY);
-
-        // --- MAGIE DES TRANSFORMATIONS GRAPHIQUES ---
-        // 1. Déplace le point d'origine du dessin (0,0) sur les coordonnées absolues du joueur
-        g2d.translate(posJoueurX, posJoueurY);
-        // 2. Pivote l'ensemble du calque autour de ce nouveau point (0,0) selon l'angle de la souris + l'animation d'attaque
-        g2d.rotate(angle + angleOffsetAnimation);
-
         // 3. On dessine un simple rectangle horizontal.
         // Puisque le calque a été tourné, ce rectangle pointera naturellement vers la souris.
         // On le décale de "rayon" sur l'axe X pour l'éloigner du corps, et on centre son épaisseur (Y = -TAILLE/2)
-        g2d.fillRect(rayon,-TAILLE/2, portee, TAILLE);
+        g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE);
 
         // Libère la mémoire et annule les translations/rotations pour les prochains dessins
         g2d.dispose();
