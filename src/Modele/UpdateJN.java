@@ -60,7 +60,7 @@ public class UpdateJN {
         jour = false;
         // Créer les monstres
         // Lance une vague massive de 100 ennemis répartis sur les bords de la carte
-        monGestionnaireMonstres.genererMonstre(100); // Génère 5 monstres pour la nuit
+        monGestionnaireMonstres.genererMonstre(5); // Génère les monstres pour la nuit
 
         // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
         // (Excellente mécanique de game design pour éviter la sur-accumulation passive)

@@ -48,7 +48,6 @@ public class Map {
 
         // Ajoute deux autres tours par défaut pour tester le système de défense
         this.batiments.add(new Tower(largeur/2 - 100, hauteur/2 - 100));
-        this.batiments.add(new Tower(largeur/2,  70));
     }
 
     /**
