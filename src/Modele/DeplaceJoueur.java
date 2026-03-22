@@ -37,8 +37,8 @@ public class DeplaceJoueur extends Thread {
         // Continue de tourner tant que le thread n'est pas interrompu (ex: par un nouveau clic de déplacement)
         while (!Thread.currentThread().isInterrupted()) {
             // Récupère la position actuelle du joueur à l'instant T
-            double posX = joueur.getPositionX();
-            double posY = joueur.getPositionY();
+            double posX = joueur.getX();
+            double posY = joueur.getY();
 
             // Condition de sortie : si le joueur est pile sur la destination, on arrête le thread
             if (posX == destX && posY == destY) break;

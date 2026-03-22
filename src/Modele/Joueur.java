@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
  * Gère l'état du joueur (PV, position, inventaire, arme) ainsi que ses actions
  * principales (se déplacer, ramasser, attaquer, construire).
  */
-public class Joueur {
+public class Joueur implements Localisable {
 
     //Stats du joueur
     // Points de vie actuels
@@ -52,8 +52,8 @@ public class Joueur {
     // Constructeur de la classe Joueur, il initialise les données du joueur.
     public Joueur(Modele modele) {
         // on initialise la position au centre exact de la carte
-        positionX = (double) LARGEUR_MAP /2;
-        positionY = (double) HAUTEUR_MAP /2;
+        positionX = LARGEUR_MAP /2;
+        positionY = HAUTEUR_MAP /2;
         // Statistiques de base
         hp = 100;
         attack = 10;
@@ -90,9 +90,9 @@ public class Joueur {
 
     // L'utilisation de 'synchronized' évite les conflits si le thread de déplacement et la boucle principale y accèdent en même temps
     // Getter pour la position X du joueur
-    public synchronized double getPositionX() {return positionX;}
+    public synchronized double getX() {return positionX;}
     // Getter pour la position Y du joueur
-    public synchronized double getPositionY() {return positionY;}
+    public synchronized double getY() {return positionY;}
     // Setter pour la position X du joueur
     public synchronized void setPositionX(double positionX) {this.positionX = positionX;}
     // Setter pour la position Y du joueur
@@ -281,7 +281,7 @@ public class Joueur {
             // La tour a directement tous ses PV max grâce à son constructeur
 
             // 5. On demande au Modèle d'ajouter ce nouveau bâtiment à la liste globale (Map)
-            Modele.getMap().getBatiments().add(nouvelleTour);
+            modele.getMap().getBatiments().add(nouvelleTour);
 
             System.out.println("Tour construite avec succès en (" + (int)positionX + ", " + (int)positionY + ") !");
             System.out.println("Inventaire restant : " + inventaire.size() + " objets.");

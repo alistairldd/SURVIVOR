@@ -11,10 +11,13 @@ public class CycleJourNuit extends Thread {
     // Constantes pour le cycle
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
-    // Durée fixe d'une phase (jour ou nuit) en secondes réelles
-    public final static int DUREE_CYCLE = 15;
+    // Durée fixe d'une phase jour en secondes réelles
+    public final static int DUREE_CYCLE_JOUR = 15;
+    // Durée fixe d'une phase nuit en secondes réelles
+    public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
-    public final static int TICKS_PAR_CYCLE = DUREE_CYCLE * FPS;
+    public final static int TICKS_PAR_CYCLE_JOUR = DUREE_CYCLE_JOUR * FPS;
+    public final static int TICKS_PAR_CYCLE_NUIT = DUREE_CYCLE_NUIT * FPS;
 
     // Compteur interne pour suivre l'avancement exact de la phase de jour actuelle
     private int framesInCurrentCycleJour = 0;
@@ -22,14 +25,15 @@ public class CycleJourNuit extends Thread {
     private int framesInCurrentCycleNuit = 0;
 
     // Objet responsable d'appliquer les changements d'état (spawn de monstres, nettoyage, etc.)
-    private UpdateJN updateJN = new UpdateJN();
+    private UpdateJN updateJN;
 
     /**
      * Constructeur qui démarre automatiquement le thread du cycle jour/nuit
      * dès sa création en mémoire.
      */
-    public CycleJourNuit() {
+    public CycleJourNuit(UpdateJN updateJN) {
         // Lance l'exécution de la méthode run() en parallèle
+        this.updateJN = updateJN;
         this.start();
     }
 
@@ -46,14 +50,13 @@ public class CycleJourNuit extends Thread {
         // Boucle infinie pour maintenir le temps qui passe tout au long du jeu
         while (true) {
             // Vérifie l'état actuel (vrai = jour, faux = nuit)
-            boolean jour = updateJN.isDay();
 
             if (updateJN.isDay()) {
                 // Incrémente le compteur de temps pour le jour
                 framesInCurrentCycleJour++;
 
                 // Vérifie si la durée totale du jour a été atteinte
-                if (framesInCurrentCycleJour >= TICKS_PAR_CYCLE) {
+                if (framesInCurrentCycleJour >= TICKS_PAR_CYCLE_JOUR) {
                     // Remet le compteur du jour à zéro pour le prochain cycle
                     framesInCurrentCycleJour = 0;
                     // Déclenche la tombée de la nuit et ses événements (spawn de monstres)
@@ -72,7 +75,7 @@ public class CycleJourNuit extends Thread {
                 framesInCurrentCycleNuit++;
 
                 // Vérifie si la durée totale de la nuit a été atteinte
-                if (framesInCurrentCycleNuit >= TICKS_PAR_CYCLE) {
+                if (framesInCurrentCycleNuit >= TICKS_PAR_CYCLE_NUIT) {
                     // Remet le compteur de la nuit à zéro pour le prochain cycle
                     framesInCurrentCycleNuit = 0;
                     // Déclenche le lever du soleil et ses événements (nettoyage, ressources)
@@ -110,13 +113,13 @@ public class CycleJourNuit extends Thread {
     // Calcule le temps restant (en secondes) spécifiquement pour la phase de jour
     public int getTempsRestantJour() {
         // Soustrait le nombre de secondes écoulées à la durée totale du cycle
-        return DUREE_CYCLE - (framesInCurrentCycleJour / FPS);
+        return DUREE_CYCLE_JOUR - (framesInCurrentCycleJour / FPS);
     }
 
     // Calcule le temps restant (en secondes) spécifiquement pour la phase de nuit
     public int getTempsRestantNuit() {
         // Soustrait le nombre de secondes écoulées à la durée totale du cycle
-        return DUREE_CYCLE - (framesInCurrentCycleNuit / FPS);
+        return DUREE_CYCLE_NUIT - (framesInCurrentCycleNuit / FPS);
     }
 
     // Raccourci pour vérifier si c'est actuellement le jour

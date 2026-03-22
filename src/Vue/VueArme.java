@@ -75,12 +75,12 @@ public class VueArme {
 
         // Récupère les caractéristiques physiques de l'arme pour l'affichage (notamment sa longueur/portée)
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
-        int portee = (int) armeEquipee.getPortee();
+        int portee = armeEquipee.getPortee();
         double ouvertureCone = armeEquipee.getAngle();
 
         // Récupérer la position du joueur (point d'origine de l'arme)
-        int posJoueurX = (int) modele.getJoueur().getPositionX();
-        int posJoueurY = (int) modele.getJoueur().getPositionY();
+        int posJoueurX = (int) modele.getJoueur().getX();
+        int posJoueurY = (int) modele.getJoueur().getY();
 
         // Récupérer le centre exact de la fenêtre d'affichage (où se trouve visuellement le joueur)
         int centerX = vue.getWidth() / 2;

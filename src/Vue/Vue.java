@@ -157,22 +157,22 @@ public class Vue extends JPanel {
         // --- DESSIN DU JOUEUR ---
         g2d.setColor(Color.BLACK);
         Joueur joueur = modele.getJoueur();
-        int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getPositionX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
-        int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getPositionY()); // idem
+        int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
+        int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getY()); // idem
         // Dessine un petit point noir pour le joueur
         g2d.fillOval(posX,posY, 5, 5);
 
         // --- DESSIN DES BÂTIMENTS ---
         for (Batiment b : modele.getMap().getBatiments()) {
-            int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, b.getX());
-            int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, b.getY());
+            int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, (int) b.getX());
+            int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, (int) b.getY());
             VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
         }
 
         // --- DESSIN DES MONSTRES ---
         for (Monstre m : modele.getMonstres()) {
-            int monstreX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
-            int monstreY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, m.getY()); // idem
+            int monstreX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, (int) m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
+            int monstreY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, (int) m.getY()); // idem
             vueMonstre.dessiner(g2d, m, monstreX, monstreY, true);
         }
 
@@ -200,8 +200,8 @@ public class Vue extends JPanel {
         // camX/Y représentent le coin haut-gauche de ce que l'on voit dans le monde
         Joueur joueur = modele.getJoueur();
         // Calcule le décalage pour centrer la vue exactement sur la position absolue du joueur
-        double camX = joueur.getPositionX() - ((double) getWidth() / 2);
-        double camY = joueur.getPositionY() - ((double) getHeight() / 2);
+        double camX = joueur.getX() - ((double) getWidth() / 2);
+        double camY = joueur.getY() - ((double) getHeight() / 2);
 
         // --- DÉBUT DE LA ZONE MONDE ---
         // On demande à Graphics de décaler tout ce qu'on va dessiner ensuite
@@ -225,7 +225,7 @@ public class Vue extends JPanel {
         // 4. Dessiner les bâtiments
         for (Batiment b : modele.getMap().getBatiments()) {
             // Passe le relais à la sous-vue spécialisée avec les coordonnées absolues
-            vueBatiment.dessinerBatiment(g2d, b, b.getX(), b.getY(), false);
+            vueBatiment.dessinerBatiment(g2d, b, (int) b.getX(), (int) b.getY(), false);
         }
 
         // Dessine l'arme du joueur par-dessus le reste
@@ -233,7 +233,7 @@ public class Vue extends JPanel {
 
         // 5. Dessiner les monstres (si on en a)
         for (Monstre m : modele.getMonstres()) {
-            vueMonstre.dessiner(g2d, m, m.getX(), m.getY(), false);
+            vueMonstre.dessiner(g2d, m, (int) m.getX(), (int) m.getY(), false);
         }
 
         // --- FIN DE LA ZONE MONDE ---

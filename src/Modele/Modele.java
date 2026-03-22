@@ -1,7 +1,5 @@
 package Modele;
 
-import Controleur.ControleurSouris;
-
 import java.util.ArrayList;
 
 /*
@@ -40,7 +38,8 @@ public class Modele {
 
         // Initialisation du jour et de la nuit
         // (Démarre automatiquement son propre thread interne)
-        leCycleJourNuit = new CycleJourNuit();
+        UpdateJN updateJN = new UpdateJN(this);
+        leCycleJourNuit = new CycleJourNuit(updateJN);
 
         // Dans le constructeur de Modele.java
         // Dans Modele.java, à la fin du constructeur public Modele() { ... }
@@ -54,7 +53,11 @@ public class Modele {
     /*---- GETTERS ET SETTERS ---- */
 
     // Retourne la carte globale
-    public static Map getMap() {
+    public Map getMap() {
+        return map;
+    }
+    // à enlever après la restructuration
+    public static Map getMap2() {
         return map;
     }
 
@@ -106,8 +109,8 @@ public class Modele {
         double portee = joueur.getArmeEquipee().getPortee();
         double angle = joueur.getArmeEquipee().getAngle();
         // Récupérer la position centrale du joueur d'où part l'attaque
-        double positionX = this.joueur.getPositionX();
-        double positionY = this.joueur.getPositionY();
+        double positionX = this.joueur.getX();
+        double positionY = this.joueur.getY();
 
 
         // Récupérer la liste complète des cibles potentielles

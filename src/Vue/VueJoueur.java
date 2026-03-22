@@ -25,8 +25,8 @@ public class VueJoueur {
     // Méthode pour dessiner le joueur sur la carte
     public void dessiner(Graphics g2d, Joueur joueur) {
         // Récupère les vraies coordonnées monde depuis le modèle
-        double posX = joueur.getPositionX();
-        double posY = joueur.getPositionY();
+        double posX = joueur.getX();
+        double posY = joueur.getY();
 
         // Définit la couleur de base de l'avatar (noir)
         g2d.setColor(Color.black);

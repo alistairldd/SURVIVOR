@@ -34,8 +34,8 @@ public class VueCarte {
         // ces variables "x" et "y" ne sont donc pas utilisées directement ici pour le dessin).
         // On applique la même logique de caméra que pour les ressources :
         // Centre Ecran + Position Objet - Position Joueur
-        double x = coinHautGaucheMapX - joueur.getPositionX();
-        double y = coinHautGaucheMapY - joueur.getPositionY();
+        double x = coinHautGaucheMapX - joueur.getX();
+        double y = coinHautGaucheMapY - joueur.getY();
 
         // Définit une couleur verte sombre pour le sol
         g.setColor(new Color(0, 101, 0));

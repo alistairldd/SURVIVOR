@@ -14,8 +14,17 @@ public class UpdateJN {
     // État principal du jeu qui conditionne les règles (ex: construction autorisée uniquement la nuit)
     private boolean jour = true;
 
+    // Référence au modèle pour accéder aux données globales (carte, ressources, etc.)
+    private Modele modele;
+
     // Instance unique responsable de la création et du nettoyage des ennemis
     private GestionnaireMonstres monGestionnaireMonstres = new GestionnaireMonstres();
+
+
+    public UpdateJN(Modele modele){
+        this.modele = modele;
+    }
+
 
     // Getter pour savoir si c'est le jour ou la nuit
     public boolean isDay() {
@@ -69,6 +78,7 @@ public class UpdateJN {
         // Maintien de la propreté de la carte en temps réel :
         // Supprime de la mémoire les monstres morts pour alléger le processeur et le rendu visuel
         monGestionnaireMonstres.supprimerMonstresMorts();
+        monGestionnaireMonstres.chercheCible(modele.getJoueur(), modele.getMap().getBatiments());
 
     }
 

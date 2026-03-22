@@ -5,12 +5,12 @@ package Modele;
  * Gère les données de base communes à tous les bâtiments comme la position spatiale,
  * l'intégrité structurelle (HP) et les règles de réparation.
  */
-public abstract class Batiment {
+public abstract class Batiment implements Localisable{
 
     // Constante : Points de vie maximum d'un bâtiment neuf
     public final int BASE_HP = 100;
     // Coordonnées de placement sur la grille/carte globale
-    int x,y;
+    double x,y;
     // Points de vie actuels du bâtiment (diminue lors d'une attaque)
     private int hp;
     // Rayon d'action dans lequel le joueur doit se trouver pour pouvoir interagir ou réparer
@@ -42,10 +42,10 @@ public abstract class Batiment {
     }
 
     // Récupère la position horizontale sur la carte
-    public int getX(){ return x; }
+    public double getX(){ return x; }
 
     // Récupère la position verticale sur la carte
-    public int getY(){ return y; }
+    public double getY(){ return y; }
 
     // Indique à quelle distance le joueur doit être pour initier une réparation
     public int getHealingRange() {

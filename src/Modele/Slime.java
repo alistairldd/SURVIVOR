@@ -18,7 +18,7 @@ public class Slime extends Monstre {
         // Attaque: 5 points de dégâts
         // Portée: 50 pixels
         // Vitesse: 1 pixel par déplacement
-        super("Slime", 50, 5, 50, 1);
+        super("Slime", 50, 5, 30, 1);
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;

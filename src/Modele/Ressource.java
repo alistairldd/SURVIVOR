@@ -66,7 +66,7 @@ public class Ressource {
         Cette méthode génère un nombre donné de ressources aléatoires sur la carte.
          */
         // Récupère l'instance unique de la carte depuis le modèle
-        Map carte = Modele.getMap();
+        Map carte = Modele.getMap2();
         // S'assure qu'il ne reste aucune ancienne ressource avant d'en créer de nouvelles
         carte.viderRessources();
 
@@ -87,7 +87,7 @@ public class Ressource {
         déplacer et à chercher de nouvelles ressources.
          */
         // Demande à la Map de réinitialiser sa liste de ressources
-        Modele.getMap().viderRessources();
+        Modele.getMap2().viderRessources();
     }
 
     // Récupère la position horizontale

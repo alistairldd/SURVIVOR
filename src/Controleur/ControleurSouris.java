@@ -4,14 +4,12 @@ import Modele.Modele;
 import Vue.Vue;
 import Modele.Joueur;
 import Modele.DeplaceJoueur;
-import Modele.Monstre;
 import Modele.AnimationArme;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
 /**
  * Contrôleur dédié à la gestion des événements de la souris.
@@ -81,8 +79,8 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             int y = e.getY();
 
             // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
-            double camX = joueur.getPositionX() - (double) vue.getWidth() / 2;
-            double camY = joueur.getPositionY() - (double) vue.getHeight() / 2;
+            double camX = joueur.getX() - (double) vue.getWidth() / 2;
+            double camY = joueur.getY() - (double) vue.getHeight() / 2;
 
             // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
             double destX = camX + x;

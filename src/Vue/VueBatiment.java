@@ -110,8 +110,8 @@ public class VueBatiment {
                 // L'effet laser/boule ne s'affiche que pendant 150ms pour donner un effet de "flash" ou de coup rapide
                 if (cible != null && (System.currentTimeMillis() - t.getDernierTempsAttaque() < 150)) {
 
-                    int cibleX = cible.getX(); // Centre X du monstre
-                    int cibleY = cible.getY(); // Centre Y du monstre
+                    int cibleX = (int) cible.getX(); // Centre X du monstre
+                    int cibleY = (int) cible.getY(); // Centre Y du monstre
                     int tailleProjectile = 8;
 
                     // --- AJOUT : Taille du monstre pour l'intersection ---
