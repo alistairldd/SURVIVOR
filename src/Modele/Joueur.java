@@ -177,7 +177,7 @@ public class Joueur implements Localisable {
      */
     // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
     public void ramasseRessource(){
-         ArrayList<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
+        ArrayList<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
         // Parcourt la liste à l'envers pour éviter les bugs d'index lors de la suppression d'un élément
         for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
             Ressource r = ressourcesDispo.get(i);
@@ -257,6 +257,18 @@ public class Joueur implements Localisable {
         if (!modele.getLeCycleJourNuit().isDay()) {
             System.out.println("Impossible de construire une tour le jour ! Attendez la tombée de la nuit.");
             return false; // On annule la construction
+        }
+
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
+            // Calcul de la distance euclidienne entre le joueur et le bâtiment inspecté
+            double distance = Math.hypot(b.getX() - this.positionX, b.getY() - this.positionY);
+            // La distance minimale requise est la somme du rayon du bâtiment existant et du rayon de la future tour
+            double distanceMinimaleRequise = b.getRayonHitbox() + RAYON_HITBOX_TOUR;
+
+            if (distance < distanceMinimaleRequise) {
+                System.out.println("Construction annulée : Espace insuffisant, un bâtiment est trop proche !");
+                return false;
+            }
         }
 
         // 1. On compte ce qu'il y a dans l'inventaire en triant par type

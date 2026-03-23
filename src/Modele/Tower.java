@@ -30,9 +30,11 @@ public class Tower extends Batiment{
     public Tower(int x, int y, GestionnaireBatiments gB) {
         // Initialise la structure via le constructeur parent (Batiment)
         super(x, y, gB, TOWER_BASE_RANGE);
+        this.hp = HP_TOWER;
         // Applique les statistiques de combat par défaut
         this.range = TOWER_BASE_RANGE;
         this.damage = TOWER_BASE_DAMAGE;
+        this.rayonHitbox = RAYON_HITBOX_TOUR;
     }
 
     // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)
@@ -50,18 +52,18 @@ public class Tower extends Batiment{
      * vérifie son cooldown, et tire sur le premier ennemi à portée.
      * @param monstre le monstre dans la porté.
      */
-   public void attaquer(Monstre monstre) {monstre.perdreHp(this.damage);}
+    public void attaquer(Monstre monstre) {monstre.perdreHp(this.damage);}
 
     @Override
     public void run() {
-            while (this.hp > 0) {
-                try {
-                    monstreCible = gBatiments.trouverCible(this);
-                    if (monstreCible != null) {
+        while (this.hp > 0) {
+            try {
+                monstreCible = gBatiments.trouverCible(this);
+                if (monstreCible != null) {
                     this.attaquer(monstreCible);}
-                    Thread.sleep(BAT_DELAY);
-                } catch (InterruptedException e) {}
-            }
+                Thread.sleep(BAT_DELAY);
+            } catch (InterruptedException e) {}
+        }
     }
 
     @Override

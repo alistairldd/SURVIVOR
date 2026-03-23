@@ -13,6 +13,8 @@ public class HQ extends Batiment {
     public HQ(GestionnaireBatiments gB) {
         // Appelle le constructeur parent (Batiment) en lui passant le centre de la Map calculé dynamiquement
         super(LARGEUR_MAP/2, HAUTEUR_MAP/2, gB, 0);
+        this.hp = HP_HQ;
+        this.rayonHitbox = RAYON_HITBOX_QG;
     }
     // Récupère la position horizontale sur la carte
     public double getX(){ return x; }

@@ -18,6 +18,9 @@ public abstract class Batiment extends Thread implements Localisable {
 
     private int range;
 
+    // Taille physique d'encombrement du bâtiment
+    protected int rayonHitbox;
+
     /**
      * Initialise un bâtiment à une position spécifique avec ses points de vie maximum.
      * @param x Coordonnée X sur la carte globale.
@@ -28,8 +31,6 @@ public abstract class Batiment extends Thread implements Localisable {
         // Enregistre les coordonnées choisies pour la construction
         this.x = x;
         this.y = y;
-        // Initialise la structure "flambant neuve" avec tous ses PV
-        this.hp = BASE_HP;
         // Fixe la zone d'interaction par défaut à 10 pixels
         this.healingRange = HEALING_RANGE;
         this.range = range;
@@ -43,7 +44,7 @@ public abstract class Batiment extends Thread implements Localisable {
 
     // Restaure instantanément les points de vie à leur valeur maximale par défaut
     public void resetHp(int hp) {
-        this.hp = BASE_HP;
+        this.hp = hp;
     }
 
     // Récupère la position horizontale sur la carte
@@ -66,6 +67,8 @@ public abstract class Batiment extends Thread implements Localisable {
         return range;
     }
 
-
-
+    // Récupère le rayon d'encombrement physique du bâtiment
+    public int getRayonHitbox() {
+        return rayonHitbox;
+    }
 }

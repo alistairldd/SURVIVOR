@@ -70,7 +70,7 @@ public class VueBatiment {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
 
                 // Alerte visuelle : Si la tour a moins de 10% de ses PV max, son aura devient rouge
-                if (t.getHp() <= 0.1 * BASE_HP) {
+                if (t.getHp() <= 0.1 * HP_TOWER) {
                     g2d.setColor(Color.RED);
                 } else {
                     g2d.setColor(Color.CYAN); // Sinon, aura classique cyan
@@ -92,7 +92,7 @@ public class VueBatiment {
 
             // --- DESSIN DE LA TOUR ---
             // Même logique d'alerte visuelle pour la structure elle-même (Rouge = Critique)
-            if (t.getHp() <= 0.1 * BASE_HP) {
+            if (t.getHp() <= 0.1 * HP_TOWER) {
                 g2d.setColor(Color.RED);
             } else {
                 g2d.setColor(Color.CYAN);

@@ -5,7 +5,9 @@ public final class Constantes {
 
     /*** ---Bâtiments--- ***/
     // Constante : Points de vie maximum d'un bâtiment neuf
-    public static final int BASE_HP = 100;
+    public static final int HP_TOWER = 100;
+    public static final int HP_HQ = 150;
+    public static final int HP_DEFAUT = 100;
     public static final int HEALING_RANGE = 50;
 
     /*--- Tower ---*/
@@ -13,16 +15,16 @@ public final class Constantes {
     public static final int TOWER_BASE_DAMAGE = 20;
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
-    // VITESSE D'ATTAQUE DE LA TOUR (1000 = 1 seconde)
-    // Temps de recharge nécessaire entre deux tirs successifs
-    public static final int CADENCE_TOWER = 1000;
+    public static final int RAYON_HITBOX_TOUR = 50; // Rayon d'encombrement d'une tour
+    public static final int RAYON_HITBOX_QG = 80;   // Le QG est plus gros, il prend plus de place
+
 
     /*** ---Cycle Jour/Nuit--- ***/
     // Constantes pour le cycle
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 5;
+    public final static int DUREE_CYCLE_JOUR = 100;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
