@@ -52,7 +52,10 @@ public class Tower extends Batiment{
      * vérifie son cooldown, et tire sur le premier ennemi à portée.
      * @param monstre le monstre dans la porté.
      */
-    public void attaquer(Monstre monstre) {monstre.perdreHp(this.damage);}
+    public void attaquer(Monstre monstre) {
+        monstre.perdreHp(this.damage);
+        this.dernierTempsAttaque = System.currentTimeMillis();
+    }
 
     @Override
     public void run() {
