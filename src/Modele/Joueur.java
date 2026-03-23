@@ -1,6 +1,7 @@
 package Modele;
 
 import Controleur.ControleurSouris;
+import Vue.DeplaceJoueur;
 
 import java.util.ArrayList;
 

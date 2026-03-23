@@ -1,4 +1,6 @@
-package Modele;
+package Vue;
+
+import Modele.Joueur;
 
 /**
  * Thread dédié au déplacement fluide du joueur vers une destination donnée (clic droit).

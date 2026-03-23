@@ -1,6 +1,6 @@
-package Modele;
+package Vue;
 
-import Vue.VueArme;
+import Modele.Modele;
 
 /**
  * Thread autonome gérant l'effet visuel de l'attaque d'une arme.

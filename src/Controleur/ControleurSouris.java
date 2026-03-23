@@ -3,8 +3,8 @@ package Controleur;
 import Modele.Modele;
 import Vue.Vue;
 import Modele.Joueur;
-import Modele.DeplaceJoueur;
-import Modele.AnimationArme;
+import Vue.DeplaceJoueur;
+import Vue.AnimationArme;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

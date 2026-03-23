@@ -10,6 +10,8 @@ import Modele.Modele;
 
 import javax.imageio.ImageIO;
 
+
+
 /**
  * Gère l'affichage dynamique de l'arme du joueur.
  * Calcule l'orientation de l'arme en temps réel pour qu'elle pointe toujours vers
@@ -43,11 +45,11 @@ public class VueArme {
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
         // Charger l'image de l'arme depuis le disque dur (optionnel, peut être utilisé pour un affichage plus détaillé)
         try {
-            image = ImageIO.read(new File("src/images/" + armeEquipee.getNom() + ".png"));
+            image = ImageIO.read(new File("src/images/"+ armeEquipee.getNom()  +".png"));
         } catch (java.io.IOException e) {
             // Si le fichier n'est pas trouvé, on peut choisir de ne pas afficher d'image ou de dessiner une forme générique à la place
             e.printStackTrace();
-            System.out.println("Erreur : Impossible de charger l'image de l'arme.");
+            System.out.println("Erreur : Impossible de charger l'image de l'arme." +armeEquipee);
         }
 
     }
