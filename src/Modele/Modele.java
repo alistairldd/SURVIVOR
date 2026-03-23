@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class Modele {
 
+    private boolean shopOuvert = false;
     // L'entité contrôlée par l'utilisateur
     private Joueur joueur;
     // L'environnement global (static pour être accessible facilement sans passer l'instance partout)
@@ -26,6 +27,10 @@ public class Modele {
 
     // Le gestionnaire autonome du temps (Thread)
     private CycleJourNuit leCycleJourNuit;
+    private GestionnaireShop gestionnaireShop;
+
+
+    private UpdateJN updateJN;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
@@ -38,9 +43,9 @@ public class Modele {
 
         // Initialisation du jour et de la nuit
         // (Démarre automatiquement son propre thread interne)
-        UpdateJN updateJN = new UpdateJN(this);
+        this.updateJN = new UpdateJN(this);
         leCycleJourNuit = new CycleJourNuit(updateJN);
-
+        this.gestionnaireShop = new GestionnaireShop(this);
         // Dans le constructeur de Modele.java
         // Dans Modele.java, à la fin du constructeur public Modele() { ... }
 
@@ -72,15 +77,15 @@ public class Modele {
         return leCycleJourNuit;
     }
 
-    // Raccourci pour récupérer les monstres depuis le cycle temporel
-    public ArrayList<Monstre> getMonstres() {
-        return leCycleJourNuit.getUpdateJN().getMonstres();
-    }
+    // Getter UpdateJN
+    public UpdateJN getUpdateJN() {
+        return updateJN;}
+    // Getter du Shop
+    public boolean isShopOuvert() { return shopOuvert; }
+    public void toggleShop() { this.shopOuvert = !this.shopOuvert; }
+    public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
 
-    // Raccourci pour récupérer le gestionnaire de monstres
-    public GestionnaireMonstres getGestionnaireMonstres() {
-        return leCycleJourNuit.getUpdateJN().getGestionnaireMonstres();
-    }
+
 
     /**
      * Fonction mathématique utilitaire (équivalente à la fonction map() de Processing/Arduino).
@@ -117,7 +122,7 @@ public class Modele {
 
 
         // Récupérer la liste complète des cibles potentielles
-        ArrayList<Monstre> monstres = getMonstres();
+        ArrayList<Monstre> monstres = updateJN.getMonstres();
 
         // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
         for (Monstre m : monstres) {
@@ -143,7 +148,7 @@ public class Modele {
                     // Les deux conditions sont remplies : le monstre est touché !
                     m.perdreHp( joueur.getAttack()); // On applique les dégâts
                     // Affiche l'information dans la console pour debug
-                    System.out.println("Monstre touché ! " + m.getId() + "  HP restant : " + m.getHp());
+                    System.out.println("Monstre touché ! " + m.getID() + "  HP restant : " + m.getHp());
                 }
             }
         }

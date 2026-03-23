@@ -10,8 +10,6 @@ import Modele.Modele;
 
 import javax.imageio.ImageIO;
 
-
-
 /**
  * Gère l'affichage dynamique de l'arme du joueur.
  * Calcule l'orientation de l'arme en temps réel pour qu'elle pointe toujours vers

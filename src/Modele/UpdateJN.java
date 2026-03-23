@@ -1,6 +1,8 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static Modele.Constantes.*;
 // Classe pour la mise à jour du jeu en fonction du temps (jour et la nuit)
 /**
@@ -18,7 +20,8 @@ public class UpdateJN {
     private Modele modele;
 
     // Instance unique responsable de la création et du nettoyage des ennemis
-    private GestionnaireMonstres monGestionnaireMonstres = new GestionnaireMonstres();
+    private GestionnaireMonstres monGestionnaireMonstres = new GestionnaireMonstres(this);
+    private GestionnaireRessources monGestionnaireRessources = new GestionnaireRessources();
 
 
     public UpdateJN(Modele modele){
@@ -44,7 +47,7 @@ public class UpdateJN {
         // Supprimer les monstres de la nuit précédente (fin de la vague)
         monGestionnaireMonstres.clearMonstres();
         // On génère de nouvelles ressources fraîches pour la phase d'exploration
-        Ressource.genereRessources(NB_RESSOURCES);
+        monGestionnaireRessources.genereRessources(NB_RESSOURCES);
 
     }
 
@@ -64,7 +67,7 @@ public class UpdateJN {
 
         // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
         // (Excellente mécanique de game design pour éviter la sur-accumulation passive)
-        Ressource.viderRessources();
+        monGestionnaireRessources.viderRessources();
     }
 
     // Méthode à boucler le jour
@@ -75,21 +78,54 @@ public class UpdateJN {
 
     // Méthode à boucler la nuit
     public void updateNuit() {
-        // Maintien de la propreté de la carte en temps réel :
-        // Supprime de la mémoire les monstres morts pour alléger le processeur et le rendu visuel
-        monGestionnaireMonstres.supprimerMonstresMorts();
-        monGestionnaireMonstres.chercheCible(modele.getJoueur(), modele.getMap().getBatiments());
+
 
     }
 
-    // Getter pour le gestionnaire de monstres
-    public GestionnaireMonstres getGestionnaireMonstres() {
-        return monGestionnaireMonstres;
-    }
 
     // Getter pour exposer directement la liste des monstres présents pendant la nuit au reste du Modèle
     public ArrayList<Monstre> getMonstres() {
         return monGestionnaireMonstres.getMonstres();
+    }
+
+
+    // Getter pour exposer directement la liste des ressources présentes pendant le jour au reste du Modèle
+    public ArrayList<Ressource> getRessources() {
+        return monGestionnaireRessources.getRessources();
+    }
+
+    public Localisable monstreTrouverCible(Localisable m) {
+        //ArrayList<Batiment> batiments = modele.getGestionnaireBatiments.getBatiments();
+        ArrayList<Batiment> batiments = modele.getMap().getBatiments();
+        Joueur joueur = modele.getJoueur();
+        // On crée une liste de tout ce qui est attaquable par les monstres
+        List<Localisable> ciblesPotentielles = new ArrayList<>();
+        ciblesPotentielles.add(joueur);
+        ciblesPotentielles.addAll(batiments);
+
+
+        Localisable plusProche = null;
+        double distMin = Double.MAX_VALUE;
+        for (Localisable cible : ciblesPotentielles) {
+            double d = calculerDistance(m, cible);
+            if (d < distMin) {
+                distMin = d;
+                plusProche = cible;
+            }
+        }
+        return plusProche;
+    }
+
+    /**
+     * Calcule la distance entre deux entités localisables
+     */
+    public double calculerDistance(Localisable a, Localisable b) {
+        // Calcul de la différence sur l'axe X et Y
+        double diffX = a.getX() - b.getX();
+        double diffY = a.getY() - b.getY();
+
+        // Théorème de Pythagore pour la distance
+        return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 
 }

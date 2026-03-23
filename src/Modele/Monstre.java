@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Gère l'identification unique (ID) pour le suivi, les statistiques vitales,
  * et la logique mathématique des déplacements (parcours de vecteurs).
  */
-public abstract class Monstre implements Localisable {
+public abstract class Monstre extends Thread implements Localisable {
 
     // Attributs du monstre
     // Variable statique (partagée par tous les monstres) servant de générateur d'identifiants
@@ -40,6 +40,7 @@ public abstract class Monstre implements Localisable {
     // Indique si le monstre est actuellement en train d'attaquer (true) ou de se déplacer (false)
     private boolean estEnTrainDAttaquer = false;
 
+
     // Constructeur de la classe Monstre, il initialise les données du monstre.
     public Monstre(String nom, int hp, int attack, int portee, int vitesse) {
         // Assigne la valeur actuelle du compteur comme ID unique, puis incrémente le compteur de 1 pour le prochain monstre
@@ -51,10 +52,11 @@ public abstract class Monstre implements Localisable {
         this.attack = attack;
         this.portee = portee;
         this.vitesse = vitesse;
+
     }
 
     // Getter id
-    public int getId() { return id; }
+    public int getID() { return id; }
 
     // Getters et setters pour les attributs du monstre
     public String getNom() { return nom; }
@@ -99,4 +101,5 @@ public abstract class Monstre implements Localisable {
             this.estEnTrainDAttaquer = true;
         }
     }
+
 }

@@ -56,10 +56,12 @@ public class VueInventaire {
         String[] noms = {"Bois", "Pierre", "Fer", "Or"};
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
 
+
         // Boucle pour dessiner les 4 lignes de ressources
         for (int i = 0; i < noms.length; i++) {
             // Concatène le nom et la quantité finale, et décale le texte vers le bas de 20px à chaque itération
             g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 10, yDebut + 25 + (i * 20));
         }
+        g.drawString("Pièces : " + joueur.getPieces(), xOffset, yDebut + 25 + (noms.length * 20));
     }
 }

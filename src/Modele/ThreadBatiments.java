@@ -33,7 +33,7 @@ public class ThreadBatiments extends Thread {
             // Liste de tous les bâtiments posés sur la carte
             ArrayList<Batiment> batiments = modele.getMap().getBatiments();
             // Liste de tous les monstres actuellement en vie
-            ArrayList<Monstre> monstres = modele.getMonstres();
+            ArrayList<Monstre> monstres = modele.getUpdateJN().getMonstres();
 
             // 2. Traitement : On demande à chaque bâtiment de faire son action s'il le peut
             // Parcours classique de la liste (évite parfois les erreurs d'accès concurrent par rapport au foreach)

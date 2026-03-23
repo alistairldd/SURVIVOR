@@ -31,6 +31,8 @@ public class VueHUD extends JPanel {
     private VueBatHud vueBatHud;
     private VueInstructions vueInstructions;
     private VueVie vueVie;
+    private VueShop vueShop = new VueShop();
+
 
     /**
      * Configure le panneau latéral et instancie ses composants textuels et graphiques.
@@ -50,6 +52,9 @@ public class VueHUD extends JPanel {
         this.vueBatHud = new VueBatHud();
         this.vueInstructions = new VueInstructions();
         this.vueVie = new VueVie(modele);
+        this.vueShop = new VueShop();
+
+
     }
 
     /* ---- GETTERS ET SETTERS ---- */
@@ -62,9 +67,11 @@ public class VueHUD extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // Nettoie le panneau avec la couleur de fond actuelle
-
-
-        // Dessin de l'inventaire en haut du HUD (Y=40)
+        if (modele.isShopOuvert()) {
+            this.setBackground(new Color(255, 215, 0)); // Fond doré pour le shop
+            vueShop.dessiner(g, 50, modele.getJoueur());
+        }else {
+         // Dessin de l'inventaire en haut du HUD (Y=40)
         vueInventaire.dessiner(g, (int) (getHeight()*0.3), modele, modele.getJoueur());
 
         // Dessin des batîments un peu plus bas (Y=200)
@@ -78,14 +85,17 @@ public class VueHUD extends JPanel {
         vueJourNuit.dessiner(g, getHeight());
 
         // --- GESTION DE L'AMBIANCE VISUELLE ---
-        // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
-        if (modele.getLeCycleJourNuit().isDay()){
-            // Bleu ciel clair pour le jour
-            this.setBackground(new Color(112, 216, 255));
 
-        } else {
-            // Bleu très sombre pour la nuit
-            this.setBackground(new Color(0, 13, 89));
+
+            // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
+            if (modele.getLeCycleJourNuit().isDay()) {
+                // Bleu ciel clair pour le jour
+                this.setBackground(new Color(112, 216, 255));
+
+            } else {
+                // Bleu très sombre pour la nuit
+                this.setBackground(new Color(0, 13, 89));
+            }
         }
 
     }

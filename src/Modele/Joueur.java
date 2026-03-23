@@ -14,8 +14,12 @@ import static java.lang.Math.abs;
 public class Joueur implements Localisable {
 
     //Stats du joueur
+    // Argent du joueur
+    private int pieces = 0;
     // Points de vie actuels
     private int hp;
+    // Points de vie maximum
+    private int hpMax = HP_JOUEUR;
     // Dégâts de base du joueur (indépendants de l'arme)
     private int attack;
     // Liste représentant le sac à dos du joueur contenant les ressources ramassées
@@ -69,6 +73,20 @@ public class Joueur implements Localisable {
         this.modele = modele;
     }
 
+    public int getPieces() {
+        return pieces;
+    }
+
+    public void ajouterPieces(int montant) {
+        this.pieces += montant;
+    }
+
+    public void retirerPieces(int montant) {
+        this.pieces -= montant;
+    }
+    public int getHpMax() {return hpMax;}
+    public void setHpMax(int hpMax) {this.hpMax = hpMax;}
+
     public int getHp() {return hp;}
 
     @Override
@@ -106,7 +124,8 @@ public class Joueur implements Localisable {
     public synchronized void setPositionY(double positionY) {this.positionY = positionY;}
     // Getter pour l'arme équipée du joueur
     public Arme getArmeEquipee() {return armeEquipee;}
-
+    // Setter pour l'arme équipée du joueur
+    public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
     /**
      * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte.
      * @param x La nouvelle coordonnée X voulue.
@@ -155,10 +174,10 @@ public class Joueur implements Localisable {
 
     /**
      * Tente de ramasser toutes les ressources situées dans le rayon d'interaction du joueur.
-     * @param ressourcesDispo La liste complète des ressources actuellement sur la carte.
      */
     // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
-    public void ramasseRessource(ArrayList<Ressource> ressourcesDispo){
+    public void ramasseRessource(){
+         ArrayList<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
         // Parcourt la liste à l'envers pour éviter les bugs d'index lors de la suppression d'un élément
         for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
             Ressource r = ressourcesDispo.get(i);
@@ -174,27 +193,6 @@ public class Joueur implements Localisable {
         }
     }
 
-    /**
-     * Identifie les monstres se trouvant dans une zone proche autour du joueur.
-     * @return Une liste des monstres à proximité.
-     */
-    public ArrayList<Monstre> proxyMonstre(){
-        /*
-            Cette méthode retourne une liste de monstres qui sont à proximité du joueur.
-            Elle parcourt la liste des monstres du modèle et ajoute à la liste des monstres proches ceux qui sont à une distance
-            inférieure ou égale à 30 pixels du joueur en x et en y.
-         */
-        // Liste locale pour stocker le résultat
-        ArrayList<Monstre> monstresProx = new ArrayList<Monstre>();
-        for (Monstre m : modele.getMonstres()) {
-            // Vérification de collision basique (carré de 60x60 autour du joueur)
-            if (abs(m.getY() - positionY) <= 30 && abs(m.getX() - positionX)<= 30){ // à modifier à terme (zone d'interaction du joueur)
-                // Le monstre est proche, on l'ajoute
-                monstresProx.add(m);
-            }
-        }
-        return monstresProx;
-    }
 
     /**
      * Vérifie si le joueur a le droit d'attaquer en fonction du temps de recharge (cooldown) de son arme.
