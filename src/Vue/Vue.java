@@ -1,7 +1,7 @@
 package Vue;
 
 import static Modele.Constantes.*;
-import Modele.Joueur;
+import Modele.*;
 /*
  * La classe générale de la vue, elle contient les classes de données et les méthodes pour manipuler ces données.
  * Elle est utilisée pour afficher les données de l'application et pour recevoir les événements de l'utilisateur
@@ -10,11 +10,7 @@ import Modele.Joueur;
  */
 import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
-import Modele.Modele;
-import Modele.Ressource;
-import Modele.Batiment;
-import Modele.Map;
-import Modele.Monstre;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +38,7 @@ public class Vue extends JPanel {
 
     // Modèle
     private final Modele modele;
+    private UpdateJN updateJN;
 
 
 
@@ -85,6 +82,7 @@ public class Vue extends JPanel {
 
         // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.
         this.modele = modele;
+        this.updateJN = modele.getUpdateJN();
 
         // Lance le moteur de rendu (qui va appeler paintComponent en boucle)
         new Redessine (this, modele);
@@ -143,7 +141,7 @@ public class Vue extends JPanel {
         g2d.drawRect(0, 0, tailleMinimap, tailleMinimap); // Dessine la bordure de la mini carte
 
         // --- DESSIN DES RESSOURCES ---
-        for (Ressource r : modele.getMap().getRessources()) {
+        for (Ressource r : updateJN.getRessources()) {
             // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
             int resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
             int resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
@@ -166,7 +164,7 @@ public class Vue extends JPanel {
         }
 
         // --- DESSIN DES MONSTRES ---
-        for (Monstre m : modele.getMonstres()) {
+        for (Monstre m : updateJN.getMonstres()) {
             int monstreX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, (int) m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
             int monstreY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, (int) m.getY()); // idem
             vueMonstre.dessiner(g2d, m, monstreX, monstreY, true);
@@ -210,7 +208,7 @@ public class Vue extends JPanel {
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         // La translation de la caméra s'occupe de les afficher au bon endroit sur l'écran
-        for (Ressource r : modele.getMap().getRessources()) {
+        for (Ressource r : updateJN.getRessources()) {
             VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 

@@ -53,38 +53,7 @@ public class Ressource {
         this.positionY = 0;
     }
 
-    /**
-     * Nettoie la carte et fait apparaître un nouveau lot de ressources fraîches.
-     * @param nbRessources Le nombre exact d'objets à disséminer.
-     */
-    public static void genereRessources(int nbRessources) {
-        /*
-        Cette méthode génère un nombre donné de ressources aléatoires sur la carte.
-         */
-        // Récupère l'instance unique de la carte depuis le modèle
-        Map carte = Modele.getMap2();
-        // S'assure qu'il ne reste aucune ancienne ressource avant d'en créer de nouvelles
-        carte.viderRessources();
 
-        // Boucle de création
-        for (int i = 0; i < nbRessources; i++) {
-            // Instancie une nouvelle ressource (qui calcule sa propre position) et l'ajoute à la liste de la carte
-            carte.getRessources().add(new Ressource());
-        }
-    }
-
-    /**
-     * Raccourci pour vider complètement la carte de ses ressources.
-     */
-    public static void viderRessources() {
-        /*
-        Cette méthode vide la liste des ressources de la carte,
-        utilisée à chaque changement de jour pour forcer les joueurs à se
-        déplacer et à chercher de nouvelles ressources.
-         */
-        // Demande à la Map de réinitialiser sa liste de ressources
-        Modele.getMap2().viderRessources();
-    }
 
     // Récupère la position horizontale
     public int getPositionX() { return positionX; }

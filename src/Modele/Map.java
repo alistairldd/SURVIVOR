@@ -13,8 +13,7 @@ public class Map {
     // Dimensions effectives de l'instance actuelle
     private int largeur;
     private int hauteur;
-    // Liste de toutes les ressources (bois, pierre, etc.) actuellement présentes sur le sol
-    private ArrayList<Ressource> ressources;
+
     // Liste de tous les bâtiments (HQ, Tours) construits et actifs sur la carte
     private ArrayList<Batiment> batiments;
 
@@ -29,7 +28,6 @@ public class Map {
         this.hauteur = HAUTEUR_MAP;
 
         // Initialise les listes pour éviter les NullPointerException
-        this.ressources = new ArrayList<>();
         this.batiments = new ArrayList<>();
 
         // Ajoute le bâtiment central (HQ) à la liste globale
@@ -47,22 +45,7 @@ public class Map {
         this.batiments.add(new Tower(largeur/2 - 100, hauteur/2 - 100));
     }
 
-    /**
-     * Supprime toutes les ressources présentes sur la carte.
-     * Utilisé lors des changements de cycle (ex: passage à la nuit) pour forcer l'exploration.
-     */
-    public void viderRessources() {
-        // Écrase l'ancienne liste avec une nouvelle liste vide
-        this.ressources = new ArrayList<>();
-    }
 
-    // supprime une ressource de la map (appelé quand le joueur la ramasse)
-    public void deleteResources(Ressource ressource){ this.ressources.remove(ressource);}
-
-    // Retourne la liste complète des ressources
-    public ArrayList<Ressource> getRessources() {
-        return ressources;
-    }
 
     // Retourne la liste complète des bâtiments (utilisé par ThreadBatiments pour les faire attaquer)
     public ArrayList<Batiment> getBatiments() { return batiments; }

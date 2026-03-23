@@ -164,27 +164,6 @@ public class Joueur implements Localisable {
         }
     }
 
-    /**
-     * Identifie les monstres se trouvant dans une zone proche autour du joueur.
-     * @return Une liste des monstres à proximité.
-     */
-    public ArrayList<Monstre> proxyMonstre(){
-        /*
-            Cette méthode retourne une liste de monstres qui sont à proximité du joueur.
-            Elle parcourt la liste des monstres du modèle et ajoute à la liste des monstres proches ceux qui sont à une distance
-            inférieure ou égale à 30 pixels du joueur en x et en y.
-         */
-        // Liste locale pour stocker le résultat
-        ArrayList<Monstre> monstresProx = new ArrayList<Monstre>();
-        for (Monstre m : modele.getMonstres()) {
-            // Vérification de collision basique (carré de 60x60 autour du joueur)
-            if (abs(m.getY() - positionY) <= 30 && abs(m.getX() - positionX)<= 30){ // à modifier à terme (zone d'interaction du joueur)
-                // Le monstre est proche, on l'ajoute
-                monstresProx.add(m);
-            }
-        }
-        return monstresProx;
-    }
 
     /**
      * Vérifie si le joueur a le droit d'attaquer en fonction du temps de recharge (cooldown) de son arme.

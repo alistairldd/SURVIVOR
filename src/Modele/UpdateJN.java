@@ -44,7 +44,7 @@ public class UpdateJN {
         // Supprimer les monstres de la nuit précédente (fin de la vague)
         monGestionnaireMonstres.clearMonstres();
         // On génère de nouvelles ressources fraîches pour la phase d'exploration
-        Ressource.genereRessources(NB_RESSOURCES);
+        monGestionnaireRessources.genereRessources(Ressource.NB_RESSOURCES);
 
     }
 
@@ -64,7 +64,7 @@ public class UpdateJN {
 
         // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
         // (Excellente mécanique de game design pour éviter la sur-accumulation passive)
-        Ressource.viderRessources();
+        monGestionnaireRessources.viderRessources();
     }
 
     // Méthode à boucler le jour
@@ -90,6 +90,16 @@ public class UpdateJN {
     // Getter pour exposer directement la liste des monstres présents pendant la nuit au reste du Modèle
     public ArrayList<Monstre> getMonstres() {
         return monGestionnaireMonstres.getMonstres();
+    }
+
+    // Getter pour le gestionnaire de ressources
+    public GestionnaireRessources getMonGestionnaireRessources() {
+        return monGestionnaireRessources;
+    }
+
+    // Getter pour exposer directement la liste des ressources présentes pendant le jour au reste du Modèle
+    public ArrayList<Ressource> getRessources() {
+        return monGestionnaireRessources.getRessources();
     }
 
 }

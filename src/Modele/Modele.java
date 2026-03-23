@@ -26,6 +26,7 @@ public class Modele {
 
     // Le gestionnaire autonome du temps (Thread)
     private CycleJourNuit leCycleJourNuit;
+    private UpdateJN updateJN;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
@@ -38,7 +39,7 @@ public class Modele {
 
         // Initialisation du jour et de la nuit
         // (Démarre automatiquement son propre thread interne)
-        UpdateJN updateJN = new UpdateJN(this);
+        this.updateJN = new UpdateJN(this);
         leCycleJourNuit = new CycleJourNuit(updateJN);
 
         // Dans le constructeur de Modele.java
@@ -72,9 +73,9 @@ public class Modele {
         return leCycleJourNuit;
     }
 
-    // Raccourci pour récupérer les monstres depuis le cycle temporel
-    public ArrayList<Monstre> getMonstres() {
-        return leCycleJourNuit.getUpdateJN().getMonstres();
+    // Getter UpdateJN
+    public UpdateJN getUpdateJN() {
+        return updateJN;
     }
 
     // Raccourci pour récupérer le gestionnaire de monstres
