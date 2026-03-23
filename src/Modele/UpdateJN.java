@@ -95,8 +95,7 @@ public class UpdateJN {
     }
 
     public Localisable monstreTrouverCible(Localisable m) {
-        //ArrayList<Batiment> batiments = modele.getGestionnaireBatiments.getBatiments();
-        ArrayList<Batiment> batiments = modele.getMap().getBatiments();
+        ArrayList<Batiment> batiments = modele.getGestionnaireBatiments().getBatiments();
         Joueur joueur = modele.getJoueur();
         // On crée une liste de tout ce qui est attaquable par les monstres
         List<Localisable> ciblesPotentielles = new ArrayList<>();

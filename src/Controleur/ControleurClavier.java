@@ -2,7 +2,6 @@ package Controleur;
 
 import Modele.Modele;
 import Vue.Vue;
-import Modele.Map;
 import Vue.VueArme;
 
 import java.awt.event.KeyEvent;

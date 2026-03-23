@@ -50,7 +50,7 @@ public final class Constantes {
     /*** --- Threads --- ***/
     // Intervalle de temps en millisecondes entre deux vérifications globales
     // 50ms = 20 vérifications par seconde (suffisant pour réagir vite sans saturer le processeur)
-    public static final int BAT_DELAY = 50; // Le thread tourne à 20 FPS pour vérifier les attaques
+    public static final int BAT_DELAY = 200; // Le thread tourne à 20 FPS pour vérifier les attaques
 
     // Délai en millisecondes entre chaque image (50ms = 20 images par seconde / FPS)
     public static final int REDESSINE_DELAY = 50;

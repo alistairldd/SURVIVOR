@@ -157,7 +157,7 @@ public class Vue extends JPanel {
         g2d.fillOval(posX,posY, 5, 5);
 
         // --- DESSIN DES BÂTIMENTS ---
-        for (Batiment b : modele.getMap().getBatiments()) {
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
             int batX = modele.map(0, LARGEUR_MAP, 0, tailleMinimap - 4, (int) b.getX());
             int batY = modele.map(0, HAUTEUR_MAP, 0, tailleMinimap - 4, (int) b.getY());
             VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
@@ -217,7 +217,7 @@ public class Vue extends JPanel {
         vueJoueur.dessiner(g2d, joueur);
 
         // 4. Dessiner les bâtiments
-        for (Batiment b : modele.getMap().getBatiments()) {
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
             // Passe le relais à la sous-vue spécialisée avec les coordonnées absolues
             vueBatiment.dessinerBatiment(g2d, b, (int) b.getX(), (int) b.getY(), false);
         }

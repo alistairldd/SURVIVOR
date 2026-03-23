@@ -50,21 +50,15 @@ public class Tower extends Batiment{
      * vérifie son cooldown, et tire sur le premier ennemi à portée.
      * @param monstre le monstre dans la porté.
      */
-   public void attaquerSiPossible(Monstre monstre) {
-
-                    // On retire des PV au monstre ciblé
-                    monstre.perdreHp(this.damage);
-                    // Affiche l'action dans la console pour le debug
-                    //System.out.println("Pew! Tour (" + x + "," + y + ") tire sur monstre " + m.getId());
-                    // On mémorise le monstre attaqué pour que l'effet visuel (laser) s'affiche à l'écran
-                    this.monstreCible = monstre;
-    }
+   public void attaquer(Monstre monstre) {monstre.perdreHp(this.damage);}
 
     @Override
     public void run() {
             while (this.hp > 0) {
                 try {
-                    this.attaquerSiPossible(gBatiments.trouverCible(this));
+                    monstreCible = gBatiments.trouverCible(this);
+                    if (monstreCible != null) {
+                    this.attaquer(monstreCible);}
                     Thread.sleep(BAT_DELAY);
                 } catch (InterruptedException e) {}
             }

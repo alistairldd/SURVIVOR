@@ -2,7 +2,6 @@ package Test;
 
 import Modele.Modele;
 import Modele.Joueur;
-import Modele.Map;
 
 import java.io.IOException;
 

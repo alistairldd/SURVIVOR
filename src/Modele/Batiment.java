@@ -33,6 +33,7 @@ public abstract class Batiment extends Thread implements Localisable {
         // Fixe la zone d'interaction par défaut à 10 pixels
         this.healingRange = HEALING_RANGE;
         this.range = range;
+        this.start();
     }
 
     // Récupère les points de vie actuels du bâtiment
