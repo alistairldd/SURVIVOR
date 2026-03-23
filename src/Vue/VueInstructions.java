@@ -5,6 +5,7 @@ import Modele.Ressource;
 
 import java.awt.*;
 import java.util.ArrayList;
+import static Modele.Constantes.*;
 
 /**
  * Sous-panneau du HUD affichant le tutoriel des commandes et l'état des constructions.
@@ -12,9 +13,6 @@ import java.util.ArrayList;
  * des actions (ex: nombre de tours fabricables) selon l'état du Modèle.
  */
 public class VueInstructions {
-    // Marge horizontale fixe pour aligner joliment tout le texte à gauche
-    private final int xOffset = 20;
-
     /**
      * Méthode de rendu des instructions.
      * @param g Contexte graphique fourni par la VueHUD parent.

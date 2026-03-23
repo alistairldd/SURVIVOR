@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import static Modele.Constantes.*;
 
 /* Classe de la vue du jour et de la nuit */
 /**
@@ -59,12 +60,12 @@ public class VueJourNuit{
             // Dessine le jour en centrant l'image dans le panneau en bas
             // Calcul X : (Largeur du HUD - Taille image) / 2 pour centrer parfaitement
             // Calcul Y : Hauteur totale - Taille image pour coller au bas
-            g.drawImage(soleil, (VueHUD.LARGEUR - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null);
+            g.drawImage(soleil, (LARGEUR_HUD - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null);
             // Prépare le pinceau en noir pour le texte qui sera affiché par-dessus l'image
             g.setColor(Color.BLACK);
         } else {
             // Dessine la lune exactement à la même place
-            g.drawImage(lune, (VueHUD.LARGEUR - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null); // Cercle pour la nuit
+            g.drawImage(lune, (LARGEUR_HUD - TAILLE_LS) / 2, hauteurEcran - TAILLE_LS, TAILLE_LS, TAILLE_LS, null); // Cercle pour la nuit
             // Prépare le pinceau en blanc pour que le texte ressorte sur le fond sombre de la nuit
             g.setColor(Color.WHITE);
         }
@@ -74,6 +75,6 @@ public class VueJourNuit{
         g.setFont(new Font("Arial", Font.BOLD, 20));
         // Centrer le texte en bas du panneau
         // Interroge getTempsRestant() du modèle et dessine la chaîne de caractères avec un petit décalage pour l'esthétique
-        g.drawString("Temps restant: " + leCycle.getTempsRestant() + "s", (VueHUD.LARGEUR - TAILLE_LS) / 2 + 30, hauteurEcran- TAILLE_LS - 10);
+        g.drawString("Temps restant: " + leCycle.getTempsRestant() + "s", (LARGEUR_HUD - TAILLE_LS) / 2 + 30, hauteurEcran- TAILLE_LS - 10);
     }
 }

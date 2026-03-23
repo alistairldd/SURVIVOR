@@ -2,7 +2,7 @@ package Vue;
 
 import Modele.*;
 import java.awt.*;
-
+import static Modele.Constantes.*;
 /**
  * Responsable du rendu de la toile de fond (le sol du monde).
  * Dessine les limites de l'arène de jeu.
@@ -42,12 +42,12 @@ public class VueCarte {
 
         // On dessine le rectangle vert qui représente le monde entier
         // Positionné à un offset fixe de (10, 10) et de taille globale fixée par le modèle (3000x3000)
-        g.fillRect(10, 10, Map.LARGEUR_MAP, Map.HAUTEUR_MAP);
+        g.fillRect(10, 10, LARGEUR_MAP, HAUTEUR_MAP);
 
         // (Optionnel) Ajout d'une bordure rouge pour bien voir les limites de la map
         // Aide le joueur à comprendre pourquoi il ne peut pas aller plus loin (collision dans Joueur.deplaceX/Y)
         g.setColor(Color.RED);
-        g.drawRect(10, 10, Map.LARGEUR_MAP, Map.HAUTEUR_MAP);
+        g.drawRect(10, 10, LARGEUR_MAP, HAUTEUR_MAP);
     }
 
 }

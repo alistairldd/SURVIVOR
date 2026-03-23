@@ -1,4 +1,5 @@
 package Modele;
+import static Modele.Constantes.*;
 
 /**
  * Classe abstraite représentant une structure fixe sur la carte (HQ, Tours, etc.).
@@ -7,8 +8,6 @@ package Modele;
  */
 public abstract class Batiment implements Localisable{
 
-    // Constante : Points de vie maximum d'un bâtiment neuf
-    public final int BASE_HP = 100;
     // Coordonnées de placement sur la grille/carte globale
     double x,y;
     // Points de vie actuels du bâtiment (diminue lors d'une attaque)

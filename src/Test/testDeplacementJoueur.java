@@ -6,6 +6,8 @@ import Modele.Map;
 
 import java.io.IOException;
 
+import static Modele.Constantes.*;
+
 public class testDeplacementJoueur {
 
     public static void main(String[] args) {
@@ -15,7 +17,7 @@ public class testDeplacementJoueur {
         Modele modele = new Modele();
         Joueur joueur = modele.getJoueur();
 
-        int taille = Map.LARGEUR_MAP; // La carte est carrée, donc largeur = hauteur
+        int taille = LARGEUR_MAP; // La carte est carrée, donc largeur = hauteur
         System.out.println("Taille de la carte: " + taille);
 
         // Réinitialiser la position du joueur

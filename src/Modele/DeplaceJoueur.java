@@ -1,5 +1,5 @@
 package Modele;
-
+import static Modele.Constantes.*;
 /**
  * Thread dédié au déplacement fluide du joueur vers une destination donnée (clic droit).
  * En s'exécutant de manière asynchrone, il évite de bloquer la boucle principale du jeu
@@ -10,8 +10,6 @@ public class DeplaceJoueur extends Thread {
     private final double destX;
     // Coordonnée Y de la destination finale visée par le clic
     private final double destY;
-    // Vitesse de déplacement en pixels par itération de la boucle
-    private final int VITESSE = 10;
     // Référence au joueur qui doit être déplacé
     private Joueur joueur;
 

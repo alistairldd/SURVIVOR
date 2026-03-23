@@ -1,6 +1,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import static Modele.Constantes.*;
 
 /**
  * Bâtiment défensif automatisé (Tourelle).
@@ -9,14 +10,6 @@ import java.util.ArrayList;
  * pour interagir avec le ThreadBatiments de manière indépendante.
  */
 public class Tower extends Batiment {
-    // Constante : Points de dégâts fixes infligés à chaque tir
-    public final int BASE_DAMAGE = 20;
-    // Constante : Rayon d'action maximum (en pixels) de la tourelle
-    public final int BASE_RANGE = 100;
-
-    // VITESSE D'ATTAQUE DE LA TOUR (1000 = 1 seconde)
-    // Temps de recharge nécessaire entre deux tirs successifs
-    private int cadenceTir = 1000;
 
     // Portée effective de cette instance précise
     private int range;
@@ -38,8 +31,8 @@ public class Tower extends Batiment {
         // Initialise la structure via le constructeur parent (Batiment)
         super(x, y);
         // Applique les statistiques de combat par défaut
-        this.range = BASE_RANGE;
-        this.damage = BASE_DAMAGE;
+        this.range = TOWER_BASE_RANGE;
+        this.damage = TOWER_BASE_DAMAGE;
     }
 
     // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)
@@ -62,7 +55,7 @@ public class Tower extends Batiment {
         long tempsActuel = System.currentTimeMillis();
 
         // Le bâtiment vérifie s'il s'est écoulé assez de temps depuis son dernier tir (Cooldown)
-        if (tempsActuel - dernierTempsAttaque >= cadenceTir) {
+        if (tempsActuel - dernierTempsAttaque >= CADENCE_TOWER) {
 
             // On réinitialise la cible au début du scan pour ne pas garder en mémoire un vieux monstre mort
             monstreCible = null;

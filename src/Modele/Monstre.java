@@ -82,7 +82,7 @@ public abstract class Monstre implements Localisable {
 
     public double getY() { return y; }
 
-
+    //
     public void mettreAJourPosition(Localisable cible) {
         double diffX = cible.getX() - this.x;
         double diffY = cible.getY() - this.y;

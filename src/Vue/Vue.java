@@ -1,5 +1,6 @@
 package Vue;
 
+import static Modele.Constantes.*;
 import Modele.Joueur;
 /*
  * La classe générale de la vue, elle contient les classes de données et les méthodes pour manipuler ces données.
@@ -24,11 +25,6 @@ import java.awt.*;
  * et s'occupe de la logique de Caméra (centrage sur le joueur) et de la Minimap.
  */
 public class Vue extends JPanel {
-
-    // Taille de la fenêtre principale de l'application, elle est utilisée pour définir la taille de la fenêtre.
-    public final static int LARGEUR = 1920;
-    public final static int HAUTEUR = 1080;
-
 
     // Fenêtre principale de l'application, elle est utilisée pour afficher les composants de la vue.
     private JFrame maFenetre;
@@ -149,30 +145,30 @@ public class Vue extends JPanel {
         // --- DESSIN DES RESSOURCES ---
         for (Ressource r : modele.getMap().getRessources()) {
             // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
-            int resX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
-            int resY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
+            int resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
+            int resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
             VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
         }
 
         // --- DESSIN DU JOUEUR ---
         g2d.setColor(Color.BLACK);
         Joueur joueur = modele.getJoueur();
-        int posX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
-        int posY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getY()); // idem
+        int posX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
+        int posY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getY()); // idem
         // Dessine un petit point noir pour le joueur
         g2d.fillOval(posX,posY, 5, 5);
 
         // --- DESSIN DES BÂTIMENTS ---
         for (Batiment b : modele.getMap().getBatiments()) {
-            int batX = modele.map(0, Map.LARGEUR_MAP, 0, tailleMinimap - 4, (int) b.getX());
-            int batY = modele.map(0, Map.HAUTEUR_MAP, 0, tailleMinimap - 4, (int) b.getY());
+            int batX = modele.map(0, LARGEUR_MAP, 0, tailleMinimap - 4, (int) b.getX());
+            int batY = modele.map(0, HAUTEUR_MAP, 0, tailleMinimap - 4, (int) b.getY());
             VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
         }
 
         // --- DESSIN DES MONSTRES ---
         for (Monstre m : modele.getMonstres()) {
-            int monstreX = modele.map (0, Map.LARGEUR_MAP, 0, tailleMinimap-4, (int) m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
-            int monstreY = modele.map (0, Map.HAUTEUR_MAP, 0, tailleMinimap-4, (int) m.getY()); // idem
+            int monstreX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, (int) m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
+            int monstreY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, (int) m.getY()); // idem
             vueMonstre.dessiner(g2d, m, monstreX, monstreY, true);
         }
 

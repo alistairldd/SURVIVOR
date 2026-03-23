@@ -1,6 +1,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import static Modele.Constantes.*;
 
 /**
  * Thread autonome responsable de "l'intelligence" des bâtiments.
@@ -11,9 +12,7 @@ public class ThreadBatiments extends Thread {
 
     // Référence au modèle global pour pouvoir lire la liste des monstres et des bâtiments
     private final Modele modele;
-    // Intervalle de temps en millisecondes entre deux vérifications globales
-    // 50ms = 20 vérifications par seconde (suffisant pour réagir vite sans saturer le processeur)
-    private final int DELAY = 50; // Le thread tourne à 20 FPS pour vérifier les attaques
+
 
     /**
      * Constructeur du thread d'intelligence des bâtiments.
@@ -52,7 +51,7 @@ public class ThreadBatiments extends Thread {
 
             try {
                 // 4. Temporisation : Met le thread en pause pendant 50ms pour laisser respirer l'ordinateur
-                Thread.sleep(DELAY); // Petite pause pour ne pas surcharger le processeur
+                Thread.sleep(BAT_DELAY); // Petite pause pour ne pas surcharger le processeur
             } catch (InterruptedException e) {
                 // Capture l'erreur si le thread est tué inopinément
                 e.printStackTrace();

@@ -1,6 +1,8 @@
 package Modele;
 
+import Vue.VueCarte;
 import java.util.ArrayList;
+import static Modele.Constantes.*;
 
 /**
  * Représente l'environnement spatial du jeu.
@@ -8,11 +10,6 @@ import java.util.ArrayList;
  * ainsi que toutes les entités inanimées ou structurelles (Ressources au sol, Bâtiments construits).
  */
 public class Map {
-    // Constante : Largeur totale de l'aire de jeu en pixels
-    public static final int LARGEUR_MAP = 3000;
-    // Constante : Hauteur totale de l'aire de jeu en pixels
-    public static final int HAUTEUR_MAP = 3000;
-
     // Dimensions effectives de l'instance actuelle
     private int largeur;
     private int hauteur;

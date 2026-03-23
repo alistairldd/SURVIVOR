@@ -1,13 +1,9 @@
 package Modele;
 
 import Controleur.ControleurSouris;
-import Vue.DeplaceJoueur;
+import static Modele.Constantes.*;
 
 import java.util.ArrayList;
-
-import static Modele.Map.HAUTEUR_MAP;
-import static Modele.Map.LARGEUR_MAP;
-import static Vue.VueJoueur.TAILLE;
 import static java.lang.Math.abs;
 
 /**
@@ -56,8 +52,8 @@ public class Joueur implements Localisable {
         positionX = LARGEUR_MAP /2;
         positionY = HAUTEUR_MAP /2;
         // Statistiques de base
-        hp = 100;
-        attack = 10;
+        hp = HP_JOUEUR;
+        attack = ATTAQUE_BASE;
         // Initialisation de l'inventaire
         inventaire = new ArrayList<>();
         // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
@@ -110,13 +106,13 @@ public class Joueur implements Localisable {
     // elle met à jour la position du joueur en x.
     public synchronized void deplaceX(double x) {
         // On vérifie que le déplacement en x est dans les limites de la carte (en tenant compte de la taille du sprite), sinon on le met à la limite.
-        if (x >= 10+TAILLE/2 && x <= LARGEUR_MAP) {
+        if (x >= 10+J_TAILLE/2 && x <= LARGEUR_MAP) {
             // Mouvement valide
             setPositionX(x);
         }
-        else if (x <= 10+TAILLE/2) {
+        else if (x <= 10+J_TAILLE/2) {
             // Bloqué au bord gauche
-            setPositionX(10+TAILLE/2);
+            setPositionX(10+J_TAILLE/2);
         }
         else {
             // Bloqué au bord droit
@@ -133,13 +129,13 @@ public class Joueur implements Localisable {
     // elle met à jour la position du joueur en y.
     public synchronized void deplaceY(double y) {
         // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
-        if (y >= 10+TAILLE/2 && y <= HAUTEUR_MAP) {
+        if (y >= 10+J_TAILLE/2 && y <= HAUTEUR_MAP) {
             // Mouvement valide
             setPositionY(y);
         }
-        else if (y <= 10+TAILLE/2) {
+        else if (y <= 10+J_TAILLE/2) {
             // Bloqué au bord supérieur
-            setPositionY(10+TAILLE/2);
+            setPositionY(10+J_TAILLE/2);
         }
         else {
             // Bloqué au bord inférieur

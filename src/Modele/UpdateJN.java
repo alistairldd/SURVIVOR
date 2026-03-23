@@ -1,7 +1,7 @@
 package Modele;
 
 import java.util.ArrayList;
-
+import static Modele.Constantes.*;
 // Classe pour la mise à jour du jeu en fonction du temps (jour et la nuit)
 /**
  * Gestionnaire de la logique liée au cycle temporel.
@@ -44,7 +44,7 @@ public class UpdateJN {
         // Supprimer les monstres de la nuit précédente (fin de la vague)
         monGestionnaireMonstres.clearMonstres();
         // On génère de nouvelles ressources fraîches pour la phase d'exploration
-        Ressource.genereRessources(Ressource.NB_RESSOURCES);
+        Ressource.genereRessources(NB_RESSOURCES);
 
     }
 

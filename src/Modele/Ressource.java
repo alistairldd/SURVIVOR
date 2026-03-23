@@ -1,6 +1,6 @@
 package Modele;
 
-import static Vue.VueJoueur.TAILLE;
+import static Modele.Constantes.*;
 
 /**
  * Représente un matériau ramassable sur la carte (Bois, Pierre, Fer, Or).
@@ -8,10 +8,6 @@ import static Vue.VueJoueur.TAILLE;
  * spawn hors des limites ou trop près des bords de l'écran.
  */
 public class Ressource {
-    // Tableau des identifiants de types de ressources (0 : bois, 1 : pierre, 2 : fer, 3: or)
-    public static final int[] TYPE_RESSOURCE = {0, 1, 2, 3}; // 0 : bois, 1 : pierre, 2 : fer, 3: or
-    // Nombre total de ressources à générer simultanément sur la carte au lever du jour
-    public static final int NB_RESSOURCES = 20;
 
     // Coordonnée horizontale sur la carte
     private int positionX;
@@ -32,11 +28,11 @@ public class Ressource {
          */
 
         // Marge de sécurité (offset) basée sur la taille du joueur pour éviter de coller les objets au bord absolu du monde
-        int offsetDecale = 10 + TAILLE / 2;
+        int offsetDecale = 10 + R_TAILLE / 2;
 
         // Formule de génération : Marge + Nombre aléatoire compris entre 0 et (Taille totale - 2 fois la marge)
-        this.positionX = offsetDecale + (int) (Math.random() * (Map.LARGEUR_MAP - 2 * (double) offsetDecale)); // On ajoute un offset pour éviter que les ressources soient générées trop près des bords de la carte
-        this.positionY = offsetDecale + (int) (Math.random() * (Map.HAUTEUR_MAP - 2 * (double) offsetDecale)); // Idem
+        this.positionX = offsetDecale + (int) (Math.random() * (LARGEUR_MAP - 2 * (double) offsetDecale)); // On ajoute un offset pour éviter que les ressources soient générées trop près des bords de la carte
+        this.positionY = offsetDecale + (int) (Math.random() * (HAUTEUR_MAP - 2 * (double) offsetDecale)); // Idem
 
         // Choisit un index aléatoire parmi les 4 types de ressources disponibles
         int index = (int) (Math.random() * TYPE_RESSOURCE.length);

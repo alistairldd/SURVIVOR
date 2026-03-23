@@ -4,6 +4,7 @@ import Modele.GestionnaireMonstres;
 import Modele.Monstre;
 
 import java.awt.*;
+import static Modele.Constantes.*;
 
 /**
  * Responsable du dessin d'un ennemi (Monstre) sur la carte.
@@ -11,10 +12,7 @@ import java.awt.*;
  * de sa zone de menace (portée d'attaque).
  */
 public class VueMonstre {
-    // Taille physique de l'ennemi sur l'écran principal
-    public static final int TAILLE = 30;
-    // Taille drastiquement réduite pour que le monstre soit juste un point rouge sur la minimap
-    public static final int TAILLE_MINIMAP = 10;
+
 
     // Constructeur de la classe VueMonstre
     public VueMonstre() {
@@ -39,7 +37,7 @@ public class VueMonstre {
 
         //Centrage du monstre
         // Choix de la taille selon la destination du dessin (Écran de jeu ou Radar)
-        int taille = minimap ? TAILLE_MINIMAP : TAILLE;
+        int taille = minimap ? TAILLE_MINIMAP_MONSTRE : TAILLE_MONSTRE;
         // Rouge = Danger (Couleur classique des ennemis)
         g2d.setColor(Color.RED);
         // On décale la position du monstre pour le centrer par rapport à sa taille (soustrait la moitié de la largeur/hauteur)

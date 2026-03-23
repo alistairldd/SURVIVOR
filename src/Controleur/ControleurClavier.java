@@ -39,7 +39,7 @@ public class ControleurClavier implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("Action : La touche E a été pressée !");
+        //System.out.println("Action : La touche E a été pressée !");
         if (e.getKeyCode() == KeyEvent.VK_E) {
             modele.getJoueur().ramasseRessource(map.getRessources()) ;
 

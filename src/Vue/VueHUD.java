@@ -1,7 +1,7 @@
 package Vue;
 
 import Modele.Modele;
-
+import static Modele.Constantes.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -21,9 +21,6 @@ import java.io.IOException;
  */
 public class VueHUD extends JPanel {
 
-    // Largeur fixe allouée au panneau latéral sur l'écran
-    public final static int LARGEUR = 300;
-
     // Référence au modèle pour lire l'état du jeu (cycle, inventaire du joueur)
     private Modele modele;
 
@@ -41,7 +38,7 @@ public class VueHUD extends JPanel {
     public VueHUD(Modele modele) {
 
         /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
-        this.setPreferredSize(new Dimension(LARGEUR, getHeight())); // Définit la taille préférée du panneau (fixe en largeur, flexible en hauteur)
+        this.setPreferredSize(new Dimension(LARGEUR_HUD, getHeight())); // Définit la taille préférée du panneau (fixe en largeur, flexible en hauteur)
         this.setBackground(new Color(0, 255, 255)); // Définit la couleur de fond du panneau (cyan par défaut)
         this.setLayout(new BorderLayout());
 

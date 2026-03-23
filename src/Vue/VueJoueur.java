@@ -3,15 +3,13 @@ package Vue;
 import Modele.Joueur;
 
 import java.awt.*;
+import static Modele.Constantes.*;
 
 /**
  * Responsable du dessin du personnage principal.
  * Traduit les coordonnées absolues du Modèle en une représentation visuelle basique (cercle).
  */
 public class VueJoueur {
-
-    // Diamètre visuel du sprite du joueur en pixels
-    public static final int TAILLE = 20;
 
     // Constructeur de la classe VueJoueur
     public VueJoueur() {
@@ -34,7 +32,7 @@ public class VueJoueur {
         // Dessine un disque plein.
         // On soustrait la moitié de la taille (TAILLE/2) aux positions X et Y pour que
         // les coordonnées (posX, posY) représentent le CENTRE du joueur, et non son coin en haut à gauche.
-        g2d.fillOval((int) posX - TAILLE/2, (int) posY - TAILLE/2 , TAILLE, TAILLE);
+        g2d.fillOval((int) posX - J_TAILLE/2, (int) posY - J_TAILLE/2 , J_TAILLE, J_TAILLE);
     }
 
 }

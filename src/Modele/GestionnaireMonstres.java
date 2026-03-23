@@ -2,7 +2,7 @@ package Modele;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import static Modele.Constantes.*;
 /**
  * Classe responsable de l'apparition (spawn), du stockage et du nettoyage des monstres.
  * Elle agit comme une "usine" à monstres pendant la nuit et maintient la liste à jour
@@ -37,27 +37,27 @@ public class GestionnaireMonstres {
             switch (edge) {
                 case 0: // Haut
                     // X aléatoire sur toute la largeur, Y tout en haut (0)
-                    x = (int) (Math.random() * Map.LARGEUR_MAP);
+                    x = (int) (Math.random() * LARGEUR_MAP);
                     y = 0;
                     break;
                 case 1: // Droite
                     // X collé à droite, Y aléatoire sur toute la hauteur
-                    x = Map.LARGEUR_MAP;
-                    y = (int) (Math.random() * Map.HAUTEUR_MAP);
+                    x = LARGEUR_MAP;
+                    y = (int) (Math.random() * HAUTEUR_MAP);
                     break;
                 case 2: // Bas
                     // X aléatoire sur toute la largeur, Y tout en bas
-                    x = (int) (Math.random() * Map.LARGEUR_MAP);
-                    y = Map.HAUTEUR_MAP;
+                    x = (int) (Math.random() * LARGEUR_MAP);
+                    y = HAUTEUR_MAP;
                     break;
                 case 3: // Gauche
                     // X collé à gauche (0), Y aléatoire sur toute la hauteur
                     x = 0;
-                    y = (int) (Math.random() * Map.HAUTEUR_MAP);
+                    y = (int) (Math.random() * HAUTEUR_MAP);
                     break;
                 default: // Sécurité (normalement inatteignable) : par défaut à gauche
                     x = 0;
-                    y = (int) (Math.random() * Map.HAUTEUR_MAP);
+                    y = (int) (Math.random() * HAUTEUR_MAP);
             }
 
             // Génère un nombre pour choisir le type d'ennemi (prévu pour ajouter d'autres monstres plus tard)

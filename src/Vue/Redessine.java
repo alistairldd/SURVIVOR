@@ -1,5 +1,7 @@
 package Vue;
 
+import static Modele.Constantes.*;
+
 /**
  * Moteur de rendu graphique (Game Loop d'affichage).
  * C'est un Thread autonome dont l'unique but est de forcer l'interface
@@ -16,8 +18,7 @@ public class Redessine extends Thread {
     private Vue vue;
     // Référence au panneau d'interface utilisateur (panneau latéral)
     private VueHUD vueHUD;
-    // Délai en millisecondes entre chaque image (50ms = 20 images par seconde / FPS)
-    public final static int DELAY = 50;
+
 
     /*constructeur*/
     /**
@@ -48,7 +49,7 @@ public class Redessine extends Thread {
 
             try {
                 // Met le thread en pause pendant 50ms pour cadencer l'affichage
-                Thread.sleep(DELAY);
+                Thread.sleep(REDESSINE_DELAY);
             } catch (InterruptedException e) {
                 // Relance une exception critique si le moteur de rendu plante
                 throw new RuntimeException(e);
