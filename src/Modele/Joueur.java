@@ -242,6 +242,26 @@ public class Joueur implements Localisable {
     // ==========================================================
 
     /**
+     * Calcule le nombre maximum de tours que le joueur peut construire avec son inventaire actuel.
+     * @return Le nombre de tours fabricables.
+     */
+    public int calculerMaxToursConstructibles() {
+        int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
+        for (Ressource r : inventaire) {
+            switch (r.getType()) {
+                case 0: nbBois++; break;
+                case 1: nbPierre++; break;
+                case 2: nbFer++; break;
+                case 3: nbOr++; break;
+            }
+        }
+        return Math.min(
+                Math.min(nbBois / 4, nbPierre / 4),
+                Math.min(nbFer / 2, nbOr / 1)
+        );
+    }
+
+    /**
      * Tente de placer une Tour Défensive à la position actuelle du joueur.
      * Vérifie les conditions temporelles (nuit uniquement) et les ressources (coûts).
      * @return True si la construction a réussi, False sinon.

@@ -2,10 +2,8 @@ package Vue;
 
 import Modele.Joueur;
 import Modele.Modele;
-import Modele.Ressource;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 import static Modele.Constantes.xOffset;
 
@@ -60,27 +58,7 @@ public class VueBatHud {
         // On remet la couleur dynamique pour les ressources (au lieu du noir)
         g2d.setColor(couleurTexte);
 
-        // Récupération des ressources directement depuis le sac à dos du joueur
-        ArrayList<Ressource> inv = joueur.getInventaire();
-        // Compteurs individuels
-        int bois = 0, pierre = 0, fer = 0, or = 0;
-
-        // Trie et compte l'inventaire complet
-        for (Ressource r : inv) {
-            switch (r.getType()) {
-                case 0 -> bois++;
-                case 1 -> pierre++;
-                case 2 -> fer++;
-                case 3 -> or++;
-            }
-        }
-
-        // Algorithme pour calculer combien de tours complètes le joueur peut payer.
-        // On divise chaque ressource possédée par son coût, et on prend la valeur la plus petite (le goulot d'étranglement).
-        int nbTours = Math.min(
-                Math.min(bois / 4, pierre / 4),
-                Math.min(fer / 2, or / 1) // (or / 1 est formel, correspond au prix de 1 Or)
-        );
+        int nbTours = joueur.calculerMaxToursConstructibles();
 
         // Affichage dynamique du résultat du calcul
         yCourant += 25;
