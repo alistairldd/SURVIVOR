@@ -50,8 +50,21 @@ public class ControleurClavier implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_C) {
             vue.getVueArme().setAffPortee(!vue.getVueArme().getAffPortee()); // bascule l'affichage de la portée de l'arme
         }
-    }
 
+        if (e.getKeyCode() == KeyEvent.VK_I) {
+            modele.toggleShop();
+        }
+
+        if (modele.isShopOuvert()) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_1 -> modele.getGestionnaireShop().acheterEpeeAcieree();
+                case KeyEvent.VK_2 -> modele.getGestionnaireShop().acheterArmure();
+                case KeyEvent.VK_3 -> modele.getGestionnaireShop().acheterArmureLourde();
+                case KeyEvent.VK_4 -> modele.getGestionnaireShop().acheterEpee();
+                case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
+            }
+        }
+    }
     @Override
     public void keyReleased(KeyEvent e) {
 

@@ -29,6 +29,7 @@ public class VueHUD extends JPanel {
     private VueJourNuit vueJourNuit;
     private VueInventaire vueInventaire;
     private VueInstructions vueInstructions;
+    private VueShop vueShop = new VueShop();
 
 
     /**
@@ -47,6 +48,8 @@ public class VueHUD extends JPanel {
         vueJourNuit = new VueJourNuit(modele.getLeCycleJourNuit());
         this.vueInventaire = new VueInventaire();
         this.vueInstructions = new VueInstructions();
+        this.vueShop = new VueShop();
+
 
     }
 
@@ -60,7 +63,10 @@ public class VueHUD extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // Nettoie le panneau avec la couleur de fond actuelle
-
+        if (modele.isShopOuvert()) {
+            this.setBackground(new Color(255, 215, 0)); // Fond doré pour le shop
+            vueShop.dessiner(g, 50, modele.getJoueur());
+        }else {
         // Demande à la vue des instructions de s'afficher un peu plus bas (Y=200)
         vueInstructions.dessiner(g, 200, modele.getJoueur());
         // Dessin de l'inventaire en haut du HUD (Y=40)
@@ -69,14 +75,17 @@ public class VueHUD extends JPanel {
         vueJourNuit.dessiner(g, getHeight());
 
         // --- GESTION DE L'AMBIANCE VISUELLE ---
-        // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
-        if (modele.getLeCycleJourNuit().isDay()){
-            // Bleu ciel clair pour le jour
-            this.setBackground(new Color(112, 216, 255));
 
-        } else {
-            // Bleu très sombre pour la nuit
-            this.setBackground(new Color(0, 13, 89));
+
+            // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
+            if (modele.getLeCycleJourNuit().isDay()) {
+                // Bleu ciel clair pour le jour
+                this.setBackground(new Color(112, 216, 255));
+
+            } else {
+                // Bleu très sombre pour la nuit
+                this.setBackground(new Color(0, 13, 89));
+            }
         }
 
     }

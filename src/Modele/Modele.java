@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class Modele {
 
+    private boolean shopOuvert = false;
     // L'entité contrôlée par l'utilisateur
     private Joueur joueur;
     // L'environnement global (static pour être accessible facilement sans passer l'instance partout)
@@ -26,6 +27,9 @@ public class Modele {
 
     // Le gestionnaire autonome du temps (Thread)
     private CycleJourNuit leCycleJourNuit;
+    private GestionnaireShop gestionnaireShop;
+
+
     private UpdateJN updateJN;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
@@ -41,7 +45,7 @@ public class Modele {
         // (Démarre automatiquement son propre thread interne)
         this.updateJN = new UpdateJN(this);
         leCycleJourNuit = new CycleJourNuit(updateJN);
-
+        this.gestionnaireShop = new GestionnaireShop(this);
         // Dans le constructeur de Modele.java
         // Dans Modele.java, à la fin du constructeur public Modele() { ... }
 
@@ -75,8 +79,13 @@ public class Modele {
 
     // Getter UpdateJN
     public UpdateJN getUpdateJN() {
-        return updateJN;
-    }
+        return updateJN;}
+    // Getter du Shop
+    public boolean isShopOuvert() { return shopOuvert; }
+    public void toggleShop() { this.shopOuvert = !this.shopOuvert; }
+    public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
+
+
 
     /**
      * Fonction mathématique utilitaire (équivalente à la fonction map() de Processing/Arduino).
