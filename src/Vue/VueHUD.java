@@ -28,6 +28,7 @@ public class VueHUD extends JPanel {
     // Sous-panneaux gérant des sections spécifiques de l'interface
     private VueJourNuit vueJourNuit;
     private VueInventaire vueInventaire;
+    private VueBatHud vueBatHud;
     private VueInstructions vueInstructions;
 
 
@@ -46,7 +47,9 @@ public class VueHUD extends JPanel {
         this.modele = modele;
         vueJourNuit = new VueJourNuit(modele.getLeCycleJourNuit());
         this.vueInventaire = new VueInventaire();
+        this.vueBatHud = new VueBatHud();
         this.vueInstructions = new VueInstructions();
+
 
     }
 
@@ -61,10 +64,16 @@ public class VueHUD extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // Nettoie le panneau avec la couleur de fond actuelle
 
-        // Demande à la vue des instructions de s'afficher un peu plus bas (Y=200)
-        vueInstructions.dessiner(g, 200, modele.getJoueur());
+
         // Dessin de l'inventaire en haut du HUD (Y=40)
-        vueInventaire.dessiner(g, 40, modele.getJoueur());
+        vueInventaire.dessiner(g, (int) (getHeight()*0.3), modele, modele.getJoueur());
+
+        // Dessin des batîments un peu plus bas (Y=200)
+        vueBatHud.dessiner(g, (int) (getHeight()*0.42), modele, modele.getJoueur());
+
+        // Demande à la vue des instructions de s'afficher un peu plus bas (Y=200)
+        vueInstructions.dessiner(g, (int) (getHeight()*0.6), modele.getJoueur());
+
         // Affiche l'image lune/soleil tout en bas du panneau
         vueJourNuit.dessiner(g, getHeight());
 
