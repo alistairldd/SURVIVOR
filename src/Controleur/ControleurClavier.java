@@ -17,13 +17,11 @@ public class ControleurClavier implements KeyListener {
 
     private Modele modele;
     private Vue vue;
-    private Map map;
 
     public ControleurClavier(Vue vue, Modele modele) {
 
         this.modele = modele;
         this.vue = vue;
-        this.map = modele.getMap();
     }
 
     @Override
@@ -41,7 +39,7 @@ public class ControleurClavier implements KeyListener {
     public void keyPressed(KeyEvent e) {
         //System.out.println("Action : La touche E a été pressée !");
         if (e.getKeyCode() == KeyEvent.VK_E) {
-            modele.joueurRamasseRessource();
+            modele.getJoueur().ramasseRessource();
         //getJoueur().ramasseRessource(map.getRessources()) ;
 
         }

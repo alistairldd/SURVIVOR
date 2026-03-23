@@ -78,11 +78,6 @@ public class Modele {
         return updateJN;
     }
 
-    // Raccourci pour récupérer le gestionnaire de monstres
-    public GestionnaireMonstres getGestionnaireMonstres() {
-        return leCycleJourNuit.getUpdateJN().getGestionnaireMonstres();
-    }
-
     /**
      * Fonction mathématique utilitaire (équivalente à la fonction map() de Processing/Arduino).
      * Re-projette un nombre d'un intervalle de référence vers un nouvel intervalle.
@@ -115,7 +110,7 @@ public class Modele {
 
 
         // Récupérer la liste complète des cibles potentielles
-        ArrayList<Monstre> monstres = getMonstres();
+        ArrayList<Monstre> monstres = updateJN.getMonstres();
 
         // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
         for (Monstre m : monstres) {
@@ -141,7 +136,7 @@ public class Modele {
                     // Les deux conditions sont remplies : le monstre est touché !
                     m.perdreHp( joueur.getAttack()); // On applique les dégâts
                     // Affiche l'information dans la console pour debug
-                    System.out.println("Monstre touché ! " + m.getId() + "  HP restant : " + m.getHp());
+                    System.out.println("Monstre touché ! " + m.getID() + "  HP restant : " + m.getHp());
                 }
             }
         }

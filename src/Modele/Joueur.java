@@ -145,10 +145,10 @@ public class Joueur implements Localisable {
 
     /**
      * Tente de ramasser toutes les ressources situées dans le rayon d'interaction du joueur.
-     * @param ressourcesDispo La liste complète des ressources actuellement sur la carte.
      */
     // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
-    public void ramasseRessource(ArrayList<Ressource> ressourcesDispo){
+    public void ramasseRessource(){
+         ArrayList<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
         // Parcourt la liste à l'envers pour éviter les bugs d'index lors de la suppression d'un élément
         for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
             Ressource r = ressourcesDispo.get(i);
