@@ -98,7 +98,7 @@ public class Modele {
          */
         List<Localisable> ciblesPotentielles = new ArrayList<>();
         ciblesPotentielles.add(joueur);
-        //ciblesPotentielles.addAll(gestionnaireBatiments.getBatiments());
+        ciblesPotentielles.addAll(batiments.getBatiments());
         ciblesPotentielles.addAll(updateJN.getMonstres());
         // Parcourt toutes les entités potentiellement survolables et calcule la distance entre chacune d'elles et la position de la souris
         for (Localisable cible : ciblesPotentielles) {
