@@ -25,7 +25,6 @@ public class Slime extends Monstre {
         // Vitesse: 1 pixel par déplacement
         super("Slime", 50, 5, 30, 1);
 
-
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;
         this.y = y;
@@ -37,21 +36,27 @@ public class Slime extends Monstre {
     public int getMaxHp() {
         return 50; // PV maximum du Slime
     }
+
     @Override
-    public void run () {
+    public void run() {
+        // Boucle de comportement du monstre
         while(true) {
             try {
                 this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this));
                 Thread.sleep(5); // Petite pause pour ne pas surcharger le processeur
+
                 if (this.getHp() <= 0) {
+                    // Demande la suppression visuelle et logique de la carte
                     gestionnaireMonstres.supprimerMonstre(this);
+                    // Interrompt la boucle infinie pour terminer le thread proprement
+                    break;
                 }
             } catch (InterruptedException e) {
-                // Capture l'erreur si le thread est tué inopinément
+                // Capture de l'interruption
                 e.printStackTrace();
+                // Sécurité : arrête le thread en cas d'interruption externe pour éviter un thread zombie
+                break;
             }
         }
     }
-
-
 }
