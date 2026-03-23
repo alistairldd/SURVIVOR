@@ -6,28 +6,33 @@ import static Modele.Constantes.*;
  * Gère les données de base communes à tous les bâtiments comme la position spatiale,
  * l'intégrité structurelle (HP) et les règles de réparation.
  */
-public abstract class Batiment implements Localisable{
+public abstract class Batiment extends Thread implements Localisable {
 
+    GestionnaireBatiments gBatiments;
     // Coordonnées de placement sur la grille/carte globale
-    double x,y;
+    protected double x,y;
     // Points de vie actuels du bâtiment (diminue lors d'une attaque)
-    private int hp;
+    protected int hp;
     // Rayon d'action dans lequel le joueur doit se trouver pour pouvoir interagir ou réparer
-    private int healingRange;
+    protected final int healingRange;
+
+    private int range;
 
     /**
      * Initialise un bâtiment à une position spécifique avec ses points de vie maximum.
      * @param x Coordonnée X sur la carte globale.
      * @param y Coordonnée Y sur la carte globale.
      */
-    public Batiment(int x, int y) {
+    public Batiment(int x, int y, GestionnaireBatiments gBatiments, int range ) {
+        this.gBatiments = gBatiments;
         // Enregistre les coordonnées choisies pour la construction
         this.x = x;
         this.y = y;
         // Initialise la structure "flambant neuve" avec tous ses PV
         this.hp = BASE_HP;
         // Fixe la zone d'interaction par défaut à 10 pixels
-        this.healingRange = 10;
+        this.healingRange = HEALING_RANGE;
+        this.range = range;
     }
 
     // Récupère les points de vie actuels du bâtiment
@@ -55,5 +60,11 @@ public abstract class Batiment implements Localisable{
     public void setHp(int hp) {
         this.hp = hp;
     }
+
+    public int getRange(){
+        return range;
+    }
+
+
 
 }

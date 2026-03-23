@@ -18,8 +18,7 @@ public class Modele {
 
     // L'entité contrôlée par l'utilisateur
     private Joueur joueur;
-    // L'environnement global (static pour être accessible facilement sans passer l'instance partout)
-    private static Map map;
+    private GestionnaireBatiments batiments;
     // (Variables potentiellement inutilisées ici, prévues pour l'architecture)
     private Ressource ressource;
     private Batiment batiment;
@@ -34,32 +33,12 @@ public class Modele {
         // Instancie le joueur et lui donne la référence à ce Modèle
         this.joueur = new Joueur(this);
 
-        // Crée l'environnement de jeu
-        map = new Map();
-
         // Initialisation du jour et de la nuit
         // (Démarre automatiquement son propre thread interne)
         this.updateJN = new UpdateJN(this);
         leCycleJourNuit = new CycleJourNuit(updateJN);
 
-        // Dans le constructeur de Modele.java
-        // Dans Modele.java, à la fin du constructeur public Modele() { ... }
-
-        // Lance le thread qui vérifie en permanence si les tours peuvent tirer sur les ennemis
-        ThreadBatiments threadBatiments = new ThreadBatiments(this);
-        // Exécute la boucle infinie des bâtiments en arrière-plan
-        threadBatiments.start();
-    }
-
-    /*---- GETTERS ET SETTERS ---- */
-
-    // Retourne la carte globale
-    public Map getMap() {
-        return map;
-    }
-    // à enlever après la restructuration
-    public static Map getMap2() {
-        return map;
+        this.batiments = new GestionnaireBatiments(this);
     }
 
 
@@ -81,6 +60,10 @@ public class Modele {
     // Raccourci pour récupérer le gestionnaire de monstres
     public GestionnaireMonstres getGestionnaireMonstres() {
         return leCycleJourNuit.getUpdateJN().getGestionnaireMonstres();
+    }
+
+    public GestionnaireBatiments getGestionnaireBatiments() {
+        return batiments;
     }
 
     /**
@@ -114,8 +97,7 @@ public class Modele {
         double positionY = this.joueur.getY();
 
 
-        // Récupérer la liste complète des cibles potentielles
-        ArrayList<Monstre> monstres = getMonstres();
+
 
         // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
         for (Monstre m : monstres) {
@@ -143,6 +125,19 @@ public class Modele {
                     // Affiche l'information dans la console pour debug
                     System.out.println("Monstre touché ! " + m.getId() + "  HP restant : " + m.getHp());
                 }
+            }
+        }
+    }
+
+    public Monstre batTrouverMonstre(Batiment b) {
+        ArrayList<Monstre> monstres = updateJN.getMonstres();
+        for (Monstre m : monstres) {
+            // Calcule la distance directe (hypoténuse) entre le centre de la tour et le monstre
+            double distance = Math.hypot(m.getX() - b.getX(), m.getY() - b.getY());
+
+            // Si le monstre entre dans le périmètre de défense de la tour
+            if (distance <= b.getRange()) {
+                return m;
             }
         }
     }

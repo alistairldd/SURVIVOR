@@ -6,6 +6,7 @@ public final class Constantes {
     /*** ---Bâtiments--- ***/
     // Constante : Points de vie maximum d'un bâtiment neuf
     public static final int BASE_HP = 100;
+    public static final int HEALING_RANGE = 50;
 
     /*--- Tower ---*/
     // Constante : Points de dégâts fixes infligés à chaque tir
