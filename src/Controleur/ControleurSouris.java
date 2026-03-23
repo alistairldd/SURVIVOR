@@ -123,6 +123,14 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX();
         mouseY = e.getY();
+
+        double camX = joueur.getX() - (double) vue.getWidth() / 2;
+        double camY = joueur.getY() - (double) vue.getHeight() / 2;
+
+        double sourisMondeX = camX + mouseX;
+        double sourisMondeY = camY + mouseY;
+
+        // modele.verifierSurvol(sourisMondeX, sourisMondeY); pas encore là le truc
     }
 
     // Getters pour les coordonnées de la souris

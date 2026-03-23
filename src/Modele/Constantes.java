@@ -12,7 +12,6 @@ public final class Constantes {
     public static final int TOWER_BASE_DAMAGE = 20;
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
-
     // VITESSE D'ATTAQUE DE LA TOUR (1000 = 1 seconde)
     // Temps de recharge nécessaire entre deux tirs successifs
     public static final int CADENCE_TOWER = 1000;

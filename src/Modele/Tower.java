@@ -84,4 +84,14 @@ public class Tower extends Batiment {
             }
         }
     }
+
+    @Override
+    public int getMaxHp() {
+        return 100;
+    }
+
+    @Override
+    public String getNom() {
+        return "Tour";
+    }
 }

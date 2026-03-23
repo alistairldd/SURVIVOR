@@ -24,4 +24,9 @@ public class Slime extends Monstre {
         this.x = x;
         this.y = y;
     }
+
+    @Override
+    public int getMaxHp() {
+        return 50; // PV maximum du Slime
+    }
 }

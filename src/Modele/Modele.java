@@ -93,6 +93,9 @@ public class Modele {
     }
 
 
+    public Localisable getCibleAffichage(){
+        return joueur;
+    }
     /**
      * Gère la logique complexe de l'attaque du joueur (calcul de collisions en cône).
      * @param angleAttaque L'angle en radians vers lequel le joueur a cliqué (calculé dans le contrôleur).

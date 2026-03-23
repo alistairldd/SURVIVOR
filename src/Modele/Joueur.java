@@ -71,6 +71,16 @@ public class Joueur implements Localisable {
 
     public int getHp() {return hp;}
 
+    @Override
+    public int getMaxHp() {
+        return HP_JOUEUR;
+    }
+
+    @Override
+    public String getNom() {
+        return "Joueur";
+    }
+
     public void setHp(int hp) {this.hp = hp;}
 
     public int getAttack() {return this.attack;}

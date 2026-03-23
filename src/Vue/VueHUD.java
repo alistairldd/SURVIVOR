@@ -30,7 +30,7 @@ public class VueHUD extends JPanel {
     private VueInventaire vueInventaire;
     private VueBatHud vueBatHud;
     private VueInstructions vueInstructions;
-
+    private VueVie vueVie;
 
     /**
      * Configure le panneau latéral et instancie ses composants textuels et graphiques.
@@ -49,8 +49,7 @@ public class VueHUD extends JPanel {
         this.vueInventaire = new VueInventaire();
         this.vueBatHud = new VueBatHud();
         this.vueInstructions = new VueInstructions();
-
-
+        this.vueVie = new VueVie(modele);
     }
 
     /* ---- GETTERS ET SETTERS ---- */
@@ -74,6 +73,7 @@ public class VueHUD extends JPanel {
         // Demande à la vue des instructions de s'afficher un peu plus bas (Y=200)
         vueInstructions.dessiner(g, (int) (getHeight()*0.6), modele.getJoueur());
 
+        vueVie.dessiner(g, (int) (getHeight()*0.01), (int) (getWidth()*0.9), 20);
         // Affiche l'image lune/soleil tout en bas du panneau
         vueJourNuit.dessiner(g, getHeight());
 
