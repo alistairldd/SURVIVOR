@@ -43,14 +43,23 @@ public abstract class Arme {
     // Retourne la puissance d'attaque de l'arme
     public int getDegats(){return degats;};
 
+    // Permet de modifier les dégâts de l'arme
+    public void setDegats(int degats) {this.degats = degats;}
+
     // Retourne la distance d'attaque maximale
     public int getPortee(){return portee;};
+
+    // Permet de modifier la portée de l'arme
+    public void setPortee(int p){this.portee = p;};
 
     // Retourne le temps de recharge (cooldown) en millisecondes
     public int getCadence(){return cadence;};
 
     // Retourne le nom de l'arme
     public String getNom(){return nom;};
+
+    // Permet de modifier le nom de l'arme
+    public void setNom(String nom) {this.nom = nom;}
 
     // Retourne l'angle (la largeur) du cône de frappe en radians
     public double getAngle() {

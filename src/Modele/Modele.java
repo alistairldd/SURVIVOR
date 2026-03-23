@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class Modele {
 
+    private boolean shopOuvert = false;
     // L'entité contrôlée par l'utilisateur
     private Joueur joueur;
     private GestionnaireBatiments batiments;
@@ -25,6 +26,9 @@ public class Modele {
 
     // Le gestionnaire autonome du temps (Thread)
     private CycleJourNuit leCycleJourNuit;
+    private GestionnaireShop gestionnaireShop;
+
+
     private UpdateJN updateJN;
 
     // Constructeur de la classe Modele, il initialise les données du modèle.
@@ -39,8 +43,11 @@ public class Modele {
         leCycleJourNuit = new CycleJourNuit(updateJN);
 
         this.batiments = new GestionnaireBatiments(this);
+        this.gestionnaireShop = new GestionnaireShop(this);
+
     }
 
+    /*---- GETTERS ET SETTERS ---- */
 
     // Getter du joueur
     public Joueur getJoueur() {
@@ -54,13 +61,13 @@ public class Modele {
 
     // Getter UpdateJN
     public UpdateJN getUpdateJN() {
-        return updateJN;
-    }
+        return updateJN;}
+    // Getter du Shop
+    public boolean isShopOuvert() { return shopOuvert; }
+    public void toggleShop() { this.shopOuvert = !this.shopOuvert; }
+    public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
 
-    // Raccourci pour récupérer le gestionnaire de monstres
-    public GestionnaireMonstres getGestionnaireMonstres() {
-        return leCycleJourNuit.getUpdateJN().getGestionnaireMonstres();
-    }
+
 
     public GestionnaireBatiments getGestionnaireBatiments() {
         return batiments;
@@ -77,6 +84,9 @@ public class Modele {
     }
 
 
+    public Localisable getCibleAffichage(){
+        return joueur;
+    }
     /**
      * Gère la logique complexe de l'attaque du joueur (calcul de collisions en cône).
      * @param angleAttaque L'angle en radians vers lequel le joueur a cliqué (calculé dans le contrôleur).
@@ -97,6 +107,8 @@ public class Modele {
         double positionY = this.joueur.getY();
 
 
+        // Récupérer la liste complète des cibles potentielles
+        ArrayList<Monstre> monstres = updateJN.getMonstres();
 
 
         // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
@@ -123,7 +135,7 @@ public class Modele {
                     // Les deux conditions sont remplies : le monstre est touché !
                     m.perdreHp( joueur.getAttack()); // On applique les dégâts
                     // Affiche l'information dans la console pour debug
-                    System.out.println("Monstre touché ! " + m.getId() + "  HP restant : " + m.getHp());
+                    System.out.println("Monstre touché ! " + m.getID() + "  HP restant : " + m.getHp());
                 }
             }
         }

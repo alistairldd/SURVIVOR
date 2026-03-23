@@ -17,13 +17,11 @@ public class ControleurClavier implements KeyListener {
 
     private Modele modele;
     private Vue vue;
-    private Map map;
 
     public ControleurClavier(Vue vue, Modele modele) {
 
         this.modele = modele;
         this.vue = vue;
-        this.map = modele.getMap();
     }
 
     @Override
@@ -41,7 +39,7 @@ public class ControleurClavier implements KeyListener {
     public void keyPressed(KeyEvent e) {
         //System.out.println("Action : La touche E a été pressée !");
         if (e.getKeyCode() == KeyEvent.VK_E) {
-            modele.joueurRamasseRessource();
+            modele.getJoueur().ramasseRessource();
         //getJoueur().ramasseRessource(map.getRessources()) ;
 
         }
@@ -52,8 +50,21 @@ public class ControleurClavier implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_C) {
             vue.getVueArme().setAffPortee(!vue.getVueArme().getAffPortee()); // bascule l'affichage de la portée de l'arme
         }
-    }
 
+        if (e.getKeyCode() == KeyEvent.VK_I) {
+            modele.toggleShop();
+        }
+
+        if (modele.isShopOuvert()) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_1 -> modele.getGestionnaireShop().acheterEpeeAcieree();
+                case KeyEvent.VK_2 -> modele.getGestionnaireShop().acheterArmure();
+                case KeyEvent.VK_3 -> modele.getGestionnaireShop().acheterArmureLourde();
+                case KeyEvent.VK_4 -> modele.getGestionnaireShop().acheterEpee();
+                case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
+            }
+        }
+    }
     @Override
     public void keyReleased(KeyEvent e) {
 

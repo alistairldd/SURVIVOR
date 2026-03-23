@@ -13,10 +13,12 @@ public class GestionnaireMonstres {
 
     // Liste dynamique stockant tous les monstres actuellement en vie sur la carte
     private ArrayList<Monstre> monstres;
+    private UpdateJN updateJN;
 
-    public GestionnaireMonstres() {
+    public GestionnaireMonstres(UpdateJN updateJN) {
         // Initialise la liste vide au démarrage
         this.monstres = new ArrayList<>();
+        this.updateJN = updateJN;
     }
 
     /**
@@ -65,11 +67,11 @@ public class GestionnaireMonstres {
             switch (type) {
                 case 0:
                     // Ajoute un nouveau Slime à la liste aux coordonnées calculées
-                    monstres.add(new Slime(x,y));
+                    monstres.add(new Slime(x,y, this));
                     break;
                 default:
                     // Par défaut (si type = 1 ou 2), crée un Slime pour le moment
-                    monstres.add(new Slime(x,y)); // Par défaut, retourne un Slime
+                    monstres.add(new Slime(x,y, this)); // Par défaut, retourne un Slime
             }
         }
     }
@@ -90,27 +92,10 @@ public class GestionnaireMonstres {
     }
 
     /**
-     * Parcourt la liste pour identifier et retirer les monstres dont les PV sont tombés à zéro.
-     * Appelé régulièrement pendant la nuit par UpdateJN.
+     *  Retirer les monstres dont les PV sont tombés à zéro.
      */
-    public void supprimerMonstresMorts (){
-        // Crée une liste temporaire pour éviter l'erreur de modification concourante (ConcurrentModificationException)
-        List<Monstre> monstresMorts = new ArrayList<>();
-
-        // Phase 1 : Identification
-        for (Monstre m : monstres) {
-            // Si le monstre n'a plus de PV
-            if (m.getHp() <= 0) {
-                // On l'ajoute à la liste des condamnés
-                monstresMorts.add(m);
-            }
-        }
-
-        // Phase 2 : Suppression
-        for (Monstre m : monstresMorts) {
-            // Retire effectivement le monstre mort de la liste principale
+    public void supprimerMonstre (Monstre m){
             monstres.remove(m);
-        }
     }
 
     /**
@@ -147,6 +132,10 @@ public class GestionnaireMonstres {
                 m.mettreAJourPosition(plusProche);
             }
         }
+    }
+
+    public Localisable trouverCible(Localisable m){
+        return updateJN.monstreTrouverCible(m);
     }
 
 }

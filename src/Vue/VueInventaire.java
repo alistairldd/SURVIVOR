@@ -1,6 +1,7 @@
 package Vue;
 
 import Modele.Joueur;
+import Modele.Modele;
 import Modele.Ressource;
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,14 +17,15 @@ public class VueInventaire {
      * Dessine le tableau récapitulatif de l'inventaire.
      * @param g Contexte graphique.
      * @param yDebut Hauteur de départ dans le HUD.
+     * @param modele Le modèle pour accéder au cycle jour/nuit et adapter la couleur du texte en conséquence.
      * @param joueur Le joueur dont on lit l'inventaire.
      */
-    public void dessiner(Graphics g, int yDebut, Joueur joueur) {
+    public void dessiner(Graphics g, int yDebut, Modele modele, Joueur joueur) {
         Graphics2D g2d = (Graphics2D) g;
 
         // --- MODIFICATION : Couleur adaptative ---
         // Vérifie l'état jour/nuit pour garantir la lisibilité
-        boolean isDay = joueur.getModele().getLeCycleJourNuit().isDay();
+        boolean isDay = modele.getLeCycleJourNuit().isDay();
         Color couleurTexte = isDay ? Color.BLACK : Color.WHITE;
         g2d.setColor(couleurTexte);
         // -----------------------------------------
@@ -54,10 +56,12 @@ public class VueInventaire {
         String[] noms = {"Bois", "Pierre", "Fer", "Or"};
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
 
+
         // Boucle pour dessiner les 4 lignes de ressources
         for (int i = 0; i < noms.length; i++) {
             // Concatène le nom et la quantité finale, et décale le texte vers le bas de 20px à chaque itération
             g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 10, yDebut + 25 + (i * 20));
         }
+        g.drawString("Pièces : " + joueur.getPieces(), xOffset, yDebut + 25 + (noms.length * 20));
     }
 }

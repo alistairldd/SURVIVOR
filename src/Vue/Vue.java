@@ -226,7 +226,7 @@ public class Vue extends JPanel {
         vueArme.dessiner(g2d);
 
         // 5. Dessiner les monstres (si on en a)
-        for (Monstre m : modele.getMonstres()) {
+        for (Monstre m : updateJN.getMonstres()) {
             vueMonstre.dessiner(g2d, m, (int) m.getX(), (int) m.getY(), false);
         }
 

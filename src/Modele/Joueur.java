@@ -14,8 +14,12 @@ import static java.lang.Math.abs;
 public class Joueur implements Localisable {
 
     //Stats du joueur
+    // Argent du joueur
+    private int pieces = 0;
     // Points de vie actuels
     private int hp;
+    // Points de vie maximum
+    private int hpMax = HP_JOUEUR;
     // Dégâts de base du joueur (indépendants de l'arme)
     private int attack;
     // Liste représentant le sac à dos du joueur contenant les ressources ramassées
@@ -69,7 +73,31 @@ public class Joueur implements Localisable {
         this.modele = modele;
     }
 
+    public int getPieces() {
+        return pieces;
+    }
+
+    public void ajouterPieces(int montant) {
+        this.pieces += montant;
+    }
+
+    public void retirerPieces(int montant) {
+        this.pieces -= montant;
+    }
+    public int getHpMax() {return hpMax;}
+    public void setHpMax(int hpMax) {this.hpMax = hpMax;}
+
     public int getHp() {return hp;}
+
+    @Override
+    public int getMaxHp() {
+        return HP_JOUEUR;
+    }
+
+    @Override
+    public String getNom() {
+        return "Joueur";
+    }
 
     public void setHp(int hp) {this.hp = hp;}
 
@@ -96,7 +124,8 @@ public class Joueur implements Localisable {
     public synchronized void setPositionY(double positionY) {this.positionY = positionY;}
     // Getter pour l'arme équipée du joueur
     public Arme getArmeEquipee() {return armeEquipee;}
-
+    // Setter pour l'arme équipée du joueur
+    public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
     /**
      * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte.
      * @param x La nouvelle coordonnée X voulue.
@@ -145,10 +174,10 @@ public class Joueur implements Localisable {
 
     /**
      * Tente de ramasser toutes les ressources situées dans le rayon d'interaction du joueur.
-     * @param ressourcesDispo La liste complète des ressources actuellement sur la carte.
      */
     // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
-    public void ramasseRessource(ArrayList<Ressource> ressourcesDispo){
+    public void ramasseRessource(){
+         ArrayList<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
         // Parcourt la liste à l'envers pour éviter les bugs d'index lors de la suppression d'un élément
         for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
             Ressource r = ressourcesDispo.get(i);

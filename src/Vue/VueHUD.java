@@ -28,7 +28,10 @@ public class VueHUD extends JPanel {
     // Sous-panneaux gérant des sections spécifiques de l'interface
     private VueJourNuit vueJourNuit;
     private VueInventaire vueInventaire;
+    private VueBatHud vueBatHud;
     private VueInstructions vueInstructions;
+    private VueVie vueVie;
+    private VueShop vueShop = new VueShop();
 
 
     /**
@@ -46,7 +49,11 @@ public class VueHUD extends JPanel {
         this.modele = modele;
         vueJourNuit = new VueJourNuit(modele.getLeCycleJourNuit());
         this.vueInventaire = new VueInventaire();
+        this.vueBatHud = new VueBatHud();
         this.vueInstructions = new VueInstructions();
+        this.vueVie = new VueVie(modele);
+        this.vueShop = new VueShop();
+
 
     }
 
@@ -60,23 +67,35 @@ public class VueHUD extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // Nettoie le panneau avec la couleur de fond actuelle
+        if (modele.isShopOuvert()) {
+            this.setBackground(new Color(255, 215, 0)); // Fond doré pour le shop
+            vueShop.dessiner(g, 50, modele.getJoueur());
+        }else {
+         // Dessin de l'inventaire en haut du HUD (Y=40)
+        vueInventaire.dessiner(g, (int) (getHeight()*0.3), modele, modele.getJoueur());
+
+        // Dessin des batîments un peu plus bas (Y=200)
+        vueBatHud.dessiner(g, (int) (getHeight()*0.42), modele, modele.getJoueur());
 
         // Demande à la vue des instructions de s'afficher un peu plus bas (Y=200)
-        vueInstructions.dessiner(g, 200, modele.getJoueur());
-        // Dessin de l'inventaire en haut du HUD (Y=40)
-        vueInventaire.dessiner(g, 40, modele.getJoueur());
+        vueInstructions.dessiner(g, (int) (getHeight()*0.6), modele.getJoueur());
+
+        vueVie.dessiner(g, (int) (getHeight()*0.01), (int) (getWidth()*0.9), 20);
         // Affiche l'image lune/soleil tout en bas du panneau
         vueJourNuit.dessiner(g, getHeight());
 
         // --- GESTION DE L'AMBIANCE VISUELLE ---
-        // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
-        if (modele.getLeCycleJourNuit().isDay()){
-            // Bleu ciel clair pour le jour
-            this.setBackground(new Color(112, 216, 255));
 
-        } else {
-            // Bleu très sombre pour la nuit
-            this.setBackground(new Color(0, 13, 89));
+
+            // Change dynamiquement la couleur de fond du panneau entier en fonction du cycle temporel du Modèle
+            if (modele.getLeCycleJourNuit().isDay()) {
+                // Bleu ciel clair pour le jour
+                this.setBackground(new Color(112, 216, 255));
+
+            } else {
+                // Bleu très sombre pour la nuit
+                this.setBackground(new Color(0, 13, 89));
+            }
         }
 
     }

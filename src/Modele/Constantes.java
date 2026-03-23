@@ -13,7 +13,6 @@ public final class Constantes {
     public static final int TOWER_BASE_DAMAGE = 20;
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
-
     // VITESSE D'ATTAQUE DE LA TOUR (1000 = 1 seconde)
     // Temps de recharge nécessaire entre deux tirs successifs
     public static final int CADENCE_TOWER = 1000;
@@ -23,7 +22,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 60;
+    public final static int DUREE_CYCLE_JOUR = 5;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière

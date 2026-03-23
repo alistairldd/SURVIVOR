@@ -1,4 +1,5 @@
 package Modele;
+import Modele.Map;
 import static Modele.Constantes.*;
 /**
  * Représente le Quartier Général (HeadQuarters) du joueur.
@@ -19,6 +20,16 @@ public class HQ extends Batiment {
 
     // Récupère la position verticale sur la carte
     public double getY(){ return y; }
+
+    @Override
+    public int getMaxHp() {
+        return 150; // PV maximum du HQ
+    }
+
+    @Override
+    public String getNom() {
+        return "HQ";
+    }
 
     @Override
     public void run() {
