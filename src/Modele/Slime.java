@@ -42,8 +42,7 @@ public class Slime extends Monstre {
         while(true) {
             try {
                 this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this));
-                Thread.sleep(1); // Petite pause pour ne pas surcharger le processeur
-                System.out.println("aaaa");
+                Thread.sleep(5); // Petite pause pour ne pas surcharger le processeur
                 if (this.getHp() <= 0) {
                     gestionnaireMonstres.supprimerMonstre(this);
                 }

@@ -24,7 +24,7 @@ public class VueVie {
             * La barre de vie est remplie proportionnellement à la vie actuelle par rapport à la vie maximale.
             * La couleur de la barre de vie est déterminée par le paramètre "color" passé au constructeur.
          */
-
+        Graphics2D g2d = (Graphics2D) g;
         Localisable localisable = modele.getCibleAffichage(); // Par défaut, on suppose que c'est pour le joueur
 
         if (localisable != null) { // Ne dessine pas la barre de vie tant qu'on a pas hover qqchose
@@ -44,15 +44,19 @@ public class VueVie {
 
 
             // Dessine une bordure noire pour la barre de vie
-            g.setColor(Color.BLACK);
-            g.fillRect(xOffset -5, yDebut -5, width + 10, height + 10);
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(xOffset -5, yDebut -5, width + 10, height + 10);
 
             // Calcule la largeur de la partie remplie de la barre de vie en fonction du pourcentage de vie restante
             int filledWidth = (int) ((double) vie / vieMax * width);
 
             // Dessine la partie remplie de la barre de vie avec la couleur spécifiée
-            g.setColor(color);
-            g.fillRect(xOffset, yDebut, filledWidth, height);
+            g2d.setColor(color);
+            g2d.fillRect(xOffset, yDebut, filledWidth, height);
+
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(nom , xOffset, yDebut + 50); // Affiche le nom et les points de vie au-dessus de la barre
+
         }
     }
 

@@ -130,7 +130,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
         double sourisMondeX = camX + mouseX;
         double sourisMondeY = camY + mouseY;
 
-        // modele.verifierSurvol(sourisMondeX, sourisMondeY); pas encore là le truc
+        modele.verifierSurvol(sourisMondeX, sourisMondeY);
     }
 
     // Getters pour les coordonnées de la souris

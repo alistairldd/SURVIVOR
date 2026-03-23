@@ -1,6 +1,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * La clase générale du modèle, elle contient les classes de données et les méthodes pour manipuler ces données.
@@ -29,6 +30,8 @@ public class Modele {
     private CycleJourNuit leCycleJourNuit;
     private GestionnaireShop gestionnaireShop;
 
+    // Entité actuellement survolée par la souris (pour affichage d'infos)
+    private Localisable cibleAffichage;
 
     private UpdateJN updateJN;
 
@@ -46,8 +49,7 @@ public class Modele {
         this.updateJN = new UpdateJN(this);
         leCycleJourNuit = new CycleJourNuit(updateJN);
         this.gestionnaireShop = new GestionnaireShop(this);
-        // Dans le constructeur de Modele.java
-        // Dans Modele.java, à la fin du constructeur public Modele() { ... }
+        this.cibleAffichage = joueur; // valeur initiale
 
         // Lance le thread qui vérifie en permanence si les tours peuvent tirer sur les ennemis
         ThreadBatiments threadBatiments = new ThreadBatiments(this);
@@ -97,9 +99,27 @@ public class Modele {
         return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
     }
 
+    public Localisable getCibleAffichage() {
+        return cibleAffichage;
+    }
 
-    public Localisable getCibleAffichage(){
-        return joueur;
+    public void verifierSurvol(double sourisMondeX, double sourisMondeY) {
+         /*
+            Cette méthode est appelée à chaque mouvement de la souris pour vérifier si le curseur survole une entité du jeu (joueur, bâtiment ou monstre).
+            Elle prend en paramètre les coordonnées de la souris dans le monde du jeu, elle parcourt la liste des entités et retourne celle qui est la plus proche du curseur.
+         */
+        List<Localisable> ciblesPotentielles = new ArrayList<>();
+        ciblesPotentielles.add(joueur);
+        //ciblesPotentielles.addAll(gestionnaireBatiments.getBatiments());
+        ciblesPotentielles.addAll(updateJN.getMonstres());
+        // Parcourt toutes les entités potentiellement survolables et calcule la distance entre chacune d'elles et la position de la souris
+        for (Localisable cible : ciblesPotentielles) {
+            double d = Math.hypot(sourisMondeX - cible.getX(), sourisMondeY - cible.getY());
+            if (d < 20) {
+                cibleAffichage = cible;
+            }
+        }
+
     }
     /**
      * Gère la logique complexe de l'attaque du joueur (calcul de collisions en cône).
