@@ -281,12 +281,12 @@ public class Joueur implements Localisable {
             consommerRessource(3, 1); // Retire 1 Or
 
             // 4. On crée la tour exactement sous les pieds du joueur (conversion double -> int requise pour la grille)
-            Tower nouvelleTour = new Tower((int) positionX, (int) positionY);
+            Tower nouvelleTour = new Tower((int) positionX, (int) positionY, modele.getGestionnaireBatiments());
 
             // La tour a directement tous ses PV max grâce à son constructeur
 
             // 5. On demande au Modèle d'ajouter ce nouveau bâtiment à la liste globale (Map)
-            modele.getMap().getBatiments().add(nouvelleTour);
+            modele.getGestionnaireBatiments().getBatiments().add(nouvelleTour);
 
             System.out.println("Tour construite avec succès en (" + (int)positionX + ", " + (int)positionY + ") !");
             System.out.println("Inventaire restant : " + inventaire.size() + " objets.");

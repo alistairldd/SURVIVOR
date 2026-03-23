@@ -9,7 +9,7 @@ import static Modele.Constantes.*;
  * sa propre logique de combat (portée, dégâts, cadence) et un système de ciblage
  * pour interagir avec le ThreadBatiments de manière indépendante.
  */
-public class Tower extends Batiment {
+public class Tower extends Batiment{
 
     // Portée effective de cette instance précise
     private int range;
@@ -27,9 +27,9 @@ public class Tower extends Batiment {
      * @param x Coordonnée X de placement.
      * @param y Coordonnée Y de placement.
      */
-    public Tower(int x, int y) {
+    public Tower(int x, int y, GestionnaireBatiments gB) {
         // Initialise la structure via le constructeur parent (Batiment)
-        super(x, y);
+        super(x, y, gB, TOWER_BASE_RANGE);
         // Applique les statistiques de combat par défaut
         this.range = TOWER_BASE_RANGE;
         this.damage = TOWER_BASE_DAMAGE;
@@ -48,41 +48,20 @@ public class Tower extends Batiment {
      * Logique de tir autonome de la tour.
      * Appelée en boucle par le ThreadBatiments, elle scanne les monstres proches,
      * vérifie son cooldown, et tire sur le premier ennemi à portée.
-     * @param monstres La liste complète des monstres vivants sur la carte.
+     * @param monstre le monstre dans la porté.
      */
-    public void attaquerSiPossible(ArrayList<Monstre> monstres) {
-        // Récupère l'heure exacte à l'instant T
-        long tempsActuel = System.currentTimeMillis();
+   public void attaquer(Monstre monstre) {monstre.perdreHp(this.damage);}
 
-        // Le bâtiment vérifie s'il s'est écoulé assez de temps depuis son dernier tir (Cooldown)
-        if (tempsActuel - dernierTempsAttaque >= CADENCE_TOWER) {
-
-            // On réinitialise la cible au début du scan pour ne pas garder en mémoire un vieux monstre mort
-            monstreCible = null;
-
-            // Parcourt tous les ennemis présents sur la carte
-            for (Monstre m : monstres) {
-                // Calcule la distance directe (hypoténuse) entre le centre de la tour et le monstre
-                double distance = Math.hypot(m.getX() - this.x, m.getY() - this.y);
-
-                // Si le monstre entre dans le périmètre de défense de la tour
-                if (distance <= this.range) {
-                    // On retire des PV au monstre ciblé
-                    m.perdreHp(this.damage);
-                    // Affiche l'action dans la console pour le debug
-                    System.out.println("Pew! Tour (" + x + "," + y + ") tire sur monstre " + m.getId());
-
-                    // On remet le chrono à zéro pour CETTE tour (elle ne pourra plus tirer avant 1 seconde)
-                    this.dernierTempsAttaque = tempsActuel;
-
-                    // On mémorise le monstre attaqué pour que l'effet visuel (laser) s'affiche à l'écran
-                    this.monstreCible = m;
-
-                    // On tire sur un seul monstre à la fois, donc on arrête la boucle de scan dès qu'on a trouvé une cible
-                    break;
-                }
+    @Override
+    public void run() {
+            while (this.hp > 0) {
+                try {
+                    monstreCible = gBatiments.trouverCible(this);
+                    if (monstreCible != null) {
+                    this.attaquer(monstreCible);}
+                    Thread.sleep(BAT_DELAY);
+                } catch (InterruptedException e) {}
             }
-        }
     }
 
     @Override
