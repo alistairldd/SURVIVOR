@@ -65,11 +65,11 @@ public class ControleurClavier implements KeyListener {
         if (modele.getHudPageActuelle() == 3) {
             // Utilisation du pavé numérique pour dissocier l'achat de la navigation
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_NUMPAD1 -> modele.getGestionnaireShop().acheterEpeeAcieree();
-                case KeyEvent.VK_NUMPAD2 -> modele.getGestionnaireShop().acheterArmure();
-                case KeyEvent.VK_NUMPAD3 -> modele.getGestionnaireShop().acheterArmureLourde();
-                case KeyEvent.VK_NUMPAD4 -> modele.getGestionnaireShop().acheterEpee();
-                case KeyEvent.VK_NUMPAD5 -> modele.getGestionnaireShop().acheterPotionDeVie();
+                case KeyEvent.VK_1 -> modele.getGestionnaireShop().acheterEpeeAcieree();
+                case KeyEvent.VK_2 -> modele.getGestionnaireShop().acheterArmure();
+                case KeyEvent.VK_3 -> modele.getGestionnaireShop().acheterArmureLourde();
+                case KeyEvent.VK_4 -> modele.getGestionnaireShop().acheterEpee();
+                case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
             }
         }
     }
