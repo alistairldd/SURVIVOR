@@ -17,7 +17,9 @@ import java.util.List;
  */
 public class Modele {
 
-    private boolean shopOuvert = false;
+    // Indicateur de la page actuellement affichée dans le HUD (1: Etat du jeu, 2: Inventaire/Action, 3: Shop)
+    private int hudPageActuelle = 1;
+
     // L'entité contrôlée par l'utilisateur
     private Joueur joueur;
     private GestionnaireBatiments batiments;
@@ -66,12 +68,12 @@ public class Modele {
     // Getter UpdateJN
     public UpdateJN getUpdateJN() {
         return updateJN;}
-    // Getter du Shop
-    public boolean isShopOuvert() { return shopOuvert; }
-    public void toggleShop() { this.shopOuvert = !this.shopOuvert; }
+
+    // Getter et Setter pour la pagination du HUD
+    public int getHudPageActuelle() { return hudPageActuelle; }
+    public void setHudPageActuelle(int page) { this.hudPageActuelle = page; }
+
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
-
-
 
     public GestionnaireBatiments getGestionnaireBatiments() {
         return batiments;

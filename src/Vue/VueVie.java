@@ -1,33 +1,30 @@
 package Vue;
 
 import Modele.Modele;
-
 import java.awt.*;
 import Modele.Localisable;
-
 import static Modele.Constantes.xOffset;
 
 public class VueVie {
 
-    // Référence au modèle pour accéder aux données du jeu si nécessaire (ex: pour récupérer la vie du joueur)
     private Modele modele;
 
     public VueVie(Modele modele) {
-        // Constructeur par défaut, les paramètres de la barre de vie seront mis à jour plus tard via setParam()
         this.modele = modele;
     }
 
-
-    public void dessiner(Graphics g, int yDebut, int width, int height) {
-        /*
-            * Dessine une barre de vie à la position (x, y) avec les dimensions spécifiées (width, height).
-            * La barre de vie est remplie proportionnellement à la vie actuelle par rapport à la vie maximale.
-            * La couleur de la barre de vie est déterminée par le paramètre "color" passé au constructeur.
-         */
+    /**
+     * Dessine la barre de vie et l'avatar de l'entité.
+     * @return La coordonnée Y finale après avoir dessiné ce composant (pour empiler la suite).
+     */
+    public int dessiner(Graphics g, int yDebut, int width, int height) {
         Graphics2D g2d = (Graphics2D) g;
-        Localisable localisable = modele.getCibleAffichage(); // Par défaut, on suppose que c'est pour le joueur
+        Localisable localisable = modele.getCibleAffichage();
 
-        if (localisable != null) { // Ne dessine pas la barre de vie tant qu'on a pas hover qqchose
+        // Curseur vertical qui mémorisera notre progression
+        int yCourant = yDebut;
+
+        if (localisable != null) {
 
             String nom = localisable.getNom();
             int vie = localisable.getHp();
@@ -42,22 +39,38 @@ public class VueVie {
                 color = Color.RED;
             }
 
-
-            // Dessine une bordure noire pour la barre de vie
+            // 1. Dessin de la barre de vie
             g2d.setColor(Color.BLACK);
-            g2d.fillRect(xOffset -5, yDebut -5, width + 10, height + 10);
+            g2d.fillRect(xOffset - 5, yCourant - 5, width + 10, height + 10);
 
-            // Calcule la largeur de la partie remplie de la barre de vie en fonction du pourcentage de vie restante
             int filledWidth = (int) ((double) vie / vieMax * width);
-
-            // Dessine la partie remplie de la barre de vie avec la couleur spécifiée
             g2d.setColor(color);
-            g2d.fillRect(xOffset, yDebut, filledWidth, height);
+            g2d.fillRect(xOffset, yCourant, filledWidth, height);
 
-            g2d.setColor(Color.BLACK);
-            g2d.drawString(nom , xOffset, yDebut + 50); // Affiche le nom et les points de vie au-dessus de la barre
+            yCourant += height + 25; // On descend sous la barre
 
+            // Affiche le nom et les points de vie
+            g2d.setColor(Color.WHITE); // Toujours blanc sur les pages du CardLayout (fond sombre global prévu)
+            g2d.setFont(new Font("Arial", Font.BOLD, 16));
+            g2d.drawString(nom + " : " + vie + " / " + vieMax + " PV", xOffset, yCourant);
+
+            yCourant += 20; // On descend pour l'image
+
+            // 2. Dessin de l'image de l'entité
+            // Ici, tu pourras remplacer ce rectangle de test par ton ImageIO (ex: g2d.drawImage(avatarJoueur, ...))
+            int tailleImage = 100;
+            g2d.setColor(new Color(50, 50, 50, 150)); // Fond gris transparent pour la boîte d'image
+            g2d.fillRect(xOffset, yCourant, tailleImage, tailleImage);
+            g2d.setColor(Color.WHITE);
+            g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
+
+            g2d.setFont(new Font("Arial", Font.ITALIC, 12));
+            g2d.drawString("[Image " + nom + "]", xOffset + 10, yCourant + (tailleImage/2));
+
+            yCourant += tailleImage + 30; // On ajoute la taille de l'image plus une marge
         }
-    }
 
+        // On retourne la position Y exacte où l'on s'est arrêté
+        return yCourant;
+    }
 }

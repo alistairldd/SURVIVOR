@@ -5,57 +5,59 @@ import java.awt.*;
 import static Modele.Constantes.*;
 
 public class VueShop {
-    public void dessiner(Graphics g, int yDebut, Joueur joueur) {
+    public int dessiner(Graphics g, int yDebut, Joueur joueur) {
         Graphics2D g2d = (Graphics2D) g;
+        int yCourant = yDebut;
+
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
-        g2d.drawString("--- Shop ---", 40, yDebut);
+        g2d.drawString("--- Shop ---", 40, yCourant);
 
-        g.drawString("Pièces : " + joueur.getPieces(), xOffset, yDebut + 30);
+        yCourant += 30;
+        g.drawString("Pièces : " + joueur.getPieces(), xOffset, yCourant);
 
-        int y = yDebut + 50;
+        yCourant += 50;
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
 
         // Article 1
-        g2d.drawString("1. Épée Aciérée (+5 Dégâts)", 20, y);
+        g2d.drawString("1. Épée Aciérée (+5 Dégâts)", 20, yCourant);
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
-        g2d.drawString("   Prix: " + formatPrix(PRIX_EPEE_ACIEREE), 20, y + 15);
+        g2d.drawString("   Prix: " + formatPrix(PRIX_EPEE_ACIEREE), 20, yCourant + 15);
 
         // Article 2
-        y += 50;
+        yCourant += 50;
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
-        g2d.drawString("2. Armure (+20 PV)", 20, y);
+        g2d.drawString("2. Armure (+20 PV)", 20, yCourant);
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
-        g2d.drawString("   Prix: " + formatPrix(PRIX_ARMURE), 20, y + 15);
+        g2d.drawString("   Prix: " + formatPrix(PRIX_ARMURE), 20, yCourant + 15);
 
         // Article 3
-        y += 50;
+        yCourant += 50;
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
-        g2d.drawString("3. Armure lourde", 20, y);
+        g2d.drawString("3. Armure lourde", 20, yCourant);
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
-        g2d.drawString("   Prix: " + formatPrix(PRIX_ARMURE_LOURDE), 20, y + 15);
-
-        g2d.setFont(new Font("Arial", Font.BOLD, 12));
+        g2d.drawString("   Prix: " + formatPrix(PRIX_ARMURE_LOURDE), 20, yCourant + 15);
 
         // Article 4
-        y += 50;
+        yCourant += 50;
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
-        g2d.drawString("4. Épée améliorée", 20, y);
+        g2d.drawString("4. Épée améliorée", 20, yCourant);
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
-        g2d.drawString("   Prix: " + formatPrix(PRIX_EPEE_AMELIOREE), 20, y + 15);
-
-        g2d.setFont(new Font("Arial", Font.BOLD, 12));
+        g2d.drawString("   Prix: " + formatPrix(PRIX_EPEE_AMELIOREE), 20, yCourant + 15);
 
         // Article 5
-        y += 50;
+        yCourant += 50;
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
-        g2d.drawString("5. Potion de Vie", 20, y);
+        g2d.drawString("5. Potion de Vie", 20, yCourant);
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
-        g2d.drawString("   Prix: " + formatPrix(PRIX_POTION), 20, y + 15);
+        g2d.drawString("   Prix: " + formatPrix(PRIX_POTION), 20, yCourant + 15);
 
+        yCourant += 80;
         g2d.setFont(new Font("Arial", Font.BOLD, 12));
-        g2d.drawString("[I] Quitter | [1-5] Acheter", 20, y + 80);
+        g2d.drawString("[1, 2, 3] Naviguer | [Pavé Num 1-5] Acheter", 20, yCourant);
 
+        yCourant += 40; // Marge finale pour le JScrollPane
+        return yCourant;
     }
 
     private String formatPrix(int[] prix) {

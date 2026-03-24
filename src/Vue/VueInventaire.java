@@ -19,9 +19,13 @@ public class VueInventaire {
      * @param yDebut Hauteur de départ dans le HUD.
      * @param modele Le modèle pour accéder au cycle jour/nuit et adapter la couleur du texte en conséquence.
      * @param joueur Le joueur dont on lit l'inventaire.
+     * @return La coordonnée Y finale après avoir dessiné ce composant (pour empiler la suite).
      */
-    public void dessiner(Graphics g, int yDebut, Modele modele, Joueur joueur) {
+    public int dessiner(Graphics g, int yDebut, Modele modele, Joueur joueur) {
         Graphics2D g2d = (Graphics2D) g;
+
+        // Curseur vertical qui mémorisera notre progression
+        int yCourant = yDebut;
 
         // --- MODIFICATION : Couleur adaptative ---
         // Vérifie l'état jour/nuit pour garantir la lisibilité
@@ -32,7 +36,7 @@ public class VueInventaire {
 
         // Affiche le titre en grand
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
-        g2d.drawString("INVENTAIRE", xOffset, yDebut);
+        g2d.drawString("INVENTAIRE", xOffset, yCourant);
 
         // Récupère la liste brute des objets possédés
         ArrayList<Ressource> inventaire = joueur.getInventaire();
@@ -56,12 +60,20 @@ public class VueInventaire {
         String[] noms = {"Bois", "Pierre", "Fer", "Or"};
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
 
+        yCourant += 25; // On descend sous le titre principal
 
         // Boucle pour dessiner les 4 lignes de ressources
         for (int i = 0; i < noms.length; i++) {
             // Concatène le nom et la quantité finale, et décale le texte vers le bas de 20px à chaque itération
-            g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 10, yDebut + 25 + (i * 20));
+            g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 10, yCourant);
+            yCourant += 20; // Descend pour la ligne suivante
         }
-        g.drawString("Pièces : " + joueur.getPieces(), xOffset, yDebut + 25 + (noms.length * 20));
+
+        // Affichage de l'or/pièces
+        g.drawString("Pièces : " + joueur.getPieces(), xOffset, yCourant);
+
+        yCourant += 30; // Marge de sécurité de 30px avant le prochain composant visuel
+
+        return yCourant;
     }
 }
