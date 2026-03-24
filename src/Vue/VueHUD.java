@@ -55,21 +55,55 @@ public class VueHUD extends JPanel {
     }
 
     /**
-     * Méthode utilitaire pour configurer proprement les barres de défilement.
+     * Méthode utilitaire pour configurer proprement les barres de défilement en Overlay.
      */
     private JScrollPane creerScroll(JPanel page) {
         JScrollPane scroll = new JScrollPane(page);
-        // Cache la barre horizontale, affiche la verticale seulement si l'écran est trop petit
+
+        // Configuration de base
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        // Rend le fond transparent pour laisser transparaître la couleur du HUD
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
-        scroll.setBorder(null); // Retire la bordure native inesthétique
-
-        // Accélère la vitesse de défilement de la molette
+        scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
+
+        // 1. Applique notre design personnalisé (transparence, pas de boutons)
+        scroll.getVerticalScrollBar().setUI(new OverlayScrollBarUI());
+        scroll.getVerticalScrollBar().setOpaque(false);
+
+        // 2. Modifie le Layout pour superposer la barre au-dessus du contenu
+        scroll.setLayout(new ScrollPaneLayout() {
+            @Override
+            public void layoutContainer(Container parent) {
+                JScrollPane scrollPane = (JScrollPane) parent;
+                Rectangle availR = scrollPane.getBounds();
+                availR.x = availR.y = 0;
+
+                Insets insets = parent.getInsets();
+                availR.width -= insets.left + insets.right;
+                availR.height -= insets.top + insets.bottom;
+
+                // Le contenu prend 100% de la largeur
+                if (viewport != null) {
+                    viewport.setBounds(availR);
+                }
+                // La barre se dessine par-dessus, tout à droite
+                if (vsb != null) {
+                    Rectangle vsbR = new Rectangle();
+                    vsbR.width = 8; // Largeur très fine pour la barre
+                    vsbR.height = availR.height;
+                    vsbR.x = availR.x + availR.width - vsbR.width - 2; // -2 pour une petite marge à droite
+                    vsbR.y = availR.y;
+                    vsb.setBounds(vsbR);
+                }
+            }
+        });
+
+        // 3. Assure que la barre passe bien au premier plan par rapport au contenu
+        scroll.setComponentZOrder(scroll.getVerticalScrollBar(), 0);
+        scroll.setComponentZOrder(scroll.getViewport(), 1);
+
         return scroll;
     }
 
