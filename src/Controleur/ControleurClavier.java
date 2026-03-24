@@ -50,14 +50,15 @@ public class ControleurClavier implements KeyListener {
         }
 
         // --- NAVIGATION DU HUD ---
-        if (e.getKeyCode() == KeyEvent.VK_1) {
-            modele.setHudPageActuelle(1); // Page État du jeu
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            // Flèche gauche : on recule (Formule pour un cycle 1-2-3 inversé)
+            int page = (modele.getHudPageActuelle() + 1) % 3 + 1;
+            modele.setHudPageActuelle(page);
         }
-        else if (e.getKeyCode() == KeyEvent.VK_2) {
-            modele.setHudPageActuelle(2); // Page Action / Inventaire
-        }
-        else if (e.getKeyCode() == KeyEvent.VK_3) {
-            modele.setHudPageActuelle(3); // Page Boutique
+        else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            // Flèche droite : on avance (Formule pour un cycle 1-2-3 standard)
+            int page = (modele.getHudPageActuelle() % 3) + 1;
+            modele.setHudPageActuelle(page);
         }
 
         // --- ACHATS DANS LA BOUTIQUE (Page 3) ---

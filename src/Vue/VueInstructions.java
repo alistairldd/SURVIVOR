@@ -1,10 +1,7 @@
 package Vue;
 
 import Modele.Joueur;
-import Modele.Ressource;
-
 import java.awt.*;
-import java.util.ArrayList;
 import static Modele.Constantes.*;
 
 /**
@@ -29,12 +26,16 @@ public class VueInstructions {
         g2d.drawString("COMMANDES", xOffset, yCourant);
 
         g2d.setFont(new Font("Arial", Font.PLAIN, 13));
+
+        // Liste complète et actualisée des commandes du jeu
         String[] instructions = {
                 "• CLIC DROIT : Se déplacer",
                 "• CLIC GAUCHE : Attaquer",
                 "• TOUCHE E : Ramasser ressource",
                 "• TOUCHE T : Construire tour",
-                "• TOUCHE C : Afficher le rayon de l'attaque"
+                "• TOUCHE C : Afficher rayon de l'attaque",
+                "• GAUCHE/DROITE : Changer de page",
+                "• PAVÉ NUM. 1 à 5 : Acheter (Shop)"
         };
 
         for (int i = 0; i < instructions.length; i++) {
