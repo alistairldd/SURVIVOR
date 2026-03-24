@@ -3,6 +3,7 @@ package Modele;
 import Modele.Arme;
 import Modele.Joueur;
 import java.util.ArrayList;
+import static Modele.Constantes.*;
 
 public class GestionnaireShop {
     private Modele modele;
@@ -14,8 +15,7 @@ public class GestionnaireShop {
     // --- OBJETS DU SHOP ---
 
     public void acheterEpeeAcieree() {
-        // Prix : 10 Fer, 5 Or
-        if (tenterAchat(0, 0, 10, 5)) {
+        if (tenterAchat(PRIX_EPEE_ACIEREE[0], PRIX_EPEE_ACIEREE[1], PRIX_EPEE_ACIEREE[2], PRIX_EPEE_ACIEREE[3])) {
             // Améliore les dégâts du joueur
             Joueur j = modele.getJoueur();
             j.setAttack(j.getAttack() + 5);
@@ -23,8 +23,7 @@ public class GestionnaireShop {
     }
 
     public void acheterArmure() {
-        // Prix : 15 Pierre, 5 Fer
-        if (tenterAchat(0, 15, 5, 0)) {
+        if (tenterAchat(PRIX_ARMURE[0], PRIX_ARMURE[1], PRIX_ARMURE[2], PRIX_ARMURE[3])) {
             // Améliore les points de vie max
             Joueur j = modele.getJoueur();
             j.setHpMax(j.getHpMax() + 20);
@@ -32,16 +31,14 @@ public class GestionnaireShop {
     }
 
     public void acheterArmureLourde() {
-        // Prix : 20 Pierre, 10 Fer
-        if (tenterAchat(0, 20, 10, 0)) {
+        if (tenterAchat(PRIX_ARMURE_LOURDE[0], PRIX_ARMURE_LOURDE[1], PRIX_ARMURE_LOURDE[2], PRIX_ARMURE_LOURDE[3])) {
             Joueur j = modele.getJoueur();
             j.setHpMax(j.getHpMax() + 40);
         }
     }
 
     public void acheterEpee() {
-        // Prix : 10 Bois, 5 Or
-        if (tenterAchat(10, 0, 0, 5)) {
+        if (tenterAchat(PRIX_EPEE_AMELIOREE[0], PRIX_EPEE_AMELIOREE[1], PRIX_EPEE_AMELIOREE[2], PRIX_EPEE_AMELIOREE[3])) {
             Joueur j = modele.getJoueur();
             Arme a = j.getArmeEquipee();
             a.setNom("Épée améliorée");
@@ -52,8 +49,7 @@ public class GestionnaireShop {
     }
 
     public void acheterPotionDeVie(){
-        // Prix : 5 Bois, 5 Pierre
-        if (tenterAchat(5, 5, 0, 0)) {
+        if (tenterAchat(PRIX_POTION[0], PRIX_POTION[1], PRIX_POTION[2], PRIX_POTION[3])) {
             Joueur j = modele.getJoueur();
             j.setHp(Math.min(j.getHp() + 30, j.getHpMax()));
         }

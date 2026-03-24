@@ -75,4 +75,11 @@ public final class Constantes {
     // Taille drastiquement réduite pour que le monstre soit juste un point rouge sur la minimap
     public static final int TAILLE_MINIMAP_MONSTRE = 10;
 
+    // --- PRIX DE LA BOUTIQUE (Format : {Bois, Pierre, Fer, Or}) ---
+    public static final int[] PRIX_EPEE_ACIEREE = {0, 0, 10, 5};
+    public static final int[] PRIX_ARMURE = {0, 15, 5, 0};
+    public static final int[] PRIX_ARMURE_LOURDE = {0, 20, 10, 0};
+    public static final int[] PRIX_EPEE_AMELIOREE = {10, 0, 0, 5};
+    public static final int[] PRIX_POTION = {5, 5, 0, 0};
+
 }
