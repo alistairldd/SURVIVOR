@@ -3,9 +3,11 @@ package Vue;
 import Modele.Modele;
 import java.awt.*;
 import Modele.Localisable;
-import static Modele.Constantes.xOffset;
+import Modele.Monstre;
 
-public class VueVie {
+import static Modele.Constantes.*;
+
+public class    VueVie {
 
     private Modele modele;
 
@@ -59,13 +61,30 @@ public class VueVie {
             // 2. Dessin de l'image de l'entité
             // Ici, tu pourras remplacer ce rectangle de test par ton ImageIO (ex: g2d.drawImage(avatarJoueur, ...))
             int tailleImage = 100;
-            g2d.setColor(new Color(50, 50, 50, 150)); // Fond gris transparent pour la boîte d'image
-            g2d.fillRect(xOffset, yCourant, tailleImage, tailleImage);
-            g2d.setColor(Color.WHITE);
-            g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
+            if (localisable instanceof Monstre) {
+                Monstre m = (Monstre) localisable;
+                Image imgMonstre = m.getImage(); // Ton getter qui renvoie le slime aléatoire
 
-            g2d.setFont(new Font("Arial", Font.ITALIC, 12));
-            g2d.drawString("[Image " + nom + "]", xOffset + 10, yCourant + (tailleImage/2));
+                if (imgMonstre != null) {
+                    int hauteurProp = (int)( tailleImage * ( (double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
+                    int offsetCentrageY = (tailleImage - hauteurProp) / 2;
+                    // Dessine l'image redimensionnée pour remplir le cadre de 100x100
+                    g2d.drawImage(imgMonstre, xOffset, yCourant+ offsetCentrageY, tailleImage, hauteurProp, null);
+
+                    // Optionnel : un petit contour blanc pour faire "propre"
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
+                }
+            } else {
+
+                g2d.setColor(new Color(50, 50, 50, 150)); // Fond gris transparent pour la boîte d'image
+                g2d.fillRect(xOffset, yCourant, tailleImage, tailleImage);
+                g2d.setColor(Color.WHITE);
+                g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
+
+                g2d.setFont(new Font("Arial", Font.ITALIC, 12));
+                g2d.drawString("[Image " + nom + "]", xOffset + 10, yCourant + (tailleImage / 2));
+            }
 
             yCourant += tailleImage + 30; // On ajoute la taille de l'image plus une marge
         }

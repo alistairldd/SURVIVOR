@@ -35,13 +35,24 @@ public class VueMonstre {
         // Lisse les bords (utile surtout pour le cercle de portée)
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //Centrage du monstre
-        // Choix de la taille selon la destination du dessin (Écran de jeu ou Radar)
-        int taille = minimap ? TAILLE_MINIMAP_MONSTRE : TAILLE_MONSTRE;
-        // Rouge = Danger (Couleur classique des ennemis)
-        g2d.setColor(Color.RED);
-        // On décale la position du monstre pour le centrer par rapport à sa taille (soustrait la moitié de la largeur/hauteur)
-        g2d.fillRect((int) posX - taille / 2, (int) posY - taille / 2, taille, taille);
+        if (minimap) {
+            // Sur la minimap, on garde souvent un point de couleur (plus lisible qu'un petit sprite)
+            g2d.setColor(Color.RED);
+            g2d.fillRect(posX - TAILLE_MINIMAP_MONSTRE / 2, posY - TAILLE_MINIMAP_MONSTRE / 2, TAILLE_MINIMAP_MONSTRE, TAILLE_MINIMAP_MONSTRE);
+        } else {
+            // VUE PRINCIPALE : On dessine le Slime
+            Image imgSlime = monstre.getImage(); // On utilise le getter que nous avons créé
+
+            if (imgSlime != null) {
+                // On centre l'image par rapport à posX et posY
+                int hauteurProp =  (int) (TAILLE_MONSTRE * ((double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
+                g2d.drawImage(imgSlime, posX - TAILLE_MONSTRE / 2, posY - hauteurProp / 2, TAILLE_MONSTRE, hauteurProp, null);
+            } else {
+                // Sécurité : si l'image n'est pas chargée, on met le carré rouge par défaut
+                g2d.setColor(Color.RED);
+                g2d.fillRect(posX - TAILLE_MONSTRE / 2, posY - TAILLE_MONSTRE / 2, TAILLE_MONSTRE, TAILLE_MONSTRE);
+            }
+        }
 
         // Dessin du cercle de portée du monstre
         // On ne surcharge pas la minimap avec les cercles de portée, on ne les dessine que sur la vue principale

@@ -2,6 +2,8 @@ package Modele;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import static Modele.Constantes.*;
 /**
  * Classe responsable de l'apparition (spawn), du stockage et du nettoyage des monstres.
@@ -12,12 +14,12 @@ import static Modele.Constantes.*;
 public class GestionnaireMonstres {
 
     // Liste dynamique stockant tous les monstres actuellement en vie sur la carte
-    private ArrayList<Monstre> monstres;
+    private List<Monstre> monstres;
     private UpdateJN updateJN;
 
     public GestionnaireMonstres(UpdateJN updateJN) {
         // Initialise la liste vide au démarrage
-        this.monstres = new ArrayList<>();
+        this.monstres = new CopyOnWriteArrayList<>();
         this.updateJN = updateJN;
     }
 
@@ -77,7 +79,7 @@ public class GestionnaireMonstres {
     }
 
     // Retourne la liste complète des monstres actuels (utilisée par la vue pour les dessiner)
-    public ArrayList<Monstre> getMonstres() {
+    public List<Monstre> getMonstres() {
         return monstres;
     }
 

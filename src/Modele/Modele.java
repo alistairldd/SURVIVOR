@@ -132,7 +132,7 @@ public class Modele {
 
 
         // Récupérer la liste complète des cibles potentielles
-        ArrayList<Monstre> monstres = updateJN.getMonstres();
+        List<Monstre> monstres = updateJN.getMonstres();
 
 
         // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
@@ -166,7 +166,7 @@ public class Modele {
     }
 
     public Monstre batTrouverMonstre(Batiment b) {
-        ArrayList<Monstre> monstres = updateJN.getMonstres();
+        List<Monstre> monstres = updateJN.getMonstres();
         for (Monstre m : monstres) {
             // Calcule la distance directe (hypoténuse) entre le centre de la tour et le monstre
             double distance = Math.hypot(m.getX() - b.getX(), m.getY() - b.getY());

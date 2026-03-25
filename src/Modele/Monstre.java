@@ -1,5 +1,6 @@
 package Modele;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /* * classe représentant les monstres du jeu
@@ -83,6 +84,8 @@ public abstract class Monstre extends Thread implements Localisable {
     public double getX() { return x; }
 
     public double getY() { return y; }
+
+    public Image getImage() { return null; } // Getter d'image par défaut, les sous-classes comme Slime le redéfiniront pour fournir leur propre sprite
 
     //
     public void mettreAJourPosition(Localisable cible) {

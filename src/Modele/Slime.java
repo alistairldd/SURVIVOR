@@ -1,6 +1,9 @@
 package Modele;
 
-import static Modele.Constantes.BAT_DELAY;
+import java.awt.*;
+import java.util.Random;
+
+import static Modele.Constantes.IMAGES_SLIMES;
 
 /**
  * Implémentation concrète d'un ennemi de base : le Slime.
@@ -10,6 +13,8 @@ public class Slime extends Monstre {
 
     // Référence au gestionnaire de monstres
     private final GestionnaireMonstres gestionnaireMonstres;
+
+    private final Image imageSlime;
 
     /**
      * Crée un Slime à des coordonnées précises (généralement fournies par le GestionnaireMonstres).
@@ -23,13 +28,23 @@ public class Slime extends Monstre {
         // Attaque: 5 points de dégâts
         // Portée: 50 pixels
         // Vitesse: 1 pixel par déplacement
-        super("Slime", 50, 5, 30, 1);
+        super("Slime", 50, 5, 30, 5);
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;
         this.y = y;
+        // Choisit un index aléatoire entre 0 et 5
+        Random rand = new Random();
+        int indexAleatoire = rand.nextInt(IMAGES_SLIMES.size());
+        // Récupère l'image 30x30 correspondante
+        this.imageSlime = IMAGES_SLIMES.get(indexAleatoire); // Choix aléatoire d'une image de slime pour la variété visuelle
         this.gestionnaireMonstres = gestionnaireMonstres;
         this.start(); // Démarre le thread du monstre pour qu'il commence à agir immédiatement après sa création
+    }
+
+    // Getter Image
+    public Image getImage() {
+        return this.imageSlime;
     }
 
     @Override
@@ -43,7 +58,7 @@ public class Slime extends Monstre {
         while(true) {
             try {
                 this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this));
-                Thread.sleep(5); // Petite pause pour ne pas surcharger le processeur
+                Thread.sleep(50); // Petite pause pour ne pas surcharger le processeur
 
                 if (this.getHp() <= 0) {
                     // Demande la suppression visuelle et logique de la carte

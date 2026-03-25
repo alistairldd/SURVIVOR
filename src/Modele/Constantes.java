@@ -1,5 +1,13 @@
 package Modele;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+
 public final class Constantes {
     private Constantes(){}
 
@@ -71,7 +79,7 @@ public final class Constantes {
     public static final int R_TAILLE = 10;
 
     // Taille physique de l'ennemi sur l'écran principal
-    public static final int TAILLE_MONSTRE = 30;
+    public static final int TAILLE_MONSTRE = 40;
     // Taille drastiquement réduite pour que le monstre soit juste un point rouge sur la minimap
     public static final int TAILLE_MINIMAP_MONSTRE = 10;
 
@@ -81,5 +89,42 @@ public final class Constantes {
     public static final int[] PRIX_ARMURE_LOURDE = {0, 20, 10, 0};
     public static final int[] PRIX_EPEE_AMELIOREE = {10, 0, 0, 5};
     public static final int[] PRIX_POTION = {5, 5, 0, 0};
+
+    /*** --- Images --- ***/
+    // Liste d'images pour l'affichage
+    public final static List<Image> IMAGES_SLIMES = new ArrayList<>();
+    public final static int LARGEUR_SLIME_SOURCE = 724;
+    public final static int HAUTEUR_SLIME_SOURCE = 492;
+    static {
+        try {
+            // Charger la planche de slimes
+            BufferedImage planche = ImageIO.read(new File("src/images/slime.png"));
+
+
+
+            int[] lesX = {111, 85, 88, 1051, 1031, 1030}; // X pour chaque slime
+            int[] lesY = {70, 651, 1263, 69, 651, 1266};   // Y pour chaque slime
+
+            for (int i = 0; i < 5; i++) {
+
+
+                // Découpe la sous-image
+                BufferedImage spriteSource = planche.getSubimage(lesX[i], lesY[i], LARGEUR_SLIME_SOURCE, HAUTEUR_SLIME_SOURCE);
+
+                // Redimensionne immédiatement en 30x30
+                // SCALE_SMOOTH donne le meilleur résultat visuel
+                Image spriteRedimensionne = spriteSource.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+
+                // Ajoute à la liste
+                IMAGES_SLIMES.add(spriteRedimensionne);;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement des images !");
+        }
+    }
+
+
 
 }
