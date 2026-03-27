@@ -46,7 +46,18 @@ public class VueMonstre {
             if (imgSlime != null) {
                 // On centre l'image par rapport à posX et posY
                 int hauteurProp =  (int) (TAILLE_MONSTRE * ((double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
-                g2d.drawImage(imgSlime, posX - TAILLE_MONSTRE / 2, posY - hauteurProp / 2, TAILLE_MONSTRE, hauteurProp, null);
+
+                // Les variables pour l'animation
+                double anim = monstre.getAnimation();
+                int decalageY = (int) (-10 * Math.sin(anim)); // Décalage vertical pour l'affichage de l'image
+                int etirement = (int) (10 * Math.sin(anim)); // Étirement vertical pour tirer l'image vers le bas
+
+                g2d.drawImage(imgSlime,
+                        posX - TAILLE_MONSTRE / 2,
+                        posY - hauteurProp / 2 + decalageY,
+                        TAILLE_MONSTRE,
+                        hauteurProp + etirement,
+                        null);
             } else {
                 // Sécurité : si l'image n'est pas chargée, on met le carré rouge par défaut
                 g2d.setColor(Color.RED);

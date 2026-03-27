@@ -2,6 +2,7 @@ package Modele;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static Modele.Constantes.IMAGES_SLIMES;
 
@@ -15,6 +16,11 @@ public class Slime extends Monstre {
     private final GestionnaireMonstres gestionnaireMonstres;
 
     private final Image imageSlime;
+
+    // Variable pour gérer l'animation du slime
+
+    // on prend un index aléatoire pour commencer l'animation du slime à des frames différentes
+    int randomNum = ThreadLocalRandom.current().nextInt(0, 51);
 
     /**
      * Crée un Slime à des coordonnées précises (généralement fournies par le GestionnaireMonstres).
@@ -54,9 +60,17 @@ public class Slime extends Monstre {
 
     @Override
     public void run() {
+
         // Boucle de comportement du monstre
         while(true) {
             try {
+                if (randomNum <= 0){
+                    this.ajouterAnimation( Math.PI/8); // Incrémente l'animation pour faire osciller le slime
+                }
+                else {
+                    randomNum--; // Décrémente le compteur pour atteindre 0 et déclencher l'animation
+                }
+
                 this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this));
                 Thread.sleep(50); // Petite pause pour ne pas surcharger le processeur
 

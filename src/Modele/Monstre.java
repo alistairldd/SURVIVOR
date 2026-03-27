@@ -41,6 +41,8 @@ public abstract class Monstre extends Thread implements Localisable {
     // Indique si le monstre est actuellement en train d'attaquer (true) ou de se déplacer (false)
     private boolean estEnTrainDAttaquer = false;
 
+    // Variable pour gérer l'animation du monstre
+    private double animation = 0;
 
     // Constructeur de la classe Monstre, il initialise les données du monstre.
     public Monstre(String nom, int hp, int attack, int portee, int vitesse) {
@@ -87,7 +89,10 @@ public abstract class Monstre extends Thread implements Localisable {
 
     public Image getImage() { return null; } // Getter d'image par défaut, les sous-classes comme Slime le redéfiniront pour fournir leur propre sprite
 
-    //
+    public void ajouterAnimation(double delta) { this.animation += delta; }
+
+    public double getAnimation() { return this.animation; }
+
     public void mettreAJourPosition(Localisable cible) {
         double diffX = cible.getX() - this.x;
         double diffY = cible.getY() - this.y;
