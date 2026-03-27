@@ -112,30 +112,6 @@ public class GestionnaireMonstres {
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 
-    public void chercheCible(Localisable joueur, List<Batiment> batiments) {
-        // On crée une liste de tout ce qui est attaquable par les monstres
-        List<Localisable> ciblesPotentielles = new ArrayList<>();
-        ciblesPotentielles.add(joueur);
-        ciblesPotentielles.addAll(batiments);
-
-        for (Monstre m : monstres) {
-            Localisable plusProche = null;
-            double distMin = Double.MAX_VALUE;
-
-            for (Localisable cible : ciblesPotentielles) {
-                double d = calculerDistance(m, cible);
-                if (d < distMin) {
-                    distMin = d;
-                    plusProche = cible;
-                }
-            }
-
-            if (plusProche != null) {
-                m.mettreAJourPosition(plusProche);
-            }
-        }
-    }
-
     public Localisable trouverCible(Localisable m){
         return updateJN.monstreTrouverCible(m);
     }

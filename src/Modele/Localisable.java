@@ -6,4 +6,5 @@ public interface Localisable {
     int getHp();
     int getMaxHp();
     String getNom();
+    void setHp(int hp);
 }

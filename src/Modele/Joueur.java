@@ -99,6 +99,7 @@ public class Joueur implements Localisable {
         return "Joueur";
     }
 
+    @Override
     public void setHp(int hp) {this.hp = hp;}
 
     public int getAttack() {return this.attack;}

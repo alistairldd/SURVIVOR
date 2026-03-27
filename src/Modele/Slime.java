@@ -60,7 +60,8 @@ public class Slime extends Monstre {
 
     @Override
     public void run() {
-
+    // On définit le pas de temps (50ms exprimé en secondes)
+            double dt = 0.05;
         // Boucle de comportement du monstre
         while(true) {
             try {
@@ -71,7 +72,7 @@ public class Slime extends Monstre {
                     randomNum--; // Décrémente le compteur pour atteindre 0 et déclencher l'animation
                 }
 
-                this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this));
+                this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this), dt);
                 Thread.sleep(50); // Petite pause pour ne pas surcharger le processeur
 
                 if (this.getHp() <= 0) {

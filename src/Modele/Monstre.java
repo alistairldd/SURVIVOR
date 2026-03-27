@@ -44,6 +44,10 @@ public abstract class Monstre extends Thread implements Localisable {
     // Variable pour gérer l'animation du monstre
     private double animation = 0;
 
+    // Variables pour gérer les temps d'attaque
+    private double cadenceAttaque = 1.0; // 1 coup par seconde
+    private double tempsDepuisDerniereAttaque = 0;
+
     // Constructeur de la classe Monstre, il initialise les données du monstre.
     public Monstre(String nom, int hp, int attack, int portee, int vitesse) {
         // Assigne la valeur actuelle du compteur comme ID unique, puis incrémente le compteur de 1 pour le prochain monstre
@@ -93,7 +97,7 @@ public abstract class Monstre extends Thread implements Localisable {
 
     public double getAnimation() { return this.animation; }
 
-    public void mettreAJourPosition(Localisable cible) {
+    public void mettreAJourPosition(Localisable cible, double dt) {
         double diffX = cible.getX() - this.x;
         double diffY = cible.getY() - this.y;
         double distance = Math.sqrt(diffX * diffX + diffY * diffY);
@@ -107,6 +111,20 @@ public abstract class Monstre extends Thread implements Localisable {
         } else {
             // S'arrêter et attaquer
             this.estEnTrainDAttaquer = true;
+            attaquer(cible, dt);
+        }
+    }
+
+    private void attaquer(Localisable cible, double dt) {
+        // On incrémente le compteur de temps
+        tempsDepuisDerniereAttaque += dt;
+
+        // Si assez de temps est passé (1 seconde)
+        if (tempsDepuisDerniereAttaque >= cadenceAttaque) {
+            cible.setHp(cible.getHp() - this.attack); // La cible perd des PV
+            tempsDepuisDerniereAttaque = 0;    // On réinitialise le timer
+
+            System.out.println("Le monstre tape ! PV restants : " + cible.getHp());
         }
     }
 

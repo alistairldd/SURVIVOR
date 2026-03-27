@@ -78,4 +78,5 @@ public class Tower extends Batiment{
     public String getNom() {
         return "Tour";
     }
+
 }
