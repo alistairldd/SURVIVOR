@@ -272,6 +272,13 @@ public class Vue extends JPanel {
             y += g2d.getFontMetrics().getHeight() + 20; // Décalage vertical pour le score
             g2d.drawString(message, x, y);
 
+            message = "cliquez n'importe ou pour recommencer";
+            g2d.setFont(new Font("Arial", Font.BOLD, 15));
+            g2d.setColor(Color.GRAY);
+            x = (getWidth() - g2d.getFontMetrics().stringWidth(message)) / 2;
+            y += g2d.getFontMetrics().getHeight() + 40; // Décalage vertical pour le score
+            g2d.drawString(message, x, y);
+
             return; // ON S'ARRÊTE LÀ
         }
 
