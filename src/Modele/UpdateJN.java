@@ -89,9 +89,10 @@ public class UpdateJN {
 
     // Méthode à boucler la nuit
     public void updateNuit() {
-        if (modele.getJoueur().getHp() <= 0) {
+        // Fin de partie si le joueur meurt ou si le HQ n'a plus de vie
+        if (modele.getJoueur().getHp() <= 0 || modele.getGestionnaireBatiments().getHQ().getHp() <= 0) {
             modele.declencherGameOver();
-            return;
+
         }
 
     }

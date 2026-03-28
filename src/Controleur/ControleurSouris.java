@@ -44,34 +44,6 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             modele.reinitialiserJeu();
             return; // On bloque tout le reste des actions (attaquer, construire, etc.)
         }
-        if (SwingUtilities.isLeftMouseButton(e)){
-
-            // Vérifie que la partie n'est pas terminée avant de permettre toute action d'attaque du joueur
-            if (!modele.getPartieTerminee()){
-                Joueur j = modele.getJoueur();
-                if (j.peutAttaquer()){
-                    int centerX = vue.getWidth() / 2;
-                    int centerY = vue.getHeight() / 2;
-
-                    double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
-
-                    //System.out.println("angleAttaque=" + angleAttaque + " mouse=(" + mouseX + "," + mouseY + ")");
-
-                    // Attaquer dans la direction de la souris
-                    modele.joueurAttaque(angleAttaque);
-                    j.setDernierTempsAttaque();
-                    int cadence = j.getArmeEquipee().getCadence();
-                    AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
-                    vue.getVueArme().setEnAnimation(true);
-                    animation.start();
-                }
-
-
-            }
-
-
-
-        }
     }
 
     /**
@@ -104,6 +76,28 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                 joueur.setThreadActuel(deplacement);
                 deplacement.start();
                 //modele.getJoueur().deplaceJoueur(destX, destY);
+            }
+        } else if (SwingUtilities.isLeftMouseButton(e)){
+
+            // Vérifie que la partie n'est pas terminée avant de permettre toute action d'attaque du joueur
+            if (!modele.getPartieTerminee()){
+                Joueur j = modele.getJoueur();
+                if (j.peutAttaquer()){
+                    int centerX = vue.getWidth() / 2;
+                    int centerY = vue.getHeight() / 2;
+
+                    double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
+
+                    //System.out.println("angleAttaque=" + angleAttaque + " mouse=(" + mouseX + "," + mouseY + ")");
+
+                    // Attaquer dans la direction de la souris
+                    modele.joueurAttaque(angleAttaque);
+                    j.setDernierTempsAttaque();
+                    int cadence = j.getArmeEquipee().getCadence();
+                    AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
+                    vue.getVueArme().setEnAnimation(true);
+                    animation.start();
+                }
             }
         }
     }
