@@ -39,7 +39,6 @@ public class Vue extends JPanel {
 
     // Modèle
     private final Modele modele;
-    private UpdateJN updateJN;
 
 
 
@@ -84,7 +83,6 @@ public class Vue extends JPanel {
 
         // Initialisation du modèle, il est utilisé pour stocker les données de l'application et pour effectuer des opérations sur ces données.
         this.modele = modele;
-        this.updateJN = modele.getUpdateJN();
 
         // Lance le moteur de rendu (qui va appeler paintComponent en boucle)
         new Redessine (this, modele);
@@ -146,7 +144,7 @@ public class Vue extends JPanel {
         g2d.drawRect(0, 0, tailleMinimap, tailleMinimap); // Dessine la bordure de la mini carte
 
         // --- DESSIN DES RESSOURCES ---
-        for (Ressource r : updateJN.getRessources()) {
+        for (Ressource r : modele.getUpdateJN().getRessources()) {
             // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
             int resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
             int resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
@@ -169,7 +167,7 @@ public class Vue extends JPanel {
         }
 
         // --- DESSIN DES MONSTRES ---
-        for (Monstre m : updateJN.getMonstres()) {
+        for (Monstre m : modele.getUpdateJN().getMonstres()) {
             int monstreX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, (int) m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
             int monstreY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, (int) m.getY()); // idem
             vueMonstre.dessiner(g2d, m, monstreX, monstreY, true);
@@ -213,7 +211,7 @@ public class Vue extends JPanel {
         // 2. Dessiner les ressources
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         // La translation de la caméra s'occupe de les afficher au bon endroit sur l'écran
-        for (Ressource r : updateJN.getRessources()) {
+        for (Ressource r : modele.getUpdateJN().getRessources()) {
             VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
@@ -231,7 +229,7 @@ public class Vue extends JPanel {
         vueArme.dessiner(g2d);
 
         // 5. Dessiner les monstres (si on en a)
-        for (Monstre m : updateJN.getMonstres()) {
+        for (Monstre m : modele.getUpdateJN().getMonstres()) {
             vueMonstre.dessiner(g2d, m, (int) m.getX(), (int) m.getY(), false);
         }
 
@@ -243,7 +241,7 @@ public class Vue extends JPanel {
         if (modele.getPartieTerminee()) {
             // --- ÉCRAN DE GAME OVER ---
             // Fond noir transparent
-            g2d.setColor(new Color(0, 0, 0, 150));
+            g2d.setColor(new Color(0, 0, 0, 160));
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
             // Texte rouge centré
@@ -261,13 +259,13 @@ public class Vue extends JPanel {
             g2d.setFont(new Font("Arial", Font.BOLD, 40));
             g2d.setColor(Color.BLACK);
 
-            message = "Nombre de nuits passées : " + updateJN.getNbNuit();
+            message = "Nombre de nuits passées : " + modele.getUpdateJN().getNbNuit();
             x = (getWidth() - g2d.getFontMetrics().stringWidth(message)) / 2;
             y += g2d.getFontMetrics().getHeight() + 20; // Décalage vertical pour le score
             g2d.drawString(message, x, y);
 
 
-            message = "Nombre de monstres tués : " + updateJN.getMonGestionnaireMonstres().getNbMonstresMorts();
+            message = "Nombre de monstres tués : " + modele.getUpdateJN().getMonGestionnaireMonstres().getNbMonstresMorts();
             x = (getWidth() - g2d.getFontMetrics().stringWidth(message)) / 2;
             y += g2d.getFontMetrics().getHeight() + 20; // Décalage vertical pour le score
             g2d.drawString(message, x, y);

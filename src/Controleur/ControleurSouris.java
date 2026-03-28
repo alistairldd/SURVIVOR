@@ -19,7 +19,6 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     private Modele modele;
     private Vue vue;
-    private Joueur joueur;
 
     private int mouseX = 0;
     private int mouseY = 0;
@@ -28,7 +27,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
         this.modele = modele;
         this.vue = vue;
-        this.joueur = modele.getJoueur();
+
 
     }
 
@@ -86,6 +85,8 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)){
             if (!modele.getPartieTerminee()){
+                // on recupere le joueur (on peut aps mettre dans constructeur car ça pose probleme si on restart)
+                Joueur joueur = modele.getJoueur();
                 // Récupérer les coordonnées du clic
                 int x = e.getX();
                 int y = e.getY();
@@ -136,6 +137,9 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!modele.getPartieTerminee()) {
+
+            Joueur joueur = modele.getJoueur();
+
             mouseX = e.getX();
             mouseY = e.getY();
 

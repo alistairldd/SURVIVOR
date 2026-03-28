@@ -203,27 +203,30 @@ public class Modele {
     public void reinitialiserJeu() {
         System.out.println("--- RELANCE DE LA PARTIE ---");
 
-        this.gestionnaireBatiments.clearBatiments();
-        updateJN.getMonGestionnaireMonstres().clearMonstres();
-        //this.gestionnaireRessources.clearRessources();
-        //this.gestionnaireMonstres.clearMonstres();
+        // 1. ARRÊTER LES ANCIENS THREADS (OBLIGATOIRE !)
+        // Si on ne fait pas ça, le jeu va ralentir à chaque partie et planter
+        if (leCycleJourNuit != null && leCycleJourNuit.isAlive()) {
+            leCycleJourNuit.interrupt();
+        }
+        for (Monstre m : updateJN.getMonstres()) {
+            if (m.isAlive()) m.interrupt();
+        }
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+            if (b.isAlive()) b.interrupt();
+        }
 
-        // RÉINITIALISER LES ÉTATS GLOBAUX
+        // 2. Réinitialiser l'état du jeu
         this.partieTerminee = false;
         this.hudPageActuelle = 1;
-        this.cibleAffichage = joueur;
 
-        // Instancie le joueur et lui donne la référence à ce Modèle
+        // 2. RECRÉER TOUS LES GESTIONNAIRES À NEUF
         this.joueur = new Joueur(this);
-
-        // Initialisation du jour et de la nuit
-        // (Démarre automatiquement son propre thread interne)
         this.updateJN = new UpdateJN(this);
-        leCycleJourNuit = new CycleJourNuit(updateJN);
-
+        this.leCycleJourNuit = new CycleJourNuit(this.updateJN); // Relance le temps
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
-        this.cibleAffichage = joueur; // valeur initiale
+
+        this.cibleAffichage = joueur;
     }
 
 }

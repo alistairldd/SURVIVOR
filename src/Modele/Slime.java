@@ -85,7 +85,12 @@ public class Slime extends Monstre {
                 }
             } catch (InterruptedException e) {
                 // Capture de l'interruption
-                e.printStackTrace();
+                System.out.println("Debug : Le thread du " + this.getNom() + " a bien été tué.");
+
+                // on peut choisir de ne pas afficher la stack trace pour éviter de polluer la console avec des messages d'erreur liés à l'arrêt normal du thread
+                // notamment lorsqu'on reset le jeu
+                //e.printStackTrace();
+
                 // Sécurité : arrête le thread en cas d'interruption externe pour éviter un thread zombie
                 break;
             }
