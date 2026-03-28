@@ -59,8 +59,7 @@ public class Vue extends JPanel {
         this.vueHUD = new VueHUD(modele);
         // Ajout de composants dans le panneau droite
 
-        // Ajoute un titre temporaire (souvent recouvert ou caché)
-        this.add(new JLabel("Le jeu le vrai"));
+
 
         // on ajoute les éléments en précisant les zones du BorderLayout
         // Place la zone de jeu au milieu (occupe tout l'espace disponible)
@@ -258,7 +257,22 @@ public class Vue extends JPanel {
             g2d.drawString(message, x, y);
 
             // possible pour plus tard : Afficher le score (pièces, jours survécus...)
-            return; // ON S'ARRÊTE LÀ, on ne dessine plus le reste du jeu !
+
+            g2d.setFont(new Font("Arial", Font.BOLD, 40));
+            g2d.setColor(Color.BLACK);
+
+            message = "Nombre de nuits passées : " + updateJN.getNbNuit();
+            x = (getWidth() - g2d.getFontMetrics().stringWidth(message)) / 2;
+            y += g2d.getFontMetrics().getHeight() + 20; // Décalage vertical pour le score
+            g2d.drawString(message, x, y);
+
+
+            message = "Nombre de monstres tués : " + updateJN.getMonGestionnaireMonstres().getNbMonstresMorts();
+            x = (getWidth() - g2d.getFontMetrics().stringWidth(message)) / 2;
+            y += g2d.getFontMetrics().getHeight() + 20; // Décalage vertical pour le score
+            g2d.drawString(message, x, y);
+
+            return; // ON S'ARRÊTE LÀ
         }
 
 

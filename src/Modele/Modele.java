@@ -25,7 +25,7 @@ public class Modele {
 
     // L'entité contrôlée par l'utilisateur
     private Joueur joueur;
-    private GestionnaireBatiments batiments;
+    private GestionnaireBatiments gestionnaireBatiments;
     // (Variables potentiellement inutilisées ici, prévues pour l'architecture)
     private Ressource ressource;
     private Batiment batiment;
@@ -53,7 +53,7 @@ public class Modele {
         this.updateJN = new UpdateJN(this);
         leCycleJourNuit = new CycleJourNuit(updateJN);
 
-        this.batiments = new GestionnaireBatiments(this);
+        this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
         this.cibleAffichage = joueur; // valeur initiale
     }
@@ -83,7 +83,7 @@ public class Modele {
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
 
     public GestionnaireBatiments getGestionnaireBatiments() {
-        return batiments;
+        return gestionnaireBatiments;
     }
 
     // Getter pour l'indicateur de fin de partie
@@ -120,7 +120,7 @@ public class Modele {
          */
         List<Localisable> ciblesPotentielles = new ArrayList<>();
         ciblesPotentielles.add(joueur);
-        ciblesPotentielles.addAll(batiments.getBatiments());
+        ciblesPotentielles.addAll(gestionnaireBatiments.getBatiments());
         ciblesPotentielles.addAll(updateJN.getMonstres());
         // Parcourt toutes les entités potentiellement survolables et calcule la distance entre chacune d'elles et la position de la souris
         for (Localisable cible : ciblesPotentielles) {
@@ -199,17 +199,31 @@ public class Modele {
         return null;
     }
 
-    // Méthode pour réinitialiser le jeu après un Game Over (remet tout à zéro pour une nouvelle partie)
+    // Méthode pour réinitialiser le jeu après un Game Over
     public void reinitialiserJeu() {
-        // 1. On recrée un joueur tout neuf (PV max, inventaire vide)
-        Modele monModele = new Modele();
+        System.out.println("--- RELANCE DE LA PARTIE ---");
 
-        // 2. Initialisation de l'interface graphique, qui a besoin du modèle pour s'afficher
-        Vue maVue = new Vue(monModele);
+        this.gestionnaireBatiments.clearBatiments();
+        updateJN.getMonGestionnaireMonstres().clearMonstres();
+        //this.gestionnaireRessources.clearRessources();
+        //this.gestionnaireMonstres.clearMonstres();
 
-        // 3. Initialisation du contrôleur (écouteurs clavier/souris) pour lier les actions de la vue au modèle
-        new Controleur(monModele, maVue);
+        // RÉINITIALISER LES ÉTATS GLOBAUX
+        this.partieTerminee = false;
+        this.hudPageActuelle = 1;
+        this.cibleAffichage = joueur;
 
+        // Instancie le joueur et lui donne la référence à ce Modèle
+        this.joueur = new Joueur(this);
+
+        // Initialisation du jour et de la nuit
+        // (Démarre automatiquement son propre thread interne)
+        this.updateJN = new UpdateJN(this);
+        leCycleJourNuit = new CycleJourNuit(updateJN);
+
+        this.gestionnaireBatiments = new GestionnaireBatiments(this);
+        this.gestionnaireShop = new GestionnaireShop(this);
+        this.cibleAffichage = joueur; // valeur initiale
     }
 
 }

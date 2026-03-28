@@ -17,10 +17,22 @@ public class GestionnaireMonstres {
     private List<Monstre> monstres;
     private UpdateJN updateJN;
 
+    private int nbMonstresMorts = 0; // Compteur de monstres morts, peut être utilisé pour des statistiques ou des récompenses
+
     public GestionnaireMonstres(UpdateJN updateJN) {
         // Initialise la liste vide au démarrage
         this.monstres = new CopyOnWriteArrayList<>();
         this.updateJN = updateJN;
+    }
+
+    // Méthode pour incrémenter le compteur de monstres morts, appelée par les monstres eux-mêmes lorsqu'ils meurent
+    public void incrementerMonstresMorts() {
+        nbMonstresMorts++;
+    }
+
+    // Getter pour le nombre de monstres morts, utile pour les statistiques ou les récompenses
+    public int getNbMonstresMorts() {
+        return nbMonstresMorts;
     }
 
     /**

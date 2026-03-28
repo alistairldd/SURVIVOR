@@ -41,6 +41,10 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (modele.getPartieTerminee()) {
+            modele.reinitialiserJeu();
+            return; // On bloque tout le reste des actions (attaquer, construire, etc.)
+        }
         if (SwingUtilities.isLeftMouseButton(e)){
 
             // Vérifie que la partie n'est pas terminée avant de permettre toute action d'attaque du joueur
@@ -65,10 +69,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
 
             }
-            else {
-                modele.reinitialiserJeu();
 
-            }
 
 
         }

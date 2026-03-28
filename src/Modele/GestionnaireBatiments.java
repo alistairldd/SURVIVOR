@@ -23,5 +23,8 @@ public class GestionnaireBatiments {
         return m.batTrouverMonstre(t);
     }
 
-
+    public void clearBatiments() {
+        // Vide l'ArrayList
+        batiments.clear();
+    }
 }

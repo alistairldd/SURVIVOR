@@ -42,6 +42,7 @@ public class CycleJourNuit extends Thread {
 
             if (updateJN.getModele().getPartieTerminee()) {
                 // Si la partie est finie, on arrête le thread du cycle jour/nuit !
+                Thread.currentThread().interrupt();
                 break; // Sort de la boucle infinie, le thread s'arrête proprement.
             }
 

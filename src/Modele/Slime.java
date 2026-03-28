@@ -64,6 +64,7 @@ public class Slime extends Monstre {
             double dt = 0.05;
         // Boucle de comportement du monstre
         while(true) {
+
             try {
                 if (randomNum <= 0){
                     this.ajouterAnimation( Math.PI/8); // Incrémente l'animation pour faire osciller le slime
@@ -78,6 +79,7 @@ public class Slime extends Monstre {
                 if (this.getHp() <= 0) {
                     // Demande la suppression visuelle et logique de la carte
                     gestionnaireMonstres.supprimerMonstre(this);
+                    gestionnaireMonstres.incrementerMonstresMorts();
                     // Interrompt la boucle infinie pour terminer le thread proprement
                     break;
                 }
