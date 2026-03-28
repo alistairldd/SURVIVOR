@@ -23,11 +23,21 @@ public class UpdateJN {
     private GestionnaireMonstres monGestionnaireMonstres = new GestionnaireMonstres(this);
     private GestionnaireRessources monGestionnaireRessources = new GestionnaireRessources();
 
+    private int nbNuits = 0; // Compteur de jours écoulés, peut être utilisé pour augmenter la difficulté au fil du temps
 
     public UpdateJN(Modele modele){
         this.modele = modele;
     }
 
+    // Méthode pour incrémenter le nombre de jours écoulés, appelée à chaque transition jour/nuit
+    public void incrNbNuit() {
+        nbNuits++;
+    }
+
+    // Getter pour le nombre de jours écoulés, utile pour la logique d'augmentation progressive de la difficulté
+    public int getNbNuit(){
+        return nbNuits;
+    }
 
     // Getter pour savoir si c'est le jour ou la nuit
     public boolean isDay() {
@@ -68,6 +78,7 @@ public class UpdateJN {
         // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
         // (Excellente mécanique de game design pour éviter la sur-accumulation passive)
         monGestionnaireRessources.viderRessources();
+        incrNbNuit();
     }
 
     // Méthode à boucler le jour
@@ -78,9 +89,10 @@ public class UpdateJN {
 
     // Méthode à boucler la nuit
     public void updateNuit() {
-        if (modele.getJoueur().getHp() <= 0) {
+        // Fin de partie si le joueur meurt ou si le HQ n'a plus de vie
+        if (modele.getJoueur().getHp() <= 0 || modele.getGestionnaireBatiments().getHQ().getHp() <= 0) {
             modele.declencherGameOver();
-            return;
+
         }
 
     }
@@ -94,6 +106,10 @@ public class UpdateJN {
         return monGestionnaireMonstres.getMonstres();
     }
 
+    // Getter pour exposer le gestionnaire de monstres lui-même (pour les méthodes de ciblage, etc.)
+    public GestionnaireMonstres getMonGestionnaireMonstres() {
+        return monGestionnaireMonstres;
+    }
 
     // Getter pour exposer directement la liste des ressources présentes pendant le jour au reste du Modèle
     public ArrayList<Ressource> getRessources() {

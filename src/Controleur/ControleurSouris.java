@@ -19,7 +19,6 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     private Modele modele;
     private Vue vue;
-    private Joueur joueur;
 
     private int mouseX = 0;
     private int mouseY = 0;
@@ -28,7 +27,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
         this.modele = modele;
         this.vue = vue;
-        this.joueur = modele.getJoueur();
+
 
     }
 
@@ -41,7 +40,44 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)){
+        if (modele.getPartieTerminee()) {
+            modele.reinitialiserJeu();
+            return; // On bloque tout le reste des actions (attaquer, construire, etc.)
+        }
+    }
+
+    /**
+     * Gère la pression des boutons de la souris.
+     * Sur un clic droit : Convertit les coordonnées du clic à l'écran en coordonnées "Monde"
+     * (en appliquant l'offset de la caméra centré sur le joueur), puis lance un Thread autonome
+     * (DeplaceJoueur) pour gérer le mouvement de manière fluide.
+     * * @param e L'événement de pression de souris capturé.
+     */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isRightMouseButton(e)){
+            if (!modele.getPartieTerminee()){
+                // on recupere le joueur (on peut aps mettre dans constructeur car ça pose probleme si on restart)
+                Joueur joueur = modele.getJoueur();
+                // Récupérer les coordonnées du clic
+                int x = e.getX();
+                int y = e.getY();
+
+                // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
+                double camX = joueur.getX() - (double) vue.getWidth() / 2;
+                double camY = joueur.getY() - (double) vue.getHeight() / 2;
+
+                // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
+                double destX = camX + x;
+                double destY = camY + y;
+
+                // Déplacer le joueur vers la position de destination
+                DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
+                joueur.setThreadActuel(deplacement);
+                deplacement.start();
+                //modele.getJoueur().deplaceJoueur(destX, destY);
+            }
+        } else if (SwingUtilities.isLeftMouseButton(e)){
 
             // Vérifie que la partie n'est pas terminée avant de permettre toute action d'attaque du joueur
             if (!modele.getPartieTerminee()){
@@ -62,46 +98,6 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                     vue.getVueArme().setEnAnimation(true);
                     animation.start();
                 }
-
-
-            }
-            else {
-                modele.reinitialiserJeu();
-
-            }
-
-
-        }
-    }
-
-    /**
-     * Gère la pression des boutons de la souris.
-     * Sur un clic droit : Convertit les coordonnées du clic à l'écran en coordonnées "Monde"
-     * (en appliquant l'offset de la caméra centré sur le joueur), puis lance un Thread autonome
-     * (DeplaceJoueur) pour gérer le mouvement de manière fluide.
-     * * @param e L'événement de pression de souris capturé.
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isRightMouseButton(e)){
-            if (!modele.getPartieTerminee()){
-                // Récupérer les coordonnées du clic
-                int x = e.getX();
-                int y = e.getY();
-
-                // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
-                double camX = joueur.getX() - (double) vue.getWidth() / 2;
-                double camY = joueur.getY() - (double) vue.getHeight() / 2;
-
-                // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
-                double destX = camX + x;
-                double destY = camY + y;
-
-                // Déplacer le joueur vers la position de destination
-                DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
-                joueur.setThreadActuel(deplacement);
-                deplacement.start();
-                //modele.getJoueur().deplaceJoueur(destX, destY);
             }
         }
     }
@@ -135,6 +131,9 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!modele.getPartieTerminee()) {
+
+            Joueur joueur = modele.getJoueur();
+
             mouseX = e.getX();
             mouseY = e.getY();
 

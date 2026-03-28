@@ -42,4 +42,10 @@ public class GestionnaireRessources {
             this.ressources.add(new Ressource());
         }
     }
+
+    public void clearRessources() {
+        // Vide l'ArrayList
+        ressources.clear();
+    }
+
 }

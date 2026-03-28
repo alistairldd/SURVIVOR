@@ -20,7 +20,7 @@ public class VuePageEtat extends JPanel {
         // Instanciation de nos sous-vues
         this.vueVie = new VueVie(modele);
         this.vueInstructions = new VueInstructions();
-        this.vueJourNuit = new VueJourNuit(modele.getLeCycleJourNuit());
+        this.vueJourNuit = new VueJourNuit(modele);
 
         // Taille de départ
         this.setPreferredSize(new Dimension(LARGEUR_HUD, 600));

@@ -1,6 +1,7 @@
 package Vue;
 
 import Modele.CycleJourNuit;
+import Modele.Modele;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,12 +17,12 @@ import static Modele.Constantes.*;
 public class VueJourNuit{
 
     public final static int TAILLE_LS = 250;
-    private CycleJourNuit leCycle;
+    private Modele modele;
     private BufferedImage lune;
     private BufferedImage soleil;
 
-    public VueJourNuit(CycleJourNuit cycle) {
-        leCycle = cycle;
+    public VueJourNuit(Modele modele) {
+        this.modele = modele;
         try {
             lune = ImageIO.read(new File("src/images/LUNE.png"));
             soleil = ImageIO.read(new File("src/images/SOLEIL.png"));
@@ -39,6 +40,8 @@ public class VueJourNuit{
         int yCourant = yDebut;
         // On centre l'image horizontalement
         int centreX = (LARGEUR_HUD - TAILLE_LS) / 2;
+
+        CycleJourNuit leCycle = modele.getLeCycleJourNuit();
 
         if (leCycle.isDay()) {
             g.drawImage(soleil, centreX, yCourant, TAILLE_LS, TAILLE_LS, null);

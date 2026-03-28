@@ -64,6 +64,7 @@ public class Slime extends Monstre {
             double dt = 0.05;
         // Boucle de comportement du monstre
         while(true) {
+
             try {
                 if (randomNum <= 0){
                     this.ajouterAnimation( Math.PI/8); // Incrémente l'animation pour faire osciller le slime
@@ -78,12 +79,18 @@ public class Slime extends Monstre {
                 if (this.getHp() <= 0) {
                     // Demande la suppression visuelle et logique de la carte
                     gestionnaireMonstres.supprimerMonstre(this);
+                    gestionnaireMonstres.incrementerMonstresMorts();
                     // Interrompt la boucle infinie pour terminer le thread proprement
                     break;
                 }
             } catch (InterruptedException e) {
                 // Capture de l'interruption
-                e.printStackTrace();
+                System.out.println("Debug : Le thread du " + this.getNom() + " a bien été tué.");
+
+                // on peut choisir de ne pas afficher la stack trace pour éviter de polluer la console avec des messages d'erreur liés à l'arrêt normal du thread
+                // notamment lorsqu'on reset le jeu
+                //e.printStackTrace();
+
                 // Sécurité : arrête le thread en cas d'interruption externe pour éviter un thread zombie
                 break;
             }
