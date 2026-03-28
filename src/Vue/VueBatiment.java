@@ -1,15 +1,9 @@
 package Vue;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import Modele.Batiment;
-import Modele.HQ;
-import Modele.Tower;
-import Modele.Monstre; // Import nécessaire !
+import java.awt.*;
+
+import Modele.*;
+
 import static Modele.Constantes.*;
 
 /**
@@ -164,9 +158,25 @@ public class VueBatiment {
             }
             // =====================================================================
 
+
+        } else if (b instanceof Mine) {
+            Mine m = (Mine) b;
+
+            // Couleur spécifique pour la mine (un orange foncé/marron)
+            g2d.setColor(new Color(150, 75, 0));
+            g2d.fillRect(x - demiTaille, y - demiTaille, taille, taille);
+
+            // Affichage du nombre de minerais stockés (uniquement sur la carte, pas sur le radar)
+            if (!minimap) {
+                int stock = m.getRessources().size();
+                g2d.setColor(Color.WHITE);
+                g2d.setFont(new Font("Arial", Font.BOLD, 12));
+                // Dessine le texte centré au-dessus du bâtiment
+                g2d.drawString(stock + " Minerais", x - 30, y - demiTaille - 8);
+            }
+
         } else {
             // Sécurité : Dessin par défaut si on ajoute de nouveaux Bâtiments non reconnus plus tard
-            // Bâtiment générique
             g2d.setColor(Color.GRAY);
             g2d.fillRect(x - demiTaille, y - demiTaille, taille, taille);
         }

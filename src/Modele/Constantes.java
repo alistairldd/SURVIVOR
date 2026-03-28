@@ -15,15 +15,19 @@ public final class Constantes {
     // Constante : Points de vie maximum d'un bâtiment neuf
     public static final int HP_TOWER = 100;
     public static final int HP_HQ = 150;
+    public static final int HP_MINE = 100;
     public static final int HP_DEFAUT = 100;
     public static final int HEALING_RANGE = 50;
 
     /*--- Tower ---*/
     // Constante : Points de dégâts fixes infligés à chaque tir
     public static final int TOWER_BASE_DAMAGE = 20;
+
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
+    public static final int MINE_BASE_RANGE = 100;
     public static final int RAYON_HITBOX_TOUR = 50; // Rayon d'encombrement d'une tour
+    public static final int RAYON_HITBOX_MINE = 100; // Rayon d'encombrment de la mine
     public static final int RAYON_HITBOX_QG = 80;   // Le QG est plus gros, il prend plus de place
 
 

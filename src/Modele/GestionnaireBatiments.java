@@ -12,6 +12,7 @@ public class GestionnaireBatiments {
         //Liste des batiments présents sur la carte
         batiments = new ArrayList<Batiment>();
         batiments.add(new HQ(this)); //Par défaut on ne peut construire que le HQ, les autres bâtiments sont construits par le joueur
+        batiments.add(new Mine(this));
 
     }
 

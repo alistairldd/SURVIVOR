@@ -362,6 +362,51 @@ public class Joueur implements Localisable {
         }
     }
 
+    // ==========================================================
+    // --- INTERACTION AVEC LA MINE ---
+    // ==========================================================
+
+    /**
+     * Permet au joueur de récolter les minerais stockés dans la mine.
+     * Conditions : Il doit faire jour et le joueur doit être à proximité.
+     */
+    public void recolterMine() {
+        // 1. Vérification temporelle
+        if (!modele.getLeCycleJourNuit().isDay()) {
+            System.out.println("Récolte impossible : c'est la nuit !");
+            return;
+        }
+
+        // 2. Recherche de la mine et vérification de la distance
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
+            if (b instanceof Mine) {
+                Mine mine = (Mine) b;
+
+                // Calcul de la distance entre le joueur et le centre de la mine
+                double distance = Math.hypot(mine.getX() - this.positionX, mine.getY() - this.positionY);
+
+                // Rayon d'interaction (Rayon de la mine + marge de manœuvre de 50 pixels)
+                if (distance <= mine.getRange() + 50) {
+
+                    int nbRessources = mine.getRessources().size();
+
+                    if (nbRessources > 0) {
+                        // Transfert de la liste de la mine vers l'inventaire du joueur
+                        this.inventaire.addAll(mine.getRessources());
+                        // Vidage de la mine
+                        mine.getRessources().clear();
+                        System.out.println("Succès : " + nbRessources + " minerais récoltés !");
+                    } else {
+                        System.out.println("La mine est vide pour le moment.");
+                    }
+                    return; // On a trouvé la mine, on stoppe la recherche
+                } else {
+                    System.out.println("Échec : Tu es trop loin de la mine.");
+                }
+            }
+        }
+    }
+
     // Getter pour le modèle (utile pour les vues qui ont besoin d'infos globales comme le cycle temporel)
     public Modele getModele() {
         return this.modele;

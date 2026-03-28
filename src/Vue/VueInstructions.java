@@ -28,13 +28,15 @@ public class VueInstructions {
         g2d.setFont(new Font("Arial", Font.PLAIN, 13));
 
         // Liste complète et actualisée des commandes du jeu
+        // Liste complète et actualisée des commandes du jeu
         String[] instructions = {
                 "• CLIC DROIT : Se déplacer",
                 "• CLIC GAUCHE : Attaquer",
-                "• TOUCHE E : Ramasser ressource",
+                "• TOUCHE E : Ramasser ressource au sol",
+                "• TOUCHE R : Récolter la mine (Jour)",
                 "• TOUCHE T : Construire tour",
                 "• TOUCHE C : Afficher rayon de l'attaque",
-                "• GAUCHE/DROITE : Changer de page",
+                "• FLÈCHES : Changer de page (HUD)",
                 "• PAVÉ NUM. 1 à 5 : Acheter (Shop)"
         };
 

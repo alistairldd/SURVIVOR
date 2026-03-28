@@ -49,6 +49,11 @@ public class ControleurClavier implements KeyListener {
             vue.getVueArme().setAffPortee(!vue.getVueArme().getAffPortee()); // bascule l'affichage de la portée de l'arme
         }
 
+        // --- INTERACTION BÂTIMENTS ---
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            modele.getJoueur().recolterMine();
+        }
+
         // --- NAVIGATION DU HUD ---
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             // Flèche gauche : on recule (Formule pour un cycle 1-2-3 inversé)
