@@ -40,6 +40,11 @@ public class CycleJourNuit extends Thread {
         while (true) {
             // Vérifie l'état actuel (vrai = jour, faux = nuit)
 
+            if (updateJN.getModele().getPartieTerminee()) {
+                // Si la partie est finie, on arrête le thread du cycle jour/nuit !
+                break; // Sort de la boucle infinie, le thread s'arrête proprement.
+            }
+
             if (updateJN.isDay()) {
                 // Incrémente le compteur de temps pour le jour
                 framesInCurrentCycleJour++;

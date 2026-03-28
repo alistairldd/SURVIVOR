@@ -78,10 +78,16 @@ public class UpdateJN {
 
     // Méthode à boucler la nuit
     public void updateNuit() {
-
+        if (modele.getJoueur().getHp() <= 0) {
+            modele.declencherGameOver();
+            return;
+        }
 
     }
 
+    public Modele getModele() {
+        return modele;
+    }
 
     // Getter pour exposer directement la liste des monstres présents pendant la nuit au reste du Modèle
     public List<Monstre> getMonstres() {

@@ -1,5 +1,8 @@
 package Modele;
 
+import Controleur.Controleur;
+import Vue.Vue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,9 @@ public class Modele {
 
     private UpdateJN updateJN;
 
+    // Indicateur de fin de partie
+    private boolean partieTerminee = false;
+
     // Constructeur de la classe Modele, il initialise les données du modèle.
     public Modele() {
 
@@ -50,8 +56,9 @@ public class Modele {
         this.batiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
         this.cibleAffichage = joueur; // valeur initiale
-
     }
+
+
 
     /*---- GETTERS ET SETTERS ---- */
 
@@ -77,6 +84,19 @@ public class Modele {
 
     public GestionnaireBatiments getGestionnaireBatiments() {
         return batiments;
+    }
+
+    // Getter pour l'indicateur de fin de partie
+    public boolean getPartieTerminee() {
+        return partieTerminee;
+    }
+
+    // Méthode pour déclencher la fin de partie (ex: lorsque le joueur meurt)
+    public void declencherGameOver() {
+        if (!partieTerminee) {
+            partieTerminee = true;
+            System.out.println("GAME OVER ! Le joueur est mort.");
+        }
     }
 
     /**
@@ -177,6 +197,19 @@ public class Modele {
             }
         }
         return null;
+    }
+
+    // Méthode pour réinitialiser le jeu après un Game Over (remet tout à zéro pour une nouvelle partie)
+    public void reinitialiserJeu() {
+        // 1. On recrée un joueur tout neuf (PV max, inventaire vide)
+        Modele monModele = new Modele();
+
+        // 2. Initialisation de l'interface graphique, qui a besoin du modèle pour s'afficher
+        Vue maVue = new Vue(monModele);
+
+        // 3. Initialisation du contrôleur (écouteurs clavier/souris) pour lier les actions de la vue au modèle
+        new Controleur(monModele, maVue);
+
     }
 
 }

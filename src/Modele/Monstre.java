@@ -121,10 +121,10 @@ public abstract class Monstre extends Thread implements Localisable {
 
         // Si assez de temps est passé (1 seconde)
         if (tempsDepuisDerniereAttaque >= cadenceAttaque) {
-            cible.setHp(cible.getHp() - this.attack); // La cible perd des PV
+            cible.setHp(Math.max(cible.getHp() - this.attack, 0)); // La cible perd des PV
             tempsDepuisDerniereAttaque = 0;    // On réinitialise le timer
 
-            System.out.println("Le monstre tape ! PV restants : " + cible.getHp());
+            //System.out.println("Le monstre tape ! PV restants : " + cible.getHp());
         }
     }
 

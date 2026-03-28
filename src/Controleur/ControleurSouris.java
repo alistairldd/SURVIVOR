@@ -43,23 +43,34 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)){
 
-            Joueur j = modele.getJoueur();
-            if (j.peutAttaquer()){
-                int centerX = vue.getWidth() / 2;
-                int centerY = vue.getHeight() / 2;
+            // Vérifie que la partie n'est pas terminée avant de permettre toute action d'attaque du joueur
+            if (!modele.getPartieTerminee()){
+                Joueur j = modele.getJoueur();
+                if (j.peutAttaquer()){
+                    int centerX = vue.getWidth() / 2;
+                    int centerY = vue.getHeight() / 2;
 
-                double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
+                    double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
 
-                //System.out.println("angleAttaque=" + angleAttaque + " mouse=(" + mouseX + "," + mouseY + ")");
+                    //System.out.println("angleAttaque=" + angleAttaque + " mouse=(" + mouseX + "," + mouseY + ")");
 
-                // Attaquer dans la direction de la souris
-                modele.joueurAttaque(angleAttaque);
-                j.setDernierTempsAttaque();
-                int cadence = j.getArmeEquipee().getCadence();
-                AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
-                vue.getVueArme().setEnAnimation(true);
-                animation.start();
+                    // Attaquer dans la direction de la souris
+                    modele.joueurAttaque(angleAttaque);
+                    j.setDernierTempsAttaque();
+                    int cadence = j.getArmeEquipee().getCadence();
+                    AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
+                    vue.getVueArme().setEnAnimation(true);
+                    animation.start();
+                }
+
+
             }
+            else {
+                modele.reinitialiserJeu();
+
+            }
+
+
         }
     }
 
@@ -73,23 +84,25 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)){
-            // Récupérer les coordonnées du clic
-            int x = e.getX();
-            int y = e.getY();
+            if (!modele.getPartieTerminee()){
+                // Récupérer les coordonnées du clic
+                int x = e.getX();
+                int y = e.getY();
 
-            // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
-            double camX = joueur.getX() - (double) vue.getWidth() / 2;
-            double camY = joueur.getY() - (double) vue.getHeight() / 2;
+                // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
+                double camX = joueur.getX() - (double) vue.getWidth() / 2;
+                double camY = joueur.getY() - (double) vue.getHeight() / 2;
 
-            // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
-            double destX = camX + x;
-            double destY = camY + y;
+                // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
+                double destX = camX + x;
+                double destY = camY + y;
 
-            // Déplacer le joueur vers la position de destination
-            DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
-            joueur.setThreadActuel(deplacement);
-            deplacement.start();
-            //modele.getJoueur().deplaceJoueur(destX, destY);
+                // Déplacer le joueur vers la position de destination
+                DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
+                joueur.setThreadActuel(deplacement);
+                deplacement.start();
+                //modele.getJoueur().deplaceJoueur(destX, destY);
+            }
         }
     }
 
@@ -121,16 +134,18 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX();
-        mouseY = e.getY();
+        if (!modele.getPartieTerminee()) {
+            mouseX = e.getX();
+            mouseY = e.getY();
 
-        double camX = joueur.getX() - (double) vue.getWidth() / 2;
-        double camY = joueur.getY() - (double) vue.getHeight() / 2;
+            double camX = joueur.getX() - (double) vue.getWidth() / 2;
+            double camY = joueur.getY() - (double) vue.getHeight() / 2;
 
-        double sourisMondeX = camX + mouseX;
-        double sourisMondeY = camY + mouseY;
+            double sourisMondeX = camX + mouseX;
+            double sourisMondeY = camY + mouseY;
 
-        modele.verifierSurvol(sourisMondeX, sourisMondeY);
+            modele.verifierSurvol(sourisMondeX, sourisMondeY);
+        }
     }
 
     // Getters pour les coordonnées de la souris

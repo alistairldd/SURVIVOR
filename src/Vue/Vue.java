@@ -14,6 +14,7 @@ import Controleur.ControleurSouris;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 /**
  * Fenêtre et zone de dessin principale du jeu.
@@ -51,6 +52,8 @@ public class Vue extends JPanel {
         maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ferme l'application lorsque la fenêtre est fermée
         maFenetre.setLayout(new BorderLayout()); // Utilise un BorderLayout pour organiser les composants (Centre + Bords)
         maFenetre.setResizable(true);
+
+
 
         /* Initialisation du panneau droit de la fenêtre, il est utilisé pour afficher les informations du joueur et les ressources. */
         this.vueHUD = new VueHUD(modele);
@@ -110,6 +113,9 @@ public class Vue extends JPanel {
         return vueHUD;
     }
 
+    public JFrame getMaFenetre() {
+        return maFenetre;
+    }
 
     /**
      * Dessine une carte miniature (radar) en haut à droite de l'écran.
@@ -234,6 +240,26 @@ public class Vue extends JPanel {
         // Annule l'effet de caméra pour revenir aux coordonnées de l'écran fixes (0,0 en haut à gauche de la fenêtre)
         // Indispensable avant de dessiner des éléments d'interface qui ne doivent pas bouger avec le joueur (comme la minimap)
         g2d.translate(camX, camY); // On remet à zéro pour l'interface si besoin
+
+        if (modele.getPartieTerminee()) {
+            // --- ÉCRAN DE GAME OVER ---
+            // Fond noir transparent
+            g2d.setColor(new Color(0, 0, 0, 150));
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+
+            // Texte rouge centré
+            g2d.setColor(Color.RED);
+            g2d.setFont(new Font("Arial", Font.BOLD, 100));
+            String message = "GAME OVER";
+            FontMetrics fm = g2d.getFontMetrics();
+            int x = (getWidth() - fm.stringWidth(message)) / 2;
+            int y = (getHeight() / 2) + (fm.getAscent() / 4);
+
+            g2d.drawString(message, x, y);
+
+            // possible pour plus tard : Afficher le score (pièces, jours survécus...)
+            return; // ON S'ARRÊTE LÀ, on ne dessine plus le reste du jeu !
+        }
 
 
         // Dessine l'interface radar par-dessus le monde
