@@ -1,6 +1,5 @@
 package Modele;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -112,17 +111,6 @@ public class GestionnaireMonstres {
             monstres.remove(m);
     }
 
-    /**
-     * Calcule la distance entre deux entités localisables
-     */
-    public double calculerDistance(Localisable a, Localisable b) {
-        // Calcul de la différence sur l'axe X et Y
-        double diffX = a.getX() - b.getX();
-        double diffY = a.getY() - b.getY();
-
-        // Théorème de Pythagore pour la distance
-        return Math.sqrt(diffX * diffX + diffY * diffY);
-    }
 
     public Localisable trouverCible(Localisable m){
         return updateJN.monstreTrouverCible(m);

@@ -74,4 +74,8 @@ public abstract class Batiment extends Thread implements Localisable {
     public int getRayonHitbox() {
         return rayonHitbox;
     }
+
+    public boolean isAttaquable() {
+        return attaquable;
+    }
 }

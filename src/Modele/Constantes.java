@@ -45,7 +45,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 30;
+    public final static int DUREE_CYCLE_JOUR = 5;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 60;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière

@@ -71,10 +71,11 @@ public class CycleJourNuit extends Thread {
 
                 // Vérifie si la durée totale de la nuit a été atteinte
                 if (framesInCurrentCycleNuit >= TICKS_PAR_CYCLE_NUIT) {
-                    // Remet le compteur de la nuit à zéro pour le prochain cycle
-                    framesInCurrentCycleNuit = 0;
-                    // Déclenche le lever du soleil et ses événements (nettoyage, ressources)
-                    updateJN.changeJour();
+
+                    if (updateJN.getMonstresRestants() > 0) {
+                        // Si des monstres sont encore en vie à la fin de la nuit, on considère que le joueur a perdu
+                        updateJN.getModele().declencherGameOver();
+                    }
                 } else {
                     // Exécute la logique continue spécifique à la nuit (ex: supprimer les monstres morts)
                     updateJN.updateNuit();
@@ -122,9 +123,8 @@ public class CycleJourNuit extends Thread {
         return updateJN.isDay();
     }
 
-    // Permet d'accéder à l'objet UpdateJN (utile pour récupérer les monstres liés à la nuit actuelle)
-    public UpdateJN getUpdateJN() {
-        return updateJN;
+    public void resetFramesNuit() {
+        framesInCurrentCycleNuit = 0;
     }
 
 }

@@ -46,15 +46,31 @@ public class VueJourNuit{
         if (leCycle.isDay()) {
             g.drawImage(soleil, centreX, yCourant, TAILLE_LS, TAILLE_LS, null);
             g.setColor(Color.BLACK);
+            yCourant += TAILLE_LS + 10; // On descend sous l'image pour le texte
+            g.setFont(new Font("Arial", Font.BOLD, 20));
+            g.drawString("Temps restant: " + leCycle.getTempsRestant() + "s", centreX + 30, yCourant);
         } else {
             g.drawImage(lune, centreX, yCourant, TAILLE_LS, TAILLE_LS, null);
             g.setColor(Color.WHITE);
+            yCourant += TAILLE_LS + 10;
+            if (modele.getUpdateJN().getMonstresRestants() == 0) {
+                g.setFont(new Font("Arial", Font.BOLD, 20));
+                g.drawString("Nuit terminée !", centreX + 50, yCourant);
+                yCourant += 30;
+                g.setFont(new Font("Arial", Font.PLAIN, 13));
+                g.drawString("Appuyez sur S pour passer au prochain jour", centreX - 5, yCourant);
+            } else {
+                g.setFont(new Font("Arial", Font.BOLD, 14));
+                g.drawString("Temps restant avant le Game Over: ", centreX - 5, yCourant);
+                yCourant += 20;
+                g.drawString(leCycle.getTempsRestant() + " secondes", centreX + 60, yCourant);
+                yCourant += 25;
+                g.setFont(new Font("Arial", Font.BOLD, 13));
+                g.drawString("Nombre de monstres restants à tuer: " + modele.getUpdateJN().getMonstresRestants(), centreX - 5, yCourant);
+            }
         }
 
-        yCourant += TAILLE_LS + 30; // On descend sous l'image pour le texte
 
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Temps restant: " + leCycle.getTempsRestant() + "s", centreX + 30, yCourant);
 
         yCourant += 40; // Marge finale pour que le scroll ne coupe pas le bas
         return yCourant;

@@ -122,7 +122,11 @@ public class UpdateJN {
         // On crée une liste de tout ce qui est attaquable par les monstres
         List<Localisable> ciblesPotentielles = new ArrayList<>();
         ciblesPotentielles.add(joueur);
-        ciblesPotentielles.addAll(batiments);
+        for (Batiment b : batiments) {
+            if (b.isAttaquable()) {
+                ciblesPotentielles.add(b);
+            }
+        }
 
 
         Localisable plusProche = null;
@@ -147,6 +151,21 @@ public class UpdateJN {
 
         // Théorème de Pythagore pour la distance
         return Math.sqrt(diffX * diffX + diffY * diffY);
+    }
+
+    /**
+     * Méthode pour avoir le nombre restant de monstres
+     */
+
+    public int getMonstresRestants() {
+        return monGestionnaireMonstres.getMonstres().size();
+    }
+
+    public void passerJour() {
+        if (getMonstresRestants() <= 0 && !jour) {
+            modele.getLeCycleJourNuit().resetFramesNuit();
+            changeJour();
+        }
     }
 
 }

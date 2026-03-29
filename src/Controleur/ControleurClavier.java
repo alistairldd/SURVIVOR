@@ -82,6 +82,11 @@ public class ControleurClavier implements KeyListener {
                 case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
             }
         }
+
+        // --- PASSER LA NUIT ---
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            modele.getUpdateJN().passerJour();
+        }
     }
 
     @Override
