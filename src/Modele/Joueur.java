@@ -45,6 +45,9 @@ public class Joueur implements Localisable {
     // Garde une trace du thread de déplacement en cours pour pouvoir l'interrompre si un nouveau clic est fait
     private static DeplaceJoueur threadActuel = null;
 
+    // Garde une trace du thread de soin en cours pour pouvoir l'interrompre si besoin
+    private ThreadReparation threadReparation = null;
+
     /**
      * Constructeur principal du joueur.
      * Initialise ses statistiques, le place au centre de la carte et lui donne un inventaire de départ.
@@ -404,6 +407,35 @@ public class Joueur implements Localisable {
                     System.out.println("Échec : Tu es trop loin de la mine.");
                 }
             }
+        }
+    }
+
+    /**
+     * Demande au modèle s'il y a un bâtiment à soigner à proximité.
+     * Si oui, lance le thread autonome de réparation.
+     */
+    public void lancerReparation() {
+        // 0. Vérification temporelle
+        if (!modele.getLeCycleJourNuit().isDay()) {
+            System.out.println("Réparation impossible : c'est la nuit !");
+            return;
+        }
+        // 1. On demande la cible au Modèle
+        Batiment cible = modele.trouverBatimentSoignable();
+
+        if (cible != null) {
+            // 2. Si une réparation est DÉJÀ en cours sur un autre bâtiment, on l'arrête proprement
+            if (threadReparation != null && threadReparation.isAlive()) {
+                threadReparation.interrupt();
+            }
+
+            // 3. On crée le nouveau moteur de soin et on lui donne sa cible
+            threadReparation = new ThreadReparation(this, cible);
+
+            // 4. On démarre le thread en arrière-plan
+            threadReparation.start();
+        } else {
+            System.out.println("Réparation impossible : Aucun bâtiment endommagé à portée.");
         }
     }
 

@@ -199,6 +199,35 @@ public class Modele {
         return null;
     }
 
+    // ==========================================================
+    // --- GESTION DES RÉPARATIONS ---
+    // ==========================================================
+
+    /**
+     * Cherche le premier bâtiment à portée du joueur qui a besoin d'être soigné.
+     * @return Le bâtiment blessé, ou null s'il n'y a rien à soigner à proximité.
+     */
+    public Batiment trouverBatimentSoignable() {
+        // Récupération des coordonnées actuelles du joueur
+        double positionX = this.joueur.getX();
+        double positionY = this.joueur.getY();
+
+        // On boucle sur tous les bâtiments présents sur la carte
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+
+            // 1. Calcul de la distance géométrique exacte
+            double distance = Math.hypot(b.getX() - positionX, b.getY() - positionY);
+
+            // 2. Vérification de la portée (healingRange) ET de l'état de santé
+            if (distance <= b.getHealingRange() && b.getHp() < b.getMaxHp()) {
+                return b; // Cible valide trouvée, on la renvoie immédiatement
+            }
+        }
+
+        // Aucun bâtiment blessé n'est à portée
+        return null;
+    }
+
     // Méthode pour réinitialiser le jeu après un Game Over
     public void reinitialiserJeu() {
         System.out.println("--- RELANCE DE LA PARTIE ---");

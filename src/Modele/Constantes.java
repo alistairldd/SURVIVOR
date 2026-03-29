@@ -14,6 +14,8 @@ public final class Constantes {
     }
 
     /*** ---Bâtiments--- ***/
+    // Paramètres d'équilibrage du soin
+    public static int SOIN_BAT = 1; // Nombre de PV restaurés par itération
     // Constante : Points de vie maximum d'un bâtiment neuf
     public static final int HP_TOWER = 100;
     public static final int HP_HQ = 150;
@@ -43,7 +45,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 15;
+    public final static int DUREE_CYCLE_JOUR = 30;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 60;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -75,6 +77,8 @@ public final class Constantes {
     public static final int MINE_DELAY = 5000; // La mine génère une ressource toutes les 5 secondes
     // Délai en millisecondes entre chaque image (50ms = 20 images par seconde / FPS)
     public static final int REDESSINE_DELAY = 50;
+
+    public static int REPARATION_DELAY = 50; // Pause de 50 millisecondes (0.05s) entre chaque soin
 
 
     /*** --- Vue --- ***/
