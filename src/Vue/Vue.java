@@ -40,6 +40,9 @@ public class Vue extends JPanel {
     // Modèle
     private final Modele modele;
 
+    // Le gestionnaire visuel des particules de soin
+    private VueEffetSoin vueEffetSoin;
+
 
 
     // Constructeur de la classe Vue, il initialise les données de la vue.
@@ -92,6 +95,8 @@ public class Vue extends JPanel {
         this.vueBatiment = new VueBatiment();
         this.vueMonstre = new VueMonstre();
         this.vueArme = new VueArme(controleurSouris, this, modele);
+
+        this.vueEffetSoin = new VueEffetSoin(modele);
 
         // Demande à la fenêtre de calculer la taille de tous ses composants
         maFenetre.pack();
@@ -224,6 +229,11 @@ public class Vue extends JPanel {
             // Passe le relais à la sous-vue spécialisée avec les coordonnées absolues
             vueBatiment.dessinerBatiment(g2d, b, (int) b.getX(), (int) b.getY(), false);
         }
+
+        // Calcule la nouvelle position des particules
+        vueEffetSoin.miseAJour();
+        // Dessine le grand cercle vert et les "+" par-dessus les bâtiments
+        vueEffetSoin.dessiner(g2d);
 
         // Dessine l'arme du joueur par-dessus le reste
         vueArme.dessiner(g2d);

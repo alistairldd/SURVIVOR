@@ -130,6 +130,8 @@ public class Joueur implements Localisable {
     public Arme getArmeEquipee() {return armeEquipee;}
     // Setter pour l'arme équipée du joueur
     public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
+
+    public ThreadReparation getThreadReparation() { return threadReparation; }
     /**
      * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte.
      * @param x La nouvelle coordonnée X voulue.

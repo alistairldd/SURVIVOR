@@ -17,6 +17,8 @@ public class ThreadReparation extends Thread {
         this.batiment = batiment;
     }
 
+    public Batiment getBatiment() { return batiment; }
+
     @Override
     public void run() {
         //System.out.println("Début de la réparation sur : " + batiment.getNom());
