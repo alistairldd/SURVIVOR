@@ -32,6 +32,11 @@ public final class Constantes {
     public static final int RAYON_HITBOX_MINE = 100; // Rayon d'encombrment de la mine
     public static final int RAYON_HITBOX_QG = 80;   // Le QG est plus gros, il prend plus de place
 
+    /*--- Mine ---*/
+    public static final int PROBA_PIERRE = 70; // 50% de chance d'obtenir de la pierre
+    public static final int PROBA_FER = 25;   // 30% de chance d'obtenir du fer
+    public static final int PROBA_OR = 5;    //
+
 
     /*** ---Cycle Jour/Nuit--- ***/
     // Constantes pour le cycle
@@ -64,10 +69,10 @@ public final class Constantes {
     public static final int NB_RESSOURCES = 20;
 
     /*** --- Threads --- ***/
-    // Intervalle de temps en millisecondes entre deux vérifications globales
-    // 50ms = 20 vérifications par seconde (suffisant pour réagir vite sans saturer le processeur)
-    public static final int BAT_DELAY = 200; // Le thread tourne à 20 FPS pour vérifier les attaques
+    public static final int BAT_DELAY = 1000;
+    public static final int TOWER_DELAY = 200; // Le thread tourne à 20 FPS pour vérifier les attaques
 
+    public static final int MINE_DELAY = 5000; // La mine génère une ressource toutes les 5 secondes
     // Délai en millisecondes entre chaque image (50ms = 20 images par seconde / FPS)
     public static final int REDESSINE_DELAY = 50;
 

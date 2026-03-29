@@ -18,8 +18,10 @@ public abstract class Batiment extends Thread implements Localisable {
 
     private int range;
 
+    protected boolean attaquable;
     // Taille physique d'encombrement du bâtiment
     protected int rayonHitbox;
+
 
     /**
      * Initialise un bâtiment à une position spécifique avec ses points de vie maximum.
@@ -35,6 +37,7 @@ public abstract class Batiment extends Thread implements Localisable {
         this.healingRange = HEALING_RANGE;
         this.range = range;
         this.start();
+        this.attaquable = true;
     }
 
     // Récupère les points de vie actuels du bâtiment

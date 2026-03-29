@@ -26,6 +26,7 @@ public class Mine extends Batiment{
         this.range = MINE_BASE_RANGE;
         this.rayonHitbox = RAYON_HITBOX_MINE;
         this.ressources = new ArrayList<Ressource>();
+        this.attaquable = false; // La mine n'est pas attaquable, elle ne peut pas être détruite par les monstres
     }
 
     // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)
@@ -42,12 +43,20 @@ public class Mine extends Batiment{
     }
 
     public void genererRessources() {
-        // Tableau des minerais autorisés (1: Pierre, 2: Fer, 3: Or) - Pas de bois (0)
-        int[] minerais = {1, 2, 3};
+        // Tirage d'un nombre aléatoire entre 0 et 99 (pour simuler 100%)
+        int tirage = (int) (Math.random() * 100);
+        int typeChoisi;
 
-        // Sélection aléatoire d'un index
-        int indexAleatoire = (int) (Math.random() * minerais.length);
-        int typeChoisi = minerais[indexAleatoire];
+        // Définition des paliers de probabilité
+        if (tirage < PROBA_PIERRE) {
+            typeChoisi = 1; // Pierre
+        }
+        else if (tirage < PROBA_PIERRE + PROBA_FER) {
+            typeChoisi = 2; // Fer
+        }
+        else {
+            typeChoisi = 3; // Or
+        }
 
         // Ajout de la nouvelle ressource à la liste de stockage de la mine
         this.ressources.add(new Ressource(typeChoisi));
@@ -58,7 +67,7 @@ public class Mine extends Batiment{
         while (this.hp > 0) {
             try {
                 genererRessources();
-                Thread.sleep(BAT_DELAY);
+                Thread.sleep(MINE_DELAY);
             } catch (InterruptedException e) {}
         }
     }

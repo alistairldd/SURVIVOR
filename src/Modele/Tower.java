@@ -64,7 +64,7 @@ public class Tower extends Batiment{
                 monstreCible = gBatiments.trouverCible(this);
                 if (monstreCible != null) {
                     this.attaquer(monstreCible);}
-                Thread.sleep(BAT_DELAY);
+                Thread.sleep(TOWER_DELAY);
             } catch (InterruptedException e) {}
         }
     }
