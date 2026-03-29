@@ -19,9 +19,9 @@ public class VueHUD extends JPanel {
     private CardLayout cardLayout;
 
     // Les 3 pages indépendantes (qui hériteront de JPanel)
-    private VuePageEtat pageEtat;
-    private VuePageAction pageAction;
-    private VuePageBoutique pageBoutique;
+    private VueHUDPageEtat pageEtat;
+    private VueHUDPageAction pageAction;
+    private VueHUDPageBoutique pageBoutique;
 
     // Mémorise la dernière page affichée pour ne demander le changement que si nécessaire
     private int dernierePageAffichee = -1;
@@ -39,9 +39,9 @@ public class VueHUD extends JPanel {
         this.setLayout(cardLayout);
 
         // Instanciation des 3 pages (Conteneurs indépendants)
-        pageEtat = new VuePageEtat(modele);
-        pageAction = new VuePageAction(modele);
-        pageBoutique = new VuePageBoutique(modele);
+        pageEtat = new VueHUDPageEtat(modele);
+        pageAction = new VueHUDPageAction(modele);
+        pageBoutique = new VueHUDPageBoutique(modele);
 
         // Création des ascenseurs (JScrollPane) pour chaque page
         JScrollPane scrollEtat = creerScroll(pageEtat);

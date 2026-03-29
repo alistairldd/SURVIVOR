@@ -4,7 +4,7 @@ import Modele.Joueur;
 import java.awt.*;
 import static Modele.Constantes.*;
 
-public class VueShop {
+public class VueHUDShop {
     public int dessiner(Graphics g, int yDebut, Joueur joueur) {
         Graphics2D g2d = (Graphics2D) g;
         int yCourant = yDebut;

@@ -11,7 +11,7 @@ import static Modele.Constantes.*;
  * Sous-panneau du HUD listant les quantités de matériaux possédés par le joueur.
  * Lit directement les données du Modèle et les met en forme.
  */
-public class VueInventaire {
+public class VueHUDInventaire {
 
     /**
      * Dessine le tableau récapitulatif de l'inventaire.

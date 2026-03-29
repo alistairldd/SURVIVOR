@@ -6,14 +6,14 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import static Modele.Constantes.*;
 
-public class VuePageBoutique extends JPanel {
+public class VueHUDPageBoutique extends JPanel {
     private Modele modele;
-    private VueShop vueShop;
+    private VueHUDShop vueHUDShop;
 
-    public VuePageBoutique(Modele modele) {
+    public VueHUDPageBoutique(Modele modele) {
         this.modele = modele;
         this.setOpaque(false);
-        this.vueShop = new VueShop();
+        this.vueHUDShop = new VueHUDShop();
 
         this.setPreferredSize(new Dimension(LARGEUR_HUD, 600));
     }
@@ -23,7 +23,7 @@ public class VuePageBoutique extends JPanel {
         super.paintComponent(g);
 
         int y = 40;
-        y = vueShop.dessiner(g, y, modele.getJoueur());
+        y = vueHUDShop.dessiner(g, y, modele.getJoueur());
 
         // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {

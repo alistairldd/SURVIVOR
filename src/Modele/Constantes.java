@@ -4,12 +4,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public final class Constantes {
-    private Constantes(){}
+    private Constantes() {
+    }
 
     /*** ---Bâtiments--- ***/
     // Constante : Points de vie maximum d'un bâtiment neuf
@@ -99,11 +101,11 @@ public final class Constantes {
     public final static List<Image> IMAGES_SLIMES = new ArrayList<>();
     public final static int LARGEUR_SLIME_SOURCE = 724;
     public final static int HAUTEUR_SLIME_SOURCE = 492;
+
     static {
         try {
             // Charger la planche de slimes
             BufferedImage planche = ImageIO.read(new File("src/images/slime.png"));
-
 
 
             int[] lesX = {111, 85, 88, 1051, 1031, 1030}; // X pour chaque slime
@@ -120,7 +122,8 @@ public final class Constantes {
                 Image spriteRedimensionne = spriteSource.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 
                 // Ajoute à la liste
-                IMAGES_SLIMES.add(spriteRedimensionne);;
+                IMAGES_SLIMES.add(spriteRedimensionne);
+                ;
             }
 
         } catch (Exception e) {
@@ -129,6 +132,17 @@ public final class Constantes {
         }
     }
 
+    public final static int LARGEUR_JOUEUR_SOURCE = 200;
+    public final static int HAUTEUR_JOUEUR_SOURCE = 200;
+    public static Image IMAGE_JOUEUR = null;
+    static {
+        try {
+            // Charger l'image du joueur
+            IMAGE_JOUEUR = ImageIO.read(new File("src/images/Joueur.png"));
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

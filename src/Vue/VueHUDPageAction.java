@@ -6,17 +6,17 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import static Modele.Constantes.*;
 
-public class VuePageAction extends JPanel {
+public class VueHUDPageAction extends JPanel {
     private Modele modele;
-    private VueInventaire vueInventaire;
-    private VueBatHud vueBatHud;
+    private VueHUDInventaire vueHUDInventaire;
+    private VueHUDBat vueHUDBat;
 
-    public VuePageAction(Modele modele) {
+    public VueHUDPageAction(Modele modele) {
         this.modele = modele;
         this.setOpaque(false);
 
-        this.vueInventaire = new VueInventaire();
-        this.vueBatHud = new VueBatHud();
+        this.vueHUDInventaire = new VueHUDInventaire();
+        this.vueHUDBat = new VueHUDBat();
 
         this.setPreferredSize(new Dimension(LARGEUR_HUD, 600));
     }
@@ -26,8 +26,8 @@ public class VuePageAction extends JPanel {
         super.paintComponent(g);
 
         int y = 40;
-        y = vueInventaire.dessiner(g, y, modele, modele.getJoueur());
-        y = vueBatHud.dessiner(g, y, modele, modele.getJoueur());
+        y = vueHUDInventaire.dessiner(g, y, modele, modele.getJoueur());
+        y = vueHUDBat.dessiner(g, y, modele, modele.getJoueur());
 
         // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {

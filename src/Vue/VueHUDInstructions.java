@@ -9,7 +9,7 @@ import static Modele.Constantes.*;
  * Met à jour dynamiquement la lisibilité (couleur du texte) et la faisabilité
  * des actions (ex: nombre de tours fabricables) selon l'état du Modèle.
  */
-public class VueInstructions {
+public class VueHUDInstructions {
     /**
      * Méthode de rendu des instructions.
      * @return La coordonnée Y finale.

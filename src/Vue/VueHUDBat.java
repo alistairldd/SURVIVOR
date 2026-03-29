@@ -7,7 +7,7 @@ import java.awt.*;
 
 import static Modele.Constantes.xOffset;
 
-public class VueBatHud {
+public class VueHUDBat {
     /**
      * Dessine les informations de construction.
      * @return La coordonnée Y finale après dessin.

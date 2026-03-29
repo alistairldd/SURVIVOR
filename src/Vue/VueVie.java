@@ -2,8 +2,14 @@ package Vue;
 
 import Modele.Modele;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 import Modele.Localisable;
 import Modele.Monstre;
+
+import javax.imageio.ImageIO;
 
 import static Modele.Constantes.*;
 
@@ -19,26 +25,37 @@ public class    VueVie {
      * Dessine la barre de vie et l'avatar de l'entité.
      * @return La coordonnée Y finale après avoir dessiné ce composant (pour empiler la suite).
      */
-    public int dessiner(Graphics g, int yDebut, int width, int height) {
+    public int dessiner(Graphics g, int yDebut, int width, int height) throws IOException {
         Graphics2D g2d = (Graphics2D) g;
         Localisable localisable = modele.getCibleAffichage();
 
         // Curseur vertical qui mémorisera notre progression
         int yCourant = yDebut;
 
+        int tailleImage = 0;
         if (localisable != null) {
 
             String nom = localisable.getNom();
             int vie = localisable.getHp();
             int vieMax = localisable.getMaxHp();
             Color color;
+            Image img = null;
 
-            if (nom.equals("Joueur")) {
-                color = Color.GREEN;
-            } else if (nom.equals("Tour")) {
-                color = Color.BLUE;
-            } else {
-                color = Color.RED;
+            color = Color.RED;
+            switch (nom) {
+                case "Joueur" -> {
+                    color = Color.GREEN;
+                    img = IMAGE_JOUEUR;
+                }
+                case "Tour" -> color = Color.BLUE;
+                case "Slime" -> {
+                    Monstre m = (Monstre) localisable;
+                    img = m.getImage(); // Ton getter qui renvoie le slime aléatoire
+                }
+                default -> {
+                    color = Color.GRAY;
+                    // Optionnel : on peux aussi essayer de charger une image générique pour les autres entités
+                }
             }
 
             // 1. Dessin de la barre de vie
@@ -57,25 +74,24 @@ public class    VueVie {
             g2d.drawString(nom + " : " + vie + " / " + vieMax + " PV", xOffset, yCourant);
 
             yCourant += 20; // On descend pour l'image
-
             // 2. Dessin de l'image de l'entité
-            // Ici, tu pourras remplacer ce rectangle de test par ton ImageIO (ex: g2d.drawImage(avatarJoueur, ...))
-            int tailleImage = 100;
-            if (localisable instanceof Monstre) {
-                Monstre m = (Monstre) localisable;
-                Image imgMonstre = m.getImage(); // Ton getter qui renvoie le slime aléatoire
-
-                if (imgMonstre != null) {
-                    int hauteurProp = (int)( tailleImage * ( (double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
-                    int offsetCentrageY = (tailleImage - hauteurProp) / 2;
-                    // Dessine l'image redimensionnée pour remplir le cadre de 100x100
-                    g2d.drawImage(imgMonstre, xOffset, yCourant+ offsetCentrageY, tailleImage, hauteurProp, null);
-
-                    // Optionnel : un petit contour blanc pour faire "propre"
-                    g2d.setColor(Color.WHITE);
-                    g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
+            tailleImage = 100;
+            int hauteurProp;
+            if (img != null) {
+                if (nom.equals("Slime")) {
+                    hauteurProp = (int) (tailleImage * ((double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
+                } else {
+                    hauteurProp = (int) (tailleImage * ((double) HAUTEUR_JOUEUR_SOURCE / LARGEUR_JOUEUR_SOURCE));
                 }
-            } else {
+                int offsetCentrageY = (tailleImage - hauteurProp) / 2;
+
+                // Dessine l'image redimensionnée pour remplir le cadre de 100x100
+                g2d.drawImage(img, xOffset, yCourant + offsetCentrageY, tailleImage, hauteurProp, null);
+
+                // Optionnel : un petit contour blanc pour faire "propre"
+                g2d.setColor(Color.WHITE);
+                g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
+                } else {
 
                 g2d.setColor(new Color(50, 50, 50, 150)); // Fond gris transparent pour la boîte d'image
                 g2d.fillRect(xOffset, yCourant, tailleImage, tailleImage);
