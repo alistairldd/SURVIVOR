@@ -10,6 +10,9 @@ import Modele.Modele;
 
 import javax.imageio.ImageIO;
 
+import static Modele.Constantes.IMAGE_TOP_JOUEUR;
+import static Modele.Constantes.LARGEUR_TOP_JOUEUR_SOURCE;
+
 /**
  * Gère l'affichage dynamique de l'arme du joueur.
  * Calcule l'orientation de l'arme en temps réel pour qu'elle pointe toujours vers
@@ -154,6 +157,8 @@ public class VueArme {
         // On le décale de "rayon" sur l'axe X pour l'éloigner du corps, et on centre son épaisseur (Y = -TAILLE/2)
         // g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE); ça c'était pour le test au début
 
+        int offsetJoueur = -LARGEUR_TOP_JOUEUR_SOURCE/2;
+        g2d.drawImage(IMAGE_TOP_JOUEUR, offsetJoueur, offsetJoueur, 50, 50, null);
         g2d.drawImage(image, 10, -12, 90,25, null);
 
         // Libère la mémoire et annule les translations/rotations pour les prochains dessins

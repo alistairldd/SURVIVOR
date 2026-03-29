@@ -145,4 +145,17 @@ public final class Constantes {
             e.printStackTrace();
         }
     }
+
+    public final static int LARGEUR_TOP_JOUEUR_SOURCE = 50;
+    public final static int HAUTEUR_TOP_JOUEUR_SOURCE = 50;
+    public static Image IMAGE_TOP_JOUEUR = null;
+    static {
+        try {
+            // Charger l'image du joueur vue de dessus pour la minimap
+            IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/topview_perso.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

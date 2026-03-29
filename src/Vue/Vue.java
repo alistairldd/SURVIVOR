@@ -30,7 +30,7 @@ public class Vue extends JPanel {
     // Déclaration de tous les "pinceaux" spécifiques responsables de dessiner chaque type d'entité
     private final VueHUD vueHUD;
     private final VueCarte vueCarte;
-    private final VueJoueur vueJoueur;
+    //private final VueJoueur vueJoueur;
     private final VueArme vueArme;
     private final VueRessource vueRessource;
     private final VueBatiment vueBatiment;
@@ -68,7 +68,7 @@ public class Vue extends JPanel {
 
         // Initialisation des vues du monde, elles sont utilisées pour afficher les éléments du monde (carte, joueur, ressources, bâtiments).
         this.vueCarte = new VueCarte(modele);
-        this.vueJoueur = new VueJoueur();
+        //this.vueJoueur = new VueJoueur();
 
         // Initialisation des contrôleurs de la vue,
         // ils sont utilisés pour recevoir les événements de l'utilisateur et pour les transmettre au contrôleur.
@@ -217,7 +217,7 @@ public class Vue extends JPanel {
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)
         // Comme on a fait un translate(-camX, -camY), il apparaîtra pile au centre de l'écran
-        vueJoueur.dessiner(g2d, joueur);
+        //vueJoueur.dessiner(g2d, joueur);
 
         // 4. Dessiner les bâtiments
         for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
