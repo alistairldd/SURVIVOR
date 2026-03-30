@@ -1,9 +1,7 @@
 package Modele;
 
 import java.awt.*;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
+import java.util.List;
 
 
 /**
@@ -68,12 +66,11 @@ public abstract class Arme {
     public void setNom(String nom) {this.nom = nom;}
 
     // Retourne l'angle (la largeur) du cône de frappe en radians
-    public double getAngle() {
-        return angle;
-    }
+    public double getAngle() {return angle;}
 
     // Retourne l'ensemble des ressources nécessaires pour acheter / fabriquer l'arme
-    public List getRessourcesNecessaires() {
-        return ressourcesNecessaires;
-    }
+    public List<String> getRessourcesNecessaires() {return ressourcesNecessaires;}
+
+    // Retourne l'image de l'arme
+    public Image getImage() {return image;}
 }

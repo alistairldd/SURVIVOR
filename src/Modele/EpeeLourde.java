@@ -14,7 +14,7 @@ public class EpeeLourde extends Arme{
                 1500,
                 Math.PI,
                 IMAGE_EPEE_LOURDE,
-                (java.awt.List) List.of("Fer:25, Pierre:10")
+                List.of("Fer:25, Pierre:10")
         );
     }
 
@@ -47,7 +47,7 @@ public class EpeeLourde extends Arme{
     }
 
     @Override
-    public java.awt.List getRessourcesNecessaires() {
+    public List<String> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires();
     }
 }

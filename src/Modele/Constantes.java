@@ -195,10 +195,13 @@ public final class Constantes {
     }
 
 
-
+    public static Image IMAGE_BATON = null;
     public static Image IMAGE_HACHE = null;
     public static Image IMAGE_EPEE_LOURDE = null;
     public static Image IMAGE_LANCE = null;
+
+    public static Image IMAGE_ARMURE_LEGERE = null;
+    public static Image IMAGE_ARMURE_LOURDE = null;
 
     public final static int LARGEUR_JOUEUR_SOURCE = 200;
     public final static int HAUTEUR_JOUEUR_SOURCE = 200;
