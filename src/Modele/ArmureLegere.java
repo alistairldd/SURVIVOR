@@ -2,7 +2,7 @@ package Modele;
 import Modele.Armure;
 
 public class ArmureLegere extends Armure{
-    public ArmureLegere(String nom, int bonusVie) {
+    public ArmureLegere() {
         super("Armure légère", 20); // Bonus de 20 PV pour une armure légère
     }
 
