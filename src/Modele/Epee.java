@@ -1,9 +1,8 @@
 package Modele;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
+
+import static Modele.Constantes.IMAGE_EPEE;
 
 /**
  * Implémentation concrète d'une arme : l'Épée.
@@ -25,8 +24,17 @@ public class Epee extends Arme {
         // Portée: 100 pixels
         // Cadence: 500 millisecondes (0.5s entre chaque coup)
         // Angle: PI/3 radians (environ 60 degrés, crée un cône d'attaque assez large)
-
-        super("Epee", 10, 100, 500, Math.PI / 3);
+        // Image: IMAGE_EPEE (chargée depuis les ressources)
+        // Ressources nécessaires: "Fer:10" (exige 10 unités de fer
+        super(
+                "Epee",
+                10,
+                100,
+                500,
+                Math.PI / 3,
+                IMAGE_EPEE,
+                (java.awt.List) List.of("Fer:10")
+        );
     }
 
     // Récupère la valeur des dégâts définis dans la classe parente
@@ -51,5 +59,15 @@ public class Epee extends Arme {
     @Override
     public String getNom() {
         return super.getNom();
+    }
+
+    @Override
+    public double getAngle() {
+        return super.getAngle();
+    }
+
+     @Override
+    public java.awt.List getRessourcesNecessaires() {
+         return super.getRessourcesNecessaires();
     }
 }

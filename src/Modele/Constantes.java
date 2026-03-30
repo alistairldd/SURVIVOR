@@ -141,6 +141,22 @@ public final class Constantes {
         }
     }
 
+    public static Image IMAGE_EPEE = null;
+    static {
+        try {
+            // Charger l'image de l'épée
+            IMAGE_EPEE = ImageIO.read(new File("src/images/Epee.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public static Image IMAGE_HACHE = null;
+    public static Image IMAGE_EPEE_LOURDE = null;
+    public static Image IMAGE_LANCE = null;
+
     public final static int LARGEUR_JOUEUR_SOURCE = 200;
     public final static int HAUTEUR_JOUEUR_SOURCE = 200;
     public static Image IMAGE_JOUEUR = null;
