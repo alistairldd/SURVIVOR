@@ -47,7 +47,7 @@ public class TenteDeSoin extends Batiment{
      * Logique de tir autonome de la tour.
      * Appelée en boucle par le ThreadBatiments, elle scanne les monstres proches,
      * vérifie son cooldown, et tire sur le premier ennemi à portée.
-     * @param joueur le jouer dans la porté.
+     * @param joueur le jouer dans la portée.
      */
     public void soigner(Joueur joueur) {
         joueur.soigner(this.heal);

@@ -168,4 +168,8 @@ public class UpdateJN {
         }
     }
 
+    public void donnerRecompense(int Gm){
+        modele.getJoueur().addPieces(Gm);
+
+    }
 }
