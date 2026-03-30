@@ -1,6 +1,8 @@
 package Modele;
 
-import java.awt.image.BufferedImage;
+import java.awt.*;
+import java.util.List;
+
 
 /**
  * Classe abstraite définissant la base de toute arme équipable par le joueur.
@@ -20,8 +22,9 @@ public abstract class Arme {
     // Angle d'ouverture du cône d'attaque (en radians)
     private double angle;
     // Image représentant l'arme (optionnel, peut être utilisé pour l'affichage)
-    private BufferedImage image;
-
+    private Image image;
+    // Liste des ressources nécessaires pour acheter / fabriquer l'arme
+    private List ressourcesNecessaires;
     /**
      * Constructeur de base d'une arme.
      * @param nom Le nom d'affichage de l'arme.
@@ -30,7 +33,7 @@ public abstract class Arme {
      * @param cadence Le temps de recharge ("cooldown") en millisecondes entre deux attaques.
      * @param angle L'ouverture du cône d'attaque en radians. Plus l'angle est grand, plus la zone balayée est large.
      */
-    public Arme(String nom, int degats, int portee, int cadence, double angle) {
+    public Arme(String nom, int degats, int portee, int cadence, double angle, Image image, List ressourcesNecessaires) {
         // Affectation des statistiques de base lors de la création de l'arme
         this.nom = nom;
         this.degats = degats;
@@ -38,6 +41,7 @@ public abstract class Arme {
         this.cadence = cadence;
         this.angle = angle;
         this.image = image;
+        this.ressourcesNecessaires = ressourcesNecessaires;
     }
 
     // Retourne la puissance d'attaque de l'arme
@@ -62,8 +66,11 @@ public abstract class Arme {
     public void setNom(String nom) {this.nom = nom;}
 
     // Retourne l'angle (la largeur) du cône de frappe en radians
-    public double getAngle() {
-        return angle;
-    }
+    public double getAngle() {return angle;}
 
+    // Retourne l'ensemble des ressources nécessaires pour acheter / fabriquer l'arme
+    public List<String> getRessourcesNecessaires() {return ressourcesNecessaires;}
+
+    // Retourne l'image de l'arme
+    public Image getImage() {return image;}
 }

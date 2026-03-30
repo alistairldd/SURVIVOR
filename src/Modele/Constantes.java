@@ -74,6 +74,12 @@ public final class Constantes {
     // Nombre total de ressources à générer simultanément sur la carte au lever du jour
     public static final int NB_RESSOURCES = 20;
 
+    /*** ---Prix --- ***/
+    // Prix des armes, armures, objets
+    public static final int prixArmureLegere = 10;
+    public static final int prixArmuresLourde = 20;
+
+
     /*** --- Threads --- ***/
     public static final int BAT_DELAY = 1000;
     public static final int TOWER_DELAY = 200; // Le thread tourne à 20 FPS pour vérifier les attaques
@@ -184,6 +190,25 @@ public final class Constantes {
         }
     }
 
+    public static Image IMAGE_EPEE = null;
+    static {
+        try {
+            // Charger l'image de l'épée
+            IMAGE_EPEE = ImageIO.read(new File("src/images/Epee.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static Image IMAGE_BATON = null;
+    public static Image IMAGE_HACHE = null;
+    public static Image IMAGE_EPEE_LOURDE = null;
+    public static Image IMAGE_LANCE = null;
+
+    public static Image IMAGE_ARMURE_LEGERE = null;
+    public static Image IMAGE_ARMURE_LOURDE = null;
+
     public final static int LARGEUR_JOUEUR_SOURCE = 200;
     public final static int HAUTEUR_JOUEUR_SOURCE = 200;
     public static Image IMAGE_JOUEUR = null;
@@ -191,8 +216,6 @@ public final class Constantes {
         try {
             // Charger l'image du joueur
             IMAGE_JOUEUR = ImageIO.read(new File("src/images/Joueur.png"));
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

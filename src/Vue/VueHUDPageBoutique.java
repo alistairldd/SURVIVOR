@@ -23,7 +23,7 @@ public class VueHUDPageBoutique extends JPanel {
         super.paintComponent(g);
 
         int y = 40;
-        y = vueHUDShop.dessiner(g, y, modele.getJoueur());
+        y = vueHUDShop.dessiner(g, y, modele);
 
         // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {

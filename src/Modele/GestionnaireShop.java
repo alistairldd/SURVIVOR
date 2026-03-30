@@ -12,6 +12,45 @@ public class GestionnaireShop {
 
     public GestionnaireShop(Modele modele) {
         this.modele = modele;
+        this.armes = new ArrayList<>();
+        this.armures = new ArrayList<>();
+        this.objets = new ArrayList<>();
+
+        // --- Initialisation des armes disponibles ---
+        Epee ep = new Epee();
+        armes.add(ep);
+
+        // --- Initialisation des armures disponibles ---
+
+        ArmureLegere al = new ArmureLegere();
+        armures.add(al);
+
+        // --- Initialisation des objets disponibles ---
+
+    }
+
+    public ArrayList<Arme> getArmes() {
+        return armes;
+    }
+
+    public ArrayList<Armure> getArmures() {
+        return armures;
+    }
+
+    public ArrayList<Objets> getObjets() {
+        return objets;
+    }
+
+    public void setArmes(ArrayList<Arme> armes) {
+        this.armes = armes;
+    }
+
+    public void setArmures(ArrayList<Armure> armures) {
+        this.armures = armures;
+    }
+
+    public void setObjets(ArrayList<Objets> objets) {
+        this.objets = objets;
     }
 
     // ACHAT D'ARME (Classe Arme)
