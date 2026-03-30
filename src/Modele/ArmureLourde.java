@@ -6,7 +6,7 @@ import java.util.List;
 import static Modele.Constantes.IMAGE_ARMURE_LOURDE;
 
 public class ArmureLourde extends Armure{
-    public ArmureLourde(String nom, int bonusVie){
+    public ArmureLourde(){
         super(
                 "Armure lourde",
                 50,

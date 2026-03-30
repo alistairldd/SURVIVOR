@@ -8,7 +8,7 @@ import java.awt.*;
 import static Modele.Constantes.IMAGE_ARMURE_LEGERE;
 
 public class ArmureLegere extends Armure{
-    public ArmureLegere(String nom, int bonusVie) {
+    public ArmureLegere() {
         super(
                 "Armure légère",
                 20,
