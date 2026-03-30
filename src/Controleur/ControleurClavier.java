@@ -70,7 +70,7 @@ public class ControleurClavier implements KeyListener {
             int page = (modele.getHudPageActuelle() % 3) + 1;
             modele.setHudPageActuelle(page);
         }
-
+/**
         // --- ACHATS DANS LA BOUTIQUE (Page 3) ---
         if (modele.getHudPageActuelle() == 3) {
             // Utilisation du pavé numérique pour dissocier l'achat de la navigation
@@ -82,7 +82,7 @@ public class ControleurClavier implements KeyListener {
                 case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
             }
         }
-
+**/
         // --- PASSER LA NUIT ---
         if (e.getKeyCode() == KeyEvent.VK_S) {
             modele.getUpdateJN().passerJour();

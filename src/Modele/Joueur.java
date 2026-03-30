@@ -26,9 +26,11 @@ public class Joueur implements Localisable {
     private static ArrayList<Ressource> inventaire;
     // Arme actuellement tenue en main
     private Arme armeEquipee;
+    // Booléen pour déterminer si le joueur a la pioche ou non
+    private boolean aPioche;
     // Référence au modèle global pour interagir avec l'environnement (monstres, cycle jour/nuit)
     private final Modele modele;
-    // (Non utilisé directement ici mais prévu pour l'architecture)
+    // (Non utilisé directement ici, mais prévu pour l'architecture)
     private ControleurSouris controleurSouris;
 
     // Attaque
@@ -63,6 +65,7 @@ public class Joueur implements Localisable {
         attack = ATTAQUE_BASE;
         // Initialisation de l'inventaire
         inventaire = new ArrayList<>();
+        this.aPioche = false;
         // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
         for (int i = 0; i < 10; i++) {
             inventaire.add(new Ressource(0)); // 0: Bois
@@ -70,6 +73,8 @@ public class Joueur implements Localisable {
             inventaire.add(new Ressource(2)); // 2: Fer
             inventaire.add(new Ressource(3)); // 3: Or
         }
+        // triche/test : tester l'achat shop
+        this.pieces=100;
         // Équipe l'arme de départ
         armeEquipee = new Epee();
         // Lie le joueur à son monde
@@ -130,6 +135,21 @@ public class Joueur implements Localisable {
     public Arme getArmeEquipee() {return armeEquipee;}
     // Setter pour l'arme équipée du joueur
     public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
+
+    public boolean hasPioche() {
+        return aPioche;
+    }
+
+    public void setaPioche(boolean aPioche) {
+        this.aPioche = aPioche;
+    }
+
+    public void soigner(int soin){
+        this.hp += soin;
+        if(this.hp > HP_JOUEUR){
+            this.hp = HP_JOUEUR;
+        }
+    }
 
     public ThreadReparation getThreadReparation() { return threadReparation; }
     /**
@@ -444,5 +464,9 @@ public class Joueur implements Localisable {
     // Getter pour le modèle (utile pour les vues qui ont besoin d'infos globales comme le cycle temporel)
     public Modele getModele() {
         return this.modele;
+    }
+
+    public void equiperArmure(Armure nouvelleArmure) {
+        setHpMax(getHpMax()+nouvelleArmure.getBonusVie());
     }
 }

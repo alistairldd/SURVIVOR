@@ -1,88 +1,49 @@
 package Modele;
-
 import Modele.Arme;
-import Modele.Joueur;
+
 import java.util.ArrayList;
-import static Modele.Constantes.*;
+
 
 public class GestionnaireShop {
     private Modele modele;
+    private ArrayList <Arme> armes;
+    private ArrayList<Armure> armures;
+    private ArrayList <Objets> objets;
 
     public GestionnaireShop(Modele modele) {
         this.modele = modele;
     }
 
-    // --- OBJETS DU SHOP ---
-
-    public void acheterEpeeAcieree() {
-        if (tenterAchat(PRIX_EPEE_ACIEREE[0], PRIX_EPEE_ACIEREE[1], PRIX_EPEE_ACIEREE[2], PRIX_EPEE_ACIEREE[3])) {
-            // Améliore les dégâts du joueur
-            Joueur j = modele.getJoueur();
-            j.setAttack(j.getAttack() + 5);
+    // ACHAT D'ARME (Classe Arme)
+    public void acheterArme(Arme nouvelleArme, int prixPieces) {
+        Joueur j = modele.getJoueur();
+        if (j.getPieces() >= prixPieces) {
+            j.retirerPieces(prixPieces);
+            j.setArmeEquipee(nouvelleArme); // Met à jour l'arme et ses stats
+        }else{
+            System.out.println("Pas assez de pièces pour acheter cette arme !");
         }
     }
 
-    public void acheterArmure() {
-        if (tenterAchat(PRIX_ARMURE[0], PRIX_ARMURE[1], PRIX_ARMURE[2], PRIX_ARMURE[3])) {
-            // Améliore les points de vie max
-            Joueur j = modele.getJoueur();
-            j.setHpMax(j.getHpMax() + 20);
+    // ACHAT D'ARMURE (Classe Armure)
+    public void acheterArmure(Armure nouvelleArmure, int prixPieces) {
+        Joueur j = modele.getJoueur();
+        if (j.getPieces() >= prixPieces) {
+            j.retirerPieces(prixPieces);
+            j.equiperArmure(nouvelleArmure); // Augmente PV Max ou Défense
+        }else{
+            System.out.println("Pas assez de pièces pour acheter cette armure !");
         }
     }
 
-    public void acheterArmureLourde() {
-        if (tenterAchat(PRIX_ARMURE_LOURDE[0], PRIX_ARMURE_LOURDE[1], PRIX_ARMURE_LOURDE[2], PRIX_ARMURE_LOURDE[3])) {
-            Joueur j = modele.getJoueur();
-            j.setHpMax(j.getHpMax() + 40);
-        }
-    }
+    // ACHAT D'OBJETS (Potions, Outils)
+    public void acheterItem(String nom, int prixPieces) {
+        Joueur j = modele.getJoueur();
+        if (j.getPieces() >= prixPieces) {
+            j.retirerPieces(prixPieces);
 
-    public void acheterEpee() {
-        if (tenterAchat(PRIX_EPEE_AMELIOREE[0], PRIX_EPEE_AMELIOREE[1], PRIX_EPEE_AMELIOREE[2], PRIX_EPEE_AMELIOREE[3])) {
-            Joueur j = modele.getJoueur();
-            Arme a = j.getArmeEquipee();
-            a.setNom("Épée améliorée");
-            a.setPortee(a.getPortee() + 10);
-            a.setDegats(a.getDegats()+10);
-            j.setArmeEquipee(a);
-        }
-    }
-
-    public void acheterPotionDeVie(){
-        if (tenterAchat(PRIX_POTION[0], PRIX_POTION[1], PRIX_POTION[2], PRIX_POTION[3])) {
-            Joueur j = modele.getJoueur();
-            j.setHp(Math.min(j.getHp() + 30, j.getHpMax()));
-        }
-    }
-
-
-    // --- LOGIQUE INTERNE ---
-
-    private boolean tenterAchat(int b, int p, int f, int o) {
-        ArrayList<Ressource> inv = modele.getJoueur().getInventaire();
-        if (aAssez(inv, b, p, f, o)) {
-            retirer(inv, b, p, f, o);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean aAssez(ArrayList<Ressource> inv, int b, int p, int f, int o) {
-        int[] counts = new int[4];
-        for (Ressource r : inv) counts[r.getType()]++;
-        return counts[0] >= b && counts[1] >= p && counts[2] >= f && counts[3] >= o;
-    }
-
-    private void retirer(ArrayList<Ressource> inv, int b, int p, int f, int o) {
-        int[] aRetirer = {b, p, f, o};
-        for (int type = 0; type < 4; type++) {
-            int compte = 0;
-            for (int i = inv.size() - 1; i >= 0 && compte < aRetirer[type]; i--) {
-                if (inv.get(i).getType() == type) {
-                    inv.remove(i);
-                    compte++;
-                }
-            }
+        }else{
+            System.out.println("Pas assez de pièces pour acheter cette objet !");
         }
     }
 }

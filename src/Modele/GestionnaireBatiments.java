@@ -16,6 +16,7 @@ public class GestionnaireBatiments {
         batiments.add(new Mine(this));
         batiments.add(new Tower(HAUTEUR_MAP/2, LARGEUR_MAP/3, this));
         batiments.get(batiments.size() - 1).setHp(10);
+        batiments.add(new TenteDeSoin(HAUTEUR_MAP/3, LARGEUR_MAP/2,this));
     }
 
     public ArrayList<Batiment> getBatiments() {
@@ -25,6 +26,8 @@ public class GestionnaireBatiments {
     public Monstre trouverCible(Tower t) {
         return m.batTrouverMonstre(t);
     }
+
+    public Joueur trouverJoueur(TenteDeSoin tente) { return m.batTrouverJoueur(tente); }
 
     public void clearBatiments() {
         // Vide l'ArrayList
