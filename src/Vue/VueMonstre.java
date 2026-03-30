@@ -2,8 +2,12 @@ package Vue;
 
 import Modele.GestionnaireMonstres;
 import Modele.Monstre;
+import Modele.Slime;
+import Modele.SlimeMutant;
 
 import java.awt.*;
+import java.util.Objects;
+
 import static Modele.Constantes.*;
 
 /**
@@ -40,29 +44,55 @@ public class VueMonstre {
             g2d.setColor(Color.RED);
             g2d.fillRect(posX - TAILLE_MINIMAP_MONSTRE / 2, posY - TAILLE_MINIMAP_MONSTRE / 2, TAILLE_MINIMAP_MONSTRE, TAILLE_MINIMAP_MONSTRE);
         } else {
-            // VUE PRINCIPALE : On dessine le Slime
-            Image imgSlime = monstre.getImage(); // On utilise le getter que nous avons créé
+            switch (monstre) {
+                case Slime slime -> {
 
-            if (imgSlime != null) {
-                // On centre l'image par rapport à posX et posY
-                int hauteurProp =  (int) (TAILLE_MONSTRE * ((double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
 
-                // Les variables pour l'animation
-                double anim = monstre.getAnimation();
-                int decalageY = (int) (-10 * Math.sin(anim)); // Décalage vertical pour l'affichage de l'image
-                int etirement = (int) (10 * Math.sin(anim)); // Étirement vertical pour tirer l'image vers le bas
+                    // VUE PRINCIPALE : On dessine le Slime
+                    Image imgSlime = slime.getImage(); // On utilise le getter que nous avons créé
+                    // On centre l'image par rapport à posX et posY
+                    int hauteurProp = (int) (TAILLE_MONSTRE * ((double) HAUTEUR_SLIME_SOURCE / LARGEUR_SLIME_SOURCE));
 
-                g2d.drawImage(imgSlime,
-                        posX - TAILLE_MONSTRE / 2,
-                        posY - hauteurProp / 2 + decalageY,
-                        TAILLE_MONSTRE,
-                        hauteurProp + etirement,
-                        null);
-            } else {
-                // Sécurité : si l'image n'est pas chargée, on met le carré rouge par défaut
-                g2d.setColor(Color.RED);
-                g2d.fillRect(posX - TAILLE_MONSTRE / 2, posY - TAILLE_MONSTRE / 2, TAILLE_MONSTRE, TAILLE_MONSTRE);
+                    // Les variables pour l'animation
+                    double anim = slime.getAnimation();
+                    int decalageY = (int) (-10 * Math.sin(anim)); // Décalage vertical pour l'affichage de l'image
+                    int etirement = (int) (10 * Math.sin(anim)); // Étirement vertical pour tirer l'image vers le bas
+
+                    g2d.drawImage(imgSlime,
+                            posX - TAILLE_MONSTRE / 2,
+                            posY - hauteurProp / 2 + decalageY,
+                            TAILLE_MONSTRE,
+                            hauteurProp + etirement,
+                            null);
+                }
+                case SlimeMutant slimeMutant -> {
+
+                    // VUE PRINCIPALE : On dessine le Slime
+                    Image imgSlime = slimeMutant.getImage(); // On utilise le getter que nous avons créé
+
+                    // On centre l'image par rapport à posX et posY
+                    int hauteurProp = (int) (TAILLE_MONSTRE * ((double) HAUTEUR_SLIME_MUTANT_SOURCE / LARGEUR_SLIME_MUTANT_SOURCE));
+
+                    // Les variables pour l'animation
+                    double anim = slimeMutant.getAnimation();
+                    int decalageY = (int) (-10 * Math.sin(anim)); // Décalage vertical pour l'affichage de l'image
+                    int etirement = (int) (10 * Math.sin(anim)); // Étirement vertical pour tirer l'image vers le bas
+
+                    g2d.drawImage(imgSlime,
+                            posX - TAILLE_MONSTRE / 2,
+                            posY - hauteurProp / 2 + decalageY,
+                            TAILLE_MONSTRE,
+                            hauteurProp + etirement,
+                            null);
+
+                }
+                default -> {
+                    // Sécurité : si l'image n'est pas chargée, on met le carré rouge par défaut
+                    g2d.setColor(Color.RED);
+                    g2d.fillRect(posX - TAILLE_MONSTRE / 2, posY - TAILLE_MONSTRE / 2, TAILLE_MONSTRE, TAILLE_MONSTRE);
+                }
             }
+
         }
 
         // Dessin du cercle de portée du monstre
