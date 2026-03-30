@@ -64,6 +64,7 @@ public abstract class Batiment extends Thread implements Localisable {
     // Permet de forcer une valeur spécifique de points de vie (ex: lors de dégâts subis)
     public void setHp(int hp) {
         this.hp = hp;
+        if (hp <= 0 ) setAttaquable(false);
     }
 
     public int getRange(){

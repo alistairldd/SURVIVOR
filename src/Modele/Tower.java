@@ -59,15 +59,18 @@ public class Tower extends Batiment{
 
     @Override
     public void run() {
-        while (this.hp > 0) {
-            try {
-                monstreCible = gBatiments.trouverCible(this);
-                if (monstreCible != null) {
-                    this.attaquer(monstreCible);}
-                Thread.sleep(TOWER_DELAY);
-            } catch (InterruptedException e) {}
+        while (!gBatiments.getPartieTerminee()) {
+            if (this.hp > 0) {
+                try {
+                    monstreCible = gBatiments.trouverCible(this);
+                    if (monstreCible != null) {
+                        this.attaquer(monstreCible);
+                    }
+                    Thread.sleep(TOWER_DELAY);
+                } catch (InterruptedException e) {
+                }
+            }
         }
-        super.setAttaquable(false);
     }
 
     @Override

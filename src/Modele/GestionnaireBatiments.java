@@ -34,4 +34,6 @@ public class GestionnaireBatiments {
     public HQ getHQ() {
         return hq;
     }
+
+    public boolean getPartieTerminee() { return m.getPartieTerminee();}
 }
