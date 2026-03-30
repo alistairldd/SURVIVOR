@@ -18,7 +18,7 @@ public class Hache extends Arme {
         super(
                 "Hache",
                 15,
-                80,
+                90,
                 700,
                 Math.PI * 2,
                 IMAGE_HACHE, // Image non définie pour l'instant

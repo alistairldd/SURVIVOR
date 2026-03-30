@@ -153,7 +153,7 @@ public class Vue extends JPanel {
             // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
             int resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
             int resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
-            VueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
+            vueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
         }
 
         // --- DESSIN DU JOUEUR ---
@@ -217,7 +217,7 @@ public class Vue extends JPanel {
         // PLUS BESOIN de calculs compliqués : on utilise leurs vraies coordonnées X, Y
         // La translation de la caméra s'occupe de les afficher au bon endroit sur l'écran
         for (Ressource r : modele.getUpdateJN().getRessources()) {
-            VueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
+            vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
         // 3. Dessiner le joueur (à sa vraie position X, Y dans le monde)

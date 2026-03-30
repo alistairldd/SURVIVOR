@@ -49,7 +49,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 5;
+    public final static int DUREE_CYCLE_JOUR = 50;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -219,8 +219,6 @@ public final class Constantes {
         try {
             // Charger l'image du joueur
             IMAGE_JOUEUR = ImageIO.read(new File("src/images/Joueur.png"));
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

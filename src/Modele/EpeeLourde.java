@@ -9,7 +9,7 @@ public class EpeeLourde extends Arme{
     public EpeeLourde() {
         super(
                 "Epee Lourde",
-                20,
+                50,
                 80,
                 1500,
                 Math.PI,
