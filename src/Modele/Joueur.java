@@ -76,7 +76,7 @@ public class Joueur implements Localisable {
         // triche/test : tester l'achat shop
         this.pieces=100;
         // Équipe l'arme de départ
-        armeEquipee = new Lance();
+        armeEquipee = new Hache();
         // Lie le joueur à son monde
         this.modele = modele;
     }

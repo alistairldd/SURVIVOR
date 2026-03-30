@@ -63,17 +63,17 @@ public class VueRessource {
                 g.fillOval(x, y, taille, taille);
                 break;
             case 1: // Pierre
-                g.drawImage(imagePierre, x, y, taille, taille, null);
+                g.drawImage(imagePierre, x-taille/2, y-taille/2, taille, taille, null);
                 break;
             case 2: // Fer
-                g.drawImage(imageFer, x, y, taille, taille, null);
+                g.drawImage(imageFer, x-taille/2, y-taille/2, taille, taille, null);
                 break;
             case 3: // Or
-                g.drawImage(imageOr, x, y, taille, taille, null);
+                g.drawImage(imageOr, x-taille/2, y-taille/2, taille, taille, null);
                 break;
             default:
                 g.setColor(Color.BLACK); // Couleur de secours
-                g.fillOval(x, y, taille, taille);
+                g.fillOval(x-taille/2, y-taille/2, taille, taille);
         }
 
 

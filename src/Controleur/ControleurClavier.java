@@ -36,6 +36,14 @@ public class ControleurClavier implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            if (modele.getPartieTerminee()) {
+                modele.reinitialiserJeu();
+                return; // On bloque tout le reste des actions (attaquer, construire, etc.)
+            }
+        }
+
         //System.out.println("Action : La touche E a été pressée !");
         if (e.getKeyCode() == KeyEvent.VK_E) {
             modele.getJoueur().ramasseRessource();
