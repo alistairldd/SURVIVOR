@@ -14,9 +14,9 @@ public abstract class Batiment extends Thread implements Localisable {
     // Points de vie actuels du bâtiment (diminue lors d'une attaque)
     protected int hp;
     // Rayon d'action dans lequel le joueur doit se trouver pour pouvoir interagir ou réparer
-    protected final int healingRange;
+    protected final int reparationRange;
 
-    private int range;
+    protected int range;
 
     protected boolean attaquable;
     // Taille physique d'encombrement du bâtiment
@@ -34,7 +34,7 @@ public abstract class Batiment extends Thread implements Localisable {
         this.x = x;
         this.y = y;
         // Fixe la zone d'interaction par défaut à 10 pixels
-        this.healingRange = HEALING_RANGE;
+        this.reparationRange = REPARATION_RANGE;
         this.range = range;
         this.start();
         this.attaquable = true;
@@ -58,7 +58,7 @@ public abstract class Batiment extends Thread implements Localisable {
 
     // Indique à quelle distance le joueur doit être pour initier une réparation
     public int getHealingRange() {
-        return healingRange;
+        return reparationRange;
     }
 
     // Permet de forcer une valeur spécifique de points de vie (ex: lors de dégâts subis)
