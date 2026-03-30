@@ -4,7 +4,8 @@ import java.awt.*;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static Modele.Constantes.IMAGES_SLIMES;
+import static Modele.Constantes.*;
+
 
 /**
  * Implémentation concrète d'un ennemi de base : le Slime.
@@ -45,6 +46,7 @@ public class Slime extends Monstre {
         // Récupère l'image 30x30 correspondante
         this.imageSlime = IMAGES_SLIMES.get(indexAleatoire); // Choix aléatoire d'une image de slime pour la variété visuelle
         this.gestionnaireMonstres = gestionnaireMonstres;
+        this.drop = SLIME_DROP; // Définit la récompense en pièces pour ce monstre
         this.start(); // Démarre le thread du monstre pour qu'il commence à agir immédiatement après sa création
     }
 
@@ -57,6 +59,7 @@ public class Slime extends Monstre {
     public int getMaxHp() {
         return 50; // PV maximum du Slime
     }
+
 
     @Override
     public void run() {
@@ -79,6 +82,7 @@ public class Slime extends Monstre {
                     // Demande la suppression visuelle et logique de la carte
                     gestionnaireMonstres.supprimerMonstre(this);
                     gestionnaireMonstres.incrementerMonstresMorts();
+                    gestionnaireMonstres.donnerRecompense(this.drop);
                     // Interrompt la boucle infinie pour terminer le thread proprement
                     break;
                 }

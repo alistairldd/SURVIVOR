@@ -185,6 +185,9 @@ public class Modele {
                     m.perdreHp( joueur.getArmeEquipee().getDegats()); // On applique les dégâts
                     // Affiche l'information dans la console pour debug
                     System.out.println("Monstre touché ! " + m.getID() + "  HP restant : " + m.getHp());
+                    if (m.getHp() <= 0) {
+                        joueur.ajouterPieces(m.getDrop()); // Ajout des pièces au joueur
+                        System.out.println("Monstre tué ! Gain de : " + m.getDrop() + " pièces.");}
                 }
             }
         }

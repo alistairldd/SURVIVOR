@@ -85,6 +85,14 @@ public class Joueur implements Localisable {
         return pieces;
     }
 
+    public void addPieces(int pieces) {
+        this.pieces += pieces;
+    }
+
+    public void acheter(int pieces ) {
+        this.pieces -= pieces;
+    }
+
     public void ajouterPieces(int montant) {
         this.pieces += montant;
     }

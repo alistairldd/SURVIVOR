@@ -2,6 +2,8 @@ package Modele;
 
 import java.awt.*;
 import java.util.ArrayList;
+import static Modele.Constantes.*;
+
 
 /* * classe représentant les monstres du jeu
  * elle peut être utilisée pour créer différents types de monstres avec des comportements variés
@@ -41,6 +43,9 @@ public abstract class Monstre extends Thread implements Localisable {
     // vitesse de déplacement du monstre en pixels par mouvement
     private double vitesse;
 
+    // nombre de pièces en récompense
+    protected int drop;
+
     // Indique si le monstre est actuellement en train d'attaquer (true) ou de se déplacer (false)
     private boolean estEnTrainDAttaquer = false;
 
@@ -63,7 +68,7 @@ public abstract class Monstre extends Thread implements Localisable {
         this.attack = attack;
         this.portee = portee;
         this.vitesse = vitesse;
-
+        this.drop = DEFAULT_DROP; // Valeur par défaut, peut être modifiée par les sous-classes
     }
 
     // Getter id
@@ -77,6 +82,8 @@ public abstract class Monstre extends Thread implements Localisable {
 
     // Getter HP max
     public int getMaxHp() { return maxHp; }
+
+    public boolean estVivant() { return hp > 0; }
 
     // Setter HP
     public void setHp(int hp) { this.hp = hp; }
@@ -99,6 +106,8 @@ public abstract class Monstre extends Thread implements Localisable {
     public double getY() { return y; }
 
     public Image getImage() { return null; } // Getter d'image par défaut, les sous-classes comme Slime le redéfiniront pour fournir leur propre sprite
+
+    public int getDrop() { return drop; }
 
     public void ajouterAnimation(double delta) { this.animation += delta; }
 

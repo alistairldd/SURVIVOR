@@ -115,9 +115,20 @@ public class GestionnaireMonstres {
             monstres.remove(m);
     }
 
+    public void donnerRecompense(int drop) {
+        updateJN.donnerRecompense(drop);
+    }
 
     public Localisable trouverCible(Localisable m){
         return updateJN.monstreTrouverCible(m);
     }
 
+    public Monstre getMonstreMort() {
+        for (Monstre m : monstres) {
+            if (m.getHp() <= 0) {
+                return m; // Retourne le premier monstre trouvé avec 0 PV ou moins
+            }
+        }
+        return null; // Si aucun monstre n'est mort, retourne null
+    }
 }
