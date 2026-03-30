@@ -47,6 +47,7 @@ public class Modele {
 
         // Instancie le joueur et lui donne la référence à ce Modèle
         this.joueur = new Joueur(this);
+        this.joueur.setHp(10);
 
         // Initialisation du jour et de la nuit
         // (Démarre automatiquement son propre thread interne)
@@ -199,6 +200,17 @@ public class Modele {
         return null;
     }
 
+    public Joueur batTrouverJoueur(Batiment b) {
+        // Calcule la distance directe (hypoténuse) entre le centre de la tour et le monstre
+        double distance = Math.hypot(joueur.getX() - b.getX(), joueur.getY() - b.getY());
+
+        // Si le monstre entre dans le périmètre de défense de la tour
+        if (distance <= b.getRange()) {
+            return joueur;
+        }
+        return null;
+    }
+
     // ==========================================================
     // --- GESTION DES RÉPARATIONS ---
     // ==========================================================
@@ -257,5 +269,6 @@ public class Modele {
 
         this.cibleAffichage = joueur;
     }
+
 
 }

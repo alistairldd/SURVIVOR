@@ -21,7 +21,7 @@ public final class Constantes {
     public static final int HP_HQ = 150;
     public static final int HP_MINE = 100;
     public static final int HP_DEFAUT = 100;
-    public static final int HEALING_RANGE = 50;
+    public static final int REPARATION_RANGE = 50;
 
     /*--- Tower ---*/
     // Constante : Points de dégâts fixes infligés à chaque tir
@@ -39,6 +39,10 @@ public final class Constantes {
     public static final int PROBA_FER = 25;   // 30% de chance d'obtenir du fer
     public static final int PROBA_OR = 5;    //
 
+    /*--- Tente de soin ---*/
+    public static final int HEALING_POWER = 5; // Nombre de PV restaurés par tir de la tente de soin
+    public static final int HP_TENTE = 100;
+    public static final int HEALING_RANGE = 100;
 
     /*** ---Cycle Jour/Nuit--- ***/
     // Constantes pour le cycle
@@ -78,6 +82,8 @@ public final class Constantes {
     // Délai en millisecondes entre chaque image (50ms = 20 images par seconde / FPS)
     public static final int REDESSINE_DELAY = 50;
 
+    public static final int HEALING_DELAY = 500;
+
     public static int REPARATION_DELAY = 50; // Pause de 50 millisecondes (0.05s) entre chaque soin
 
 
@@ -107,6 +113,7 @@ public final class Constantes {
 
     /*** --- Images --- ***/
     // Liste d'images pour l'affichage
+    // Liste pour les slimes
     public final static List<Image> IMAGES_SLIMES = new ArrayList<>();
     public final static int LARGEUR_SLIME_SOURCE = 724;
     public final static int HAUTEUR_SLIME_SOURCE = 492;
@@ -132,6 +139,42 @@ public final class Constantes {
 
                 // Ajoute à la liste
                 IMAGES_SLIMES.add(spriteRedimensionne);
+                ;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement des images !");
+        }
+    }
+
+    // Liste pour les slimes mutants
+
+    public final static List<Image> IMAGES_SLIMES_MUTANT = new ArrayList<>();
+    public final static int LARGEUR_SLIME_MUTANT_SOURCE = 700;
+    public final static int HAUTEUR_SLIME_MUTANT_SOURCE = 520;
+
+    static {
+        try {
+            // Charger la planche de slimes mutants
+            BufferedImage planche = ImageIO.read(new File("src/images/slime_mutant.png"));
+
+
+            int[] lesX = {150, 1038, 164, 1039, 166, 1022}; // X pour chaque slime
+            int[] lesY = {70, 68, 658, 656, 1276, 1270};   // Y pour chaque slime
+
+            for (int i = 0; i < 5; i++) {
+
+
+                // Découpe la sous-image
+                BufferedImage spriteSource = planche.getSubimage(lesX[i], lesY[i], LARGEUR_SLIME_MUTANT_SOURCE, HAUTEUR_SLIME_MUTANT_SOURCE);
+
+                // Redimensionne immédiatement en 100x100
+                // SCALE_SMOOTH donne le meilleur résultat visuel
+                Image spriteRedimensionne = spriteSource.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+
+                // Ajoute à la liste
+                IMAGES_SLIMES_MUTANT.add(spriteRedimensionne);
                 ;
             }
 

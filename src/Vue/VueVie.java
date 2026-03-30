@@ -2,12 +2,10 @@ package Vue;
 
 import Modele.Modele;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
+
 import java.io.IOException;
 
-import Modele.Localisable;
-import Modele.Monstre;
+import Modele.*;
 
 import javax.imageio.ImageIO;
 
@@ -42,15 +40,19 @@ public class    VueVie {
             Image img = null;
 
             color = Color.RED;
-            switch (nom) {
-                case "Joueur" -> {
+            switch (localisable) {
+                case Joueur ignored -> {
                     color = Color.GREEN;
                     img = IMAGE_JOUEUR;
                 }
-                case "Tour" -> color = Color.BLUE;
-                case "Slime" -> {
+                case Tower ignored -> color = Color.BLUE;
+                case Slime ignored -> {
                     Monstre m = (Monstre) localisable;
                     img = m.getImage(); // Ton getter qui renvoie le slime aléatoire
+                }
+                case SlimeMutant ignored -> {
+                    Monstre m = (Monstre) localisable;
+                    img = m.getImage(); // Ton getter qui renvoie le slime mutant
                 }
                 default -> {
                     color = Color.GRAY;

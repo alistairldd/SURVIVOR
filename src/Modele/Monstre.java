@@ -26,6 +26,9 @@ public abstract class Monstre extends Thread implements Localisable {
     // points de vie actuels du monstre (tombe à 0 = mort)
     private int hp;
 
+    // points de vie maximum du monstre (utile pour les soins ou les affichages de barre de vie)
+    private int maxHp;
+
     // points d'attaque du monstre (dégâts qu'il inflige au joueur ou aux bâtiments)
     private int attack;
 
@@ -49,13 +52,14 @@ public abstract class Monstre extends Thread implements Localisable {
     private double tempsDepuisDerniereAttaque = 0;
 
     // Constructeur de la classe Monstre, il initialise les données du monstre.
-    public Monstre(String nom, int hp, int attack, int portee, int vitesse) {
+    public Monstre(String nom, int maxHp, int attack, int portee, int vitesse) {
         // Assigne la valeur actuelle du compteur comme ID unique, puis incrémente le compteur de 1 pour le prochain monstre
         this.id = compteurID++; // Attribue un ID unique au monstre et incrémente le compteur
 
         // Initialisation des statistiques
         this.nom = nom;
-        this.hp = hp;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
         this.attack = attack;
         this.portee = portee;
         this.vitesse = vitesse;
@@ -70,6 +74,9 @@ public abstract class Monstre extends Thread implements Localisable {
 
     // Getter HP
     public int getHp() { return hp; }
+
+    // Getter HP max
+    public int getMaxHp() { return maxHp; }
 
     // Setter HP
     public void setHp(int hp) { this.hp = hp; }

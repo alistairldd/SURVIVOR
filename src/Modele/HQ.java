@@ -24,7 +24,7 @@ public class HQ extends Batiment {
 
     @Override
     public int getMaxHp() {
-        return 150; // PV maximum du HQ
+        return HP_HQ; // PV maximum du HQ
     }
 
     @Override

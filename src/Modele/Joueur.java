@@ -144,6 +144,13 @@ public class Joueur implements Localisable {
         this.aPioche = aPioche;
     }
 
+    public void soigner(int soin){
+        this.hp += soin;
+        if(this.hp > HP_JOUEUR){
+            this.hp = HP_JOUEUR;
+        }
+    }
+
     public ThreadReparation getThreadReparation() { return threadReparation; }
     /**
      * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte.
