@@ -47,7 +47,7 @@ public final class Constantes {
     // Durée fixe d'une phase jour en secondes réelles
     public final static int DUREE_CYCLE_JOUR = 5;
     // Durée fixe d'une phase nuit en secondes réelles
-    public final static int DUREE_CYCLE_NUIT = 60;
+    public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
     public final static int TICKS_PAR_CYCLE_JOUR = DUREE_CYCLE_JOUR * FPS;
     public final static int TICKS_PAR_CYCLE_NUIT = DUREE_CYCLE_NUIT * FPS;

@@ -30,6 +30,7 @@ public class ThreadReparation extends Thread {
             if (batiment.getHp() >= batiment.getMaxHp()) {
                 //System.out.println("Réparation terminée : Le bâtiment est à 100% !");
                 batiment.setHp(batiment.getMaxHp()); // Sécurité pour verrouiller au max
+                batiment.setAttaquable(true); // Rendre le bâtiment à nouveau attaquable une fois réparé
                 break; // Casse la boucle, fin du thread
             }
 
