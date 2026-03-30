@@ -82,6 +82,10 @@ public class GestionnaireMonstres {
                     // Ajoute un nouveau Slime à la liste aux coordonnées calculées
                     monstres.add(new Slime(x,y, this));
                     break;
+                case 1:
+                    // Ajoute un nouveau Slime Mutant à la liste aux coordonnées calculées
+                    monstres.add(new SlimeMutant(x,y, this));
+                    break;
                 default:
                     // Par défaut (si type = 1 ou 2), crée un Slime pour le moment
                     monstres.add(new Slime(x,y, this)); // Par défaut, retourne un Slime

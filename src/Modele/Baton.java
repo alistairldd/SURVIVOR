@@ -2,6 +2,7 @@ package Modele;
 
 import java.util.List;
 
+import static Modele.Constantes.IMAGE_BATON;
 import static Modele.Constantes.IMAGE_EPEE;
 
 /**
@@ -9,7 +10,7 @@ import static Modele.Constantes.IMAGE_EPEE;
  * Elle hérite de la classe abstraite Arme et définit ses propres statistiques
  * (dégâts moyens, courte portée, balayage large, cadence modérée).
  */
-public class Epee extends Arme {
+public class Baton extends Arme {
 
     /**
      * Constructeur par défaut de l'Épée.
@@ -17,7 +18,7 @@ public class Epee extends Arme {
      */
 
 
-    public Epee() {
+    public Baton() {
         // Appelle le constructeur de "Arme" avec les valeurs :
         // Nom: "Epee"
         // Dégâts: 10
@@ -27,12 +28,12 @@ public class Epee extends Arme {
         // Image: IMAGE_EPEE (chargée depuis les ressources)
         // Ressources nécessaires: "Fer:10" (exige 10 unités de fer
         super(
-                "Epee",
-                15,
+                "Baton",
+                10,
                 100,
                 500,
                 Math.PI / 3,
-                IMAGE_EPEE,
+                IMAGE_BATON,
                 List.of("Fer:10")
         );
     }
@@ -66,8 +67,8 @@ public class Epee extends Arme {
         return super.getAngle();
     }
 
-     @Override
+    @Override
     public List<String> getRessourcesNecessaires() {
-         return super.getRessourcesNecessaires();
+        return super.getRessourcesNecessaires();
     }
 }
