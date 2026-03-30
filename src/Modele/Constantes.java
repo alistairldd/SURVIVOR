@@ -216,8 +216,6 @@ public final class Constantes {
         try {
             // Charger l'image du joueur
             IMAGE_JOUEUR = ImageIO.read(new File("src/images/Joueur.png"));
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

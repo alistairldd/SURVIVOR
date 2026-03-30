@@ -35,7 +35,7 @@ public class VueArme {
     // Flag pour afficher ou non la portée de l'arme (cône d'attaque)
     private boolean affPortee = false; // affiche la portée de l'arme (c
 
-    private BufferedImage image;
+    private Image image;
 
     // Constructeur de la classe VueArme
     public VueArme(ControleurSouris controleurSouris, Vue vue, Modele modele) {
@@ -44,14 +44,7 @@ public class VueArme {
         this.vue = vue;
 
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
-        // Charger l'image de l'arme depuis le disque dur (optionnel, peut être utilisé pour un affichage plus détaillé)
-        try {
-            image = ImageIO.read(new File("src/images/"+ armeEquipee.getNom()  +".png"));
-        } catch (java.io.IOException e) {
-            // Si le fichier n'est pas trouvé, on peut choisir de ne pas afficher d'image ou de dessiner une forme générique à la place
-            e.printStackTrace();
-            System.out.println("Erreur : Impossible de charger l'image de l'arme." +armeEquipee);
-        }
+        image = armeEquipee.getImage();
 
     }
 
@@ -149,20 +142,29 @@ public class VueArme {
             g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle))));
             g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle + arcAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle + arcAngle))));
         }
-        g2d.rotate( angleOffsetAnimation); // Applique la rotation d'animation
+        g2d.rotate(angleOffsetAnimation); // Applique la rotation d'animation
         // Dessiner l'arme (couleur générique grise)
         g2d.setColor(Color.GRAY);
-        // 3. On dessine un simple rectangle horizontal.
+
         // Puisque le calque a été tourné, ce rectangle pointera naturellement vers la souris.
         // On le décale de "rayon" sur l'axe X pour l'éloigner du corps, et on centre son épaisseur (Y = -TAILLE/2)
         // g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE); ça c'était pour le test au début
 
-        int offsetJoueur = -LARGEUR_TOP_JOUEUR_SOURCE/2;
+        int offsetJoueur = -LARGEUR_TOP_JOUEUR_SOURCE / 2;
         g2d.drawImage(IMAGE_TOP_JOUEUR, offsetJoueur, offsetJoueur, 50, 50, null);
-        g2d.drawImage(image, 10, -12, 90,25, null);
 
-        // Libère la mémoire et annule les translations/rotations pour les prochains dessins
-        g2d.dispose();
+        if (image == null) {
+            // Si l'image de l'arme n'est pas chargée, dessiner un rectangle rouge pour indiquer une erreur
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(rayon, -TAILLE / 2, portee - rayon, TAILLE);
+        } else {
+            // Sinon, dessiner l'image de l'arme à la place du rectangle
+
+            g2d.drawImage(image, 10, -12, 90, 25, null);
+
+            // Libère la mémoire et annule les translations/rotations pour les prochains dessins
+            g2d.dispose();
+        }
     }
 
 }

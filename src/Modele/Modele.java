@@ -156,29 +156,33 @@ public class Modele {
         List<Monstre> monstres = updateJN.getMonstres();
 
 
+        double dirX = Math.cos(angleAttaque);
+        double dirY = Math.sin(angleAttaque);
+
         // Parcourir la liste des monstres du modèle et appliquer les dégâts à ceux qui sont dans le cône d'attaque de l'arme équipée
         for (Monstre m : monstres) {
 
+            // Calculer le vecteur entre le joueur et ce monstre (composantes X et Y)
+            double vecteurMonstreX = m.getX() - positionX;
+            double vecteurMonstreY = m.getY() - positionY;
+
             // Calculer la distance euclidienne directe (hypoténuse) entre le joueur et ce monstre
-            double distance = Math.hypot(m.getX() - positionX, m.getY() - positionY);
+            double distance = Math.sqrt(vecteurMonstreX * vecteurMonstreX + vecteurMonstreY * vecteurMonstreY);
 
             // 1ère vérification : Le monstre est-il suffisamment proche ?
-            if (distance <= portee) {
-                // Calculer l'angle absolu entre le joueur et la position exacte du monstre
-                double angleMonstre = Math.atan2(m.getY() - positionY, m.getX() - positionX);
+            if (distance >= 0 && distance <= portee) {
 
-                // Calculer la différence entre la direction visée par le joueur et la direction réelle du monstre
-                double diffAngle = angleMonstre - angleAttaque;
+                double normMonstreX = vecteurMonstreX / distance;
+                double normMonstreY = vecteurMonstreY / distance;
 
-                // Normaliser cette différence angulaire pour qu'elle reste toujours comprise entre -PI et PI
-                // (Évite les bugs si l'angle fait plus d'un tour complet, ex: passage de 359° à 1°)
-                diffAngle = Math.atan2(Math.sin(diffAngle), Math.cos(diffAngle));
+                double produitScalaire = (dirX * normMonstreX) + (dirY * normMonstreY);
 
+                double seuilCosinus = Math.cos(angle / 2.0);
 
                 // 2ème vérification : La différence d'angle est-elle plus petite que la moitié de la largeur du cône de l'arme ?
-                if (Math.abs(diffAngle) <= angle / 2) {
+                if (produitScalaire >= seuilCosinus) {
                     // Les deux conditions sont remplies : le monstre est touché !
-                    m.perdreHp( joueur.getAttack()); // On applique les dégâts
+                    m.perdreHp( joueur.getArmeEquipee().getDegats()); // On applique les dégâts
                     // Affiche l'information dans la console pour debug
                     System.out.println("Monstre touché ! " + m.getID() + "  HP restant : " + m.getHp());
                 }
