@@ -67,6 +67,7 @@ public class Tower extends Batiment{
                 Thread.sleep(TOWER_DELAY);
             } catch (InterruptedException e) {}
         }
+        super.setAttaquable(false);
     }
 
     @Override

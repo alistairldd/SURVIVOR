@@ -78,4 +78,10 @@ public abstract class Batiment extends Thread implements Localisable {
     public boolean isAttaquable() {
         return attaquable;
     }
+
+    public void setAttaquable(boolean attaquable) {
+        this.attaquable = attaquable;
+    }
+
+     // Méthode abstraite pour récupérer les points de vie maximum du bâtiment (doit être implémentée par les sous-classes)
 }

@@ -75,7 +75,7 @@ public class Slime extends Monstre {
 
                 this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this), dt);
                 Thread.sleep(50); // Petite pause pour ne pas surcharger le processeur
-
+                System.out.println("aaaa");
                 if (this.getHp() <= 0) {
                     // Demande la suppression visuelle et logique de la carte
                     gestionnaireMonstres.supprimerMonstre(this);
@@ -96,4 +96,6 @@ public class Slime extends Monstre {
             }
         }
     }
+
+
 }
