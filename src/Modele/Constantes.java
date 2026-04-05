@@ -74,6 +74,11 @@ public final class Constantes {
     // Nombre total de ressources à générer simultanément sur la carte au lever du jour
     public static final int NB_RESSOURCES = 20;
 
+    // Rayon d'attraction pour le ramassage automatique des ressources
+    public static final int RAYON_RAMASSAGE = 150;
+    // Vitesse de déplacement des ressources lors de leur aspiration vers le joueur
+    public static final int VITESSE_ASPIRATION = 5;
+
     /*** ---Prix --- ***/
     // Prix des armes, armures, objets
     public static final int prixArmureLegere = 10;

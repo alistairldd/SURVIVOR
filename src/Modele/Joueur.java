@@ -30,9 +30,6 @@ public class Joueur implements Localisable {
     private boolean aPioche;
     // Référence au modèle global pour interagir avec l'environnement (monstres, cycle jour/nuit)
     private final Modele modele;
-    // (Non utilisé directement ici, mais prévu pour l'architecture)
-    private ControleurSouris controleurSouris;
-
     // Attaque
     // Chronomètre interne pour gérer la cadence de tir (cooldown)
     private long dernierTempsAttaque = 0;
