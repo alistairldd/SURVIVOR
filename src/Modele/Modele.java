@@ -252,25 +252,35 @@ public class Modele {
         System.out.println("--- RELANCE DE LA PARTIE ---");
 
         // 1. ARRÊTER LES ANCIENS THREADS (OBLIGATOIRE !)
-        // Si on ne fait pas ça, le jeu va ralentir à chaque partie et planter
+        // On coupe le chronomètre principal
         if (leCycleJourNuit != null && leCycleJourNuit.isAlive()) {
             leCycleJourNuit.interrupt();
         }
-        for (Monstre m : updateJN.getMonstres()) {
-            if (m.isAlive()) m.interrupt();
+
+        // On détruit les threads des monstres encore en vie
+        if (updateJN != null && updateJN.getMonstres() != null) {
+            for (Monstre m : updateJN.getMonstres()) {
+                if (m != null && m.isAlive()) {
+                    m.interrupt();
+                }
+            }
         }
-        for (Batiment b : gestionnaireBatiments.getBatiments()) {
-            if (b.isAlive()) b.interrupt();
+
+        // On détruit tous les threads des bâtiments grâce à notre nouvelle méthode sécurisée
+        if (gestionnaireBatiments != null) {
+            gestionnaireBatiments.stopperTousLesThreads();
         }
 
         // 2. Réinitialiser l'état du jeu
         this.partieTerminee = false;
         this.hudPageActuelle = 1;
 
-        // 2. RECRÉER TOUS LES GESTIONNAIRES À NEUF
+        // 3. RECRÉER TOUS LES GESTIONNAIRES À NEUF
         this.joueur = new Joueur(this);
+
         this.updateJN = new UpdateJN(this);
         this.leCycleJourNuit = new CycleJourNuit(this.updateJN); // Relance le temps
+
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
 

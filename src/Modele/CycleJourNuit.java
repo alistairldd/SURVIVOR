@@ -93,6 +93,8 @@ public class CycleJourNuit extends Thread {
             } catch (InterruptedException e) {
                 // Capture et affiche l'erreur si le thread est interrompu brutalement
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
         }
     }
