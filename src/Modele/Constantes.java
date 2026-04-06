@@ -75,9 +75,9 @@ public final class Constantes {
     public static final int NB_RESSOURCES = 20;
 
     // Rayon d'attraction pour le ramassage automatique des ressources
-    public static final int RAYON_RAMASSAGE = 150;
+    public static final int RAYON_RAMASSAGE = 70;
     // Vitesse de déplacement des ressources lors de leur aspiration vers le joueur
-    public static final int VITESSE_ASPIRATION = 5;
+    public static final int VITESSE_RAMASSAGE = 10;
 
     /*** ---Prix --- ***/
     // Prix des armes, armures, objets

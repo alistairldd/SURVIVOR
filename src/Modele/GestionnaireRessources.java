@@ -63,7 +63,7 @@ public class GestionnaireRessources {
             double distance = Math.hypot(diffX, diffY);
 
             // Si le joueur est assez proche, la ressource commence à être aspirée
-            if (distance <= 150) {
+            if (distance <= RAYON_RAMASSAGE) {
                 r.setEstAspiree(true);
             }
 

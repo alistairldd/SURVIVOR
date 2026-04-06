@@ -105,7 +105,7 @@ public class Modele {
      * Re-projette un nombre d'un intervalle de référence vers un nouvel intervalle.
      * Utilisé notamment par la Vue pour calculer les coordonnées sur la Minimap.
      */
-    public int map(int debut, int fin, int valDebut, int valFin, int val){
+    public double map(int debut, int fin, double valDebut, double valFin, double val){
         // Produit en croix pour adapter l'échelle
         return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
     }

@@ -152,30 +152,30 @@ public class Vue extends JPanel {
         // --- DESSIN DES RESSOURCES ---
         for (Ressource r : modele.getUpdateJN().getRessources()) {
             // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
-            double resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, (int) r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
-            double resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, (int) r.getPositionY()); // idem
+            double resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
+            double resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
             vueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
         }
 
         // --- DESSIN DU JOUEUR ---
         g2d.setColor(Color.BLACK);
         Joueur joueur = modele.getJoueur();
-        int posX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-5, (int) joueur.getX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
-        int posY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-5, (int) joueur.getY()); // idem
+        int posX = (int) modele.map (0, LARGEUR_MAP, 0, tailleMinimap-5, joueur.getX()); // Convertit les coordonnées du joueur pour les adapter à la mini carte
+        int posY = (int) modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-5, joueur.getY()); // idem
         // Dessine un petit point noir pour le joueur
         g2d.fillOval(posX,posY, 5, 5);
 
         // --- DESSIN DES BÂTIMENTS ---
         for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
-            int batX = modele.map(0, LARGEUR_MAP, 0, tailleMinimap - 4, (int) b.getX());
-            int batY = modele.map(0, HAUTEUR_MAP, 0, tailleMinimap - 4, (int) b.getY());
+            int batX = (int) modele.map(0, LARGEUR_MAP, 0, tailleMinimap - 4, b.getX());
+            int batY = (int) modele.map(0, HAUTEUR_MAP, 0, tailleMinimap - 4, b.getY());
             VueBatiment.dessinerBatiment(g2d, b, batX, batY, true);
         }
 
         // --- DESSIN DES MONSTRES ---
         for (Monstre m : modele.getUpdateJN().getMonstres()) {
-            int monstreX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, (int) m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
-            int monstreY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, (int) m.getY()); // idem
+            int monstreX = (int) modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, m.getX()); // Convertit les coordonnées du monstre pour les adapter à la mini carte
+            int monstreY = (int) modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, m.getY()); // idem
             vueMonstre.dessiner(g2d, m, monstreX, monstreY, true);
         }
 

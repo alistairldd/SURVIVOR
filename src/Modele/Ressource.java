@@ -67,13 +67,13 @@ public class Ressource {
 
         if (distance > 0) {
             // Si la distance est très petite, on la "téléporte" sur la cible pour éviter les tremblements
-            if (distance < VITESSE_ASPIRATION) {
+            if (distance < VITESSE_RAMASSAGE) {
                 this.positionX = cible.getX();
                 this.positionY = cible.getY();
             } else {
                 // Déplacement vectoriel classique
-                this.positionX += (diffX / distance) * VITESSE_ASPIRATION;
-                this.positionY += (diffY / distance) * VITESSE_ASPIRATION;
+                this.positionX += (diffX / distance) * VITESSE_RAMASSAGE;
+                this.positionY += (diffY / distance) * VITESSE_RAMASSAGE;
             }
         }
     }
