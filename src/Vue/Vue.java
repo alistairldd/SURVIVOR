@@ -136,6 +136,7 @@ public class Vue extends JPanel {
         // On peut aussi dessiner une bordure autour de la mini carte pour la différencier du
         // reste de l'interface.
 
+
         // Taille en pixels du radar affiché à l'écran
         int tailleMinimap = 300;
 
@@ -151,8 +152,8 @@ public class Vue extends JPanel {
         // --- DESSIN DES RESSOURCES ---
         for (Ressource r : modele.getUpdateJN().getRessources()) {
             // Utilise la fonction map() pour mettre à l'échelle : 3000 -> 300
-            int resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
-            int resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, r.getPositionY()); // idem
+            double resX = modele.map (0, LARGEUR_MAP, 0, tailleMinimap-4, (int) r.getPositionX()); // Convertit les coordonnées de la ressource pour les adapter à la mini carte
+            double resY = modele.map (0, HAUTEUR_MAP, 0, tailleMinimap-4, (int) r.getPositionY()); // idem
             vueRessource.dessinerRessource(g2d, r, resX, resY, true); // Dessine la ressource sur la mini carte
         }
 

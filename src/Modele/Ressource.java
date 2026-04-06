@@ -4,61 +4,77 @@ import static Modele.Constantes.*;
 
 /**
  * Représente un matériau ramassable sur la carte (Bois, Pierre, Fer, Or).
- * Gère sa propre logique d'apparition aléatoire tout en s'assurant de ne pas
- * spawn hors des limites ou trop près des bords de l'écran.
+ * Gère sa propre logique d'apparition aléatoire et son animation de déplacement
+ * (aspiration) vers le joueur.
  */
 public class Ressource {
 
-    // Coordonnée horizontale sur la carte
-    private int positionX;
-    // Coordonnée verticale sur la carte
-    private int positionY;
+    // Coordonnées en double pour permettre une interpolation fluide lors de l'aspiration
+    private double positionX;
+    private double positionY;
     // Identifiant définissant la nature de la ressource (bois, pierre...)
     private int type;
+    // Indique si la ressource est en train de voler vers le joueur
+    private boolean estAspiree;
 
     /**
      * Constructeur par défaut utilisé pour la génération naturelle sur la carte.
      * Calcule automatiquement des coordonnées aléatoires sécurisées.
      */
     public Ressource() {
-        /*
-        constructeur de base de ressource
-        on génère une ressource à une position aléatoire sur la carte, en évitant les bords
-        on appelle ce constructeur dans la méthode de generation des ressources
-         */
-
-        // Marge de sécurité (offset) basée sur la taille du joueur pour éviter de coller les objets au bord absolu du monde
+        // Marge de sécurité (offset) basée sur la taille du joueur
         int offsetDecale = 10 + R_TAILLE / 2;
 
-        // Formule de génération : Marge + Nombre aléatoire compris entre 0 et (Taille totale - 2 fois la marge)
-        this.positionX = offsetDecale + (int) (Math.random() * (LARGEUR_MAP - 2 * (double) offsetDecale)); // On ajoute un offset pour éviter que les ressources soient générées trop près des bords de la carte
-        this.positionY = offsetDecale + (int) (Math.random() * (HAUTEUR_MAP - 2 * (double) offsetDecale)); // Idem
+        // Formule de génération : Marge + Nombre aléatoire
+        this.positionX = offsetDecale + (Math.random() * (LARGEUR_MAP - 2 * offsetDecale));
+        this.positionY = offsetDecale + (Math.random() * (HAUTEUR_MAP - 2 * offsetDecale));
 
         // Choisit un index aléatoire parmi les 4 types de ressources disponibles
         int index = (int) (Math.random() * TYPE_RESSOURCE.length);
-        // Assigne ce type à la ressource nouvellement créée
         this.type = TYPE_RESSOURCE[index];
+        this.estAspiree = false;
     }
 
     /**
      * Constructeur spécifique utilisé pour créer des ressources directement dans l'inventaire
-     * (sans position physique sur la carte). Utilisé pour le debug ou le loot.
-     * @param i Le type de ressource forcé (0, 1, 2 ou 3).
+     * ou larguées par les monstres.
+     * @param i Le type de ressource forcé.
      */
-    public  Ressource(int i) {
-        // Force le type
+    public Ressource(int i) {
         this.type = i;
-        // Position inutile puisqu'elle n'est pas sur la carte, on la fixe à 0
         this.positionX = 0;
         this.positionY = 0;
+        this.estAspiree = false;
     }
 
-
-
-    // Récupère la position horizontale
-    public int getPositionX() { return positionX; }
-    // Récupère la position verticale
-    public int getPositionY() { return positionY; }
-    // Récupère l'identifiant du matériau
+    public double getPositionX() { return positionX; }
+    public double getPositionY() { return positionY; }
     public int getType() { return type; }
+
+    public boolean isEstAspiree() { return estAspiree; }
+    public void setEstAspiree(boolean estAspiree) { this.estAspiree = estAspiree; }
+
+    /**
+     * Calcule le vecteur directionnel vers le joueur et déplace la ressource
+     * pas à pas pour créer l'effet d'aspiration visuelle.
+     */
+    public void mettreAJourPosition(Localisable cible) {
+        if (!estAspiree) return;
+
+        double diffX = cible.getX() - this.positionX;
+        double diffY = cible.getY() - this.positionY;
+        double distance = Math.hypot(diffX, diffY);
+
+        if (distance > 0) {
+            // Si la distance est très petite, on la "téléporte" sur la cible pour éviter les tremblements
+            if (distance < VITESSE_ASPIRATION) {
+                this.positionX = cible.getX();
+                this.positionY = cible.getY();
+            } else {
+                // Déplacement vectoriel classique
+                this.positionX += (diffX / distance) * VITESSE_ASPIRATION;
+                this.positionY += (diffY / distance) * VITESSE_ASPIRATION;
+            }
+        }
+    }
 }

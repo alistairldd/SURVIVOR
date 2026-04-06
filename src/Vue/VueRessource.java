@@ -30,16 +30,15 @@ public class VueRessource {
 
     }
 
-    // MODIFICATION : On ajoute les paramètres 'Ressource r', 'x', et 'y'
     /**
-     * Dessine l'objet ressource (cercle coloré).
+     * Dessine l'objet ressource (cercle coloré ou sprite).
      * @param g Contexte graphique principal ou minimap.
      * @param r L'instance de la ressource contenant son ID (Type).
-     * @param x Coordonnée absolue ou mise à l'échelle.
-     * @param y Coordonnée absolue ou mise à l'échelle.
-     * @param minimap Définit si l'objet doit être miniaturisé.
+     * @param x Coordonnée X en double (sera castée en int pour le dessin).
+     * @param y Coordonnée Y en double (sera castée en int pour le dessin).
+     * @param minimap Définit si l'objet doit être dessiné en taille réduite.
      */
-    public void dessinerRessource(Graphics g, Ressource r, int x, int y, boolean minimap) {
+    public void dessinerRessource(Graphics g, Ressource r, double x, double y, boolean minimap) {
         // Dictionnaire visuel : associe un type (0, 1, 2, 3) à un code couleur précis (RGB)
         // 0 (Bois) -> Marron
         // 1 (Pierre) -> Gris clair
@@ -56,27 +55,26 @@ public class VueRessource {
 
         // Récupère l'identifiant du matériau
         int type = r.getType();
+
+        // Transtypage des coordonnées pour le moteur de rendu graphique
+        int drawX = (int) x;
+        int drawY = (int) y;
+
         // On dessine aux coordonnées x, y fournies par la Vue principale (qui a déjà appliqué la translation de Caméra)
         switch (type) {
             case 0: // Bois
                 g.setColor(new Color(139, 69, 19)); // Marron
-                g.fillOval(x, y, taille, taille);
+                g.fillOval(drawX, drawY, taille, taille);
                 break;
             case 1: // Pierre
-                g.drawImage(imagePierre, x-taille/2, y-taille/2, taille, taille, null);
+                g.drawImage(imagePierre, drawX-taille/2, drawY-taille/2, taille, taille, null);
                 break;
             case 2: // Fer
-                g.drawImage(imageFer, x-taille/2, y-taille/2, taille, taille, null);
+                g.drawImage(imageFer, drawX-taille/2, drawY-taille/2, taille, taille, null);
                 break;
             case 3: // Or
-                g.drawImage(imageOr, x-taille/2, y-taille/2, taille, taille, null);
+                g.drawImage(imageOr, drawX-taille/2, drawY-taille/2, taille, taille, null);
                 break;
-            default:
-                g.setColor(Color.BLACK); // Couleur de secours
-                g.fillOval(x-taille/2, y-taille/2, taille, taille);
         }
-
-
-
     }
 }

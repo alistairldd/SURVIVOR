@@ -156,6 +156,10 @@ public class Joueur implements Localisable {
         }
     }
 
+    public void ajouterAInventaire(Ressource r) {
+        inventaire.add(r);
+    }
+
     public ThreadReparation getThreadReparation() { return threadReparation; }
     /**
      * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte.

@@ -44,10 +44,10 @@ public class ControleurClavier implements KeyListener {
             }
         }
 
-        //System.out.println("Action : La touche E a été pressée !");
+        /*** System.out.println("Action : La touche E a été pressée !");
         if (e.getKeyCode() == KeyEvent.VK_E) {
             modele.getJoueur().ramasseRessource();
-        }
+        }***/
 
         if (e.getKeyCode() == KeyEvent.VK_T) {
             modele.getJoueur().construireTour();

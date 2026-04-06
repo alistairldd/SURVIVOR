@@ -84,7 +84,8 @@ public class UpdateJN {
     // Méthode à boucler le jour
     // Prévue pour accueillir des actions continues pendant la journée (croissance de plantes, etc.)
     public void updateJour() {
-
+        // Met à jour la position des ressources (aspiration vers le joueur)
+        monGestionnaireRessources.actualiserAspiration(modele.getJoueur());
     }
 
     // Méthode à boucler la nuit
@@ -92,9 +93,10 @@ public class UpdateJN {
         // Fin de partie si le joueur meurt ou si le HQ n'a plus de vie
         if (modele.getJoueur().getHp() <= 0 || modele.getGestionnaireBatiments().getHQ().getHp() <= 0) {
             modele.declencherGameOver();
-
         }
 
+        // Met à jour la position des ressources (aspiration des drops de monstres la nuit)
+        monGestionnaireRessources.actualiserAspiration(modele.getJoueur());
     }
 
     public Modele getModele() {

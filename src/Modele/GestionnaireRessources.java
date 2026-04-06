@@ -1,7 +1,7 @@
 package Modele;
 
 import java.util.ArrayList;
-
+import static Modele.Constantes.*;
 /**
  * Classe dédiée à la gestion centralisée des ressources
  */
@@ -48,4 +48,40 @@ public class GestionnaireRessources {
         ressources.clear();
     }
 
+    /**
+     * Met à jour la position des ressources (aspiration) et gère le ramassage.
+     * @param joueur Le joueur qui attire les ressources.
+     */
+    public void actualiserAspiration(Joueur joueur) {
+        // Parcours inversé pour pouvoir supprimer des éléments de la liste en toute sécurité
+        for (int i = ressources.size() - 1; i >= 0; i--) {
+            Ressource r = ressources.get(i);
+
+            // Calcul de la distance entre le joueur et la ressource
+            double diffX = joueur.getX() - r.getPositionX();
+            double diffY = joueur.getY() - r.getPositionY();
+            double distance = Math.hypot(diffX, diffY);
+
+            // Si le joueur est assez proche, la ressource commence à être aspirée
+            if (distance <= 150) {
+                r.setEstAspiree(true);
+            }
+
+            // Si la ressource est en train de voler vers le joueur
+            if (r.isEstAspiree()) {
+                r.mettreAJourPosition(joueur);
+
+                // Recalcul de la distance après le déplacement vectoriel
+                diffX = joueur.getX() - r.getPositionX();
+                diffY = joueur.getY() - r.getPositionY();
+                distance = Math.hypot(diffX, diffY);
+
+                // Si la ressource touche le centre du joueur (collision validée)
+                if (distance <= 10) {
+                    joueur.ajouterAInventaire(r); // Ajout au sac à dos
+                    ressources.remove(i);         // Disparition de la carte
+                }
+            }
+        }
+    }
 }
