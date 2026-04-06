@@ -62,10 +62,10 @@ public class ControleurClavier implements KeyListener {
             modele.getJoueur().recolterMine();
         }
 
-        // --- RÉPARATION DES BÂTIMENTS ---
+        /** --- RÉPARATION DES BÂTIMENTS ---
         if (e.getKeyCode() == KeyEvent.VK_F) {
             modele.getJoueur().lancerReparation();
-        }
+        }**/
 
         // --- NAVIGATION DU HUD ---
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {

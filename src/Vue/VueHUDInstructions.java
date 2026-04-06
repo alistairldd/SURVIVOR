@@ -32,7 +32,6 @@ public class VueHUDInstructions {
                 "• CLIC DROIT : Se déplacer",
                 "• CLIC GAUCHE : Attaquer",
                 "• TOUCHE R : Récolter la mine (Jour)",
-                "• TOUCHE F : Réparer un bâtiment",
                 "• TOUCHE T : Construire tour",
                 "• TOUCHE C : Afficher rayon de l'attaque",
                 "• FLÈCHES : Changer de page (HUD)",

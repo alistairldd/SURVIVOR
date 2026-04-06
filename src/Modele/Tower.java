@@ -58,7 +58,13 @@ public class Tower extends Batiment{
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
-            if (this.hp > 0) {
+            // Si les PV tombent à 0 ou moins, le bâtiment disjoncte et tombe en panne
+            if (this.hp <= 0 && isFonctionnel()) {
+                setFonctionnel(false);
+            }
+
+            // Si le bâtiment est allumé (soit neuf, soit réparé à 100%)
+            if (isFonctionnel()) {
                 try {
                     monstreCible = gBatiments.trouverCible(this);
                     if (monstreCible != null) {
@@ -66,6 +72,17 @@ public class Tower extends Batiment{
                     }
                     Thread.sleep(TOWER_DELAY);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break; // On quitte la boucle proprement si le jeu s'arrête
+                }
+            } else {
+                // Le bâtiment est détruit : le Thread ne meurt pas mais se repose (500ms)
+                // en attendant que le joueur finisse sa réparation.
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
             }
         }

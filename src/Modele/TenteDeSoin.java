@@ -57,7 +57,13 @@ public class TenteDeSoin extends Batiment{
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
-            if (this.hp > 0) {
+            // Si les PV tombent à 0 ou moins, la tente disjoncte et arrête de soigner
+            if (this.hp <= 0 && isFonctionnel()) {
+                setFonctionnel(false);
+            }
+
+            // Si la tente est allumée (soit neuve, soit réparée à 100%)
+            if (isFonctionnel()) {
                 try {
                     joueur = gBatiments.trouverJoueur(this);
                     if (joueur != null) {
@@ -65,6 +71,17 @@ public class TenteDeSoin extends Batiment{
                     }
                     Thread.sleep(HEALING_DELAY);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break; // On quitte la boucle proprement si le jeu s'arrête
+                }
+            } else {
+                // Le bâtiment est en panne : le Thread se repose (500ms)
+                // en attendant d'être réparé.
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
             }
         }

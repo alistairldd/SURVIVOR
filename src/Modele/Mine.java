@@ -64,11 +64,31 @@ public class Mine extends Batiment{
 
     @Override
     public void run() {
-        while (this.hp > 0) {
-            try {
-                genererRessources();
-                Thread.sleep(MINE_DELAY);
-            } catch (InterruptedException e) {}
+        while (!gBatiments.getPartieTerminee()) {
+            // Si les PV tombent à 0 ou moins, la mine disjoncte et arrête de produire
+            if (this.hp <= 0 && isFonctionnel()) {
+                setFonctionnel(false);
+            }
+
+            // Si la mine est allumée (soit neuve, soit réparée à 100%)
+            if (isFonctionnel()) {
+                try {
+                    genererRessources();
+                    Thread.sleep(MINE_DELAY);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break; // On quitte la boucle proprement si le jeu s'arrête
+                }
+            } else {
+                // Le bâtiment est en panne : le Thread se repose (500ms)
+                // en attendant d'être réparé.
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
         }
     }
 

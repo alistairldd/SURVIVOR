@@ -22,6 +22,8 @@ public abstract class Batiment extends Thread implements Localisable {
     // Taille physique d'encombrement du bâtiment
     protected int rayonHitbox;
 
+    private boolean fonctionnel = true;
+
 
     /**
      * Initialise un bâtiment à une position spécifique avec ses points de vie maximum.
@@ -84,5 +86,11 @@ public abstract class Batiment extends Thread implements Localisable {
         this.attaquable = attaquable;
     }
 
-     // Méthode abstraite pour récupérer les points de vie maximum du bâtiment (doit être implémentée par les sous-classes)
+    public boolean isFonctionnel() {
+        return fonctionnel;
+    }
+
+    public void setFonctionnel(boolean fonctionnel) {
+        this.fonctionnel = fonctionnel;
+    }
 }

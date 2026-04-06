@@ -86,6 +86,9 @@ public class UpdateJN {
     public void updateJour() {
         // Met à jour la position des ressources (aspiration vers le joueur)
         monGestionnaireRessources.actualiserAspiration(modele.getJoueur());
+
+        // Tente de réparer automatiquement les bâtiments proches
+        modele.getJoueur().lancerReparation();
     }
 
     // Méthode à boucler la nuit

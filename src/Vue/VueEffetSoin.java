@@ -27,12 +27,7 @@ public class VueEffetSoin {
      */
     public void miseAJour() {
         Joueur joueur = modele.getJoueur();
-        Batiment cible = null;
-
-        // Récupération sécurisée du bâtiment en cours de soin
-        if (joueur.getThreadReparation() != null && joueur.getThreadReparation().isAlive()) {
-            cible = joueur.getThreadReparation().getBatiment();
-        }
+        Batiment cible = modele.getJoueur().getBatimentEnReparation();
 
         // Si une réparation est en cours, on fait "poper" de nouvelles particules (ex: 2 par rafraîchissement)
         if (cible != null) {
@@ -59,11 +54,7 @@ public class VueEffetSoin {
      */
     public void dessiner(Graphics2D g2d) {
         Joueur joueur = modele.getJoueur();
-        Batiment cible = null;
-
-        if (joueur.getThreadReparation() != null && joueur.getThreadReparation().isAlive()) {
-            cible = joueur.getThreadReparation().getBatiment();
-        }
+        Batiment cible = modele.getJoueur().getBatimentEnReparation();
 
         // --- 1. Dessin de la zone de soin (Cercle vert au sol) ---
         if (cible != null) {

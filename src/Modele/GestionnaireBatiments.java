@@ -15,7 +15,7 @@ public class GestionnaireBatiments {
         batiments.add(hq); //Par défaut on ne peut construire que le HQ, les autres bâtiments sont construits par le joueur
         batiments.add(new Mine(this));
         batiments.add(new Tower(HAUTEUR_MAP/2, LARGEUR_MAP/3, this));
-        batiments.get(batiments.size() - 1).setHp(10);
+        batiments.get(batiments.size() - 1).setHp(0);
         batiments.add(new TenteDeSoin(HAUTEUR_MAP/3, LARGEUR_MAP/2,this));
     }
 

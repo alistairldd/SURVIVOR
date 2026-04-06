@@ -34,6 +34,9 @@ public class Joueur implements Localisable {
     // Chronomètre interne pour gérer la cadence de tir (cooldown)
     private long dernierTempsAttaque = 0;
 
+    private boolean enReparation = false;
+    private Batiment batimentEnReparation = null;
+
     // Position
     // Coordonnée horizontale précise sur la carte globale
     private double positionX;
@@ -446,33 +449,84 @@ public class Joueur implements Localisable {
      * Si oui, lance le thread autonome de réparation.
      */
     public void lancerReparation() {
-        // 0. Vérification temporelle
-        if (!modele.getLeCycleJourNuit().isDay()) {
-            System.out.println("Réparation impossible : c'est la nuit !");
-            return;
-        }
-        // 1. On demande la cible au Modèle
-        Batiment cible = modele.trouverBatimentSoignable();
 
-        if (cible != null) {
-            // 2. Si une réparation est DÉJÀ en cours sur un autre bâtiment, on l'arrête proprement
-            if (threadReparation != null && threadReparation.isAlive()) {
-                threadReparation.interrupt();
+        // Sécurité 0 : Évite le NullPointerException si le Thread démarre avant le chargement complet du jeu
+        if (modele == null || modele.getGestionnaireBatiments() == null) return;
+
+        // Sécurité 1 : On ne peut initier une réparation que le jour
+        if (!modele.getUpdateJN().isDay()) return;
+
+        // Sécurité 2 : On ne lance pas une nouvelle réparation si on est déjà en train de le faire
+        if (enReparation) return;
+
+        Batiment batimentAReparer = null;
+        double distMin = REPARATION_RANGE;
+
+        // On cherche le bâtiment endommagé le plus proche dans le rayon de réparation
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
+            if (b.getHp() < b.getMaxHp()) {
+                double diffX = this.positionX - b.getX();
+                double diffY = this.positionY - b.getY();
+                double dist = Math.hypot(diffX, diffY);
+
+                if (dist <= distMin) {
+                    distMin = dist;
+                    batimentAReparer = b;
+                }
             }
+        }
 
-            // 3. On crée le nouveau moteur de soin et on lui donne sa cible
-            threadReparation = new ThreadReparation(this, cible);
+        // Si on a trouvé un bâtiment à réparer à portée
+        if (batimentAReparer != null) {
+            enReparation = true;
+            Batiment cible = batimentAReparer;
+            this.batimentEnReparation = cible;
 
-            // 4. On démarre le thread en arrière-plan
+            Thread threadReparation = new Thread(() -> {
+                try {
+                    while (cible.getHp() < cible.getMaxHp()) {
+                        // Vérification 1 : Est-ce qu'il fait toujours jour ?
+                        if (!modele.getUpdateJN().isDay()) {
+                            break; // La nuit tombe, on arrête le marteau
+                        }
+
+                        // Vérification 2 : Le joueur est-il toujours à portée ?
+                        double dX = this.positionX - cible.getX();
+                        double dY = this.positionY - cible.getY();
+                        if (Math.hypot(dX, dY) > REPARATION_RANGE) {
+                            break; // Le joueur s'est éloigné, on arrête de réparer
+                        }
+
+                        // Réparation (Rend des PV). Ajuste le "+ 1" si tu veux que ça répare plus vite
+                        cible.setHp(cible.getHp() + 1);
+
+                        // Vérification 3 : Le bâtiment est-il réparé à 100% ?
+                        if (cible.getHp() >= cible.getMaxHp()) {
+                            cible.setHp(cible.getMaxHp());
+                            cible.setFonctionnel(true); // On le rallume officiellement !
+                            break;
+                        }
+
+                        // Pause entre chaque "coup de marteau" (Vitesse de réparation)
+                        Thread.sleep(100);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    enReparation = false; // Quoi qu'il arrive, on libère le joueur pour une autre réparation
+                    batimentEnReparation = null;
+                }
+            });
             threadReparation.start();
-        } else {
-            System.out.println("Réparation impossible : Aucun bâtiment endommagé à portée.");
         }
     }
 
     // Getter pour le modèle (utile pour les vues qui ont besoin d'infos globales comme le cycle temporel)
     public Modele getModele() {
         return this.modele;
+    }
+    public Batiment getBatimentEnReparation() {
+        return batimentEnReparation;
     }
 
     public void equiperArmure(Armure nouvelleArmure) {
