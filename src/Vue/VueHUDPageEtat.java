@@ -42,7 +42,7 @@ public class VueHUDPageEtat extends JPanel {
             throw new RuntimeException(e);
         }
         y = vueHUDInstructions.dessiner(g, y, modele.getJoueur());
-        y = vueJourNuit.dessiner(g, y);
+        // y = vueJourNuit.dessiner(g, y); (timer en doublons)
 
         y += 1000; //test scroll
         // --- Redimensionnement dynamique (Trailing Stop) ---

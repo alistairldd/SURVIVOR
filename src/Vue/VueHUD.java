@@ -22,6 +22,7 @@ public class VueHUD extends JPanel {
     private VueHUDPageEtat pageEtat;
     private VueHUDPageAction pageAction;
     private VueHUDPageBoutique pageBoutique;
+    private VueJourNuit vueJourNuit;
 
     // Mémorise la dernière page affichée pour ne demander le changement que si nécessaire
     private int dernierePageAffichee = -1;
@@ -42,6 +43,7 @@ public class VueHUD extends JPanel {
         pageEtat = new VueHUDPageEtat(modele);
         pageAction = new VueHUDPageAction(modele);
         pageBoutique = new VueHUDPageBoutique(modele);
+        vueJourNuit = new VueJourNuit(modele);
 
         // Création des ascenseurs (JScrollPane) pour chaque page
         JScrollPane scrollEtat = creerScroll(pageEtat);
@@ -134,5 +136,12 @@ public class VueHUD extends JPanel {
             cardLayout.show(this, "PAGE_" + pageActuelle);
             dernierePageAffichee = pageActuelle;
         }
+        // --- 3. AFFICHAGE DU TIMER ---
+        // On calcule la position Y pour que l'image apparaisse en bas du HUD
+        // TAILLE_LS (250) + environ 100 pixels pour le texte et les marges
+        int yPositionEnBas = getHeight() - 350;
+
+        // On appelle la méthode dessiner avec cette nouvelle coordonnée
+        vueJourNuit.dessiner(g, yPositionEnBas);
     }
 }
