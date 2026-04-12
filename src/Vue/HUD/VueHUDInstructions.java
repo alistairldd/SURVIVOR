@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * Overlay d'interface gérant le bouton d'aide et le popup des commandes.
@@ -34,7 +35,7 @@ public class VueHUDInstructions extends JPanel {
 
         // 2. Chargement de la ressource graphique
         try {
-            imgManette = ImageIO.read(getClass().getResourceAsStream("/images/Manette.png"));
+            imgManette = ImageIO.read(new File("src/images/Manette.png"));
             imageChargee = (imgManette != null);
         } catch (Exception e) {
             System.err.println("[DEV-LOG] Asset /images/Manette.png non trouvé. Fallback sur rendu textuel.");
