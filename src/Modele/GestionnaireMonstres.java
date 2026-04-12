@@ -119,10 +119,6 @@ public class GestionnaireMonstres {
             monstres.remove(m);
     }
 
-    public void donnerRecompense(int drop) {
-        updateJN.donnerRecompense(drop);
-    }
-
     public Localisable trouverCible(Localisable m){
         return updateJN.monstreTrouverCible(m);
     }

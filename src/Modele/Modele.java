@@ -158,8 +158,8 @@ public class Modele {
 
                 if (produitScalaire >= seuilCosinus) {
                     m.perdreHp(joueur.getArmeEquipee().getDegats());
-                    if (m.getHp() <= 0) {
-                        joueur.ajouterPieces(m.getDrop());
+                    if (m.getHp() <= 0) { // Donne une récompense d'Or
+                        joueur.addPieces(m.getDrop());
                     }
                 }
             }

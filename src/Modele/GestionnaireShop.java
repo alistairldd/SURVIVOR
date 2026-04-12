@@ -1,10 +1,12 @@
 package Modele;
 import Modele.Armes.Arme;
 import Modele.Armes.Epee;
+import Modele.Armes.EpeeBois;
 import Modele.Items.Armure;
 import Modele.Items.ArmureLegere;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class GestionnaireShop {
@@ -22,6 +24,9 @@ public class GestionnaireShop {
         // --- Initialisation des armes disponibles ---
         Epee ep = new Epee();
         armes.add(ep);
+
+        EpeeBois epBois = new EpeeBois();
+        armes.add(epBois);
 
         // --- Initialisation des armures disponibles ---
 
@@ -59,11 +64,23 @@ public class GestionnaireShop {
     // ACHAT D'ARME (Classe Arme)
     public void acheterArme(Arme nouvelleArme, int prixPieces) {
         Joueur j = modele.getJoueur();
+
         if (j.getPieces() >= prixPieces) {
-            j.retirerPieces(prixPieces);
+            j.acheter(prixPieces);
             j.setArmeEquipee(nouvelleArme); // Met à jour l'arme et ses stats
         }else{
             System.out.println("Pas assez de pièces pour acheter cette arme !");
+        }
+    }
+
+    public void fabriquerArme(Arme a) {
+        Joueur j = modele.getJoueur();
+        if (j.aAssezDeRessources(a.getRessourcesNecessaires())) {
+            j.consommerListeRessources(a.getRessourcesNecessaires());
+            j.setArmeEquipee(a);
+            System.out.println("Succès : Vous avez fabriqué " + a.getNom());
+        } else {
+            System.out.println("Échec : Ressources insuffisantes pour " + a.getNom());
         }
     }
 
@@ -71,7 +88,7 @@ public class GestionnaireShop {
     public void acheterArmure(Armure nouvelleArmure, int prixPieces) {
         Joueur j = modele.getJoueur();
         if (j.getPieces() >= prixPieces) {
-            j.retirerPieces(prixPieces);
+            j.acheter(prixPieces);
             j.equiperArmure(nouvelleArmure); // Augmente PV Max ou Défense
         }else{
             System.out.println("Pas assez de pièces pour acheter cette armure !");
@@ -82,7 +99,7 @@ public class GestionnaireShop {
     public void acheterItem(String nom, int prixPieces) {
         Joueur j = modele.getJoueur();
         if (j.getPieces() >= prixPieces) {
-            j.retirerPieces(prixPieces);
+            j.acheter(prixPieces);
 
         }else{
             System.out.println("Pas assez de pièces pour acheter cette objet !");

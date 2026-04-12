@@ -210,6 +210,18 @@ public final class Constantes {
         }
     }
 
+    public static Image IMAGE_EPEEBOIS = null;
+    static {
+        try {
+            // Charger l'image de l'épée
+            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/EpeeBois.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public static Image IMAGE_BATON = null;
     public static Image IMAGE_HACHE = null;

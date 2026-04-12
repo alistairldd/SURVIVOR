@@ -10,6 +10,8 @@ import Modele.Items.Armure;
 import static Modele.Constantes.*;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.abs;
 
 /**
@@ -20,8 +22,7 @@ import static java.lang.Math.abs;
 public class Joueur implements Localisable {
 
     //Stats du joueur
-    // Argent du joueur
-    private int pieces = 0;
+
     // Points de vie actuels
     private int hp;
     // Points de vie maximum
@@ -79,8 +80,6 @@ public class Joueur implements Localisable {
             inventaire.add(new Ressource(2)); // 2: Fer
             inventaire.add(new Ressource(3)); // 3: Or
         }
-        // triche/test : tester l'achat shop
-        this.pieces=100;
         // Équipe l'arme de départ
         armeEquipee = new Hache();
         // Lie le joueur à son monde
@@ -88,24 +87,24 @@ public class Joueur implements Localisable {
     }
 
     public int getPieces() {
-        return pieces;
+        int nbOr = 0;
+        for (Ressource r : inventaire) {
+            if (r.getType() == 3) nbOr++; // Type 3 correspond à l'Or
+        }
+        return nbOr;
     }
 
-    public void addPieces(int pieces) {
-        this.pieces += pieces;
+    public void addPieces(int montant) {
+        for (int i = 0; i < montant; i++) {
+            // On crée une ressource de type Or et on l'ajoute à l'inventaire
+            inventaire.add(new Ressource(3));
+        }
     }
 
-    public void acheter(int pieces ) {
-        this.pieces -= pieces;
+    public void acheter(int montant){
+        this.consommerRessource(3, montant);
     }
 
-    public void ajouterPieces(int montant) {
-        this.pieces += montant;
-    }
-
-    public void retirerPieces(int montant) {
-        this.pieces -= montant;
-    }
     public int getHpMax() {return hpMax;}
     public void setHpMax(int hpMax) {this.hpMax = hpMax;}
 
@@ -547,5 +546,51 @@ public class Joueur implements Localisable {
 
     public void equiperArmure(Armure nouvelleArmure) {
         setHpMax(getHpMax()+nouvelleArmure.getBonusVie());
+    }
+
+    public boolean aAssezDeRessources(List<String> besoins) {
+        int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
+        for (Ressource r : inventaire) {
+            switch (r.getType()) {
+                case 0: nbBois++; break;
+                case 1: nbPierre++; break;
+                case 2: nbFer++; break;
+                case 3: nbOr++; break;
+            }
+        }
+
+        for (String besoin : besoins) {
+            String[] parties = besoin.split(":");
+            String nomRessource = parties[0].trim().toLowerCase();
+            int quantiteRequise = Integer.parseInt(parties[1].trim());
+
+            switch (nomRessource) {
+                case "bois" -> { if (nbBois < quantiteRequise) return false; }
+                case "pierre" -> { if (nbPierre < quantiteRequise) return false; }
+                case "fer" -> { if (nbFer < quantiteRequise) return false; }
+                case "or" -> { if (nbOr < quantiteRequise) return false; }
+            }
+        }
+        return true; // Si on a passé tous les besoins sans retourner false, c'est qu'on a assez de ressources
+    }
+
+    public void consommerListeRessources(List<String> besoins) {
+        for (String besoin : besoins) {
+            String[] parties = besoin.split(":");
+            String nomRessource = parties[0].trim().toLowerCase();
+            int quantiteRequise = Integer.parseInt(parties[1].trim());
+
+            int typeIndex = -1;
+            switch (nomRessource) {
+                case "bois" -> typeIndex = 0;
+                case "pierre" -> typeIndex = 1;
+                case "fer" -> typeIndex = 2;
+                case "or" -> typeIndex = 3;
+            }
+
+            if (typeIndex != -1) {
+                consommerRessource(typeIndex, quantiteRequise);
+            }
+        }
     }
 }
