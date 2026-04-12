@@ -43,6 +43,7 @@ public class Vue extends JPanel {
 
     // Le gestionnaire visuel des particules de soin
     private VueEffetSoin vueEffetSoin;
+    private VueEffetTente vueEffetTente;
 
 
 
@@ -98,6 +99,7 @@ public class Vue extends JPanel {
         this.vueArme = new VueArme(controleurSouris, this, modele);
 
         this.vueEffetSoin = new VueEffetSoin(modele);
+        this.vueEffetTente = new VueEffetTente(modele);
 
         // Demande à la fenêtre de calculer la taille de tous ses composants
         maFenetre.pack();
@@ -236,6 +238,10 @@ public class Vue extends JPanel {
         vueEffetSoin.miseAJour();
         // Dessine le grand cercle vert et les "+" par-dessus les bâtiments
         vueEffetSoin.dessiner(g2d);
+
+        // Calcule et dessine les coeurs et l'aura rouge des Tentes de Soin
+        vueEffetTente.miseAJour();
+        vueEffetTente.dessiner(g2d);
 
         // Dessine l'arme du joueur par-dessus le reste
         vueArme.dessiner(g2d);

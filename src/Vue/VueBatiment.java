@@ -179,6 +179,40 @@ public class VueBatiment {
                 g2d.drawString(stock + " Minerais", x - 30, y - demiTaille - 8);
             }
 
+
+        } else if (b instanceof Modele.Batiments.TenteDeSoin) {
+            Modele.Batiments.TenteDeSoin tente = (Modele.Batiments.TenteDeSoin) b;
+
+            // --- 1. DESSIN DE L'AURA ROUGE (Zone d'effet) ---
+            if (!minimap) {
+                int portee = tente.getRange();
+
+                // Si la tente est en train de soigner (moins de 600ms depuis le dernier soin)
+                if (System.currentTimeMillis() - tente.getDernierTempsSoin() < 600) {
+                    // Fond rouge très transparent (15%)
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
+                    g2d.setColor(Color.RED);
+                    g2d.fillOval(x - portee, y - portee, portee * 2, portee * 2);
+
+                    // Bordure rouge plus marquée (40%)
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+                    g2d.setStroke(new BasicStroke(2));
+                    g2d.drawOval(x - portee, y - portee, portee * 2, portee * 2);
+
+                    // Reset de l'épaisseur du trait
+                    g2d.setStroke(new BasicStroke(1));
+                }
+            }
+
+            // --- 2. DESSIN DE LA TENTE ---
+            // On remet l'opacité à 100% pour le corps du bâtiment
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+            // Couleur Khaki / Jaune foncé (RGB: 200, 200, 0)
+            g2d.setColor(new Color(200, 200, 0));
+            g2d.fillRect(x - demiTaille, y - demiTaille, taille, taille);
+
+
         } else {
             // Sécurité : Dessin par défaut si on ajoute de nouveaux Bâtiments non reconnus plus tard
             g2d.setColor(Color.GRAY);
