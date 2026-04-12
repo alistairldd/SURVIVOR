@@ -4,22 +4,25 @@ import Modele.Armes.Epee;
 import Modele.Armes.EpeeBois;
 import Modele.Items.Armure;
 import Modele.Items.ArmureLegere;
+import Modele.Items.Item;
+import Modele.Items.PotionVie;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class GestionnaireShop {
     private Modele modele;
     private ArrayList <Arme> armes;
     private ArrayList<Armure> armures;
-    private ArrayList <Objets> objets;
+    private ArrayList<Item> objets;
 
     public GestionnaireShop(Modele modele) {
         this.modele = modele;
         this.armes = new ArrayList<>();
         this.armures = new ArrayList<>();
-        this.objets = new ArrayList<>();
+        this.objets = new ArrayList<Item>();
 
         // --- Initialisation des armes disponibles ---
         Epee ep = new Epee();
@@ -34,7 +37,8 @@ public class GestionnaireShop {
         armures.add(al);
 
         // --- Initialisation des objets disponibles ---
-
+        PotionVie pv = new PotionVie();
+        objets.add(pv);
     }
 
     public ArrayList<Arme> getArmes() {
@@ -45,7 +49,7 @@ public class GestionnaireShop {
         return armures;
     }
 
-    public ArrayList<Objets> getObjets() {
+    public ArrayList<Item> getObjets() {
         return objets;
     }
 
@@ -57,52 +61,56 @@ public class GestionnaireShop {
         this.armures = armures;
     }
 
-    public void setObjets(ArrayList<Objets> objets) {
+    public void setObjets(ArrayList<Item> objets) {
         this.objets = objets;
     }
 
     // ACHAT D'ARME (Classe Arme)
-    public void acheterArme(Arme nouvelleArme, int prixPieces) {
-        Joueur j = modele.getJoueur();
 
-        if (j.getPieces() >= prixPieces) {
-            j.acheter(prixPieces);
-            j.setArmeEquipee(nouvelleArme); // Met à jour l'arme et ses stats
-        }else{
-            System.out.println("Pas assez de pièces pour acheter cette arme !");
-        }
-    }
-
-    public void fabriquerArme(Arme a) {
+    public void acheterArme(Arme a) {
         Joueur j = modele.getJoueur();
-        if (j.aAssezDeRessources(a.getRessourcesNecessaires())) {
-            j.consommerListeRessources(a.getRessourcesNecessaires());
+        // On récupère directement la liste des ressources de l'arme (ex: ["Bois:10"])
+        List<String> besoins = a.getRessourcesNecessaires();
+
+        if (j.aAssezDeRessources(besoins)) {
+            j.consommerListeRessources(besoins);
             j.setArmeEquipee(a);
-            System.out.println("Succès : Vous avez fabriqué " + a.getNom());
+            System.out.println("Succès : " + a.getNom() + " fabriquée et équipée !");
         } else {
-            System.out.println("Échec : Ressources insuffisantes pour " + a.getNom());
+            System.out.println("Ressources insuffisantes pour fabriquer " + a.getNom());
         }
     }
 
     // ACHAT D'ARMURE (Classe Armure)
-    public void acheterArmure(Armure nouvelleArmure, int prixPieces) {
+    public void acheterArmure(Armure nouvelleArmure) {
         Joueur j = modele.getJoueur();
-        if (j.getPieces() >= prixPieces) {
-            j.acheter(prixPieces);
-            j.equiperArmure(nouvelleArmure); // Augmente PV Max ou Défense
-        }else{
-            System.out.println("Pas assez de pièces pour acheter cette armure !");
+        List<String> besoins = nouvelleArmure.getRessourcesNecessaires();
+
+        if (j.aAssezDeRessources(besoins)) {
+            j.consommerListeRessources(besoins);
+            j.equiperArmure(nouvelleArmure);
+            System.out.println("Succès : " + nouvelleArmure.getNom() + " équipée !");
+        } else {
+            System.out.println("Ressources insuffisantes pour l'armure !");
         }
     }
 
     // ACHAT D'OBJETS (Potions, Outils)
-    public void acheterItem(String nom, int prixPieces) {
+    public void acheterItem(Item i) {
         Joueur j = modele.getJoueur();
-        if (j.getPieces() >= prixPieces) {
-            j.acheter(prixPieces);
+        int besoins = i.getPrix();
+        // Pour les potions, on utilise soit des ressources, soit le prix en Or
+        // Si votre classe Objets utilise getPrix(), on peut simuler une liste "Or:X"
+        // Ou mieux : ajouter getRessourcesNecessaires() à la classe parente Objets.
 
-        }else{
-            System.out.println("Pas assez de pièces pour acheter cette objet !");
+        if (j.getPieces()>= besoins) {
+            j.setPieces(j.getPieces()-besoins);
+            if (i instanceof PotionVie) {
+                j.soigner(((PotionVie) i).getSoin());
+                System.out.println("Potion de vie utilisée !");
+            }
+        } else {
+            System.out.println("Pas assez d'or pour cet objet !");
         }
     }
 }

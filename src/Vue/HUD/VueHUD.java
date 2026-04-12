@@ -146,4 +146,8 @@ public class VueHUD extends JPanel {
         // On appelle la méthode dessiner avec cette nouvelle coordonnée
         vueJourNuit.dessiner(g, yPositionEnBas);
     }
+
+    public VueHUDPageBoutique getPageBoutique() {
+        return pageBoutique;
+    }
 }

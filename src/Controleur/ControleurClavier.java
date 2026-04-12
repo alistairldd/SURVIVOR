@@ -4,6 +4,8 @@ import Modele.Modele;
 import Vue.Vue;
 import Vue.VueArme;
 
+import Modele.GestionnaireShop;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -24,11 +26,15 @@ public class ControleurClavier implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+
     }
 
     /**
      * Détecte les touches enfoncées et déclenche les actions métier correspondantes.
-     * @param e L'événement de touche de clavier capturé.
+     * - Touche 'E' : Ordonne au joueur de vérifier les collisions avec les ressources pour les ajouter à son inventaire.
+     * - Touche 'T' : Ordonne au joueur de lancer la construction d'une tour défensive (vérification des prérequis gérée par le modèle).
+     * - Touches '1', '2', '3' : Navigation entre les pages du HUD.
+     * * @param e L'événement de touche de clavier capturé.
      */
     @Override
     public void keyPressed(KeyEvent e) {

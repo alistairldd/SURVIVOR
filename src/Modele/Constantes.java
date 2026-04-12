@@ -229,7 +229,25 @@ public final class Constantes {
     public static Image IMAGE_LANCE = null;
 
     public static Image IMAGE_ARMURE_LEGERE = null;
+    static {
+        try {
+            // Charger l'image de l'épée
+            IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/ArmureLegere.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static Image IMAGE_ARMURE_LOURDE = null;
+
+    public static Image IMAGE_POTION_DE_VIE = null;
+    static {
+        try {
+            // Charger l'image de la potion de vie
+            IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/PotionDeVie.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public final static int LARGEUR_JOUEUR_SOURCE = 200;
     public final static int HAUTEUR_JOUEUR_SOURCE = 200;

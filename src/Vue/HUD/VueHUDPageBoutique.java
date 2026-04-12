@@ -31,4 +31,7 @@ public class VueHUDPageBoutique extends JPanel {
             this.revalidate();
         }
     }
+    public VueHUDShop getVueHUDShop() {
+        return vueHUDShop;
+    }
 }

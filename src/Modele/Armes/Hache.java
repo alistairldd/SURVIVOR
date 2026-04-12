@@ -22,7 +22,7 @@ public class Hache extends Arme {
                 700,
                 Math.PI * 2,
                 IMAGE_HACHE, // Image non définie pour l'instant
-                List.of("Bois:10, Fer:5") // Coût en ressources pour fabriquer la hache
+                List.of("Bois:10", "Fer:5") // Coût en ressources pour fabriquer la hache
         );
     }
 

@@ -14,7 +14,7 @@ public class EpeeLourde extends Arme{
                 1500,
                 Math.PI,
                 IMAGE_EPEE_LOURDE,
-                List.of("Fer:25, Pierre:10")
+                List.of("Fer:25","Pierre:10")
         );
     }
 

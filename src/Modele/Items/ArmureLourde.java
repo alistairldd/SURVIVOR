@@ -11,7 +11,7 @@ public class ArmureLourde extends Armure{
                 "Armure lourde",
                 50,
                 IMAGE_ARMURE_LOURDE,
-                List.of("Fer:20, Pierre:10")
+                List.of("Fer:20","Pierre:10")
         );
     }
     @Override

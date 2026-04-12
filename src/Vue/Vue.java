@@ -88,6 +88,7 @@ public class Vue extends JPanel {
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);
         this.addKeyListener(new ControleurClavier(this, modele));
+        this.vueHUD.getPageBoutique().addMouseListener(controleurSouris);
 
         this.vueArme = new VueArme(controleurSouris, this, modele);
 
@@ -124,6 +125,7 @@ public class Vue extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
+        // --- CAMÉRA ---
         Joueur joueur = modele.getJoueur();
         double camX = joueur.getX() - ((double) getWidth() / 2);
         double camY = joueur.getY() - ((double) getHeight() / 2);
@@ -131,6 +133,7 @@ public class Vue extends JPanel {
         // --- TRANSLATION CAMÉRA (COORDONNÉES MONDE) ---
         g2d.translate(-camX, -camY);
 
+        // --- RENDU MONDE ---
         vueCarte.dessiner(g2d);
 
         for (Ressource r : modele.getUpdateJN().getRessources()) {
@@ -170,6 +173,7 @@ public class Vue extends JPanel {
         // --- RESET TRANSLATION (COORDONNÉES ÉCRAN) ---
         g2d.translate(camX, camY);
 
+        // --- GAME OVER ---
         if (modele.getPartieTerminee()) {
             dessinerGameOver(g2d);
             return;
@@ -247,4 +251,12 @@ public class Vue extends JPanel {
     public VueHUD getVueHUD() { return vueHUD; }
     public VueArme getVueArme() { return vueArme; }
     public JFrame getMaFenetre() { return maFenetre; }
+
+    public Object identifierElementClique(int x, int y, Object source) {
+        // Si la source du clic est le panneau de la boutique
+        if (source == vueHUD.getPageBoutique()) {
+            return vueHUD.getPageBoutique().getVueHUDShop().getObjetAuClic(x, y);
+        }
+        return null;
+    }
 }

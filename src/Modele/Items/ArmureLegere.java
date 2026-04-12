@@ -12,7 +12,7 @@ public class ArmureLegere extends Armure{
                 "Armure légère",
                 20,
                 IMAGE_ARMURE_LEGERE,
-                List.of("Bois:5, Pierre:5")
+                List.of("Bois:5","Pierre:5")
         ); // Bonus de 20 PV pour une armure légère
     }
 

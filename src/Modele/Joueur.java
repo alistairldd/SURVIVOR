@@ -31,6 +31,8 @@ public class Joueur implements Localisable {
     private int attack;
     // Liste représentant le sac à dos du joueur contenant les ressources ramassées
     private static ArrayList<Ressource> inventaire;
+    // Argent du joueur
+    private int pieces;
     // Arme actuellement tenue en main
     private Arme armeEquipee;
     // Booléen pour déterminer si le joueur a la pioche ou non
@@ -80,6 +82,8 @@ public class Joueur implements Localisable {
             inventaire.add(new Ressource(2)); // 2: Fer
             inventaire.add(new Ressource(3)); // 3: Or
         }
+        // triche/test : on donne 50 pieces au joueur au départ
+        pieces = 50;
         // Équipe l'arme de départ
         armeEquipee = new Hache();
         // Lie le joueur à son monde
@@ -87,22 +91,19 @@ public class Joueur implements Localisable {
     }
 
     public int getPieces() {
-        int nbOr = 0;
-        for (Ressource r : inventaire) {
-            if (r.getType() == 3) nbOr++; // Type 3 correspond à l'Or
-        }
-        return nbOr;
+        return pieces;
     }
 
     public void addPieces(int montant) {
-        for (int i = 0; i < montant; i++) {
-            // On crée une ressource de type Or et on l'ajoute à l'inventaire
-            inventaire.add(new Ressource(3));
-        }
+        pieces += montant;
     }
 
     public void acheter(int montant){
         this.consommerRessource(3, montant);
+    }
+
+    public void setPieces(int pieces) {
+        this.pieces = pieces;
     }
 
     public int getHpMax() {return hpMax;}
@@ -554,48 +555,60 @@ public class Joueur implements Localisable {
     }
 
     public boolean aAssezDeRessources(List<String> besoins) {
-        int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
+        // 1. Comptage des stocks actuels
+        int bois = 0, pierre = 0, fer = 0, or = 0;
         for (Ressource r : inventaire) {
             switch (r.getType()) {
-                case 0: nbBois++; break;
-                case 1: nbPierre++; break;
-                case 2: nbFer++; break;
-                case 3: nbOr++; break;
+                case 0 -> bois++;
+                case 1 -> pierre++;
+                case 2 -> fer++;
+                case 3 -> or++;
             }
         }
 
+        // 2. Vérification des besoins
         for (String besoin : besoins) {
+            // On sépare par le caractère ":"
             String[] parties = besoin.split(":");
-            String nomRessource = parties[0].trim().toLowerCase();
-            int quantiteRequise = Integer.parseInt(parties[1].trim());
+            if (parties.length < 2) continue;
 
+            String nomRessource = parties[0].trim().toLowerCase();
+            int quantiteRequise;
+
+            try {
+                quantiteRequise = Integer.parseInt(parties[1].trim());
+            } catch (NumberFormatException e) {
+                System.err.println("Erreur format prix sur : " + besoin);
+                return false;
+            }
+
+            // 3. Test de satisfaction
             switch (nomRessource) {
-                case "bois" -> { if (nbBois < quantiteRequise) return false; }
-                case "pierre" -> { if (nbPierre < quantiteRequise) return false; }
-                case "fer" -> { if (nbFer < quantiteRequise) return false; }
-                case "or" -> { if (nbOr < quantiteRequise) return false; }
+                case "bois"   -> { if (bois < quantiteRequise) return false; }
+                case "pierre" -> { if (pierre < quantiteRequise) return false; }
+                case "fer"    -> { if (fer < quantiteRequise) return false; }
+                case "or"     -> { if (or < quantiteRequise) return false; }
             }
         }
-        return true; // Si on a passé tous les besoins sans retourner false, c'est qu'on a assez de ressources
+        return true;
     }
 
     public void consommerListeRessources(List<String> besoins) {
         for (String besoin : besoins) {
             String[] parties = besoin.split(":");
-            String nomRessource = parties[0].trim().toLowerCase();
-            int quantiteRequise = Integer.parseInt(parties[1].trim());
+            if (parties.length < 2) continue;
 
-            int typeIndex = -1;
-            switch (nomRessource) {
-                case "bois" -> typeIndex = 0;
-                case "pierre" -> typeIndex = 1;
-                case "fer" -> typeIndex = 2;
-                case "or" -> typeIndex = 3;
-            }
+            String nom = parties[0].trim().toLowerCase();
+            int quantite = Integer.parseInt(parties[1].trim());
 
-            if (typeIndex != -1) {
-                consommerRessource(typeIndex, quantiteRequise);
+            int type = -1;
+            switch (nom) {
+                case "bois"   -> type = 0;
+                case "pierre" -> type = 1;
+                case "fer"    -> type = 2;
+                case "or"     -> type = 3;
             }
+            if (type != -1) this.consommerRessource(type, quantite);
         }
     }
 }

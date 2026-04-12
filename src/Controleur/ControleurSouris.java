@@ -3,6 +3,12 @@ package Controleur;
 import Modele.Modele;
 import Vue.Vue;
 import Modele.Joueur;
+
+import Modele.Armes.Arme;
+import Modele.Items.Armure;
+import Modele.Items.Item;
+import Modele.GestionnaireShop;
+
 import Vue.AnimationArme;
 import Modele.DeplaceJoueur;
 import javax.swing.*;
@@ -48,6 +54,20 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mousePressed(MouseEvent e) {
+        // 1. On demande à la vue d'identifier si un objet a été cliqué
+        Object cible = vue.identifierElementClique(e.getX(), e.getY(), e.getSource());
+
+        if (cible != null) {
+            // 2. Si oui, on traite l'achat selon le type
+            if (cible instanceof Arme) {
+                modele.getGestionnaireShop().acheterArme((Arme) cible);
+            } else if (cible instanceof Armure) {
+                modele.getGestionnaireShop().acheterArmure((Armure)cible);
+            } else if (cible instanceof Item) {
+                modele.getGestionnaireShop().acheterItem((Item) cible);
+            }
+            return; // On stoppe ici pour ne pas attaquer ou se déplacer
+        }
 
         // --- 1. DÉPLACEMENT (Clic Droit) ---
         if (SwingUtilities.isRightMouseButton(e)){
