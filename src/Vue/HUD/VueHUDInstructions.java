@@ -32,15 +32,6 @@ public class VueHUDInstructions extends JPanel {
 
         // 1. Initialisation du bouton physique
         initButton();
-
-        // 2. Chargement de la ressource graphique
-        try {
-            imgManette = ImageIO.read(new File("src/images/Manette.png"));
-            imageChargee = (imgManette != null);
-        } catch (Exception e) {
-            System.err.println("[DEV-LOG] Asset /images/Manette.png non trouvé. Fallback sur rendu textuel.");
-            imageChargee = false;
-        }
     }
 
     /**
@@ -97,12 +88,10 @@ public class VueHUDInstructions extends JPanel {
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(MARGIN, btnY, BTN_SIZE, BTN_SIZE, 10, 10);
 
-        if (imageChargee) {
-            g2d.drawImage(imgManette, MARGIN + 5, btnY + 5, BTN_SIZE - 10, BTN_SIZE - 10, null);
-        } else {
-            g2d.setFont(new Font("Monospaced", Font.BOLD, 25));
-            g2d.drawString("?", MARGIN + 18, btnY + 35);
-        }
+
+        g2d.setFont(new Font("Monospaced", Font.BOLD, 25));
+        g2d.drawString("?", MARGIN + 18, btnY + 35);
+
 
         // --- DESSIN DU POPUP (Si actif dans le modèle) ---
         if (modele.isInstructionsOuvert()) {
