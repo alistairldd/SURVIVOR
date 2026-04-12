@@ -37,6 +37,9 @@ public class Modele {
     // Indicateur de fin de partie
     private boolean partieTerminee = false;
 
+    // Dans les attributs de Modele
+    private boolean instructionsOuvert = false;
+
     // Constructeur de la classe Modele
     public Modele() {
         // Instancie le joueur et lui donne la référence à ce Modèle
@@ -218,4 +221,8 @@ public class Modele {
 
         this.cibleAffichage = joueur;
     }
+
+    // Dans les getters/setters
+    public boolean isInstructionsOuvert() { return instructionsOuvert; }
+    public void toggleInstructions() { this.instructionsOuvert = !this.instructionsOuvert; }
 }

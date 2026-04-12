@@ -11,10 +11,15 @@ import java.io.IOException;
 
 import static Modele.Constantes.*;
 
+/**
+ * Première page du HUD affichant l'état du joueur (Vie, Stats).
+ * Allégée de l'affichage des instructions qui sont désormais gérées
+ * en Overlay par la Vue principale.
+ */
 public class VueHUDPageEtat extends JPanel {
+
     private Modele modele;
     private VueVie vueVie;
-    private VueHUDInstructions vueHUDInstructions;
     private VueJourNuit vueJourNuit;
 
     public VueHUDPageEtat(Modele modele) {
@@ -22,9 +27,8 @@ public class VueHUDPageEtat extends JPanel {
         // Transparence pour laisser transparaître la couleur de fond du HUD (Jour/Nuit)
         this.setOpaque(false);
 
-        // Instanciation de nos sous-vues
+        // Instanciation de nos sous-vues restantes
         this.vueVie = new VueVie(modele);
-        this.vueHUDInstructions = new VueHUDInstructions();
         this.vueJourNuit = new VueJourNuit(modele);
 
         // Taille de départ
@@ -44,10 +48,11 @@ public class VueHUDPageEtat extends JPanel {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        y = vueHUDInstructions.dessiner(g, y, modele.getJoueur());
-        // y = vueJourNuit.dessiner(g, y); (timer en doublons)
 
-        y += 1000; //test scroll
+        // (L'appel à vueHUDInstructions a été supprimé ici)
+
+        y += 1000; // test scroll conservé
+
         // --- Redimensionnement dynamique (Trailing Stop) ---
         // Si le contenu dépasse la taille du panneau, on agrandit le panneau pour activer le scroll
         if (y > getPreferredSize().height) {

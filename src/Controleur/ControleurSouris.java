@@ -24,11 +24,8 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     private int mouseY = 0;
 
     public ControleurSouris(Vue vue, Modele modele) {
-
         this.modele = modele;
         this.vue = vue;
-
-
     }
 
     /**
@@ -40,7 +37,6 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     /**
@@ -52,19 +48,22 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mousePressed(MouseEvent e) {
+
+        // --- 1. DÉPLACEMENT (Clic Droit) ---
         if (SwingUtilities.isRightMouseButton(e)){
             if (!modele.getPartieTerminee()){
                 // on recupere le joueur (on peut aps mettre dans constructeur car ça pose probleme si on restart)
                 Joueur joueur = modele.getJoueur();
+
                 // Récupérer les coordonnées du clic
                 int x = e.getX();
                 int y = e.getY();
 
-                // Calculer la position du joueur en fonction de la position du clic et de la position actuelle du joueur
+                // Calculer la position de la caméra
                 double camX = joueur.getX() - (double) vue.getWidth() / 2;
                 double camY = joueur.getY() - (double) vue.getHeight() / 2;
 
-                // Calculer les coordonnées de destination dans le monde en ajoutant les coordonnées du clic à la position de la caméra
+                // Calculer les coordonnées de destination dans le monde absolu
                 double destX = camX + x;
                 double destY = camY + y;
 
@@ -72,11 +71,11 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                 DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
                 joueur.setThreadActuel(deplacement);
                 deplacement.start();
-                //modele.getJoueur().deplaceJoueur(destX, destY);
             }
-        } else if (SwingUtilities.isLeftMouseButton(e)){
-
-            // Vérifie que la partie n'est pas terminée avant de permettre toute action d'attaque du joueur
+        }
+        // --- 2. ATTAQUE (Clic Gauche) ---
+        else if (SwingUtilities.isLeftMouseButton(e)){
+            // Vérifie que la partie n'est pas terminée avant de permettre toute action
             if (!modele.getPartieTerminee()){
                 Joueur j = modele.getJoueur();
                 if (j.peutAttaquer()){
@@ -85,11 +84,10 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
                     double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
 
-                    //System.out.println("angleAttaque=" + angleAttaque + " mouse=(" + mouseX + "," + mouseY + ")");
-
                     // Attaquer dans la direction de la souris
                     modele.joueurAttaque(angleAttaque);
                     j.setDernierTempsAttaque();
+
                     int cadence = j.getArmeEquipee().getCadence();
                     AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
                     vue.getVueArme().setEnAnimation(true);
@@ -101,22 +99,18 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
     }
 
     /**
@@ -145,7 +139,6 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
     }
 
     // Getters pour les coordonnées de la souris
-
     public int getMX(){
         return this.mouseX;
     }
