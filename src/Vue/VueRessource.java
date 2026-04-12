@@ -16,6 +16,7 @@ public class VueRessource {
     private BufferedImage imageFer;
     private BufferedImage imageOr;
     private BufferedImage imagePierre;
+    private BufferedImage imageBois;
 
     public VueRessource() {
         // Importe les images des ressources
@@ -23,6 +24,8 @@ public class VueRessource {
             this.imageFer = ImageIO.read(new File("src/images/lingot_fer.png"));
             this.imageOr = ImageIO.read(new File("src/images/lingot_or.png"));
             this.imagePierre = ImageIO.read(new File("src/images/pierre.png"));
+             this.imageBois = ImageIO.read(new File("src/images/bois.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Erreur : Impossible de charger l'image.");
@@ -63,8 +66,7 @@ public class VueRessource {
         // On dessine aux coordonnées x, y fournies par la Vue principale (qui a déjà appliqué la translation de Caméra)
         switch (type) {
             case 0: // Bois
-                g.setColor(new Color(139, 69, 19)); // Marron
-                g.fillOval(drawX, drawY, taille, taille);
+                g.drawImage(imageBois, drawX-taille/2, drawY-taille/2, taille, taille, null);
                 break;
             case 1: // Pierre
                 g.drawImage(imagePierre, drawX-taille/2, drawY-taille/2, taille, taille, null);

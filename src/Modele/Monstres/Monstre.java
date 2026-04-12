@@ -48,9 +48,6 @@ public abstract class Monstre extends Thread implements Localisable {
     // nombre de pièces en récompense
     protected int drop;
 
-    // Indique si le monstre est actuellement en train d'attaquer (true) ou de se déplacer (false)
-    private boolean estEnTrainDAttaquer = false;
-
     // Variable pour gérer l'animation du monstre
     private double animation = 0;
 
@@ -125,10 +122,8 @@ public abstract class Monstre extends Thread implements Localisable {
             // Marcher
             this.x += (diffX / distance) * this.vitesse;
             this.y += (diffY / distance) * this.vitesse;
-            this.estEnTrainDAttaquer = false;
         } else {
             // S'arrêter et attaquer
-            this.estEnTrainDAttaquer = true;
             attaquer(cible, dt);
         }
     }

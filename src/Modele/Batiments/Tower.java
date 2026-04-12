@@ -60,9 +60,10 @@ public class Tower extends Batiment{
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
-            // Si les PV tombent à 0 ou moins, le bâtiment disjoncte et tombe en panne
+            // Si les PV tombent à 0 ou moins, le bâtiment ne fait plus rien
             if (this.hp <= 0 && isFonctionnel()) {
                 setFonctionnel(false);
+                setAttaquable(false);
             }
 
             // Si le bâtiment est allumé (soit neuf, soit réparé à 100%)

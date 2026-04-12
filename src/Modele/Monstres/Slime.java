@@ -35,8 +35,8 @@ public class Slime extends Monstre {
         // Nom: "Slime"
         // PV: 50
         // Attaque: 5 points de dégâts
-        // Portée: 50 pixels
-        // Vitesse: 1 pixel par déplacement
+        // Portée: 30 pixels
+        // Vitesse: 5 pixel par déplacement
         super("Slime", 50, 5, 30, 5);
 
         // Initialise la position de départ avec les coordonnées fournies
@@ -89,12 +89,6 @@ public class Slime extends Monstre {
                     break;
                 }
             } catch (InterruptedException e) {
-                // Capture de l'interruption
-                System.out.println("Debug : Le thread du " + this.getNom() + " a bien été tué.");
-
-                // on peut choisir de ne pas afficher la stack trace pour éviter de polluer la console avec des messages d'erreur liés à l'arrêt normal du thread
-                // notamment lorsqu'on reset le jeu
-                //e.printStackTrace();
 
                 // Sécurité : arrête le thread en cas d'interruption externe pour éviter un thread zombie
                 break;

@@ -506,10 +506,15 @@ public class Joueur implements Localisable {
                         // Réparation (Rend des PV). Ajuste le "+ 1" si tu veux que ça répare plus vite
                         cible.setHp(cible.getHp() + 1);
 
+                        // Dès qu'il a un peu de vie, il peut attaquer
+                        if (!cible.isFonctionnel()) cible.setFonctionnel(true);
+
+                        // Il redevient attaquable
+                        if (!cible.isAttaquable()) cible.setAttaquable(true);
+
                         // Vérification 3 : Le bâtiment est-il réparé à 100% ?
                         if (cible.getHp() >= cible.getMaxHp()) {
                             cible.setHp(cible.getMaxHp());
-                            cible.setFonctionnel(true); // On le rallume officiellement !
                             break;
                         }
 
