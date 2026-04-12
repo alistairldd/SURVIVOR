@@ -1,5 +1,7 @@
 package Vue;
 
+import Vue.HUD.VueHUD;
+
 import static Modele.Constantes.*;
 
 /**

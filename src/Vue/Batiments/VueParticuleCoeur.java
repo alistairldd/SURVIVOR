@@ -1,4 +1,4 @@
-package Vue;
+package Vue.Batiments;
 
 /**
  * Représente une particule visuelle en forme de coeur ("❤") générée par la Tente de Soin.

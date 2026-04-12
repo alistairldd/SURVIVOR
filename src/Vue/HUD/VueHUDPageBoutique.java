@@ -1,4 +1,4 @@
-package Vue;
+package Vue.HUD;
 
 import Modele.Modele;
 import javax.swing.JPanel;

@@ -1,4 +1,4 @@
-package Vue;
+package Vue.HUD;
 
 import Modele.Joueur;
 import Modele.Armes.Arme;

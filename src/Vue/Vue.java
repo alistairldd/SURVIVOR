@@ -12,6 +12,10 @@ import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
 import Modele.Batiments.Batiment;
 import Modele.Monstres.Monstre;
+import Vue.Batiments.VueBatiment;
+import Vue.Batiments.VueEffetSoin;
+import Vue.Batiments.VueEffetTente;
+import Vue.HUD.VueHUD;
 
 
 import javax.swing.*;

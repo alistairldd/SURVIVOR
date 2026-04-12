@@ -1,4 +1,4 @@
-package Vue;
+package Vue.Batiments;
 
 import Modele.Modele;
 import Modele.Batiments.Batiment;

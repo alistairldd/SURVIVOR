@@ -1,4 +1,4 @@
-package Vue;
+package Vue.Batiments;
 
 /**
  * Représente une petite particule visuelle (un "+") lors d'un soin.

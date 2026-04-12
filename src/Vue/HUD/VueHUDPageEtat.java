@@ -1,6 +1,9 @@
-package Vue;
+package Vue.HUD;
 
 import Modele.Modele;
+import Vue.VueJourNuit;
+import Vue.VueVie;
+
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Dimension;
