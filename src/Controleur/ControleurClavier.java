@@ -24,31 +24,29 @@ public class ControleurClavier implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     /**
      * Détecte les touches enfoncées et déclenche les actions métier correspondantes.
-     * - Touche 'E' : Ordonne au joueur de vérifier les collisions avec les ressources pour les ajouter à son inventaire.
-     * - Touche 'T' : Ordonne au joueur de lancer la construction d'une tour défensive (vérification des prérequis gérée par le modèle).
-     * - Touches '1', '2', '3' : Navigation entre les pages du HUD.
-     * * @param e L'événement de touche de clavier capturé.
+     * @param e L'événement de touche de clavier capturé.
      */
     @Override
     public void keyPressed(KeyEvent e) {
 
+        // --- RELANCE DU JEU ---
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if (modele.getPartieTerminee()) {
                 modele.reinitialiserJeu();
-                return; // On bloque tout le reste des actions (attaquer, construire, etc.)
+                return; // On bloque tout le reste des actions
             }
         }
 
         /*** System.out.println("Action : La touche E a été pressée !");
-        if (e.getKeyCode() == KeyEvent.VK_E) {
-            modele.getJoueur().ramasseRessource();
-        }***/
+         if (e.getKeyCode() == KeyEvent.VK_E) {
+         modele.getJoueur().ramasseRessource();
+         }***/
 
+        // --- CONSTRUCTIONS ET ARMES ---
         if (e.getKeyCode() == KeyEvent.VK_T) {
             modele.getJoueur().construireTour();
         }
@@ -63,9 +61,9 @@ public class ControleurClavier implements KeyListener {
         }
 
         /** --- RÉPARATION DES BÂTIMENTS ---
-        if (e.getKeyCode() == KeyEvent.VK_F) {
-            modele.getJoueur().lancerReparation();
-        }**/
+         if (e.getKeyCode() == KeyEvent.VK_F) {
+         modele.getJoueur().lancerReparation();
+         }**/
 
         // --- NAVIGATION DU HUD ---
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -78,19 +76,25 @@ public class ControleurClavier implements KeyListener {
             int page = (modele.getHudPageActuelle() % 3) + 1;
             modele.setHudPageActuelle(page);
         }
-/**
-        // --- ACHATS DANS LA BOUTIQUE (Page 3) ---
-        if (modele.getHudPageActuelle() == 3) {
-            // Utilisation du pavé numérique pour dissocier l'achat de la navigation
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_1 -> modele.getGestionnaireShop().acheterEpeeAcieree();
-                case KeyEvent.VK_2 -> modele.getGestionnaireShop().acheterArmure();
-                case KeyEvent.VK_3 -> modele.getGestionnaireShop().acheterArmureLourde();
-                case KeyEvent.VK_4 -> modele.getGestionnaireShop().acheterEpee();
-                case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
-            }
+
+        // --- INTERFACE SYSTÈME (NOUVEAU) ---
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            modele.toggleAffichagePV();
         }
-**/
+
+/**
+ // --- ACHATS DANS LA BOUTIQUE (Page 3) ---
+ if (modele.getHudPageActuelle() == 3) {
+ // Utilisation du pavé numérique pour dissocier l'achat de la navigation
+ switch (e.getKeyCode()) {
+ case KeyEvent.VK_1 -> modele.getGestionnaireShop().acheterEpeeAcieree();
+ case KeyEvent.VK_2 -> modele.getGestionnaireShop().acheterArmure();
+ case KeyEvent.VK_3 -> modele.getGestionnaireShop().acheterArmureLourde();
+ case KeyEvent.VK_4 -> modele.getGestionnaireShop().acheterEpee();
+ case KeyEvent.VK_5 -> modele.getGestionnaireShop().acheterPotionDeVie();
+ }
+ }
+ **/
         // --- PASSER LA NUIT ---
         if (e.getKeyCode() == KeyEvent.VK_S) {
             modele.getUpdateJN().passerJour();
@@ -99,6 +103,5 @@ public class ControleurClavier implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-
     }
 }

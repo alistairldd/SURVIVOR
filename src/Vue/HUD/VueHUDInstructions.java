@@ -129,9 +129,10 @@ public class VueHUDInstructions extends JPanel {
         String[] instructions = {
                 "• CLIC DROIT   : Déplacement vecteur",
                 "• CLIC GAUCHE  : Execution attaque",
-                "• TOUCHE R     : Extraction Mine",
-                "• TOUCHE T     : Build Tower (Resources req.)",
-                "• TOUCHE C     : Debug Range UI",
+                "• R     : Extraction Mine",
+                "• T     : Build Tower (Resources req.)",
+                "• P    : Afficher PVs",
+                "• C     : Debug Range UI",
                 "• FLÈCHES      : Switch HUD Pages",
                 "• PAVÉ NUM     : Transaction Shop"
         };

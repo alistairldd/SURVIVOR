@@ -8,109 +8,87 @@ import java.util.List;
 
 /**
  * Cœur du système (Architecture MVC).
- * Le Modèle orchestre toutes les données du jeu. Il instancie le Joueur, la Carte,
- * lance les threads autonomes (Cycle temporel, Intelligence des bâtiments) et centralise
- * la logique des combats complexes (calcul des cônes d'attaque).
+ * Gère l'état global du monde, les entités et les flags d'affichage de l'interface.
  */
 public class Modele {
 
-    // Indicateur de la page actuellement affichée dans le HUD (1: Etat du jeu, 2: Inventaire/Action, 3: Shop)
+    // --- ÉTAT DE L'INTERFACE (UI FLAGS) ---
     private int hudPageActuelle = 1;
-
-    // L'entité contrôlée par l'utilisateur
-    private Joueur joueur;
-    private GestionnaireBatiments gestionnaireBatiments;
-
-    // Variables de structure
-    private Ressource ressource;
-    private Batiment batiment;
-
-    // Le gestionnaire autonome du temps (Thread)
-    private CycleJourNuit leCycleJourNuit;
-    private GestionnaireShop gestionnaireShop;
-
-    // Entité actuellement survolée par la souris (pour affichage d'infos)
-    private Localisable cibleAffichage;
-
-    private UpdateJN updateJN;
-
-    // Indicateur de fin de partie
-    private boolean partieTerminee = false;
-
-    // Dans les attributs de Modele
     private boolean instructionsOuvert = false;
 
-    // Constructeur de la classe Modele
+    // NOUVEAU : Flag pour l'affichage des jauges de vie au-dessus des entités
+    private boolean affichagePV = true;
+
+    // --- ENTITÉS ET GESTIONNAIRES ---
+    private Joueur joueur;
+    private GestionnaireBatiments gestionnaireBatiments;
+    private CycleJourNuit leCycleJourNuit;
+    private GestionnaireShop gestionnaireShop;
+    private UpdateJN updateJN;
+
+    // Entité actuellement ciblée par l'interface
+    private Localisable cibleAffichage;
+
+    private boolean partieTerminee = false;
+
     public Modele() {
-        // Instancie le joueur et lui donne la référence à ce Modèle
+        // Initialisation de l'entité joueur
         this.joueur = new Joueur(this);
-        this.joueur.setHp(10);
+        this.joueur.setHp(10); // HP initial de test
 
-        // Initialisation du jour et de la nuit
+        // Initialisation des systèmes autonomes
         this.updateJN = new UpdateJN(this);
-        leCycleJourNuit = new CycleJourNuit(updateJN);
-
+        this.leCycleJourNuit = new CycleJourNuit(updateJN);
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
-        this.cibleAffichage = joueur; // valeur initiale
+
+        this.cibleAffichage = joueur;
     }
 
-    /*---- GETTERS ET SETTERS ---- */
+    /* ---- GETTERS ET SETTERS D'INTERFACE ---- */
+
+    public int getHudPageActuelle() { return hudPageActuelle; }
+    public void setHudPageActuelle(int page) { this.hudPageActuelle = page; }
+
+    public boolean isInstructionsOuvert() { return instructionsOuvert; }
+    public void toggleInstructions() { this.instructionsOuvert = !this.instructionsOuvert; }
+
+    // --- LOGIQUE D'AFFICHAGE DES PV ---
+    public boolean isAffichagePV() { return affichagePV; }
+    public void toggleAffichagePV() { this.affichagePV = !this.affichagePV; }
+
+    /* ---- LOGIQUE MÉTIER ET GESTION DU MONDE ---- */
 
     public Joueur getJoueur() { return joueur; }
     public CycleJourNuit getLeCycleJourNuit() { return leCycleJourNuit; }
     public UpdateJN getUpdateJN() { return updateJN; }
-    public int getHudPageActuelle() { return hudPageActuelle; }
-    public void setHudPageActuelle(int page) { this.hudPageActuelle = page; }
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
     public GestionnaireBatiments getGestionnaireBatiments() { return gestionnaireBatiments; }
     public boolean getPartieTerminee() { return partieTerminee; }
 
     /**
-     * NOUVELLE MÉTHODE : Le "Kill Switch" (Bouton d'arrêt d'urgence).
-     * Interrompt immédiatement tous les processus actifs du monde.
+     * Stoppe tous les processus actifs du jeu lors d'un Game Over.
      */
     private void stopperTousLesThreadsDuJeu() {
-        // 1. Arrêter le chronomètre principal
-        if (leCycleJourNuit != null && leCycleJourNuit.isAlive()) {
-            leCycleJourNuit.interrupt();
-        }
-
-        // 2. Arrêter tous les monstres
+        if (leCycleJourNuit != null && leCycleJourNuit.isAlive()) leCycleJourNuit.interrupt();
         if (updateJN != null && updateJN.getMonstres() != null) {
             for (Monstre m : updateJN.getMonstres()) {
-                if (m != null && m.isAlive()) {
-                    m.interrupt();
-                }
+                if (m != null && m.isAlive()) m.interrupt();
             }
         }
-
-        // 3. Arrêter tous les bâtiments
-        if (gestionnaireBatiments != null) {
-            gestionnaireBatiments.stopperTousLesThreads();
-        }
-
-        // 4. Arrêter les actions du joueur (Réparation)
-        if (joueur != null) {
-            joueur.stopperReparation();
-        }
+        if (gestionnaireBatiments != null) gestionnaireBatiments.stopperTousLesThreads();
+        if (joueur != null) joueur.stopperReparation();
     }
 
-    /**
-     * Déclenche la fin de partie et gèle immédiatement le monde.
-     */
     public void declencherGameOver() {
         if (!partieTerminee) {
             partieTerminee = true;
-            System.out.println("GAME OVER ! Le joueur est mort.");
-
-            // GEL DU JEU : On tue les threads dès maintenant, pas seulement au redémarrage
             stopperTousLesThreadsDuJeu();
         }
     }
 
     /**
-     * Fonction mathématique utilitaire.
+     * Utilitaire de mise à l'échelle pour le rendu (ex: Minimap).
      */
     public double map(int debut, int fin, double valDebut, double valFin, double val){
         return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
@@ -118,6 +96,9 @@ public class Modele {
 
     public Localisable getCibleAffichage() { return cibleAffichage; }
 
+    /**
+     * Vérifie quelle entité est survolée par le curseur.
+     */
     public void verifierSurvol(double sourisMondeX, double sourisMondeY) {
         List<Localisable> ciblesPotentielles = new ArrayList<>();
         ciblesPotentielles.add(joueur);
@@ -133,7 +114,7 @@ public class Modele {
     }
 
     /**
-     * Gère la logique d'attaque du joueur.
+     * Gère la détection de collision et l'application des dégâts lors d'une attaque.
      */
     public void joueurAttaque(double angleAttaque) {
         double portee = joueur.getArmeEquipee().getPortee();
@@ -148,17 +129,17 @@ public class Modele {
         for (Monstre m : monstres) {
             double vecteurMonstreX = m.getX() - positionX;
             double vecteurMonstreY = m.getY() - positionY;
-            double distance = Math.sqrt(vecteurMonstreX * vecteurMonstreX + vecteurMonstreY * vecteurMonstreY);
+            double distance = Math.hypot(vecteurMonstreX, vecteurMonstreY);
 
-            if (distance >= 0 && distance <= portee) {
-                double normMonstreX = vecteurMonstreX / distance;
-                double normMonstreY = vecteurMonstreY / distance;
-                double produitScalaire = (dirX * normMonstreX) + (dirY * normMonstreY);
+            if (distance <= portee) {
+                double normX = vecteurMonstreX / distance;
+                double normY = vecteurMonstreY / distance;
+                double produitScalaire = (dirX * normX) + (dirY * normY);
                 double seuilCosinus = Math.cos(angle / 2.0);
 
                 if (produitScalaire >= seuilCosinus) {
                     m.perdreHp(joueur.getArmeEquipee().getDegats());
-                    if (m.getHp() <= 0) { // Donne une récompense d'Or
+                    if (m.getHp() <= 0) {
                         joueur.addPieces(m.getDrop());
                     }
                 }
@@ -166,63 +147,33 @@ public class Modele {
         }
     }
 
+    /**
+     * Utilitaires de recherche d'entités pour les bâtiments.
+     */
     public Monstre batTrouverMonstre(Batiment b) {
-        List<Monstre> monstres = updateJN.getMonstres();
-        for (Monstre m : monstres) {
-            double distance = Math.hypot(m.getX() - b.getX(), m.getY() - b.getY());
-            if (distance <= b.getRange()) {
-                return m;
-            }
+        for (Monstre m : updateJN.getMonstres()) {
+            if (Math.hypot(m.getX() - b.getX(), m.getY() - b.getY()) <= b.getRange()) return m;
         }
         return null;
     }
 
     public Joueur batTrouverJoueur(Batiment b) {
-        double distance = Math.hypot(joueur.getX() - b.getX(), joueur.getY() - b.getY());
-        if (distance <= b.getRange()) {
-            return joueur;
-        }
-        return null;
-    }
-
-    public Batiment trouverBatimentSoignable() {
-        double positionX = this.joueur.getX();
-        double positionY = this.joueur.getY();
-
-        for (Batiment b : gestionnaireBatiments.getBatiments()) {
-            double distance = Math.hypot(b.getX() - positionX, b.getY() - positionY);
-            if (distance <= b.getHealingRange() && b.getHp() < b.getMaxHp()) {
-                return b;
-            }
-        }
+        if (Math.hypot(joueur.getX() - b.getX(), joueur.getY() - b.getY()) <= b.getRange()) return joueur;
         return null;
     }
 
     /**
-     * Méthode pour réinitialiser le jeu après un Game Over.
+     * Réinitialisation complète du jeu.
      */
     public void reinitialiserJeu() {
-        System.out.println("--- RELANCE DE LA PARTIE ---");
-
-        // On s'assure que tout est bien arrêté avant de recréer les objets
         stopperTousLesThreadsDuJeu();
-
         this.partieTerminee = false;
         this.hudPageActuelle = 1;
-
-        // Ordre d'instanciation sécurisé : Le plateau AVANT le temps
         this.joueur = new Joueur(this);
-
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
-
         this.updateJN = new UpdateJN(this);
         this.leCycleJourNuit = new CycleJourNuit(this.updateJN);
-
         this.cibleAffichage = joueur;
     }
-
-    // Dans les getters/setters
-    public boolean isInstructionsOuvert() { return instructionsOuvert; }
-    public void toggleInstructions() { this.instructionsOuvert = !this.instructionsOuvert; }
 }
