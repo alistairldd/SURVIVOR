@@ -1,7 +1,6 @@
 package Vue.HUD;
 
 import Modele.Modele;
-import Vue.OverlayScrollBarUI;
 import Vue.VueJourNuit;
 
 import javax.swing.*;

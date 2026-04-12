@@ -1,4 +1,4 @@
-package Vue;
+package Vue.HUD;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
