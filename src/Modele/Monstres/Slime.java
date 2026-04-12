@@ -84,7 +84,6 @@ public class Slime extends Monstre {
                     // Demande la suppression visuelle et logique de la carte
                     gestionnaireMonstres.supprimerMonstre(this);
                     gestionnaireMonstres.incrementerMonstresMorts();
-                    gestionnaireMonstres.donnerRecompense(this.drop);
                     // Interrompt la boucle infinie pour terminer le thread proprement
                     break;
                 }
