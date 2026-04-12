@@ -10,11 +10,12 @@ import Modele.*;
  */
 import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
+import Modele.Batiments.Batiment;
+import Modele.Monstres.Monstre;
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 
 /**
  * Fenêtre et zone de dessin principale du jeu.

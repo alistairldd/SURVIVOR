@@ -1,9 +1,8 @@
-package Modele;
+package Modele.Armes;
 
 import java.util.List;
 
 import static Modele.Constantes.IMAGE_BATON;
-import static Modele.Constantes.IMAGE_EPEE;
 
 /**
  * Implémentation concrète d'une arme : l'Épée.

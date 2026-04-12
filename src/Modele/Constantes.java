@@ -62,6 +62,8 @@ public final class Constantes {
     public static final int ATTAQUE_BASE = 10;
     public static final int HP_JOUEUR = 100;
 
+
+
     /*** ---Map--- ***/
     // Constante : Largeur totale de l'aire de jeu en pixels
     public static final int LARGEUR_MAP = 3000;

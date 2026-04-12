@@ -1,5 +1,4 @@
-package Modele;
-import Modele.Armure;
+package Modele.Items;
 
 import java.util.List;
 

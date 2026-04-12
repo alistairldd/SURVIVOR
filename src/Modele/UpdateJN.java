@@ -1,5 +1,8 @@
 package Modele;
 
+import Modele.Batiments.Batiment;
+import Modele.Monstres.Monstre;
+
 import java.util.ArrayList;
 import java.util.List;
 

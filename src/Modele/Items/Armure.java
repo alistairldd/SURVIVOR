@@ -1,8 +1,7 @@
-package Modele;
+package Modele.Items;
 
 import java.awt.*;
 import java.util.List;
-import java.awt.image.BufferedImage;
 
 public abstract class Armure {
         // Nom affiché de l'armure

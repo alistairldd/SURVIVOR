@@ -1,7 +1,9 @@
-package Modele;
+package Modele.Monstres;
+
+import Modele.Localisable;
 
 import java.awt.*;
-import java.util.ArrayList;
+
 import static Modele.Constantes.*;
 
 

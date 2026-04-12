@@ -1,4 +1,6 @@
 package Modele;
+import Modele.Batiments.Batiment;
+
 import static Modele.Constantes.*;
 
 /**

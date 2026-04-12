@@ -1,7 +1,7 @@
 package Modele;
 
-import Controleur.Controleur;
-import Vue.Vue;
+import Modele.Batiments.Batiment;
+import Modele.Monstres.Monstre;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,10 @@
 package Vue;
 
-import Modele.GestionnaireMonstres;
-import Modele.Monstre;
-import Modele.Slime;
-import Modele.SlimeMutant;
+import Modele.Monstres.Monstre;
+import Modele.Monstres.Slime;
+import Modele.Monstres.SlimeMutant;
 
 import java.awt.*;
-import java.util.Objects;
 
 import static Modele.Constantes.*;
 

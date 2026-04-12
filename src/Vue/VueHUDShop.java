@@ -1,8 +1,8 @@
 package Vue;
 
 import Modele.Joueur;
-import Modele.Arme;
-import Modele.Armure;
+import Modele.Armes.Arme;
+import Modele.Items.Armure;
 import Modele.Objets;
 import Modele.GestionnaireShop;
 import Modele.Modele;

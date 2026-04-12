@@ -1,6 +1,12 @@
 package Modele;
 
-import Controleur.ControleurSouris;
+import Modele.Armes.Arme;
+import Modele.Armes.Hache;
+import Modele.Batiments.Batiment;
+import Modele.Batiments.Mine;
+import Modele.Batiments.Tower;
+import Modele.Items.Armure;
+
 import static Modele.Constantes.*;
 
 import java.util.ArrayList;

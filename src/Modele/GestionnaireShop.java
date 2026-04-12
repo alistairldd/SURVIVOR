@@ -1,5 +1,8 @@
 package Modele;
-import Modele.Arme;
+import Modele.Armes.Arme;
+import Modele.Armes.Epee;
+import Modele.Items.Armure;
+import Modele.Items.ArmureLegere;
 
 import java.util.ArrayList;
 

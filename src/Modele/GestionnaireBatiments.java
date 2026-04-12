@@ -1,5 +1,8 @@
 package Modele;
 
+import Modele.Batiments.*;
+import Modele.Monstres.Monstre;
+
 import java.util.ArrayList;
 import static Modele.Constantes.*;
 

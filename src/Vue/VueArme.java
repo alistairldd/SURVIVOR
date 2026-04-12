@@ -1,14 +1,10 @@
 package Vue;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 import Controleur.ControleurSouris;
-import Modele.Arme;
+import Modele.Armes.Arme;
 import Modele.Modele;
-
-import javax.imageio.ImageIO;
 
 import static Modele.Constantes.IMAGE_TOP_JOUEUR;
 import static Modele.Constantes.LARGEUR_TOP_JOUEUR_SOURCE;

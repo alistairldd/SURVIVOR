@@ -2,7 +2,11 @@ package Vue;
 
 import java.awt.*;
 
-import Modele.*;
+import Modele.Batiments.Batiment;
+import Modele.Batiments.HQ;
+import Modele.Batiments.Mine;
+import Modele.Batiments.Tower;
+import Modele.Monstres.Monstre;
 
 import static Modele.Constantes.*;
 

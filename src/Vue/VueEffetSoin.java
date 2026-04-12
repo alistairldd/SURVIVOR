@@ -1,9 +1,9 @@
 package Vue;
 
 import Modele.Modele;
-import Modele.Batiment;
+import Modele.Batiments.Batiment;
 import Modele.Joueur;
-import Modele.ThreadReparation;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;

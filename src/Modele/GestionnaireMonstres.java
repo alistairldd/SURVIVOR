@@ -1,5 +1,9 @@
 package Modele;
 
+import Modele.Monstres.Monstre;
+import Modele.Monstres.Slime;
+import Modele.Monstres.SlimeMutant;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

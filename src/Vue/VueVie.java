@@ -1,13 +1,15 @@
 package Vue;
 
+import Modele.Batiments.Tower;
 import Modele.Modele;
 import java.awt.*;
 
 import java.io.IOException;
 
 import Modele.*;
-
-import javax.imageio.ImageIO;
+import Modele.Monstres.Monstre;
+import Modele.Monstres.Slime;
+import Modele.Monstres.SlimeMutant;
 
 import static Modele.Constantes.*;
 
