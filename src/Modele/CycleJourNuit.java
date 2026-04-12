@@ -91,8 +91,10 @@ public class CycleJourNuit extends Thread {
                 // Met le thread en pause pendant ~16ms pour simuler un rythme de 60 FPS
                 Thread.sleep(1000 / FPS);
             } catch (InterruptedException e) {
-                // Capture et affiche l'erreur si le thread est interrompu brutalement
-                e.printStackTrace();
+                if (!updateJN.getModele().getPartieTerminee()) {
+                    System.err.println("ERREUR ANORMALE : Le cycle a été interrompu pendant le jeu !");
+                    e.printStackTrace();
+                }
                 Thread.currentThread().interrupt();
                 break;
             }

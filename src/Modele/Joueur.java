@@ -527,6 +527,16 @@ public class Joueur implements Localisable {
         }
     }
 
+    /**
+     * Arrête de force tout processus de réparation en cours.
+     * Utilisé lors du Game Over pour éviter les animations fantômes au redémarrage.
+     */
+    public void stopperReparation() {
+        this.enReparation = false;
+        this.batimentEnReparation = null;
+        // Si tu utilisais un threadReparation stocké, on l'interrompt ici.
+    }
+
     // Getter pour le modèle (utile pour les vues qui ont besoin d'infos globales comme le cycle temporel)
     public Modele getModele() {
         return this.modele;
