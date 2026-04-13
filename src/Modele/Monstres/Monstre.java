@@ -36,6 +36,12 @@ public abstract class Monstre extends Thread implements Localisable {
     // points d'attaque du monstre (dégâts qu'il inflige au joueur ou aux bâtiments)
     private int attack;
 
+    // direction actuelle du monstre (utile pour les déplacements et les animations)
+    protected double directionX;
+
+    // indique si le monstre est en train de marcher ou d'attaquer (utile pour les animations)
+    protected boolean marche = true;
+
     // portée d'attaque du monstre (à quelle distance il peut frapper)
     private int portee;
 
@@ -49,7 +55,14 @@ public abstract class Monstre extends Thread implements Localisable {
     protected int drop;
 
     // Variable pour gérer l'animation du monstre
-    private double animation = 0;
+    protected double animation = 0;
+    protected double animationAtt = 0;
+
+    // Variable pour l'animation de marche
+    protected boolean animationMarche = true;
+
+    // Variable pour l'animation d'attaque
+    protected boolean animationAttaque = false;
 
     // Variables pour gérer les temps d'attaque
     private double cadenceAttaque = 1.0; // 1 coup par seconde
@@ -102,6 +115,8 @@ public abstract class Monstre extends Thread implements Localisable {
     // Getters pour la position du monstre
     public double getX() { return x; }
 
+    public boolean regardeGauche() { return directionX < 0; }
+
     public double getY() { return y; }
 
     public Image getImage() { return null; } // Getter d'image par défaut, les sous-classes comme Slime le redéfiniront pour fournir leur propre sprite
@@ -112,6 +127,12 @@ public abstract class Monstre extends Thread implements Localisable {
 
     public double getAnimation() { return this.animation; }
 
+    public boolean isMarche () { return marche; }
+
+    public boolean getAnimationMarche() { return animationMarche; }
+
+    public boolean getAnimationAttaque() { return animationAttaque; }
+
     public void mettreAJourPosition(Localisable cible, double dt) {
         double diffX = cible.getX() - this.x;
         double diffY = cible.getY() - this.y;
@@ -120,10 +141,15 @@ public abstract class Monstre extends Thread implements Localisable {
 
         if (distance > this.portee) {
             // Marcher
+            this.marche = true;
+            // Calculer la direction en normalisant le vecteur de différence
+            this.directionX = diffX / distance;
+
             this.x += (diffX / distance) * this.vitesse;
             this.y += (diffY / distance) * this.vitesse;
         } else {
             // S'arrêter et attaquer
+            this.marche = false;
             attaquer(cible, dt);
         }
     }

@@ -5,6 +5,7 @@ import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
 import Modele.Batiments.Tower;
 import Modele.Items.Armure;
+import Modele.Items.Item;
 
 import static Modele.Constantes.*;
 
@@ -34,6 +35,8 @@ public class Joueur implements Localisable {
     private int pieces;
     // Arme actuellement tenue en main
     private Arme armeEquipee;
+    // Armure du joueur
+    private Item armureEquipee;
     // Booléen pour déterminer si le joueur a la pioche ou non
     private boolean aPioche;
     // Référence au modèle global pour interagir avec l'environnement (monstres, cycle jour/nuit)
@@ -84,7 +87,9 @@ public class Joueur implements Localisable {
         // triche/test : on donne 50 pieces au joueur au départ
         pieces = 50;
         // Équipe l'arme de départ
-        armeEquipee = new EpeeLourde();
+        armeEquipee = new Hache();
+        // Pas d'armure au départ
+        armureEquipee = null;
         // Lie le joueur à son monde
         this.modele = modele;
     }
@@ -148,6 +153,10 @@ public class Joueur implements Localisable {
     public Arme getArmeEquipee() {return armeEquipee;}
     // Setter pour l'arme équipée du joueur
     public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
+
+    public Item getArmureEquipee(){return armureEquipee;}
+
+    public void setArmureEquipee(Item armureEquipee){this.armureEquipee = armureEquipee;}
 
     public boolean hasPioche() {
         return aPioche;
