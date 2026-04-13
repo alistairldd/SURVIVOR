@@ -36,7 +36,7 @@ public class VueHUDInventaire {
 
         // Affiche le titre en grand
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
-        g2d.drawString("INVENTAIRE", xOffset, yCourant);
+        g2d.drawString("RESSOURCES", xOffset, yCourant);
 
         // Récupère la liste brute des objets possédés
         ArrayList<Ressource> inventaire = joueur.getInventaire();

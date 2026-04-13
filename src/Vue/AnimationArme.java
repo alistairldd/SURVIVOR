@@ -2,13 +2,15 @@ package Vue;
 
 import Modele.Modele;
 
+import java.util.Objects;
+
 /**
  * Thread autonome gérant l'effet visuel de l'attaque d'une arme.
  * Il modifie progressivement l'angle d'affichage dans la vue (VueArme)
  * pour simuler un mouvement de frappe fluide, indépendamment de la boucle principale du jeu.
  * (Note architecturale : Ce thread crée un lien direct exceptionnel du Modèle vers la Vue pour les besoins d'animation).
  */
-public class AnimationArme extends Thread{
+public class AnimationArme extends Thread {
 
     // Référence à l'objet graphique de l'arme que l'on va faire pivoter
     private VueArme vueArme;
@@ -32,6 +34,7 @@ public class AnimationArme extends Thread{
 
     /**
      * Calcule le décalage angulaire à appliquer à l'arme à un instant T.
+     *
      * @param ratio La progression temporelle de l'animation, de 0.0 (début) à 1.0 (fin).
      * @return L'angle de décalage (offset) en radians.
      */
@@ -42,9 +45,23 @@ public class AnimationArme extends Thread{
          * Lorsque le ratio est de 0, l'offset est de -π/4 (l'arme est en position de départ).
          * Lorsque le ratio est de 1, l'offset est de π/4 (l'arme est en position d'attaque).
          */
-        // Calcule l'angle exact en fonction de l'avancement (balayage d'un angle de 90 degrés, soit PI/2)
+        // Calcule l'angle exact en fonction de l'avancement
         double angle = modele.getJoueur().getArmeEquipee().getAngle();
-        return (-angle/2) + (ratio * angle);
+        if (Objects.equals(modele.getJoueur().getArmeEquipee().getNom(), "Lance")) {
+            return 0; // le lance n'a pas d'animation de rotation, il part droit devant et revient droit devant
+        }
+        if (Objects.equals(modele.getJoueur().getArmeEquipee().getNom(), "Hache")) {
+            return ratio * angle; // on commence pas à -angle/2 pour la hache, elle part de 0 et fait un tour complet
+        } else {
+            return (-angle / 2) + (ratio * angle);
+        }
+
+    }
+
+    private int calculerTranslationLance(double ratio) {
+        int amplitude = (int) (modele.getJoueur().getArmeEquipee().getPortee() * 0.2);
+        // Courbe aller-retour fluide : 0 -> max -> 0
+        return (int) (Math.sin(Math.PI * ratio) * amplitude);
     }
 
     /**
@@ -53,34 +70,35 @@ public class AnimationArme extends Thread{
      * jusqu'à l'écoulement de la durée prévue, puis réinitialise l'état de l'arme.
      */
     @Override
-    public void run(){
-        // Enregistre l'heure exacte du début de l'animation
+    public void run() {
         long debut = System.currentTimeMillis();
-        // Initialise le curseur de temps actuel
         long maintenant = debut;
 
-        // Boucle d'animation : tourne tant que le temps écoulé ne dépasse pas la durée prévue
-        while (maintenant - debut < duree) {
-            // Calcule le pourcentage d'accomplissement de l'animation (entre 0.0 et 1.0)
-            double ratio = (double)(maintenant - debut) / duree;
+        boolean estLance = Objects.equals(modele.getJoueur().getArmeEquipee().getNom(), "Lance");
 
-            // Applique l'angle calculé directement sur l'objet graphique
-            vueArme.setAngleOffsetAnimation(calculerOffset(ratio));
+        while (maintenant - debut < duree) {
+            double ratio = (double) (maintenant - debut) / duree;
+
+            if (estLance) {
+                vueArme.setAngleOffsetAnimation(0);
+                vueArme.setTranslationOffsetAnimation(calculerTranslationLance(ratio));
+            } else {
+                vueArme.setTranslationOffsetAnimation(0);
+                vueArme.setAngleOffsetAnimation(calculerOffset(ratio));
+            }
 
             try {
-                // Met le thread en pause brièvement pour laisser le temps à l'écran de s'afficher
                 Thread.sleep(pas);
             } catch (InterruptedException e) {
-                // Gère l'interruption inattendue du thread
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
-            // Met à jour le chronomètre pour la prochaine itération de la boucle
             maintenant = System.currentTimeMillis();
         }
 
-        // Fin de la boucle : on force le retour de l'arme à sa position droite originelle
+        // reset propre dans tous les cas
         vueArme.setAngleOffsetAnimation(0);
-        // Prévient la vue que le mouvement est terminé pour qu'elle puisse reprendre son comportement normal
+        vueArme.setTranslationOffsetAnimation(0);
         vueArme.setEnAnimation(false);
     }
 }

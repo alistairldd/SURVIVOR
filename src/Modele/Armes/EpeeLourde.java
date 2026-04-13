@@ -10,7 +10,7 @@ public class EpeeLourde extends Arme{
         super(
                 "Epee Lourde",
                 50,
-                80,
+                150,
                 1500,
                 Math.PI,
                 IMAGE_EPEE_LOURDE,
