@@ -1,7 +1,6 @@
 package Modele;
 
-import Modele.Armes.Arme;
-import Modele.Armes.Hache;
+import Modele.Armes.*;
 import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
 import Modele.Batiments.Tower;
@@ -85,7 +84,7 @@ public class Joueur implements Localisable {
         // triche/test : on donne 50 pieces au joueur au départ
         pieces = 50;
         // Équipe l'arme de départ
-        armeEquipee = new Hache();
+        armeEquipee = new Lance();
         // Lie le joueur à son monde
         this.modele = modele;
     }

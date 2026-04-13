@@ -1,9 +1,11 @@
 package Vue;
 
 import java.awt.*;
+import java.util.Objects;
 
 import Controleur.ControleurSouris;
 import Modele.Armes.Arme;
+import Modele.Armes.Baton;
 import Modele.Modele;
 
 import static Modele.Constantes.IMAGE_TOP_JOUEUR;
@@ -19,6 +21,14 @@ public class VueArme {
     // Épaisseur visuelle de l'arme dessinée à l'écran
     public static final int TAILLE = 10;
 
+    // Constantes pour le positionnement et le scalage de l'arme
+    // Distance à partir du joueur où commence le dessin de l'arme
+    private static final int OFFSET_START_ARME = 10;
+    // Hauteur de l'arme pour le centrage vertical (demi-hauteur pour centrer)
+    private static final int OFFSET_Y_ARME = 12;
+    // Ratio de scalage de la largeur de l'image par rapport à la portée
+    private static final double RATIO_LARGEUR = 0.9;
+
     // Référence au contrôleur pour lire la position (X,Y) en temps réel du curseur
     private final ControleurSouris controleurSouris;
     private Modele modele;
@@ -26,12 +36,22 @@ public class VueArme {
 
     // Angle supplémentaire ajouté artificiellement par le Thread d'animation lors d'un coup
     private double angleOffsetAnimation = 0; // angle de décalage pour l'animation d'attaque
+    // translation animée pour la lance (sur l'axe X local après rotation)
+    private int translationOffsetAnimation = 0;
     // Flag indiquant si une animation est en cours
     private boolean enAnimation = false; // indique si l'animation d'attaque est en
     // Flag pour afficher ou non la portée de l'arme (cône d'attaque)
     private boolean affPortee = false; // affiche la portée de l'arme (c
 
+
+
+
+
     private Image image;
+
+    // Dimensions de l'image source de l'arme
+    private int imgWidth;
+    private int imgHeight;
 
     // Constructeur de la classe VueArme
     public VueArme(ControleurSouris controleurSouris, Vue vue, Modele modele) {
@@ -42,6 +62,14 @@ public class VueArme {
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
         image = armeEquipee.getImage();
 
+        // Initialiser les dimensions de l'image
+        if (image != null) {
+            this.imgWidth = image.getWidth(null);
+            this.imgHeight = image.getHeight(null);
+        } else {
+            this.imgWidth = 0;
+            this.imgHeight = 0;
+        }
     }
 
     public boolean getAffPortee() {
@@ -56,6 +84,11 @@ public class VueArme {
     // Injecte l'angle calculé par le Thread AnimationArme
     public void setAngleOffsetAnimation(double offset) {
         this.angleOffsetAnimation = offset;
+    }
+
+    // Nouveau setter pour la translation de la lance
+    public void setTranslationOffsetAnimation(int offset) {
+        this.translationOffsetAnimation = offset;
     }
 
     // Verrouille ou déverrouille l'état d'animation
@@ -118,49 +151,92 @@ public class VueArme {
 
         if (affPortee) {
             // Dessiner un cône semi-transparent pour représenter la zone d'attaque de l'arme
-            g2d.setColor(new Color(0, 150, 255, 60));
 
-            // La méthode fillArc prend des degrés. On convertit l'ouverture (ex: PI/3 -> 60°)
-            int arcAngle = (int) Math.toDegrees(ouvertureCone);
 
-            // Pour que la souris soit pile au milieu du cône, on commence à dessiner
-            // à la moitié de l'angle en négatif (ex: de -30° à +30°)
-            int startAngle = -arcAngle / 2;
+            if (Objects.equals(armeEquipee.getNom(), "Lance")) {
+                g2d.setColor(new Color(0, 150, 255, 60));
+                g2d.fillRect(0, -portee/8, (int) (portee*1.2), portee/4);
 
-            // fillArc dessine dans un rectangle englobant. Pour un cercle de rayon "portee" centré sur (0,0),
-            // le coin supérieur gauche est à (-portee, -portee) et sa taille est (portee*2, portee*2)
-            g2d.fillArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
+                g2d.setColor(new Color(0, 100, 255, 150));
+                g2d.drawRect(0, -portee/8, (int) (portee*1.2), portee/4);
 
-            // Optionnel : un petit trait de contour bleu foncé pour faire plus propre
-            g2d.setColor(new Color(0, 100, 255, 150));
-            g2d.drawArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
-            // On dessine aussi deux lignes pour relier le joueur au bord de l'arc
-            g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle))));
-            g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle + arcAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle + arcAngle))));
+            } else {
+                g2d.setColor(new Color(0, 150, 255, 60));
+                // La méthode fillArc prend des degrés. On convertit l'ouverture (ex: PI/3 -> 60°)
+                int arcAngle = (int) Math.toDegrees(ouvertureCone);
+
+                // Pour que la souris soit pile au milieu du cône, on commence à dessiner
+                // à la moitié de l'angle en négatif (ex: de -30° à +30°)
+                int startAngle = -arcAngle / 2;
+
+                // fillArc dessine dans un rectangle englobant. Pour un cercle de rayon "portee" centré sur (0,0),
+                // le coin supérieur gauche est à (-portee, -portee) et sa taille est (portee*2, portee*2)
+                g2d.fillArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
+
+                // Optionnel : un petit trait de contour bleu foncé pour faire plus propre
+                g2d.setColor(new Color(0, 100, 255, 150));
+
+                // Pour les autres armes, on dessine le contour de l'arc
+
+                g2d.drawArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
+                // On dessine aussi deux lignes pour relier le joueur au bord de l'arc
+                g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle))));
+                g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle + arcAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle + arcAngle))));
+            }
         }
-        g2d.rotate(angleOffsetAnimation); // Applique la rotation d'animation
+        g2d.rotate(angleOffsetAnimation); // animation rotation (armes classiques)
+        // animation translation (lance)
+        g2d.translate(translationOffsetAnimation, 0);
+
         // Dessiner l'arme (couleur générique grise)
         g2d.setColor(Color.GRAY);
+
+
+
+        // Scalage dynamique de l'image de l'arme basé sur la portée de l'arme
+        if (image == null) {
+            // Si l'image de l'arme n'est pas chargée, dessiner un rectangle pour indiquer une erreur
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(rayon, -TAILLE / 2, portee - rayon, TAILLE);
+        } else {
+            // Calculer les dimensions scalées basées sur la portée de l'arme
+            int scaledWidth = (int) (portee * RATIO_LARGEUR);
+            int scaledHeight = (int) ((scaledWidth * imgHeight) / (double) imgWidth);
+
+            // Positionner l'image avec les constantes définies pour éviter les valeurs hardcodées
+            int posX = OFFSET_START_ARME;
+            int posY = -OFFSET_Y_ARME;
+
+            if (Objects.equals(armeEquipee.getNom(), "Baton")){
+                posY = -5; // ajustement spécifique pour le bâton
+            }
+            if (Objects.equals(armeEquipee.getNom(), "Epee")){
+                posY = -15; // ajustement spécifique pour l'épée'
+            }
+            if (Objects.equals(armeEquipee.getNom(), "Epee Lourde")){
+                posY = -25; // ajustement spécifique pour l'épée lourde'
+            }
+            if (Objects.equals(armeEquipee.getNom(), "Lance")){
+                posY = -17; // ajustement spécifique pour lance'
+            }
+
+            // Dessiner l'image avec les dimensions scalées
+            g2d.drawImage(image, posX, posY, scaledWidth, scaledHeight, null);
+        }
+
 
         // Puisque le calque a été tourné, ce rectangle pointera naturellement vers la souris.
         // On le décale de "rayon" sur l'axe X pour l'éloigner du corps, et on centre son épaisseur (Y = -TAILLE/2)
         // g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE); ça c'était pour le test au début
 
+        g2d.translate(-translationOffsetAnimation, 0);
+
         int offsetJoueur = -LARGEUR_TOP_JOUEUR_SOURCE / 2;
         g2d.drawImage(IMAGE_TOP_JOUEUR, offsetJoueur, offsetJoueur, 50, 50, null);
 
-        if (image == null) {
-            // Si l'image de l'arme n'est pas chargée, dessiner un rectangle rouge pour indiquer une erreur
-            g2d.setColor(Color.BLACK);
-            g2d.fillRect(rayon, -TAILLE / 2, portee - rayon, TAILLE);
-        } else {
-            // Sinon, dessiner l'image de l'arme à la place du rectangle
 
-            g2d.drawImage(image, 10, -12, 90, 25, null);
-
-            // Libère la mémoire et annule les translations/rotations pour les prochains dessins
-            g2d.dispose();
-        }
+        // Libère la mémoire et annule les translations/rotations pour les prochains dessins
+        g2d.dispose();
     }
 
 }

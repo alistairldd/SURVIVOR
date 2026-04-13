@@ -200,48 +200,43 @@ public final class Constantes {
         }
     }
 
+    // Chargement des images des équipements et consommables
+
     public static Image IMAGE_EPEE = null;
-    static {
-        try {
-            // Charger l'image de l'épée
-            IMAGE_EPEE = ImageIO.read(new File("src/images/equipement/Epee.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static Image IMAGE_EPEEBOIS = null;
-    static {
-        try {
-            // Charger l'image de l'épée
-            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/equipement/EpeeBois.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
     public static Image IMAGE_BATON = null;
     public static Image IMAGE_HACHE = null;
     public static Image IMAGE_EPEE_LOURDE = null;
     public static Image IMAGE_LANCE = null;
 
     public static Image IMAGE_ARMURE_LEGERE = null;
-    static {
-        try {
-            // Charger l'image de l'épée
-            IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/equipement/ArmureLegere.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public static Image IMAGE_ARMURE_LOURDE = null;
 
     public static Image IMAGE_POTION_DE_VIE = null;
+
     static {
         try {
+            // Charger l'image de l'épée
+            IMAGE_EPEE = ImageIO.read(new File("src/images/equipement/Epee.png"));
+
+            // Charger l'image de l'épée en bois
+            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/equipement/EpeeBois.png"));
+
+            // Charger image baton
+            IMAGE_BATON = ImageIO.read(new File("src/images/equipement/Baton.png"));
+
+            // Charger image hache
+            IMAGE_HACHE = ImageIO.read(new File("src/images/equipement/Hache.png"));
+
+            // Charger image épée lourde
+            IMAGE_EPEE_LOURDE = ImageIO.read(new File("src/images/equipement/EpeeLourde.png"));
+
+            // Charger image lance
+            IMAGE_LANCE = ImageIO.read(new File("src/images/equipement/Lance.png"));
+
+            // Charger l'image de l'armure légère
+            IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/equipement/ArmureLegere.png"));
+
             // Charger l'image de la potion de vie
             IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/PotionDeVie.png"));
         } catch (Exception e) {
@@ -251,26 +246,21 @@ public final class Constantes {
 
     public final static int LARGEUR_JOUEUR_SOURCE = 200;
     public final static int HAUTEUR_JOUEUR_SOURCE = 200;
+
+    public final static int LARGEUR_TOP_JOUEUR_SOURCE = 50;
+    public final static int HAUTEUR_TOP_JOUEUR_SOURCE = 50;
+
     public static Image IMAGE_JOUEUR = null;
+    public static Image IMAGE_TOP_JOUEUR = null;
     static {
         try {
             // Charger l'image du joueur
             IMAGE_JOUEUR = ImageIO.read(new File("src/images/perso.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    public final static int LARGEUR_TOP_JOUEUR_SOURCE = 50;
-    public final static int HAUTEUR_TOP_JOUEUR_SOURCE = 50;
-    public static Image IMAGE_TOP_JOUEUR = null;
-    static {
-        try {
-            // Charger l'image du joueur vue de dessus pour la minimap
+            // Charger l'image du joueur vue de dessus
             IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/perso_topview.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

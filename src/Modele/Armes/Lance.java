@@ -12,7 +12,7 @@ public class Lance extends Arme{
                 40,
                 150,
                 1000,
-                Math.PI / 8, // Angle d'attaque plus étroit que l'épée, reflétant la nature plus précise et linéaire de la lance
+                Math.PI / 12, // Angle d'attaque plus étroit que l'épée, reflétant la nature plus précise et linéaire de la lance
                 IMAGE_LANCE, // Image non définie pour l'instant
                 List.of("Bois:20", "Pierre:10") // Coût en ressources pour fabriquer la lance
         );
