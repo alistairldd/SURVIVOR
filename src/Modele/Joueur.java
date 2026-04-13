@@ -84,7 +84,7 @@ public class Joueur implements Localisable {
         // triche/test : on donne 50 pieces au joueur au départ
         pieces = 50;
         // Équipe l'arme de départ
-        armeEquipee = new Lance();
+        armeEquipee = new EpeeLourde();
         // Lie le joueur à son monde
         this.modele = modele;
     }

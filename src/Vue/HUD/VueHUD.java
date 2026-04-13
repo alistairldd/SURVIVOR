@@ -18,6 +18,8 @@ public class VueHUD extends JPanel {
     private Modele modele;
 
     // Le gestionnaire de mise en page en "paquet de cartes"
+    private JPanel panelCartes;
+
     private CardLayout cardLayout;
 
     // Les 3 pages indépendantes (qui hériteront de JPanel)
@@ -37,9 +39,13 @@ public class VueHUD extends JPanel {
         this.modele = modele;
         this.setPreferredSize(new Dimension(LARGEUR_HUD, getHeight()));
 
-        // Initialisation du CardLayout comme gestionnaire principal
+        this.setLayout(new BorderLayout());
+
+        panelCartes = new JPanel();
+        panelCartes.setOpaque(false); // rend le fond transrebnt pour voir la couleur de fond du HUD
         cardLayout = new CardLayout();
-        this.setLayout(cardLayout);
+        panelCartes.setLayout(cardLayout);
+
 
         // Instanciation des 3 pages (Conteneurs indépendants)
         pageEtat = new VueHUDPageEtat(modele);
@@ -52,10 +58,17 @@ public class VueHUD extends JPanel {
         JScrollPane scrollAction = creerScroll(pageAction);
         JScrollPane scrollBoutique = creerScroll(pageBoutique);
 
-        // Ajout des ascenseurs au layout avec un identifiant "String" unique
-        this.add(scrollEtat, "PAGE_1");
-        this.add(scrollAction, "PAGE_2");
-        this.add(scrollBoutique, "PAGE_3");
+        // Ajout du panel de cartes au centre du HUD
+        panelCartes.add(scrollEtat, "PAGE_1");
+        panelCartes.add(scrollAction, "PAGE_2");
+        panelCartes.add(scrollBoutique, "PAGE_3");
+        this.add(panelCartes, BorderLayout.CENTER);
+
+        // panneau vide en bas pour laisser de la place au timer
+        JPanel espaceJourNuit = new JPanel();
+        espaceJourNuit.setOpaque(false);
+        espaceJourNuit.setPreferredSize(new Dimension(LARGEUR_HUD, 350));
+        this.add(espaceJourNuit, BorderLayout.SOUTH);
     }
 
     /**
@@ -135,7 +148,7 @@ public class VueHUD extends JPanel {
         int pageActuelle = modele.getHudPageActuelle();
         if (pageActuelle != dernierePageAffichee) {
             // Demande au CardLayout d'afficher la carte correspondante
-            cardLayout.show(this, "PAGE_" + pageActuelle);
+            cardLayout.show(panelCartes, "PAGE_" + pageActuelle);
             dernierePageAffichee = pageActuelle;
         }
         // --- 3. AFFICHAGE DU TIMER ---
