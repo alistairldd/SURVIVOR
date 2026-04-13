@@ -137,7 +137,7 @@ public final class Constantes {
     static {
         try {
             // Charger la planche de slimes
-            BufferedImage planche = ImageIO.read(new File("src/images/slime.png"));
+            BufferedImage planche = ImageIO.read(new File("src/images/monstres/slime.png"));
 
 
             int[] lesX = {111, 85, 88, 1051, 1031, 1030}; // X pour chaque slime
@@ -173,7 +173,7 @@ public final class Constantes {
     static {
         try {
             // Charger la planche de slimes mutants
-            BufferedImage planche = ImageIO.read(new File("src/images/slime_mutant.png"));
+            BufferedImage planche = ImageIO.read(new File("src/images/monstres/slime_mutant.png"));
 
 
             int[] lesX = {150, 1038, 164, 1039, 166, 1022}; // X pour chaque slime
@@ -204,7 +204,7 @@ public final class Constantes {
     static {
         try {
             // Charger l'image de l'épée
-            IMAGE_EPEE = ImageIO.read(new File("src/images/Epee.png"));
+            IMAGE_EPEE = ImageIO.read(new File("src/images/equipement/Epee.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,7 +214,7 @@ public final class Constantes {
     static {
         try {
             // Charger l'image de l'épée
-            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/EpeeBois.png"));
+            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/equipement/EpeeBois.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,7 +232,7 @@ public final class Constantes {
     static {
         try {
             // Charger l'image de l'épée
-            IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/ArmureLegere.png"));
+            IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/equipement/ArmureLegere.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -255,7 +255,7 @@ public final class Constantes {
     static {
         try {
             // Charger l'image du joueur
-            IMAGE_JOUEUR = ImageIO.read(new File("src/images/Joueur.png"));
+            IMAGE_JOUEUR = ImageIO.read(new File("src/images/perso.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -267,7 +267,7 @@ public final class Constantes {
     static {
         try {
             // Charger l'image du joueur vue de dessus pour la minimap
-            IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/topview_perso.png"));
+            IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/perso_topview.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

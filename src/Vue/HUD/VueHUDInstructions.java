@@ -127,12 +127,12 @@ public class VueHUDInstructions extends JPanel {
         // Body text mapping
         g2d.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         String[] instructions = {
-                "• CLIC DROIT   : Déplacement vecteur",
-                "• CLIC GAUCHE  : Execution attaque",
-                "• R     : Extraction Mine",
-                "• T     : Build Tower (Resources req.)",
-                "• P    : Afficher PVs",
-                "• C     : Debug Range UI",
+                "• CLIC DROIT   : Déplacement",
+                "• CLIC GAUCHE  : Attaque",
+                "• R            : Extraction Mine",
+                "• T            : Construction d'une tour",
+                "• P            : Afficher PVs",
+                "• C            : Afficher la portée",
                 "• FLÈCHES      : Switch HUD Pages",
                 "• PAVÉ NUM     : Transaction Shop"
         };
