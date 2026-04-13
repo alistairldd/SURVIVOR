@@ -1,6 +1,7 @@
 package Modele;
 
 import Modele.Monstres.Monstre;
+import Modele.Monstres.Ogre;
 import Modele.Monstres.Slime;
 import Modele.Monstres.SlimeMutant;
 
@@ -89,6 +90,10 @@ public class GestionnaireMonstres {
                 case 1:
                     // Ajoute un nouveau Slime Mutant à la liste aux coordonnées calculées
                     monstres.add(new SlimeMutant(x,y, this));
+                    break;
+                case 2:
+                    // Ajoute un nouveau Ogre à la liste aux coordonnées calculées
+                    monstres.add(new Ogre(x,y, this));
                     break;
                 default:
                     // Par défaut (si type = 1 ou 2), crée un Slime pour le moment
