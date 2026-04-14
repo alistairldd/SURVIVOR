@@ -78,7 +78,7 @@ public class GestionnaireRessources {
 
                 // Si la ressource touche le centre du joueur (collision validée)
                 if (distance <= 10) {
-                    joueur.ajouterAInventaire(r); // Ajout au sac à dos
+                    joueur.ajouterARessources(r); // Ajout au sac à dos
                     ressources.remove(i);         // Disparition de la carte
                 }
             }

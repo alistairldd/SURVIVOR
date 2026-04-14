@@ -30,11 +30,15 @@ public class Joueur implements Localisable {
     // Dégâts de base du joueur (indépendants de l'arme)
     private int attack;
     // Liste représentant le sac à dos du joueur contenant les ressources ramassées
-    private static ArrayList<Ressource> inventaire;
+    private ArrayList<Item> inventaire;
+    // Liste des ressources ramassées
+    private ArrayList<Ressource> ressources = new ArrayList<>();
     // Argent du joueur
     private int pieces;
     // Arme actuellement tenue en main
     private Arme armeEquipee;
+    // Arme non équipée mais possédée par le joueur
+    private Arme armePasEquipee;
     // Armure du joueur
     private Item armureEquipee;
     // Booléen pour déterminer si le joueur a la pioche ou non
@@ -77,17 +81,20 @@ public class Joueur implements Localisable {
         // Initialisation de l'inventaire
         inventaire = new ArrayList<>();
         this.aPioche = false;
+
         // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
         for (int i = 0; i < 10; i++) {
-            inventaire.add(new Ressource(0)); // 0: Bois
-            inventaire.add(new Ressource(1)); // 1: Pierre
-            inventaire.add(new Ressource(2)); // 2: Fer
-            inventaire.add(new Ressource(3)); // 3: Or
+            ressources.add(new Ressource(0)); // 0: Bois
+            ressources.add(new Ressource(1)); // 1: Pierre
+            ressources.add(new Ressource(2)); // 2: Fer
+            ressources.add(new Ressource(3)); // 3: Or
         }
         // triche/test : on donne 50 pieces au joueur au départ
         pieces = 50;
         // Équipe l'arme de départ
-        armeEquipee = new Hache();
+        armeEquipee = new Baton();
+        // Arme non équipée existe pas encore
+        armePasEquipee = new EpeeLourde();
         // Pas d'armure au départ
         armureEquipee = null;
         // Lie le joueur à son monde
@@ -132,12 +139,20 @@ public class Joueur implements Localisable {
 
     public void setAttack(int attack) {this.attack = attack;}
 
-    public ArrayList<Ressource> getInventaire() {
+    public ArrayList<Item> getInventaire() {
         return inventaire;
     }
 
-    public void addToInventaire(Ressource item) {
+    public ArrayList<Ressource> getRessources(){
+        return ressources;
+    }
+
+    public void addToInventaire(Item item) {
         inventaire.add(item);
+    }
+
+    private void addToRessource(Ressource r) {
+        this.ressources.add(r);
     }
 
     // L'utilisation de 'synchronized' évite les conflits si le thread de déplacement et la boucle principale y accèdent en même temps
@@ -153,6 +168,16 @@ public class Joueur implements Localisable {
     public Arme getArmeEquipee() {return armeEquipee;}
     // Setter pour l'arme équipée du joueur
     public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
+    // Getter pour l'arme non équipée du joueur
+    public Arme getArmePasEquipee() {return armePasEquipee;}
+    // Setter pour l'arme non équipée du joueur
+    public void setArmePasEquipee(Arme armePasEquipee) {this.armePasEquipee = armePasEquipee;}
+    // Méthode pour échanger les armes équipée et non équipée
+    public void switchArmes() {
+        Arme temp = armeEquipee;
+        armeEquipee = armePasEquipee;
+        armePasEquipee = temp;
+    }
 
     public Item getArmureEquipee(){return armureEquipee;}
 
@@ -173,8 +198,12 @@ public class Joueur implements Localisable {
         }
     }
 
-    public void ajouterAInventaire(Ressource r) {
+    public void ajouterAInventaire(Item r) {
         inventaire.add(r);
+    }
+
+    public void ajouterARessources(Ressource r) {
+        ressources.add(r);
     }
 
     public ThreadReparation getThreadReparation() { return threadReparation; }
@@ -236,7 +265,7 @@ public class Joueur implements Localisable {
             // Vérifie si la ressource est à moins de 30 pixels de distance en X et en Y (Hitbox carrée)
             if (abs(r.getPositionY() - positionY) <= 30 && abs(r.getPositionX() - positionX)<= 30){// à modifier à terme (zone d'interaction du joueur)
                 // Ajoute au sac à dos
-                addToInventaire(r);
+                addToRessource(r);
                 // Retire du sol
                 ressourcesDispo.remove(i);
                 // Affiche l'inventaire complet dans la console pour debug
@@ -244,6 +273,8 @@ public class Joueur implements Localisable {
             }
         }
     }
+
+
 
 
     /**
@@ -299,7 +330,7 @@ public class Joueur implements Localisable {
      */
     public int calculerMaxToursConstructibles() {
         int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
-        for (Ressource r : inventaire) {
+        for (Ressource r : ressources) {
             switch (r.getType()) {
                 case 0: nbBois++; break;
                 case 1: nbPierre++; break;
@@ -345,7 +376,7 @@ public class Joueur implements Localisable {
 
         // 1. On compte ce qu'il y a dans l'inventaire en triant par type
         int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
-        for (Ressource r : inventaire) {
+        for (Ressource r : ressources) {
             // Associe l'ID du type à son compteur
             switch (r.getType()) {
                 case 0: nbBois++; break;   // Bois
@@ -398,11 +429,11 @@ public class Joueur implements Localisable {
         // Compteur de ressources déjà supprimées
         int supprimes = 0;
         // Parcours inversé indispensable quand on utilise un .remove() sur une liste dynamique
-        for (int i = inventaire.size() - 1; i >= 0; i--) {
+        for (int i = ressources.size() - 1; i >= 0; i--) {
             // Si l'objet correspond au type cherché
-            if (inventaire.get(i).getType() == type) {
+            if (ressources.get(i).getType() == type) {
                 // On le détruit
-                inventaire.remove(i);
+                ressources.remove(i);
                 // On incrémente le compteur
                 supprimes++;
                 // Dès qu'on a atteint la quantité exigée, on arrête de boucler
@@ -443,7 +474,7 @@ public class Joueur implements Localisable {
 
                     if (nbRessources > 0) {
                         // Transfert de la liste de la mine vers l'inventaire du joueur
-                        this.inventaire.addAll(mine.getRessources());
+                        this.ressources.addAll(mine.getRessources());
                         // Vidage de la mine
                         mine.getRessources().clear();
                         System.out.println("Succès : " + nbRessources + " minerais récoltés !");
@@ -565,7 +596,7 @@ public class Joueur implements Localisable {
     public boolean aAssezDeRessources(List<String> besoins) {
         // 1. Comptage des stocks actuels
         int bois = 0, pierre = 0, fer = 0, or = 0;
-        for (Ressource r : inventaire) {
+        for (Ressource r : ressources) {
             switch (r.getType()) {
                 case 0 -> bois++;
                 case 1 -> pierre++;

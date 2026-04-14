@@ -1,5 +1,6 @@
 package Vue.HUD;
 
+import Modele.Items.Item;
 import Modele.Joueur;
 import Modele.Modele;
 import Modele.Ressource;
@@ -39,14 +40,14 @@ public class VueHUDInventaire {
         g2d.drawString("RESSOURCES", xOffset, yCourant);
 
         // Récupère la liste brute des objets possédés
-        ArrayList<Ressource> inventaire = joueur.getInventaire();
-
+        ArrayList<Item> inventaire = joueur.getInventaire();
+        ArrayList<Ressource> ressources = joueur.getRessources();
         // Comptage des ressources (0: bois, 1: pierre, 2: fer, 3: or)
         // Crée un tableau de 4 cases pour stocker les totaux de chaque matériau
         int[] compteurs = new int[4];
 
         // Parcours du sac à dos entier
-        for (Ressource r : inventaire) {
+        for (Ressource r : ressources) {
             // Extrait l'identifiant (0, 1, 2 ou 3)
             int type = r.getType();
             // Sécurité : Vérifie que l'ID rentre bien dans notre tableau pour éviter un crash (IndexOutOfBounds)

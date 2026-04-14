@@ -45,7 +45,15 @@ public class ControleurClavier implements KeyListener {
                 modele.reinitialiserJeu();
                 return; // On bloque tout le reste des actions
             }
+
+            else {
+                if (!vue.getVueArme().getEnAnimation()) {
+                    modele.getJoueur().switchArmes();
+                }
+            }
         }
+
+
 
         /*** System.out.println("Action : La touche E a été pressée !");
          if (e.getKeyCode() == KeyEvent.VK_E) {
