@@ -49,7 +49,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 5;
+    public final static int DUREE_CYCLE_JOUR = 60;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -128,6 +128,12 @@ public final class Constantes {
     public static final int[] PRIX_ARMURE_LOURDE = {0, 20, 10, 0};
     public static final int[] PRIX_EPEE_AMELIOREE = {10, 0, 0, 5};
     public static final int[] PRIX_POTION = {5, 5, 0, 0};
+
+
+    // --- HUD ---
+    public static final int TAILLE_IMG = 80;
+    public static final int TAILLE_ICONE = 50;
+
 
     /*** --- Images --- ***/
     // Liste d'images pour l'affichage

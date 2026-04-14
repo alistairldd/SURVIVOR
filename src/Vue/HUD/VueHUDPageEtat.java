@@ -58,7 +58,7 @@ public class VueHUDPageEtat extends JPanel {
             throw new RuntimeException(e);
         }
 
-        y = vueHUDEquipement.dessiner(g, y, modele.getJoueur(), 20);
+        y = vueHUDEquipement.dessiner(g, y, modele.getJoueur());
 
 
 

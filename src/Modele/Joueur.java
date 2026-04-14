@@ -35,6 +35,8 @@ public class Joueur implements Localisable {
     private int pieces;
     // Arme actuellement tenue en main
     private Arme armeEquipee;
+    // Arme non équipée mais possédée par le joueur
+    private Arme armePasEquipee;
     // Armure du joueur
     private Item armureEquipee;
     // Booléen pour déterminer si le joueur a la pioche ou non
@@ -87,7 +89,9 @@ public class Joueur implements Localisable {
         // triche/test : on donne 50 pieces au joueur au départ
         pieces = 50;
         // Équipe l'arme de départ
-        armeEquipee = new Hache();
+        armeEquipee = new Baton();
+        // Arme non équipée existe pas encore
+        armePasEquipee = new EpeeLourde();
         // Pas d'armure au départ
         armureEquipee = null;
         // Lie le joueur à son monde
@@ -153,6 +157,16 @@ public class Joueur implements Localisable {
     public Arme getArmeEquipee() {return armeEquipee;}
     // Setter pour l'arme équipée du joueur
     public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
+    // Getter pour l'arme non équipée du joueur
+    public Arme getArmePasEquipee() {return armePasEquipee;}
+    // Setter pour l'arme non équipée du joueur
+    public void setArmePasEquipee(Arme armePasEquipee) {this.armePasEquipee = armePasEquipee;}
+    // Méthode pour échanger les armes équipée et non équipée
+    public void switchArmes() {
+        Arme temp = armeEquipee;
+        armeEquipee = armePasEquipee;
+        armePasEquipee = temp;
+    }
 
     public Item getArmureEquipee(){return armureEquipee;}
 

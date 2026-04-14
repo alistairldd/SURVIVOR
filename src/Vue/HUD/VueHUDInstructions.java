@@ -133,6 +133,7 @@ public class VueHUDInstructions extends JPanel {
                 "• T            : Construction d'une tour",
                 "• P            : Afficher PVs",
                 "• C            : Afficher la portée",
+                "• ESPACE       : Changer d'arme",
                 "• FLÈCHES      : Switch HUD Pages",
                 "• PAVÉ NUM     : Transaction Shop"
         };

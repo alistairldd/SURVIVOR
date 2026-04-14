@@ -43,12 +43,6 @@ public class VueArme {
     // Flag pour afficher ou non la portée de l'arme (cône d'attaque)
     private boolean affPortee = false; // affiche la portée de l'arme (c
 
-
-
-
-
-    private Image image;
-
     // Dimensions de l'image source de l'arme
     private int imgWidth;
     private int imgHeight;
@@ -58,18 +52,6 @@ public class VueArme {
         this.controleurSouris = controleurSouris;
         this.modele = modele;
         this.vue = vue;
-
-        Arme armeEquipee = modele.getJoueur().getArmeEquipee();
-        image = armeEquipee.getImage();
-
-        // Initialiser les dimensions de l'image
-        if (image != null) {
-            this.imgWidth = image.getWidth(null);
-            this.imgHeight = image.getHeight(null);
-        } else {
-            this.imgWidth = 0;
-            this.imgHeight = 0;
-        }
     }
 
     public boolean getAffPortee() {
@@ -94,6 +76,10 @@ public class VueArme {
     // Verrouille ou déverrouille l'état d'animation
     public void setEnAnimation(boolean b) {
         this.enAnimation = b;
+    }
+
+    public boolean getEnAnimation() {
+        return enAnimation;
     }
 
 
@@ -121,6 +107,7 @@ public class VueArme {
 
         // Récupère les caractéristiques physiques de l'arme pour l'affichage (notamment sa longueur/portée)
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
+        Image image = armeEquipee.getImage();
         int portee = armeEquipee.getPortee();
         double ouvertureCone = armeEquipee.getAngle();
 
@@ -191,8 +178,6 @@ public class VueArme {
         // Dessiner l'arme (couleur générique grise)
         g2d.setColor(Color.GRAY);
 
-
-
         // Scalage dynamique de l'image de l'arme basé sur la portée de l'arme
         if (image == null) {
             // Si l'image de l'arme n'est pas chargée, dessiner un rectangle pour indiquer une erreur
@@ -201,24 +186,11 @@ public class VueArme {
         } else {
             // Calculer les dimensions scalées basées sur la portée de l'arme
             int scaledWidth = (int) (portee * RATIO_LARGEUR);
-            int scaledHeight = (int) ((scaledWidth * imgHeight) / (double) imgWidth);
+            int scaledHeight = (int) ((scaledWidth * image.getHeight(null)) / (double) image.getWidth(null));
 
             // Positionner l'image avec les constantes définies pour éviter les valeurs hardcodées
             int posX = OFFSET_START_ARME;
-            int posY = -OFFSET_Y_ARME;
-
-            if (Objects.equals(armeEquipee.getNom(), "Baton")){
-                posY = -5; // ajustement spécifique pour le bâton
-            }
-            if (Objects.equals(armeEquipee.getNom(), "Epee")){
-                posY = -15; // ajustement spécifique pour l'épée'
-            }
-            if (Objects.equals(armeEquipee.getNom(), "Epee Lourde")){
-                posY = -25; // ajustement spécifique pour l'épée lourde'
-            }
-            if (Objects.equals(armeEquipee.getNom(), "Lance")){
-                posY = -17; // ajustement spécifique pour lance'
-            }
+            int posY = getPosY(armeEquipee);
 
             // Dessiner l'image avec les dimensions scalées
             g2d.drawImage(image, posX, posY, scaledWidth, scaledHeight, null);
@@ -237,6 +209,24 @@ public class VueArme {
 
         // Libère la mémoire et annule les translations/rotations pour les prochains dessins
         g2d.dispose();
+    }
+
+    private int getPosY(Arme armeEquipee) {
+        int posY = -OFFSET_Y_ARME;
+
+        if (Objects.equals(armeEquipee.getNom(), "Baton")){
+            posY = -5; // ajustement spécifique pour le bâton
+        }
+        if (Objects.equals(armeEquipee.getNom(), "Epee")){
+            posY = -15; // ajustement spécifique pour l'épée'
+        }
+        if (Objects.equals(armeEquipee.getNom(), "Epee Lourde")){
+            posY = -25; // ajustement spécifique pour l'épée lourde'
+        }
+        if (Objects.equals(armeEquipee.getNom(), "Lance")){
+            posY = -17; // ajustement spécifique pour lance'
+        }
+        return posY;
     }
 
 }

@@ -11,13 +11,12 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import static Modele.Constantes.TAILLE_IMG;
 import static Modele.Constantes.xOffset;
 
 public class VueHUDShop {
 
     private final int HAUTEUR_ITEM = 100;
-    private final int TAILLE_IMG = 80;
     private Map<Rectangle, Object> zonesCliquables = new HashMap<>();
 
     public int dessiner(Graphics g, int yDebut, Modele modele) {
@@ -126,7 +125,21 @@ public class VueHUDShop {
             // --- 4. DESSIN DU BLOC ITEM (IMAGE + TEXTES) ---
             // Image à gauche
             if (img != null) {
-                g2d.drawImage(img, xOffset, y, TAILLE_IMG, TAILLE_IMG, null);
+                // Dimensions originales de l'image
+                int imgW = img.getWidth(null);
+                int imgH = img.getHeight(null);
+
+                // Calcul du ratio pour tenir dans TAILLE_IMG x TAILLE_IMG
+                float ratio = Math.min((float) TAILLE_IMG / imgW, (float) TAILLE_IMG / imgH);
+
+                int drawW = Math.round(imgW * ratio);
+                int drawH = Math.round(imgH * ratio);
+
+                // Centrage dans le carré
+                int offsetX = xOffset + (TAILLE_IMG - drawW) / 2;
+                int offsetY = y + (TAILLE_IMG - drawH) / 2;
+
+                g2d.drawImage(img, offsetX, offsetY, drawW, drawH, null);
             } else {
                 g2d.setColor(new Color(0, 0, 0, 30));
                 g2d.fillRect(xOffset, y, TAILLE_IMG, TAILLE_IMG);
