@@ -13,6 +13,11 @@ public final class Constantes {
     private Constantes() {
     }
 
+    /*** --- DIMENSIONS DE RENDU --- ***/
+    public static final int TAILLE_BATIMENT = 200;
+    public static final int TAILLE_HQ = 400;
+    public static final int TAILLE_BATIMENT_MINIMAP = 6;
+
     /*** ---Bâtiments--- ***/
     // Paramètres d'équilibrage du soin
     public static int SOIN_BAT = 1; // Nombre de PV restaurés par itération
@@ -30,10 +35,10 @@ public final class Constantes {
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
     public static final int MINE_BASE_RANGE = 100;
-    public static final int RAYON_HITBOX_TOUR = 50; // Rayon d'encombrement d'une tour
-    public static final int RAYON_HITBOX_MINE = 100; // Rayon d'encombrment de la mine
-    public static final int RAYON_HITBOX_QG = 80;   // Le QG est plus gros, il prend plus de place
-
+    public static final int RAYON_HITBOX_TOUR =  10; // Rayon d'encombrement d'une tour
+    public static final int RAYON_HITBOX_MINE = TAILLE_BATIMENT + 10; // Rayon d'encombrment de la mine
+    public static final int RAYON_HITBOX_QG = TAILLE_HQ + 10;   // Le QG est plus gros, il prend plus de place
+    public static final int RAYON_HITBOX_TENTE = TAILLE_BATIMENT/2 + 5; // La tente de soin a une hitbox intermédiaire
     /*--- Mine ---*/
     public static final int PROBA_PIERRE = 70; // 50% de chance d'obtenir de la pierre
     public static final int PROBA_FER = 25;   // 30% de chance d'obtenir du fer
@@ -136,6 +141,35 @@ public final class Constantes {
 
 
     /*** --- Images --- ***/
+
+    public static Image IMAGE_HQ = null;
+    public static Image IMAGE_HQ_ENDOMMAGE = null;
+    public static Image IMAGE_TOUR = null;
+    public static Image IMAGE_TOUR_ENDOMMAGE = null;
+    public static Image IMAGE_MINE = null;
+    public static Image IMAGE_MINE_ENDOMMAGE = null;
+    public static Image IMAGE_TENTE = null;
+    public static Image IMAGE_TENTE_ENDOMMAGE = null;
+
+    static {
+        try {
+            IMAGE_HQ = chargerEtRedimensionner("src/images/Batiments/HQ.png", TAILLE_HQ);
+            IMAGE_HQ_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/HQ_endommage.png", TAILLE_HQ);
+
+            IMAGE_TOUR = chargerEtRedimensionner("src/images/Batiments/tour.png", TAILLE_BATIMENT);
+            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tour_endommage.png", TAILLE_BATIMENT);
+
+            IMAGE_MINE = chargerEtRedimensionner("src/images/Batiments/mine.png", TAILLE_BATIMENT);
+            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/mine_endommage.png", TAILLE_BATIMENT);
+
+            IMAGE_TENTE = chargerEtRedimensionner("src/images/Batiments/tente.png", TAILLE_BATIMENT);
+            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tente_endommage.png", TAILLE_BATIMENT);
+        } catch (Exception e) {
+            System.err.println("ERREUR : Impossible de charger les images des bâtiments.");
+            e.printStackTrace();
+        }
+    }
+
     // Liste d'images pour l'affichage
     // Liste pour les slimes
     public final static List<Image> IMAGES_SLIMES = new ArrayList<>();
@@ -270,5 +304,15 @@ public final class Constantes {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static Image chargerEtRedimensionner(String chemin, int taille) throws IOException {
+        File fichier = new File(chemin);
+        if (!fichier.exists()) {
+            System.out.println("Attention : Fichier manquant -> " + chemin);
+            return null;
+        }
+        BufferedImage img = ImageIO.read(fichier);
+        return img.getScaledInstance(taille, taille, Image.SCALE_SMOOTH);
     }
 }

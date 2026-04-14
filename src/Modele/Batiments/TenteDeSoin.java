@@ -31,7 +31,7 @@ public class TenteDeSoin extends Batiment{
         // Applique les statistiques de soin par défaut
         this.range = HEALING_RANGE;
         this.heal = HEALING_POWER;
-        this.rayonHitbox = RAYON_HITBOX_TOUR;
+        this.rayonHitbox = RAYON_HITBOX_TENTE;
     }
 
     public int getRange() { return range; }
