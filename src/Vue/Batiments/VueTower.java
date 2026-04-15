@@ -7,42 +7,45 @@ import static Modele.Constantes.*;
 
 /**
  * Classe utilitaire dédiée au rendu de la Tour Défensive.
- * Gère le sprite, l'aura de portée et les VFX balistiques (laser calculé par raycasting).
+ * Gère séparément l'aura (au sol) et le sprite avec ses effets balistiques.
  */
 public class VueTower {
 
     /**
-     * Procédure de rendu de la Tour.
-     * @param g2d Le contexte graphique.
-     * @param t L'instance de la tour à dessiner.
-     * @param x Coordonnée X (écran).
-     * @param y Coordonnée Y (écran).
-     * @param minimap Si vrai, dessine un symbole simplifié.
+     * PASSE 1 : Dessine uniquement l'aura de portée au sol.
      */
-    public static void dessiner(Graphics2D g2d, Tower t, int x, int y, boolean minimap) {
+    public static void dessinerAura(Graphics2D g2d, Tower t, int x, int y) {
+        int portee = t.getRange();
 
+        // Configuration de la transparence pour l'aura
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+
+        // Changement de couleur selon l'état de santé
+        Color couleurAura = t.getHp() <= 0.1 * HP_TOWER ? Color.RED : Color.CYAN;
+        g2d.setColor(couleurAura);
+
+        // Remplissage du cercle
+        g2d.fillOval(x - portee, y - portee, portee * 2, portee * 2);
+
+        // Bordure un peu plus visible
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+        g2d.setStroke(new BasicStroke(2));
+        g2d.drawOval(x - portee, y - portee, portee * 2, portee * 2);
+
+        // Reset des paramètres pour ne pas affecter les autres dessins
+        g2d.setStroke(new BasicStroke(1));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+    }
+
+    /**
+     * PASSE 2 : Dessine le volume (Sprite) et les effets de tir.
+     */
+    public static void dessinerSprite(Graphics2D g2d, Tower t, int x, int y, boolean minimap) {
         if (minimap) {
-            // Rendu Minimap : Un petit carré cyan (ou rouge si HP critique)
             g2d.setColor(t.getHp() <= 0.1 * HP_TOWER ? Color.RED : Color.CYAN);
             g2d.fillRect(x - (TAILLE_BATIMENT_MINIMAP / 2), y - (TAILLE_BATIMENT_MINIMAP / 2), TAILLE_BATIMENT_MINIMAP, TAILLE_BATIMENT_MINIMAP);
         } else {
-            // --- 1. DESSIN DU CERCLE DE PORTÉE (AURA) ---
-            int portee = t.getRange();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-
-            // L'aura devient rouge si la tour est presque détruite
-            Color couleurAura = t.getHp() <= 0.1 * HP_TOWER ? Color.RED : Color.CYAN;
-            g2d.setColor(couleurAura);
-            g2d.fillOval(x - portee, y - portee, portee * 2, portee * 2);
-
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
-            g2d.setStroke(new BasicStroke(2));
-            g2d.drawOval(x - portee, y - portee, portee * 2, portee * 2);
-
-            // On remet l'opacité à 100% pour la suite
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-
-            // --- 2. DESSIN DU SPRITE DE LA TOUR ---
+            // 1. DÉTERMINATION DU SPRITE SELON L'ÉTAT
             Image spriteAAfficher;
             if (!t.isFonctionnel() || t.getHp() <= (t.getMaxHp() / 2)) {
                 spriteAAfficher = IMAGE_TOUR_ENDOMMAGE;
@@ -50,50 +53,58 @@ public class VueTower {
                 spriteAAfficher = IMAGE_TOUR;
             }
 
+            // 2. RENDU DU SPRITE (Ancré au bas-milieu pour la 2.5D)
             if (spriteAAfficher != null) {
-                g2d.drawImage(spriteAAfficher, x - (TAILLE_TOUR / 2), y - TAILLE_TOUR* 4/5, null);
+                g2d.drawImage(spriteAAfficher, x - (TAILLE_TOUR / 2), y - (TAILLE_TOUR * 4 / 5), null);
             } else {
-                g2d.setColor(couleurAura);
+                g2d.setColor(Color.CYAN);
                 g2d.fillRect(x - (TAILLE_TOUR / 2), y - TAILLE_TOUR, TAILLE_TOUR, TAILLE_TOUR);
             }
 
-            // --- 3. EFFET D'ATTAQUE (LASER ET RAYCASTING) ---
+            // 3. EFFET DE TIR (LASER)
             Monstre cible = t.getMonstreCible();
-
-            // Le laser ne s'affiche que pendant 150ms après le tir
             if (cible != null && (System.currentTimeMillis() - t.getDernierTempsAttaque() < 150)) {
-                int cibleX = (int) cible.getX();
-                int cibleY = (int) cible.getY();
-                int tailleProjectile = 8;
-                int demiTailleMonstre = TAILLE_MONSTRE / 2;
-
-                double dx = cibleX - x;
-                double dy = cibleY - y;
-                double distance = Math.hypot(dx, dy);
-
-                if (distance > 1) { // Sécurité anti-division par zéro
-                    // Mathématiques : calcul du point d'impact sur le bord du monstre
-                    double tx = (dx == 0) ? Double.MAX_VALUE : Math.abs(demiTailleMonstre / dx);
-                    double ty = (dy == 0) ? Double.MAX_VALUE : Math.abs(demiTailleMonstre / dy);
-                    double tIntersection = Math.min(tx, ty);
-
-                    int posBouleX = (int) (x + dx * (1 - tIntersection));
-                    int posBouleY = (int) (y + dy * (1 - tIntersection));
-
-                    // Traînée du laser (Jaune transparent 50%)
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                    g2d.setColor(Color.YELLOW);
-                    g2d.setStroke(new BasicStroke(3));
-                    g2d.drawLine(x, y, posBouleX, posBouleY);
-
-                    // Impact / Boule d'énergie (Jaune opaque 100%)
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-                    g2d.fillOval(posBouleX - (tailleProjectile/2), posBouleY - (tailleProjectile/2), tailleProjectile, tailleProjectile);
-                }
-
-                // Reset de l'épaisseur du trait pour ne pas polluer les autres dessins
-                g2d.setStroke(new BasicStroke(1));
+                dessinerLaser(g2d, t, cible, x, y);
             }
+        }
+    }
+
+    /**
+     * Méthode interne pour le rendu balistique du laser.
+     */
+    private static void dessinerLaser(Graphics2D g2d, Tower t, Monstre cible, int x, int y) {
+        int cibleX = (int) cible.getX();
+        int cibleY = (int) cible.getY();
+        int tailleProjectile = 8;
+        int demiTailleMonstre = TAILLE_MONSTRE / 2;
+
+        // Calcul du sommet de la tour (point de départ du laser)
+        int sommetX = x;
+        int sommetY = y - (TAILLE_TOUR / 2);
+
+        double dx = cibleX - sommetX;
+        double dy = cibleY - sommetY;
+        double distance = Math.hypot(dx, dy);
+
+        if (distance > 1) {
+            double tx = (dx == 0) ? Double.MAX_VALUE : Math.abs(demiTailleMonstre / dx);
+            double ty = (dy == 0) ? Double.MAX_VALUE : Math.abs(demiTailleMonstre / dy);
+            double tIntersection = Math.min(tx, ty);
+
+            int impactX = (int) (sommetX + dx * (1 - tIntersection));
+            int impactY = (int) (sommetY + dy * (1 - tIntersection));
+
+            // Trait du laser
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            g2d.setColor(Color.YELLOW);
+            g2d.setStroke(new BasicStroke(3));
+            g2d.drawLine(sommetX, sommetY, impactX, impactY);
+
+            // Impact
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            g2d.fillOval(impactX - (tailleProjectile/2), impactY - (tailleProjectile/2), tailleProjectile, tailleProjectile);
+
+            g2d.setStroke(new BasicStroke(1));
         }
     }
 }

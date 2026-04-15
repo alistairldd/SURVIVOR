@@ -17,6 +17,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Architecture de rendu hybride (JLayeredPane).
@@ -76,10 +78,7 @@ public class Vue extends JPanel {
         this.vueInstructions = new VueHUDInstructions(modele);
 
         // --- ASSEMBLAGE DES COUCHES ---
-        // Le moteur de rendu (this) est sur la couche de fond
         layeredPane.add(this, JLayeredPane.DEFAULT_LAYER);
-
-        // L'interface interactive est sur la couche supérieure
         layeredPane.add(vueInstructions, JLayeredPane.PALETTE_LAYER);
 
         maFenetre.add(layeredPane, BorderLayout.CENTER);
@@ -93,7 +92,6 @@ public class Vue extends JPanel {
 
         this.vueArme = new VueArme(controleurSouris, this, modele);
 
-        // 7. Auto-scaling des calques lors du redimensionnement de la Frame
         maFenetre.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -103,21 +101,15 @@ public class Vue extends JPanel {
             }
         });
 
-        // Lancement du Thread de rafraîchissement
         new Redessine(this, modele);
 
         maFenetre.pack();
         maFenetre.setVisible(true);
 
-        // Capture du focus pour le KeyListener
         this.setFocusable(true);
         this.requestFocusInWindow();
     }
 
-    /**
-     * Méthode de rendu du monde.
-     * Les composants Overlay Swing sont gérés par le LayeredPane et ne sont pas dessinés ici.
-     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -126,23 +118,24 @@ public class Vue extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        // --- CAMÉRA ---
         Joueur joueur = modele.getJoueur();
         double camX = joueur.getX() - ((double) getWidth() / 2);
         double camY = joueur.getY() - ((double) getHeight() / 2);
 
-        // --- TRANSLATION CAMÉRA (COORDONNÉES MONDE) ---
+        // --- TRANSLATION CAMÉRA ---
         g2d.translate(-camX, -camY);
 
-        // --- RENDU MONDE ---
+        // --- RENDU FOND (SOL) ---
         vueCarte.dessiner(g2d);
 
         for (Ressource r : modele.getUpdateJN().getRessources()) {
             vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
+        // --- PASSE 1 : LES AURAS ET EFFETS AU SOL ---
+        // On dessine toutes les portées en premier pour qu'elles soient SOUS les bâtiments
         for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
-            VueBatiment.dessinerBatiment(g2d, b, (int) b.getX(), (int) b.getY(), false);
+            VueBatiment.dessinerAura(g2d, b, (int) b.getX(), (int) b.getY());
         }
 
         vueEffetSoin.miseAJour();
@@ -151,30 +144,43 @@ public class Vue extends JPanel {
         vueEffetTente.miseAJour();
         vueEffetTente.dessiner(g2d);
 
-        vueArme.dessiner(g2d);
+        // --- TRI PAR PROFONDEUR (Y-SORTING) ---
+        // On crée une liste d'entités "physiques" (Bâtiments, Monstres, Joueur)
+        ArrayList<Localisable> entites = new ArrayList<>();
+        entites.addAll(modele.getGestionnaireBatiments().getBatiments());
+        entites.addAll(modele.getUpdateJN().getMonstres());
+        entites.add(joueur);
 
-        for (Monstre m : modele.getUpdateJN().getMonstres()) {
-            vueMonstre.dessiner(g2d, m, (int) m.getX(), (int) m.getY(), false);
+        // Tri : les éléments les plus hauts (Y petit) sont dessinés en premier,
+        // les éléments les plus bas (Y grand) par-dessus.
+        entites.sort(Comparator.comparingDouble(Localisable::getY));
+
+        // --- PASSE 2 : LES VOLUMES (SPRITES) ---
+        for (Localisable entite : entites) {
+            if (entite instanceof Batiment) {
+                VueBatiment.dessinerSprite(g2d, (Batiment) entite, (int) entite.getX(), (int) entite.getY(), false);
+            } else if (entite instanceof Monstre) {
+                vueMonstre.dessiner(g2d, (Monstre) entite, (int) entite.getX(), (int) entite.getY(), false);
+            } else if (entite instanceof Joueur) {
+                // Le joueur et son arme sont dessinés ici pour s'insérer dans le tri
+                vueArme.dessiner(g2d);
+            }
         }
 
-        // --- #DEV : INJECTION DU RENDU DES PV ---
-        // On dessine ici pour que les barres suivent les coordonnées du monde
+        // --- #DEV : RENDU DES PV (Toujours au-dessus de tout le reste) ---
         if (modele.isAffichagePV()) {
             VueBarreDeVie.dessiner(g2d, joueur);
-
             for (Monstre m : modele.getUpdateJN().getMonstres()) {
                 VueBarreDeVie.dessiner(g2d, m);
             }
-
             for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
                 if (!(b instanceof Mine)) VueBarreDeVie.dessiner(g2d, b);
             }
         }
 
-        // --- RESET TRANSLATION (COORDONNÉES ÉCRAN) ---
+        // --- RESET TRANSLATION ---
         g2d.translate(camX, camY);
 
-        // --- GAME OVER ---
         if (modele.getPartieTerminee()) {
             dessinerGameOver(g2d);
             return;
@@ -183,6 +189,7 @@ public class Vue extends JPanel {
         dessineMinimap(g2d);
     }
 
+    // (Le reste de la classe reste identique : dessinerGameOver, dessineMinimap, etc.)
     private void dessinerGameOver(Graphics2D g2d) {
         g2d.setColor(new Color(0, 0, 0, 160));
         g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -248,13 +255,11 @@ public class Vue extends JPanel {
         }
     }
 
-    // --- ACCESSEURS (Getters) ---
     public VueHUD getVueHUD() { return vueHUD; }
     public VueArme getVueArme() { return vueArme; }
     public JFrame getMaFenetre() { return maFenetre; }
 
     public Object identifierElementClique(int x, int y, Object source) {
-        // Si la source du clic est le panneau de la boutique
         if (source == vueHUD.getPageBoutique()) {
             return vueHUD.getPageBoutique().getVueHUDShop().getObjetAuClic(x, y);
         }
