@@ -66,7 +66,7 @@ public class DeplaceJoueur extends Thread {
 
             try {
                 // Met le thread en pause pendant 50ms (crée l'effet de mouvement fluide)
-                Thread.sleep(50);
+                Thread.sleep(Math.max(1, 50 / (1 + joueur.getVitesse())));
             } catch (InterruptedException e) {
                 // Si le thread est interrompu pendant son sommeil, on relance l'interruption pour sortir proprement de la boucle
                 Thread.currentThread().interrupt();

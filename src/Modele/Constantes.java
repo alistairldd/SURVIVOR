@@ -255,6 +255,7 @@ public final class Constantes {
     public static Image IMAGE_ARMURE_LOURDE = null;
 
     public static Image IMAGE_POTION_DE_VIE = null;
+    public static Image IMAGE_POTION_VITESSE = null;
 
     static {
         try {
@@ -282,7 +283,9 @@ public final class Constantes {
             //Charger l'image de l'armure lourde
             IMAGE_ARMURE_LOURDE = ImageIO.read(new File("src/images/equipement/ArmureLourde.png"));
             // Charger l'image de la potion de vie
-            IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/PotionDeVie.png"));
+            IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/items/PotionDeVie.png"));
+            // Charger l'image de la potion de vitesse
+            IMAGE_POTION_VITESSE = ImageIO.read(new File("src/images/items/PotionVitesse.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

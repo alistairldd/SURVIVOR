@@ -8,6 +8,8 @@ import Modele.Armure.Armure;
 import Modele.Armure.ArmureLegere;
 import Modele.Armure.ArmureLourde;
 import Modele.Items.Item;
+import Modele.Items.PotionVie;
+import Modele.Items.PotionVitesse;
 
 import static Modele.Constantes.*;
 
@@ -66,7 +68,7 @@ public class Joueur implements Localisable {
     // Déplacement
     // Garde une trace du thread de déplacement en cours pour pouvoir l'interrompre si un nouveau clic est fait
     private static DeplaceJoueur threadActuel = null;
-
+    private int vitesse;
     // Garde une trace du thread de soin en cours pour pouvoir l'interrompre si besoin
     private ThreadReparation threadReparation = null;
 
@@ -104,6 +106,8 @@ public class Joueur implements Localisable {
         armurePrincipale = new ArmureLegere();
         // armureSecondaire
         armureSecondaire = new ArmureLourde();
+        // Vitesse de déplacement
+        vitesse = 0;
         // Lie le joueur à son monde
         this.modele = modele;
     }
@@ -226,6 +230,23 @@ public class Joueur implements Localisable {
     public void setaPioche(boolean aPioche) {
         this.aPioche = aPioche;
     }
+
+    public void utilierConsommable(Item item) {
+        if (item instanceof PotionVie) {
+            soigner(item.getEffet());
+            removeFromInventaire(item);
+        }
+        if (item instanceof PotionVitesse){
+            incrVitesse(item.getEffet());
+            removeFromInventaire(item);
+        }
+    }
+
+    // Méthode pour augmenter (ou baisser) la vitesse du joueur
+    private void incrVitesse(int i) {vitesse += i;}
+
+    // Getter pour la vitesse du joueur
+    public int getVitesse() {return vitesse;}
 
     public void soigner(int soin){
         this.hp += soin;
@@ -682,4 +703,5 @@ public class Joueur implements Localisable {
             if (type != -1) this.consommerRessource(type, quantite);
         }
     }
+
 }

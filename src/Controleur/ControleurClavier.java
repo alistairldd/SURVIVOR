@@ -1,6 +1,7 @@
 package Controleur;
 
 import Modele.Items.PotionVie;
+import Modele.Items.PotionVitesse;
 import Modele.Modele;
 import Vue.Vue;
 import Vue.VueArme;
@@ -9,6 +10,7 @@ import Modele.GestionnaireShop;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 
 /**
  * Contrôleur dédié à la gestion des événements du clavier.
@@ -59,7 +61,11 @@ public class ControleurClavier implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_E){
-            modele.getJoueur().removeFromInventaire(new PotionVie());
+            modele.getJoueur().utilierConsommable(new PotionVitesse());
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_Z){
+            modele.getJoueur().addToInventaire(new PotionVitesse());
         }
 
         /*** System.out.println("Action : La touche E a été pressée !");
