@@ -72,6 +72,8 @@ public class Joueur implements Localisable {
     // Garde une trace du thread de soin en cours pour pouvoir l'interrompre si besoin
     private ThreadReparation threadReparation = null;
 
+    private int reduction;
+
     /**
      * Constructeur principal du joueur.
      * Initialise ses statistiques, le place au centre de la carte et lui donne un inventaire de départ.
@@ -103,11 +105,15 @@ public class Joueur implements Localisable {
         // Arme non équipée existe pas encore
         armePasEquipee = new EpeeLourde();
         // Pas d'armure au départ
-        armurePrincipale = new ArmureLegere();
+        armurePrincipale = null;
+        setArmureEquipee(new ArmureLegere());
         // armureSecondaire
         armureSecondaire = new ArmureLourde();
         // Vitesse de déplacement
         vitesse = 0;
+
+        // Réduction de dégâts
+        reduction = 0;
         // Lie le joueur à son monde
         this.modele = modele;
     }
@@ -206,7 +212,18 @@ public class Joueur implements Localisable {
     public Armure getArmurePrincipale(){return armurePrincipale;}
 
     // Setter pour l'armure équipée du joueur
-    public void setArmureEquipee(Armure armureEquipee){this.armurePrincipale = armureEquipee;}
+    public void setArmureEquipee(Armure armureEquipee){
+        this.armurePrincipale = armureEquipee;
+        setReductionDegats(armureEquipee.getReduction());
+    }
+
+    public void setReductionDegats(int reduction) {
+        this.reduction = reduction;
+    }
+
+    public int getReductionDegats() {
+        return this.reduction;
+    }
 
     // Getter pour l'armure secondaire du joueur
     public Armure getArmureSecondaire(){return armureSecondaire;}
@@ -643,7 +660,7 @@ public class Joueur implements Localisable {
     }
 
     public void equiperArmure(Armure nouvelleArmure) {
-        setHpMax(getHpMax()+nouvelleArmure.getBonusVie());
+        setReductionDegats(nouvelleArmure.getReduction());
     }
 
     public boolean aAssezDeRessources(List<String> besoins) {

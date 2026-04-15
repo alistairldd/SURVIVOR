@@ -10,15 +10,16 @@ public class ArmureLegere extends Armure{
     public ArmureLegere() {
         super(
                 "Armure légère",
-                20,
+                5,
                 IMAGE_ARMURE_LEGERE,
+                -1,
                 List.of("Bois:5","Pierre:5")
         ); // Bonus de 20 PV pour une armure légère
     }
 
     @Override
-    public int getBonusVie() {
-        return super.getBonusVie(); // Récupère le bonus de vie défini dans la classe parente
+    public int getReduction() {
+        return super.getReduction(); // Récupère le bonus de vie défini dans la classe parente
     }
 
     @Override

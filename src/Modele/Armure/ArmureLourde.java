@@ -9,14 +9,15 @@ public class ArmureLourde extends Armure{
     public ArmureLourde(){
         super(
                 "Armure lourde",
-                50,
+                10,
                 IMAGE_ARMURE_LOURDE,
+                -10,
                 List.of("Fer:20","Pierre:10")
         );
     }
     @Override
-    public int getBonusVie() {
-        return super.getBonusVie(); // Récupère le bonus de vie défini dans la classe parente
+    public int getReduction() {
+        return super.getReduction(); // Récupère le bonus de vie défini dans la classe parente
     }
 
     @Override

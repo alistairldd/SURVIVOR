@@ -78,8 +78,8 @@ public class    VueVie {
             g2d.drawString(nom + " : " + vie + " / " + vieMax + " PV", xOffset, yCourant);
 
             yCourant += 20; // On descend pour l'image
-            // 2. Dessin de l'image de l'entité
-            tailleImage = 100;
+            // Dessin de l'image de l'entité
+            tailleImage = 150;
             int hauteurProp;
             if (img != null) {
                 if (nom.equals("Slime")) {
@@ -89,10 +89,11 @@ public class    VueVie {
                 }
                 int offsetCentrageY = (tailleImage - hauteurProp) / 2;
 
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.fillRect(xOffset, yCourant, tailleImage, tailleImage);
                 // Dessine l'image redimensionnée pour remplir le cadre de 100x100
                 g2d.drawImage(img, xOffset, yCourant + offsetCentrageY, tailleImage, hauteurProp, null);
 
-                // Optionnel : un petit contour blanc pour faire "propre"
                 g2d.setColor(Color.WHITE);
                 g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
                 } else {

@@ -102,14 +102,16 @@ public class GestionnaireShop {
         // Si votre classe Objets utilise getPrix(), on peut simuler une liste "Or:X"
         // Ou mieux : ajouter getRessourcesNecessaires() à la classe parente Objets.
 
-        if (j.getPieces()>= besoins) {
+        /*if (j.getPieces()>= besoins) {
             j.setPieces(j.getPieces()-besoins);
-            if (i instanceof PotionVie) {
+            if (i instanceof Item) {
                 j.soigner(((PotionVie) i).getSoin());
                 System.out.println("Potion de vie utilisée !");
             }
         } else {
             System.out.println("Pas assez d'or pour cet objet !");
         }
+        */
+
     }
 }

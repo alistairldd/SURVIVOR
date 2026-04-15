@@ -1,5 +1,6 @@
 package Modele.Monstres;
 
+import Modele.Joueur;
 import Modele.Localisable;
 
 import java.awt.*;
@@ -160,7 +161,14 @@ public abstract class Monstre extends Thread implements Localisable {
 
         // Si assez de temps est passé (1 seconde)
         if (tempsDepuisDerniereAttaque >= cadenceAttaque) {
-            cible.setHp(Math.max(cible.getHp() - this.attack, 0)); // La cible perd des PV
+            if (cible instanceof Joueur){
+                Joueur j = (Joueur) cible;
+                int reduction = j.getReductionDegats();
+                cible.setHp(Math.max(cible.getHp() - this.attack*(100-reduction)/100, 0)); // La cible perd des PV en tenant compte de la réduction de dégâts
+            }
+            else {
+                cible.setHp(Math.max(cible.getHp() - this.attack, 0)); // La cible perd des PV
+            }
             tempsDepuisDerniereAttaque = 0;    // On réinitialise le timer
 
             //System.out.println("Le monstre tape ! PV restants : " + cible.getHp());

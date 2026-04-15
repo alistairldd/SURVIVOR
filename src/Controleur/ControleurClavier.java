@@ -1,5 +1,6 @@
 package Controleur;
 
+import Modele.Items.PotionDegats;
 import Modele.Items.PotionVie;
 import Modele.Items.PotionVitesse;
 import Modele.Modele;
@@ -51,13 +52,9 @@ public class ControleurClavier implements KeyListener {
 
             else {
                 if (!vue.getVueArme().getEnAnimation()) {
-                    modele.getJoueur().switchArmes();
+                    modele.getJoueur().switchArmures();
                 }
             }
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_R) {
-            modele.getJoueur().addToInventaire(new PotionVie());
         }
 
         if (e.getKeyCode() == KeyEvent.VK_E){
@@ -65,7 +62,10 @@ public class ControleurClavier implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Z){
+            modele.getJoueur().addToInventaire(new PotionVie());
+            modele.getJoueur().addToInventaire(new PotionDegats());
             modele.getJoueur().addToInventaire(new PotionVitesse());
+
         }
 
         /*** System.out.println("Action : La touche E a été pressée !");

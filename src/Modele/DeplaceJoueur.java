@@ -66,7 +66,10 @@ public class DeplaceJoueur extends Thread {
 
             try {
                 // Met le thread en pause pendant 50ms (crée l'effet de mouvement fluide)
-                Thread.sleep(Math.max(1, 50 / (1 + joueur.getVitesse())));
+                // La durée de sommeil est ajustée en fonction de la vitesse du joueur (plus il est rapide, moins il dort pour réagir plus vite)
+                long sleepBase = 50 / (1 + joueur.getVitesse());
+                double facteurArmure = 1.0 + (-joueur.getArmurePrincipale().getVitesse()) * 0.3; // Plus l'armure est lourde, plus le facteur augmente (et donc le temps de sommeil)
+                Thread.sleep(Math.max(1, (long)(sleepBase * facteurArmure)));
             } catch (InterruptedException e) {
                 // Si le thread est interrompu pendant son sommeil, on relance l'interruption pour sortir proprement de la boucle
                 Thread.currentThread().interrupt();

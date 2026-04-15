@@ -86,7 +86,7 @@ public class VueHUDShop {
             } else if (obj instanceof Armure) {
                 Armure arm = (Armure) obj;
                 nom = arm.getNom();
-                stats = "Bonus Vie: +" + arm.getBonusVie();
+                stats = "Reduction dgts: +" + arm.getReduction();
                 ressources = "Coût: " + String.join(", ", arm.getRessourcesNecessaires());
                 img = arm.getImage();
             } else if (obj instanceof Item) {

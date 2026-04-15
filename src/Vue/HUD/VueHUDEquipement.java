@@ -77,6 +77,20 @@ public class VueHUDEquipement {
         g2d.setColor(Color.BLACK);
         g2d.drawString(nomArmePrincipale, x, y - 5);
 
+
+        int degats = armePrincipale.getDegats();
+        int portee = armePrincipale.getPortee();
+        int cadence = armePrincipale.getCadence();
+        // On convertit la cadence en secondes
+        String cad = String.format("%.2f", cadence/600.0);
+        Font font = g2d.getFont();
+        g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+        g2d.drawString("Degats  : " + degats,  x+TailleIconePrinc + 5, y + TAILLE_ICONE + 30);
+        g2d.drawString("Portée  : " + portee,  x+TailleIconePrinc + 5, y + TAILLE_ICONE + 50);
+        g2d.drawString("Vit. Atq : " + cad + "s", x+TailleIconePrinc + 5, y + TAILLE_ICONE + 70);
+
+        g2d.setFont(font);
+
         g2d.drawImage(img, offsetX, offsetY, drawW, drawH, null);
         if (imgSecondaire != null) {
 
@@ -131,6 +145,22 @@ public class VueHUDEquipement {
             g2d.setColor(Color.BLACK);
             g2d.drawString(armure.getNom(), x, y-5);
             g2d.drawImage(img, offsetX, offsetY, drawW, drawH, null);
+
+
+            // affichage des stats de l'armure à droite de l'icône
+            int reduction = armure.getReduction();
+            int bonusVitesse = armure.getVitesse();
+            Font font = g2d.getFont();
+            g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+
+            g2d.drawString("Reduction : +" + reduction,  x+TailleIconeArmure + 5, y + TAILLE_ICONE + 30);
+            if (bonusVitesse >0){
+                g2d.drawString("Vit : +" + bonusVitesse,  x+TailleIconeArmure + 5, y + TAILLE_ICONE + 50);
+            }
+            else {
+                g2d.drawString("Vit : " + bonusVitesse,  x+TailleIconeArmure + 5, y + TAILLE_ICONE + 50);
+            }
+            g2d.setFont(font);
         }
 
         if (armureSecondaire != null){
@@ -150,6 +180,9 @@ public class VueHUDEquipement {
 
             g2d.drawImage(img2, offsetX2 + TailleIconeArmure + 10, offsetY2, draw2W, draw2H, null);
         }
+
+
+
         return y+3*TAILLE_ICONE + 40;
     }
 

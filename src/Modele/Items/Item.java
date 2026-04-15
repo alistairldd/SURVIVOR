@@ -22,7 +22,7 @@ public abstract class Item{
         this.prix = prix;
     }
 
-    // Retourne le bonus de vie de l'armure
+    // Retourne le bonus de l'item (ex: points de vie ajoutés au joueur)
     public int getEffet() {
         return effet;
     }

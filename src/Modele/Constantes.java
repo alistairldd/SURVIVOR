@@ -54,7 +54,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 60;
+    public final static int DUREE_CYCLE_JOUR = 5;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -256,6 +256,7 @@ public final class Constantes {
 
     public static Image IMAGE_POTION_DE_VIE = null;
     public static Image IMAGE_POTION_VITESSE = null;
+    public static Image IMAGE_POTION_DEGATS = null;
 
     static {
         try {
@@ -286,6 +287,8 @@ public final class Constantes {
             IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/items/PotionDeVie.png"));
             // Charger l'image de la potion de vitesse
             IMAGE_POTION_VITESSE = ImageIO.read(new File("src/images/items/PotionVitesse.png"));
+            // Charger l'image de la potion de dégâts
+            IMAGE_POTION_DEGATS = ImageIO.read(new File("src/images/items/PotionDegats.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
