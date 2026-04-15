@@ -5,6 +5,7 @@ import Modele.*;
 import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
 import Modele.Batiments.Batiment;
+import Modele.Batiments.Mine;
 import Modele.Monstres.Monstre;
 import Vue.Batiments.VueBatiment;
 import Vue.Batiments.VueEffetSoin;
@@ -166,7 +167,7 @@ public class Vue extends JPanel {
             }
 
             for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
-                VueBarreDeVie.dessiner(g2d, b);
+                if (!(b instanceof Mine)) VueBarreDeVie.dessiner(g2d, b);
             }
         }
 
