@@ -260,7 +260,8 @@ public class Modele {
                 joueur.consommerListeRessources(COUT_TOUR);
                 Tower t = new Tower((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
-                annulerConstruction(); // On désactive le mode
+
+                if (!(joueur.aAssezDeRessources(COUT_TOUR))) annulerConstruction(); // On désactive le mode
             } else {
                 System.out.println("Impossible de construire la Tour ici ou ressources insuffisantes !");
             }

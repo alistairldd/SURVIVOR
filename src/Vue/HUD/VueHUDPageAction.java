@@ -44,7 +44,7 @@ public class VueHUDPageAction extends JPanel {
         this.add(btnTente);
 
         // --- BOUTON ANNULER (X) en Rouge ---
-        btnCancel = createStyledButton("X", new Color(178, 34, 34));
+        btnCancel = createStyledButton("x", new Color(178, 34, 34));
         btnCancel.addActionListener(e -> modele.annulerConstruction());
         this.add(btnCancel);
     }
