@@ -37,10 +37,10 @@ public class VueHUDShop {
         yCourant += 40;
 
         // --- SECTION 1 : ARMES ---
-        yCourant = dessinerCategorie(g2d, yCourant, "ARMES", shop.getArmes());
+        yCourant = dessinerCategorie(g2d, yCourant, "ARMES", shop.getArmesDansShop());
 
         // --- SECTION 2 : ARMURES ---
-        yCourant = dessinerCategorie(g2d, yCourant, "ARMURES", shop.getArmures());
+        yCourant = dessinerCategorie(g2d, yCourant, "ARMURES", shop.getArmuresDansShop());
 
         // --- SECTION 3 : OBJETS ---
         yCourant = dessinerCategorie(g2d, yCourant, "UTILITAIRES", shop.getObjets());

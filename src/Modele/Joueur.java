@@ -8,6 +8,7 @@ import Modele.Armure.Armure;
 import Modele.Armure.ArmureLegere;
 import Modele.Armure.ArmureLourde;
 import Modele.Items.Item;
+import Modele.Items.PotionDegats;
 import Modele.Items.PotionVie;
 import Modele.Items.PotionVitesse;
 
@@ -86,29 +87,28 @@ public class Joueur implements Localisable {
         positionY = HAUTEUR_MAP /2;
         // Statistiques de base
         hp = HP_JOUEUR;
-        attack = ATTAQUE_BASE;
+        attack = 0;
         // Initialisation de l'inventaire
         inventaire = new ArrayList<Item>();
         this.aPioche = false;
 
         // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10000; i++) {
             ressources.add(new Ressource(0)); // 0: Bois
             ressources.add(new Ressource(1)); // 1: Pierre
             ressources.add(new Ressource(2)); // 2: Fer
             ressources.add(new Ressource(3)); // 3: Or
         }
         // triche/test : on donne 50 pieces au joueur au départ
-        pieces = 50;
+        pieces = 10000;
         // Équipe l'arme de départ
         armeEquipee = new Baton();
         // Arme non équipée existe pas encore
-        armePasEquipee = new EpeeLourde();
+        armePasEquipee = null;
         // Pas d'armure au départ
         armurePrincipale = null;
-        setArmureEquipee(new ArmureLegere());
         // armureSecondaire
-        armureSecondaire = new ArmureLourde();
+        armureSecondaire = null;
         // Vitesse de déplacement
         vitesse = 0;
 
@@ -255,6 +255,11 @@ public class Joueur implements Localisable {
         }
         if (item instanceof PotionVitesse){
             incrVitesse(item.getEffet());
+            removeFromInventaire(item);
+        }
+
+        if (item instanceof PotionDegats){
+            setAttack(getAttack() + item.getEffet());
             removeFromInventaire(item);
         }
     }
@@ -660,6 +665,7 @@ public class Joueur implements Localisable {
     }
 
     public void equiperArmure(Armure nouvelleArmure) {
+        this.armurePrincipale = nouvelleArmure;
         setReductionDegats(nouvelleArmure.getReduction());
     }
 

@@ -64,7 +64,6 @@ public final class Constantes {
     /*** ---Joueur--- ***/
     // Vitesse de déplacement en pixels par itération de la boucle
     public static final int VITESSE = 10;
-    public static final int ATTAQUE_BASE = 10;
     public static final int HP_JOUEUR = 100;
 
 

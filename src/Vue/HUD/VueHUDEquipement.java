@@ -60,8 +60,8 @@ public class VueHUDEquipement {
         g2d.fillRect(x + TailleIconePrinc + 10, y, TAILLE_ICONE, TAILLE_ICONE);
 
         // Dimensions originales de l'image
-        int imgW = imgSecondaire.getWidth(null);
-        int imgH = imgSecondaire.getHeight(null);
+        int imgW = img.getWidth(null);
+        int imgH = img.getHeight(null);
 
 
         // Calcul du ratio pour tenir dans TAILLE_IMG x TAILLE_IMG
@@ -85,7 +85,12 @@ public class VueHUDEquipement {
         String cad = String.format("%.2f", cadence/600.0);
         Font font = g2d.getFont();
         g2d.setFont(new Font("Arial", Font.PLAIN, 12));
-        g2d.drawString("Degats  : " + degats,  x+TailleIconePrinc + 5, y + TAILLE_ICONE + 30);
+        if (j.getAttack()>0){
+            g2d.drawString("Degats  : " + degats + " + " + j.getAttack(),  x+TailleIconePrinc + 5, y + TAILLE_ICONE + 30);
+        }
+        else {
+            g2d.drawString("Degats  : " + degats,  x+TailleIconePrinc + 5, y + TAILLE_ICONE + 30);
+        }
         g2d.drawString("Portée  : " + portee,  x+TailleIconePrinc + 5, y + TAILLE_ICONE + 50);
         g2d.drawString("Vit. Atq : " + cad + "s", x+TailleIconePrinc + 5, y + TAILLE_ICONE + 70);
 

@@ -138,7 +138,7 @@ public class Modele {
                 double seuilCosinus = Math.cos(angle / 2.0);
 
                 if (produitScalaire >= seuilCosinus) {
-                    m.perdreHp(joueur.getArmeEquipee().getDegats());
+                    m.perdreHp(joueur.getArmeEquipee().getDegats() + joueur.getAttack());
                     if (m.getHp() <= 0) {
                         joueur.addPieces(m.getDrop());
                     }

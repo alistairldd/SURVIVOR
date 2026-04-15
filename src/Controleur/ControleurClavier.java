@@ -58,7 +58,7 @@ public class ControleurClavier implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_E){
-            modele.getJoueur().utilierConsommable(new PotionVitesse());
+            modele.getJoueur().utilierConsommable(new PotionDegats());
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Z){
