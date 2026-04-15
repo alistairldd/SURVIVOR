@@ -3,6 +3,8 @@ package Modele.Batiments;
 import Modele.GestionnaireBatiments;
 import Modele.Joueur;
 
+import java.util.Map;
+
 import static Modele.Constantes.*;
 
 /**
@@ -18,6 +20,8 @@ public class TenteDeSoin extends Batiment{
 
     // Mémorisation de la cible pour la vue
     private Joueur joueur = null;
+
+    private Map<Integer, Integer> coutConstruction = COUT_TENTE;
 
     /**
      * Construit une tente de soin à des coordonnées précises.

@@ -18,6 +18,7 @@ public class Mine extends Batiment{
     // Portée effective de cette instance précise
     private int range;
     private ArrayList<Ressource> ressources;
+
     /**
      * Construit une mine à des coordonnées précises.
      */

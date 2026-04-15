@@ -2,6 +2,9 @@ package Modele;
 
 import Modele.Batiments.Batiment;
 import Modele.Monstres.Monstre;
+import static Modele.Constantes.*;
+import Modele.Batiments.Tower;
+import Modele.Batiments.TenteDeSoin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,10 @@ public class Modele {
 
     private boolean partieTerminee = false;
 
+    // --- ÉTAT DE CONSTRUCTION (RTS) ---
+    public enum TypeConstruction { AUCUN, TOUR, TENTE }
+    private TypeConstruction modeConstruction = TypeConstruction.AUCUN;
+
     public Modele() {
         // Initialisation de l'entité joueur
         this.joueur = new Joueur(this);
@@ -57,6 +64,17 @@ public class Modele {
     public boolean isAffichagePV() { return affichagePV; }
     public void toggleAffichagePV() { this.affichagePV = !this.affichagePV; }
 
+    // Suivi de la souris pour le rendu du fantôme
+    private double sourisMondeX = 0;
+    private double sourisMondeY = 0;
+
+    public double getSourisMondeX() { return sourisMondeX; }
+    public double getSourisMondeY() { return sourisMondeY; }
+    public void setPositionSourisMonde(double x, double y) {
+        this.sourisMondeX = x;
+        this.sourisMondeY = y;
+    }
+
     /* ---- LOGIQUE MÉTIER ET GESTION DU MONDE ---- */
 
     public Joueur getJoueur() { return joueur; }
@@ -65,6 +83,10 @@ public class Modele {
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
     public GestionnaireBatiments getGestionnaireBatiments() { return gestionnaireBatiments; }
     public boolean getPartieTerminee() { return partieTerminee; }
+
+    public TypeConstruction getModeConstruction() { return modeConstruction; }
+    public void setModeConstruction(TypeConstruction mode) { this.modeConstruction = mode; }
+    public void annulerConstruction() { this.modeConstruction = TypeConstruction.AUCUN; }
 
     /**
      * Stoppe tous les processus actifs du jeu lors d'un Game Over.
@@ -175,5 +197,67 @@ public class Modele {
         this.updateJN = new UpdateJN(this);
         this.leCycleJourNuit = new CycleJourNuit(this.updateJN);
         this.cibleAffichage = joueur;
+    }
+
+    /**
+     * Vérifie si l'emplacement (x, y) est libre et constructible.
+     * @param x Coordonnée X de la souris
+     * @param y Coordonnée Y de la souris
+     * @param rayonHitbox Le rayon d'encombrement du bâtiment qu'on veut placer
+     * @return true si la place est libre ET qu'il fait jour.
+     */
+    public boolean peutConstruireIci(double x, double y, int rayonHitbox) {
+        // 1. On ne construit que le jour
+        if (!leCycleJourNuit.isDay()) return false;
+
+        // 2. Vérification des collisions avec les autres bâtiments existants
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+            double distance = Math.hypot(b.getX() - x, b.getY() - y);
+            double distanceMinimaleRequise = b.getRayonHitbox() + rayonHitbox;
+
+            if (distance < distanceMinimaleRequise) {
+                return false; // Il y a déjà un bâtiment trop proche
+            }
+        }
+        return true; // La zone est libre !
+    }
+
+    /**
+     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources.
+     * @param x Coordonnée X du clic
+     * @param y Coordonnée Y du clic
+     */
+    /**
+     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources ET la place.
+     */
+    /**
+     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources ET la place.
+     */
+    public void finaliserConstruction(double x, double y) {
+        if (modeConstruction == TypeConstruction.TOUR) {
+            // On vérifie le prix ET la collision
+            if (joueur.aAssezDeRessources(COUT_TOUR) &&
+                    peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TOUR)) {
+
+                joueur.consommerListeRessources(COUT_TOUR);
+                Tower t = new Tower((int)x, (int)y, gestionnaireBatiments);
+                gestionnaireBatiments.ajouterBatiment(t);
+                annulerConstruction(); // On désactive le mode
+            } else {
+                System.out.println("Impossible de construire la Tour ici ou ressources insuffisantes !");
+            }
+        }
+        else if (modeConstruction == TypeConstruction.TENTE) {
+            if (joueur.aAssezDeRessources(COUT_TENTE) &&
+                    peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TENTE)) {
+
+                joueur.consommerListeRessources(COUT_TENTE);
+                TenteDeSoin t = new TenteDeSoin((int)x, (int)y, gestionnaireBatiments);
+                gestionnaireBatiments.ajouterBatiment(t);
+                annulerConstruction(); // On désactive le mode
+            } else {
+                System.out.println("Impossible de construire la Tente ici ou ressources insuffisantes !");
+            }
+        }
     }
 }

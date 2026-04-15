@@ -2,6 +2,9 @@ package Modele.Batiments;
 
 import Modele.GestionnaireBatiments;
 import Modele.Monstres.Monstre;
+import Modele.Ressource;
+
+import java.util.Map;
 
 import static Modele.Constantes.*;
 
@@ -22,6 +25,7 @@ public class Tower extends Batiment{
     // Stocke temporairement l'ennemi visé pour que la VueBatiment sache où dessiner le laser/projectile
     private Monstre monstreCible = null;
 
+    private Map<Integer, Integer> coutConstruction = COUT_TOUR;
     /**
      * Construit une tour défensive à des coordonnées précises.
      * @param x Coordonnée X de placement.

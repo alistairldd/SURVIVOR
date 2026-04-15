@@ -17,8 +17,7 @@ import java.awt.event.MouseMotionListener;
 
 /**
  * Contrôleur dédié à la gestion des événements de la souris.
- * Gère les interactions fondamentales du joueur : l'attaque (clic gauche),
- * le déplacement (clic droit), et l'orientation de l'arme (mouvement).
+ * Gère le mode RTS (Construction) ou les actions classiques (Attaque/Déplacement).
  */
 public class ControleurSouris implements MouseListener, MouseMotionListener {
 
@@ -33,31 +32,15 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
         this.vue = vue;
     }
 
-    /**
-     * Gère les clics de la souris.
-     * Sur un clic gauche : Vérifie le temps de recharge (cooldown) de l'arme. Si l'attaque est possible,
-     * calcule l'angle de tir depuis le centre de l'écran, applique les dégâts via le modèle
-     * et déclenche le Thread d'animation de l'arme côté Vue.
-     * * @param e L'événement de clic de souris capturé.
-     */
     @Override
-    public void mouseClicked(MouseEvent e) {
-    }
+    public void mouseClicked(MouseEvent e) {}
 
-    /**
-     * Gère la pression des boutons de la souris.
-     * Sur un clic droit : Convertit les coordonnées du clic à l'écran en coordonnées "Monde"
-     * (en appliquant l'offset de la caméra centré sur le joueur), puis lance un Thread autonome
-     * (DeplaceJoueur) pour gérer le mouvement de manière fluide.
-     * * @param e L'événement de pression de souris capturé.
-     */
     @Override
     public void mousePressed(MouseEvent e) {
-        // 1. On demande à la vue d'identifier si un objet a été cliqué
+        // 1. Priorité UI : Vérifier si on clique dans la boutique
         Object cible = vue.identifierElementClique(e.getX(), e.getY(), e.getSource());
 
         if (cible != null) {
-            // 2. Si oui, on traite l'achat selon le type
             if (cible instanceof Arme) {
                 modele.getGestionnaireShop().acheterArme((Arme) cible);
             } else if (cible instanceof Armure) {
@@ -65,83 +48,66 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             } else if (cible instanceof Item) {
                 modele.getGestionnaireShop().acheterItem((Item) cible);
             }
-            return; // On stoppe ici pour ne pas attaquer ou se déplacer
+            return;
         }
+
+        Joueur joueur = modele.getJoueur();
+        double camX = joueur.getX() - (double) vue.getWidth() / 2;
+        double camY = joueur.getY() - (double) vue.getHeight() / 2;
+        double destX = camX + e.getX();
+        double destY = camY + e.getY();
 
         // --- 1. DÉPLACEMENT (Clic Droit) ---
         if (SwingUtilities.isRightMouseButton(e)){
             if (!modele.getPartieTerminee()){
-                // on recupere le joueur (on peut aps mettre dans constructeur car ça pose probleme si on restart)
-                Joueur joueur = modele.getJoueur();
-
-                // Récupérer les coordonnées du clic
-                int x = e.getX();
-                int y = e.getY();
-
-                // Calculer la position de la caméra
-                double camX = joueur.getX() - (double) vue.getWidth() / 2;
-                double camY = joueur.getY() - (double) vue.getHeight() / 2;
-
-                // Calculer les coordonnées de destination dans le monde absolu
-                double destX = camX + x;
-                double destY = camY + y;
-
-                // Déplacer le joueur vers la position de destination
                 DeplaceJoueur deplacement = new DeplaceJoueur(destX, destY, joueur);
                 joueur.setThreadActuel(deplacement);
                 deplacement.start();
             }
         }
-        // --- 2. ATTAQUE (Clic Gauche) ---
+        // --- 2. ACTION (Clic Gauche) ---
         else if (SwingUtilities.isLeftMouseButton(e)){
-            // Vérifie que la partie n'est pas terminée avant de permettre toute action
             if (!modele.getPartieTerminee()){
-                Joueur j = modele.getJoueur();
-                if (j.peutAttaquer()){
-                    int centerX = vue.getWidth() / 2;
-                    int centerY = vue.getHeight() / 2;
 
-                    double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
+                // A. MODE CONSTRUCTION (RTS)
+                if (modele.getModeConstruction() != Modele.TypeConstruction.AUCUN) {
+                    modele.finaliserConstruction(destX, destY);
+                }
+                // B. MODE COMBAT (Classique)
+                else {
+                    if (joueur.peutAttaquer()){
+                        int centerX = vue.getWidth() / 2;
+                        int centerY = vue.getHeight() / 2;
+                        double angleAttaque = Math.atan2(mouseY - centerY, mouseX - centerX);
 
-                    // Attaquer dans la direction de la souris
-                    modele.joueurAttaque(angleAttaque);
-                    j.setDernierTempsAttaque();
+                        modele.joueurAttaque(angleAttaque);
+                        joueur.setDernierTempsAttaque();
 
-                    int cadence = j.getArmeEquipee().getCadence();
-                    AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
-                    vue.getVueArme().setEnAnimation(true);
-                    animation.start();
+                        int cadence = joueur.getArmeEquipee().getCadence();
+                        AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
+                        vue.getVueArme().setEnAnimation(true);
+                        animation.start();
+                    }
                 }
             }
         }
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-    }
+    public void mouseEntered(MouseEvent e) {}
 
     @Override
-    public void mouseExited(MouseEvent e) {
-    }
+    public void mouseExited(MouseEvent e) {}
 
     @Override
-    public void mouseDragged(MouseEvent e) {
-    }
+    public void mouseDragged(MouseEvent e) {}
 
-    /**
-     * Met à jour en continu les coordonnées de la souris.
-     * Ces coordonnées sont lues par la VueArme pour orienter le dessin de l'arme en temps réel
-     * vers le curseur de l'utilisateur.
-     * * @param e L'événement de mouvement de souris capturé.
-     */
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!modele.getPartieTerminee()) {
-
             Joueur joueur = modele.getJoueur();
 
             mouseX = e.getX();
@@ -153,16 +119,12 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             double sourisMondeX = camX + mouseX;
             double sourisMondeY = camY + mouseY;
 
+            // Transmission des coordonnées au Modèle pour le Fantôme et l'UI
+            modele.setPositionSourisMonde(sourisMondeX, sourisMondeY);
             modele.verifierSurvol(sourisMondeX, sourisMondeY);
         }
     }
 
-    // Getters pour les coordonnées de la souris
-    public int getMX(){
-        return this.mouseX;
-    }
-
-    public int getMY(){
-        return this.mouseY;
-    }
+    public int getMX(){ return this.mouseX; }
+    public int getMY(){ return this.mouseY; }
 }

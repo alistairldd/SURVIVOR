@@ -22,15 +22,14 @@ import java.util.Comparator;
 
 /**
  * Architecture de rendu hybride (JLayeredPane).
- * - Calque DEFAULT : Moteur de rendu du monde (JPanel) à 60 FPS.
- * - Calque PALETTE : Interface utilisateur statique (Overlay UI).
+ * Gère le cycle de rendu 2.5D : Passe Sol, Y-Sorting, Passe Volume et Fantôme RTS.
  */
 public class Vue extends JPanel {
 
     private JFrame maFenetre;
     private JLayeredPane layeredPane;
 
-    // Components UI & Vues
+    // Composants UI & Moteurs de rendu
     private final VueHUD vueHUD;
     private final VueCarte vueCarte;
     private final VueArme vueArme;
@@ -38,10 +37,10 @@ public class Vue extends JPanel {
     private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
 
-    // Business Logic
+    // Logique métier
     private final Modele modele;
 
-    // Systems d'effets
+    // Systèmes d'effets visuels
     private VueEffetSoin vueEffetSoin;
     private VueEffetTente vueEffetTente;
 
@@ -88,10 +87,13 @@ public class Vue extends JPanel {
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);
         this.addKeyListener(new ControleurClavier(this, modele));
+
+        // Liaison du shop pour la détection de clic
         this.vueHUD.getPageBoutique().addMouseListener(controleurSouris);
 
         this.vueArme = new VueArme(controleurSouris, this, modele);
 
+        // Gestion du redimensionnement dynamique
         maFenetre.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -132,8 +134,7 @@ public class Vue extends JPanel {
             vueRessource.dessinerRessource(g2d, r, r.getPositionX(), r.getPositionY(), false);
         }
 
-        // --- PASSE 1 : LES AURAS ET EFFETS AU SOL ---
-        // On dessine toutes les portées en premier pour qu'elles soient SOUS les bâtiments
+        // --- PASSE 1 : LES AURAS ET EFFETS AU SOL (Layering) ---
         for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
             VueBatiment.dessinerAura(g2d, b, (int) b.getX(), (int) b.getY());
         }
@@ -144,30 +145,29 @@ public class Vue extends JPanel {
         vueEffetTente.miseAJour();
         vueEffetTente.dessiner(g2d);
 
-        // --- TRI PAR PROFONDEUR (Y-SORTING) ---
-        // On crée une liste d'entités "physiques" (Bâtiments, Monstres, Joueur)
+        // --- TRI PAR PROFONDEUR (Y-Sorting) ---
         ArrayList<Localisable> entites = new ArrayList<>();
         entites.addAll(modele.getGestionnaireBatiments().getBatiments());
         entites.addAll(modele.getUpdateJN().getMonstres());
         entites.add(joueur);
 
-        // Tri : les éléments les plus hauts (Y petit) sont dessinés en premier,
-        // les éléments les plus bas (Y grand) par-dessus.
         entites.sort(Comparator.comparingDouble(Localisable::getY));
 
-        // --- PASSE 2 : LES VOLUMES (SPRITES) ---
+        // --- PASSE 2 : LES VOLUMES (Sprites) ---
         for (Localisable entite : entites) {
             if (entite instanceof Batiment) {
                 VueBatiment.dessinerSprite(g2d, (Batiment) entite, (int) entite.getX(), (int) entite.getY(), false);
             } else if (entite instanceof Monstre) {
                 vueMonstre.dessiner(g2d, (Monstre) entite, (int) entite.getX(), (int) entite.getY(), false);
             } else if (entite instanceof Joueur) {
-                // Le joueur et son arme sont dessinés ici pour s'insérer dans le tri
                 vueArme.dessiner(g2d);
             }
         }
 
-        // --- #DEV : RENDU DES PV (Toujours au-dessus de tout le reste) ---
+        // --- PASSE 3 : FANTÔME DE CONSTRUCTION (RTS) ---
+        dessinerFantomeConstruction(g2d);
+
+        // --- PASSE 4 : OVERLAYS (PV / Barres de vie) ---
         if (modele.isAffichagePV()) {
             VueBarreDeVie.dessiner(g2d, joueur);
             for (Monstre m : modele.getUpdateJN().getMonstres()) {
@@ -189,7 +189,74 @@ public class Vue extends JPanel {
         dessineMinimap(g2d);
     }
 
-    // (Le reste de la classe reste identique : dessinerGameOver, dessineMinimap, etc.)
+    /**
+     * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision.
+     */
+    private void dessinerFantomeConstruction(Graphics2D g2d) {
+        Modele.TypeConstruction mode = modele.getModeConstruction();
+        if (mode == Modele.TypeConstruction.AUCUN) return;
+
+        double sourisX = modele.getSourisMondeX();
+        double sourisY = modele.getSourisMondeY();
+
+        Image imgFantome = null;
+        int taille = 0;
+        int rayonHitbox = 0;
+        int range = 0;
+        int drawY = 0;
+
+        // 1. Définition des propriétés selon l'objet tenu
+        if (mode == Modele.TypeConstruction.TOUR) {
+            imgFantome = IMAGE_TOUR;
+            taille = TAILLE_TOUR;
+            rayonHitbox = RAYON_HITBOX_TOUR;
+            range = TOWER_BASE_RANGE;
+            drawY = (int) sourisY - (taille * 4 / 5);
+        }
+        else if (mode == Modele.TypeConstruction.TENTE) {
+            imgFantome = IMAGE_TENTE;
+            taille = TAILLE_TENTE;
+            rayonHitbox = RAYON_HITBOX_TENTE;
+            range = HEALING_RANGE;
+            drawY = (int) sourisY - (taille / 2);
+        }
+
+        if (imgFantome != null) {
+            int drawX = (int) sourisX - (taille / 2);
+            Joueur joueur = modele.getJoueur();
+
+            // 2. Vérification d'intégrité (Ressources + Collisions)
+            boolean aLesFonds = (mode == Modele.TypeConstruction.TOUR) ?
+                    joueur.aAssezDeRessources(COUT_TOUR) :
+                    joueur.aAssezDeRessources(COUT_TENTE);
+
+            boolean constructible = modele.peutConstruireIci(sourisX, sourisY, rayonHitbox) && aLesFonds;
+
+            // 3. Rendu de l'Aura de portée dynamique
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            g2d.setColor(constructible ? Color.GREEN : Color.RED);
+            g2d.fillOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            g2d.setStroke(new BasicStroke(2));
+            g2d.drawOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+            g2d.setStroke(new BasicStroke(1));
+
+            // 4. Rendu du Sprite Fantôme (Translucide)
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+            g2d.drawImage(imgFantome, drawX, drawY, null);
+
+            // 5. Overlay de collision (Filtre rouge si Bearish)
+            if (!constructible) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+                g2d.setColor(Color.RED);
+                g2d.fillOval((int) sourisX - rayonHitbox, (int) sourisY - rayonHitbox, rayonHitbox * 2, rayonHitbox * 2);
+            }
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        }
+    }
+
     private void dessinerGameOver(Graphics2D g2d) {
         g2d.setColor(new Color(0, 0, 0, 160));
         g2d.fillRect(0, 0, getWidth(), getHeight());

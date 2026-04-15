@@ -80,9 +80,9 @@ public class ControleurClavier implements KeyListener {
          }***/
 
         // --- CONSTRUCTIONS ET ARMES ---
-        if (e.getKeyCode() == KeyEvent.VK_T) {
+        /**if (e.getKeyCode() == KeyEvent.VK_T) {
             modele.getJoueur().construireTour();
-        }
+        }**/
 
         if (e.getKeyCode() == KeyEvent.VK_C) {
             vue.getVueArme().setAffPortee(!vue.getVueArme().getAffPortee()); // bascule l'affichage de la portée de l'arme

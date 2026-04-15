@@ -17,6 +17,7 @@ import static Modele.Constantes.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.abs;
 
@@ -420,78 +421,6 @@ public class Joueur implements Localisable {
     }
 
     /**
-     * Tente de placer une Tour Défensive à la position actuelle du joueur.
-     * Vérifie les conditions temporelles (nuit uniquement) et les ressources (coûts).
-     * @return True si la construction a réussi, False sinon.
-     */
-    public boolean construireTour() {
-        /*
-            Cette méthode permet de construire une Tower à la position du joueur.
-            Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)
-            Condition : Uniquement pendant la nuit !
-        */
-
-        // 0. Vérification du cycle jour/nuit (Impossible de construire le jour)
-        if (!modele.getLeCycleJourNuit().isDay()) {
-            System.out.println("Impossible de construire une tour le jour ! Attendez la tombée de la nuit.");
-            return false; // On annule la construction
-        }
-
-        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
-            // Calcul de la distance euclidienne entre le joueur et le bâtiment inspecté
-            double distance = Math.hypot(b.getX() - this.positionX, b.getY() - this.positionY);
-            // La distance minimale requise est la somme du rayon du bâtiment existant et du rayon de la future tour
-            double distanceMinimaleRequise = b.getRayonHitbox() + RAYON_HITBOX_TOUR;
-
-            if (distance < distanceMinimaleRequise) {
-                System.out.println("Construction annulée : Espace insuffisant, un bâtiment est trop proche !");
-                return false;
-            }
-        }
-
-        // 1. On compte ce qu'il y a dans l'inventaire en triant par type
-        int nbBois = 0, nbPierre = 0, nbFer = 0, nbOr = 0;
-        for (Ressource r : ressources) {
-            // Associe l'ID du type à son compteur
-            switch (r.getType()) {
-                case 0: nbBois++; break;   // Bois
-                case 1: nbPierre++; break; // Pierre
-                case 2: nbFer++; break;    // Fer
-                case 3: nbOr++; break;     // Or
-            }
-        }
-
-        // 2. On vérifie si on a les quantités suffisantes pour le "prix" de la tour
-        if (nbBois >= 4 && nbPierre >= 4 && nbFer >= 2 && nbOr >= 1) {
-
-            // 3. On consomme (retire) les ressources de l'inventaire via la méthode utilitaire
-            consommerRessource(0, 4); // Retire 4 Bois
-            consommerRessource(1, 4); // Retire 4 Pierre
-            consommerRessource(2, 2); // Retire 2 Fer
-            consommerRessource(3, 1); // Retire 1 Or
-
-            // 4. On crée la tour exactement sous les pieds du joueur (conversion double -> int requise pour la grille)
-            Tower nouvelleTour = new Tower((int) positionX, (int) positionY, modele.getGestionnaireBatiments());
-
-            // La tour a directement tous ses PV max grâce à son constructeur
-
-            // 5. On demande au Modèle d'ajouter ce nouveau bâtiment à la liste globale (Map)
-            modele.getGestionnaireBatiments().getBatiments().add(nouvelleTour);
-
-            System.out.println("Tour construite avec succès en (" + (int)positionX + ", " + (int)positionY + ") !");
-            System.out.println("Inventaire restant : " + inventaire.size() + " objets.");
-            // Confirme la réussite de l'action
-            return true;
-
-        } else {
-            // Echec par manque de fonds
-            System.out.println("Ressources insuffisantes pour construire une tour !");
-            System.out.println("Il te faut : 4 Bois, 4 Pierre, 2 Fer, 1 Or.");
-            return false;
-        }
-    }
-
-    /**
      * Supprime un nombre exact d'un type de ressource spécifique de l'inventaire.
      * @param type L'ID de la ressource à détruire (0: Bois, etc).
      * @param quantiteARetirer Le nombre d'instances à retirer.
@@ -669,6 +598,47 @@ public class Joueur implements Localisable {
         setReductionDegats(nouvelleArmure.getReduction());
     }
 
+    /**
+     * Vérifie si l'inventaire contient les quantités requises via un Dictionnaire.
+     */
+    public boolean aAssezDeRessources(Map<Integer, Integer> couts) {
+        // 1. On compte les stocks actuels rapidement dans un tableau
+        int[] stocks = new int[4];
+        for (Ressource r : ressources) {
+            if (r.getType() >= 0 && r.getType() < 4) {
+                stocks[r.getType()]++;
+            }
+        }
+
+        // 2. On compare avec le dictionnaire de prix
+        for (Map.Entry<Integer, Integer> cout : couts.entrySet()) {
+            int typeRessource = cout.getKey();
+            int quantiteRequise = cout.getValue();
+
+            if (stocks[typeRessource] < quantiteRequise) {
+                return false; // Manque de fonds (Bearish)
+            }
+        }
+        return true; // Fonds suffisants (Bullish)
+    }
+
+    /**
+     * Consomme les ressources en lisant le Dictionnaire.
+     */
+    public void consommerListeRessources(Map<Integer, Integer> couts) {
+        for (Map.Entry<Integer, Integer> cout : couts.entrySet()) {
+            int typeRessource = cout.getKey();
+            int quantiteRequise = cout.getValue();
+
+            this.consommerRessource(typeRessource, quantiteRequise);
+        }
+    }
+
+
+    /**
+     * SURCHARGE (Compatibilité Boutique) :
+     * Vérifie si l'inventaire contient les quantités via l'ancien format List<String>.
+     */
     public boolean aAssezDeRessources(List<String> besoins) {
         // 1. Comptage des stocks actuels
         int bois = 0, pierre = 0, fer = 0, or = 0;
@@ -683,7 +653,6 @@ public class Joueur implements Localisable {
 
         // 2. Vérification des besoins
         for (String besoin : besoins) {
-            // On sépare par le caractère ":"
             String[] parties = besoin.split(":");
             if (parties.length < 2) continue;
 
@@ -693,7 +662,6 @@ public class Joueur implements Localisable {
             try {
                 quantiteRequise = Integer.parseInt(parties[1].trim());
             } catch (NumberFormatException e) {
-                System.err.println("Erreur format prix sur : " + besoin);
                 return false;
             }
 
@@ -708,6 +676,10 @@ public class Joueur implements Localisable {
         return true;
     }
 
+    /**
+     * SURCHARGE (Compatibilité Boutique) :
+     * Consomme les ressources via l'ancien format List<String>.
+     */
     public void consommerListeRessources(List<String> besoins) {
         for (String besoin : besoins) {
             String[] parties = besoin.split(":");
@@ -726,5 +698,4 @@ public class Joueur implements Localisable {
             if (type != -1) this.consommerRessource(type, quantite);
         }
     }
-
 }

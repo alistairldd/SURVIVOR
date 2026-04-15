@@ -74,12 +74,15 @@ public class UpdateJN {
         // Logique pour changer à la nuit, comme faire apparaître les monstres
         // Met à jour l'état global
         jour = false;
+
+        // --- SÉCURITÉ RTS : On force l'annulation de la construction ---
+        modele.annulerConstruction();
+
         // Créer les monstres
-        // Lance une vague massive de 100 ennemis répartis sur les bords de la carte
+        // Lance une vague massive de 10 ennemis répartis sur les bords de la carte
         monGestionnaireMonstres.genererMonstre(15); // Génère les monstres pour la nuit
 
         // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
-        // (Excellente mécanique de game design pour éviter la sur-accumulation passive)
         monGestionnaireRessources.viderRessources();
         incrNbNuit();
     }

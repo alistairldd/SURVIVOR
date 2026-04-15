@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public final class Constantes {
@@ -50,6 +51,24 @@ public final class Constantes {
     public static final int HEALING_POWER = 5; // Nombre de PV restaurés par tir de la tente de soin
     public static final int HP_TENTE = 100;
     public static final int HEALING_RANGE = 100;
+
+
+    /*--- Couts ---*/
+    // Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)
+    public static final Map<Integer, Integer> COUT_TOUR = Map.of(
+            0, 4,
+            1, 4,
+            2, 2,
+            3, 1
+    );
+
+    // Coût : 7 Bois (0), 2 Pierre (1), 4 Fer (2), 5 Or (3)
+    public static final Map<Integer, Integer> COUT_TENTE = Map.of(
+            0, 7,
+            1, 2,
+            2, 4,
+            3, 5
+    );
 
     /*** ---Cycle Jour/Nuit--- ***/
     // Constantes pour le cycle
