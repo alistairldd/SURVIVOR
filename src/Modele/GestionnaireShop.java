@@ -9,7 +9,7 @@ import Modele.Items.PotionVie;
 import Modele.Items.PotionVitesse;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map; // Ajout de l'import pour le dictionnaire
 
 
 public class GestionnaireShop {
@@ -119,8 +119,8 @@ public class GestionnaireShop {
 
     public void acheterArme(Arme a) {
         Joueur j = modele.getJoueur();
-        // On récupère directement la liste des ressources de l'arme (ex: ["Bois:10"])
-        List<String> besoins = a.getRessourcesNecessaires();
+        // NOUVEAU : On récupère le dictionnaire des ressources de l'arme (ex: {2=10} pour 10 Fer)
+        Map<Integer, Integer> besoins = a.getRessourcesNecessaires();
 
         if (j.aAssezDeRessources(besoins)) {
             j.consommerListeRessources(besoins);
@@ -129,7 +129,7 @@ public class GestionnaireShop {
                 j.switchArmes();
                 j.setArmeEquipee(a);
             }
-             else {
+            else {
                 j.setArmeEquipee(a);
             }
             enleverArmeDuShop(a);
@@ -143,7 +143,8 @@ public class GestionnaireShop {
     // ACHAT D'ARMURE (Classe Armure)
     public void acheterArmure(Armure a) {
         Joueur j = modele.getJoueur();
-        List<String> besoins = a.getRessourcesNecessaires();
+        // NOUVEAU : On récupère le dictionnaire des ressources de l'armure
+        Map<Integer, Integer> besoins = a.getRessourcesNecessaires();
 
         if (j.aAssezDeRessources(besoins)) {
             j.consommerListeRessources(besoins);

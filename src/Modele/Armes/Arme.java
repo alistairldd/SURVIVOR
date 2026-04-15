@@ -1,8 +1,7 @@
 package Modele.Armes;
 
 import java.awt.*;
-import java.util.List;
-
+import java.util.Map;
 
 /**
  * Classe abstraite définissant la base de toute arme équipable par le joueur.
@@ -23,8 +22,9 @@ public abstract class Arme {
     private double angle;
     // Image représentant l'arme (optionnel, peut être utilisé pour l'affichage)
     private Image image;
-    // Liste des ressources nécessaires pour acheter / fabriquer l'arme
-    private List ressourcesNecessaires;
+    // Dictionnaire des ressources nécessaires pour acheter / fabriquer l'arme (ID Ressource : Quantité)
+    private Map<Integer, Integer> ressourcesNecessaires;
+
     /**
      * Constructeur de base d'une arme.
      * @param nom Le nom d'affichage de l'arme.
@@ -33,7 +33,7 @@ public abstract class Arme {
      * @param cadence Le temps de recharge ("cooldown") en millisecondes entre deux attaques.
      * @param angle L'ouverture du cône d'attaque en radians. Plus l'angle est grand, plus la zone balayée est large.
      */
-    public Arme(String nom, int degats, int portee, int cadence, double angle, Image image, List ressourcesNecessaires) {
+    public Arme(String nom, int degats, int portee, int cadence, double angle, Image image, Map<Integer, Integer> ressourcesNecessaires) {
         // Affectation des statistiques de base lors de la création de l'arme
         this.nom = nom;
         this.degats = degats;
@@ -45,22 +45,22 @@ public abstract class Arme {
     }
 
     // Retourne la puissance d'attaque de l'arme
-    public int getDegats(){return degats;};
+    public int getDegats(){return degats;}
 
     // Permet de modifier les dégâts de l'arme
     public void setDegats(int degats) {this.degats = degats;}
 
     // Retourne la distance d'attaque maximale
-    public int getPortee(){return portee;};
+    public int getPortee(){return portee;}
 
     // Permet de modifier la portée de l'arme
-    public void setPortee(int p){this.portee = p;};
+    public void setPortee(int p){this.portee = p;}
 
     // Retourne le temps de recharge (cooldown) en millisecondes
-    public int getCadence(){return cadence;};
+    public int getCadence(){return cadence;}
 
     // Retourne le nom de l'arme
-    public String getNom(){return nom;};
+    public String getNom(){return nom;}
 
     // Permet de modifier le nom de l'arme
     public void setNom(String nom) {this.nom = nom;}
@@ -68,8 +68,11 @@ public abstract class Arme {
     // Retourne l'angle (la largeur) du cône de frappe en radians
     public double getAngle() {return angle;}
 
-    // Retourne l'ensemble des ressources nécessaires pour acheter / fabriquer l'arme
-    public List<String> getRessourcesNecessaires() {return ressourcesNecessaires;}
+    /**
+     * Retourne le dictionnaire des ressources nécessaires.
+     * La clé correspond à l'ID de la ressource et la valeur à la quantité.
+     */
+    public Map<Integer, Integer> getRessourcesNecessaires() {return ressourcesNecessaires;}
 
     // Retourne l'image de l'arme
     public Image getImage() {return image;}

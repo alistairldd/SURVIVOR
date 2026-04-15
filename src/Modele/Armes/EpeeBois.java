@@ -1,6 +1,6 @@
 package Modele.Armes;
 
-import java.util.List;
+import java.util.Map;
 
 import static Modele.Constantes.IMAGE_EPEEBOIS;
 public class EpeeBois extends Arme {
@@ -12,7 +12,7 @@ public class EpeeBois extends Arme {
                 700,
                 Math.PI / 3,
                 IMAGE_EPEEBOIS, // Image à définir pour l'épée en bois
-                List.of("Bois:10") // Ressources nécessaires pour fabriquer l'épée en bois
+                Map.of(0, 10) // Ressources nécessaires pour fabriquer l'épée en bois (0 = Bois)
         );
     }
     // Récupère la valeur des dégâts définis dans la classe parente
@@ -45,8 +45,7 @@ public class EpeeBois extends Arme {
     }
 
     @Override
-    public List<String> getRessourcesNecessaires() {
+    public Map<Integer, Integer> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires();
     }
 }
-

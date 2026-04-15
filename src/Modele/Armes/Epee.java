@@ -1,6 +1,6 @@
 package Modele.Armes;
 
-import java.util.List;
+import java.util.Map;
 
 import static Modele.Constantes.IMAGE_EPEE;
 
@@ -33,7 +33,7 @@ public class Epee extends Arme {
                 500,
                 Math.PI / 3,
                 IMAGE_EPEE,
-                List.of("Fer:10")
+                Map.of(2, 10) // 2 = Fer
         );
     }
 
@@ -66,8 +66,8 @@ public class Epee extends Arme {
         return super.getAngle();
     }
 
-     @Override
-    public List<String> getRessourcesNecessaires() {
-         return super.getRessourcesNecessaires();
+    @Override
+    public Map<Integer, Integer> getRessourcesNecessaires() {
+        return super.getRessourcesNecessaires();
     }
 }

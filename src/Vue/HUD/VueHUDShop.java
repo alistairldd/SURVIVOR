@@ -9,10 +9,15 @@ import Modele.Modele;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static Modele.Constantes.TAILLE_IMG;
 import static Modele.Constantes.xOffset;
 
+/**
+ * Moteur de rendu de la Boutique.
+ * Traduit les flux de données (Map) en informations visuelles pour l'investisseur (le joueur).
+ */
 public class VueHUDShop {
 
     private final int HAUTEUR_ITEM = 100;
@@ -49,71 +54,78 @@ public class VueHUDShop {
         yCourant += 20;
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.ITALIC, 12));
-        g2d.drawString("Utilisez le pavé numérique pour acheter", xOffset, yCourant);
+        g2d.drawString("Cliquez sur un actif pour l'acquérir", xOffset, yCourant);
 
         return yCourant;
     }
 
     /**
-     * Méthode générique pour dessiner n'importe quelle catégorie d'objets (Armes, Armures, etc.)
+     * Traduit le dictionnaire de ressources en une chaîne de caractères lisible.
      */
+    private String formaterPrix(Map<Integer, Integer> prix) {
+        if (prix == null || prix.isEmpty()) return "Coût : Gratuit";
+
+        List<String> labels = new ArrayList<>();
+        // Mapping des IDs défini dans tes Constantes (0:Bois, 1:Pierre, 2:Fer, 3:Or)
+        String[] nomsRessources = {"Bois", "Pierre", "Fer", "Or"};
+
+        for (Map.Entry<Integer, Integer> entry : prix.entrySet()) {
+            int id = entry.getKey();
+            int quantite = entry.getValue();
+            if (id >= 0 && id < nomsRessources.length) {
+                labels.add(quantite + " " + nomsRessources[id]);
+            }
+        }
+        return "Coût : " + String.join(", ", labels);
+    }
+
     private int dessinerCategorie(Graphics2D g2d, int y, String titre, ArrayList<?> liste) {
         if (liste == null || liste.isEmpty()) return y;
 
-        // Titre de la catégorie
         g2d.setColor(new Color(40, 40, 40));
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
         g2d.drawString(titre, xOffset, y);
-        y += 25; // Petit espace sous le titre
+        y += 25;
 
         for (int i = 0; i < liste.size(); i++) {
             Object obj = liste.get(i);
             String nom = "";
             String stats = "";
-            String ressources = "";
+            String ressourcesStr = "";
             Image img = null;
 
-            Rectangle rect = new Rectangle(xOffset, y, 260, HAUTEUR_ITEM);
-            zonesCliquables.put(rect, obj);
-
-            // --- 1. EXTRACTION DES DONNÉES ---
             if (obj instanceof Arme) {
                 Arme a = (Arme) obj;
                 nom = a.getNom();
                 stats = "Atk: " + a.getDegats() + " | Portée: " + a.getPortee();
-                ressources = "Coût: " + String.join(", ", a.getRessourcesNecessaires());
+                ressourcesStr = formaterPrix(a.getRessourcesNecessaires());
                 img = a.getImage();
             } else if (obj instanceof Armure) {
                 Armure arm = (Armure) obj;
                 nom = arm.getNom();
                 stats = "Reduction dgts: +" + arm.getReduction();
-                ressources = "Coût: " + String.join(", ", arm.getRessourcesNecessaires());
+                ressourcesStr = formaterPrix(arm.getRessourcesNecessaires());
                 img = arm.getImage();
             } else if (obj instanceof Item) {
                 Item it = (Item) obj;
                 nom = it.getNom();
                 stats = "Consommable";
-                ressources = "Prix: " + it.getPrix() + " Or";
+                ressourcesStr = "Prix: " + it.getPrix() + " Or";
                 img = it.getImage();
             }
 
-            // --- 2. ENREGISTREMENT DE LA ZONE DE CLIC ---
-            // On enregistre tout le rectangle de l'item (260 de large, HAUTEUR_ITEM de haut)
             Rectangle rectItem = new Rectangle(xOffset, y, 260, HAUTEUR_ITEM);
             zonesCliquables.put(rectItem, obj);
 
-            // --- 3. DESSIN DU BOUTON "ACHETER" ---
+            // Dessin du bouton ACHETER
             int btnLargeur = 75;
             int btnHauteur = 25;
             int btnX = xOffset + 180;
-            // btnY est calculé pour être aligné avec le milieu des textes
             int btnY = y + 35;
 
-            // Fond du bouton (Vert si achetable, gris sinon)
-            g2d.setColor(new Color(34, 139, 34));
+            g2d.setColor(new Color(34, 139, 34)); // Vert Bullish
             g2d.fillRoundRect(btnX, btnY, btnLargeur, btnHauteur, 8, 8);
 
-            // Texte du bouton
             g2d.setColor(Color.WHITE);
             g2d.setFont(new Font("Arial", Font.BOLD, 11));
             FontMetrics fm = g2d.getFontMetrics();
@@ -121,30 +133,16 @@ public class VueHUDShop {
             int ty = btnY + ((btnHauteur - fm.getHeight()) / 2) + fm.getAscent();
             g2d.drawString("ACHETER", tx, ty);
 
-            // --- 4. DESSIN DU BLOC ITEM (IMAGE + TEXTES) ---
-            // Image à gauche
+            // Sprite et Textes
             if (img != null) {
-                // Dimensions originales de l'image
                 int imgW = img.getWidth(null);
                 int imgH = img.getHeight(null);
-
-                // Calcul du ratio pour tenir dans TAILLE_IMG x TAILLE_IMG
                 float ratio = Math.min((float) TAILLE_IMG / imgW, (float) TAILLE_IMG / imgH);
-
                 int drawW = Math.round(imgW * ratio);
                 int drawH = Math.round(imgH * ratio);
-
-                // Centrage dans le carré
-                int offsetX = xOffset + (TAILLE_IMG - drawW) / 2;
-                int offsetY = y + (TAILLE_IMG - drawH) / 2;
-
-                g2d.drawImage(img, offsetX, offsetY, drawW, drawH, null);
-            } else {
-                g2d.setColor(new Color(0, 0, 0, 30));
-                g2d.fillRect(xOffset, y, TAILLE_IMG, TAILLE_IMG);
+                g2d.drawImage(img, xOffset + (TAILLE_IMG - drawW) / 2, y + (TAILLE_IMG - drawH) / 2, drawW, drawH, null);
             }
 
-            // Textes à droite de l'image
             int xTexte = xOffset + TAILLE_IMG + 12;
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font("Arial", Font.BOLD, 14));
@@ -153,17 +151,15 @@ public class VueHUDShop {
             g2d.setFont(new Font("Arial", Font.PLAIN, 12));
             g2d.drawString(stats, xTexte, y + 40);
 
-            g2d.setColor(new Color(139, 69, 19)); // Marron
+            g2d.setColor(new Color(139, 69, 19)); // Marron Liquidation
             g2d.setFont(new Font("Arial", Font.BOLD, 11));
-            g2d.drawString(ressources, xTexte, y + 65);
+            g2d.drawString(ressourcesStr, xTexte, y + 65);
 
-            // Ligne de séparation
             g2d.setColor(new Color(0, 0, 0, 20));
             g2d.drawLine(xOffset, y + HAUTEUR_ITEM - 5, xOffset + 255, y + HAUTEUR_ITEM - 5);
 
             y += HAUTEUR_ITEM;
         }
-
         return y + 20;
     }
 

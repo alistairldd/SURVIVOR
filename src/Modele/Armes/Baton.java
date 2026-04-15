@@ -1,6 +1,6 @@
 package Modele.Armes;
 
-import java.util.List;
+import java.util.Map;
 
 import static Modele.Constantes.IMAGE_BATON;
 
@@ -33,7 +33,7 @@ public class Baton extends Arme {
                 500,
                 Math.PI / 3,
                 IMAGE_BATON,
-                List.of("Fer:10")
+                Map.of(2, 10) // 2 = Fer
         );
     }
 
@@ -67,7 +67,7 @@ public class Baton extends Arme {
     }
 
     @Override
-    public List<String> getRessourcesNecessaires() {
+    public Map<Integer, Integer> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires();
     }
 }

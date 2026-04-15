@@ -1,6 +1,6 @@
 package Modele.Armes;
 
-import java.util.List;
+import java.util.Map;
 
 import static Modele.Constantes.IMAGE_EPEE_LOURDE;
 
@@ -14,11 +14,11 @@ public class EpeeLourde extends Arme{
                 1500,
                 Math.PI,
                 IMAGE_EPEE_LOURDE,
-                List.of("Fer:25","Pierre:10")
+                Map.of(2, 25, 1, 10) // 2 = Fer, 1 = Pierre
         );
     }
 
-     // Récupère la valeur des dégâts définis dans la classe parente
+    // Récupère la valeur des dégâts définis dans la classe parente
     @Override
     public int getDegats() {
         return super.getDegats();
@@ -47,7 +47,7 @@ public class EpeeLourde extends Arme{
     }
 
     @Override
-    public List<String> getRessourcesNecessaires() {
+    public Map<Integer, Integer> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires();
     }
 }

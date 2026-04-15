@@ -1,40 +1,38 @@
 package Modele.Armure;
 
-import java.util.List;
-
+import java.util.Map;
 import java.awt.*;
 
 import static Modele.Constantes.IMAGE_ARMURE_LEGERE;
 
-public class ArmureLegere extends Armure{
+public class ArmureLegere extends Armure {
     public ArmureLegere() {
         super(
                 "Armure légère",
                 5,
                 IMAGE_ARMURE_LEGERE,
                 -1,
-                List.of("Bois:5","Pierre:5")
-        ); // Bonus de 20 PV pour une armure légère
+                Map.of(0, 5, 1, 5) // 0 = Bois, 1 = Pierre
+        );
     }
 
     @Override
     public int getReduction() {
-        return super.getReduction(); // Récupère le bonus de vie défini dans la classe parente
+        return super.getReduction();
     }
 
     @Override
     public String getNom() {
-        return super.getNom(); // Récupère le nom de l'armure défini dans la classe parente
+        return super.getNom();
     }
 
     @Override
     public Image getImage() {
-        return super.getImage(); // Récupère l'image de l'armure définie dans la classe parente
+        return super.getImage();
     }
 
     @Override
-    public List<String> getRessourcesNecessaires() {
-        return super.getRessourcesNecessaires(); // Récupère les ressources nécessaires définies dans la classe parente
+    public Map<Integer, Integer> getRessourcesNecessaires() {
+        return super.getRessourcesNecessaires();
     }
-
 }

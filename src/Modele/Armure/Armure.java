@@ -1,30 +1,33 @@
 package Modele.Armure;
 
 import java.awt.*;
-import java.util.List;
+import java.util.Map;
 
+/**
+ * Classe abstraite définissant la base de toute armure équipable par le joueur.
+ * Gère les statistiques de réduction de dégâts, le poids (vitesse) et le coût en ressources.
+ */
 public abstract class Armure {
     // Nom affiché de l'armure
     private String nom;
-    // Quantité de points de vie ajoutés au joueur lorsqu'il équipe cette armure
+    // Quantité de dégâts réduits (ou bonus de PV selon l'implémentation)
     private int reduction;
-    // Image représentant l'arme (optionnel, peut être utilisé pour l'affichage)
+    // Image représentant l'armure
     private Image image;
-    // Liste des ressources nécessaires pour acheter / fabriquer l'armure
-    private List ressourcesNecessaires;
-
-    // Poids de l'armure (pour baisser la vitesse)
+    // Dictionnaire des ressources nécessaires (ID Ressource : Quantité)
+    private Map<Integer, Integer> ressourcesNecessaires;
+    // Impact sur la vitesse du joueur (valeur négative pour ralentir)
     private int vitesse;
 
-    public Armure(String nom, int reduction, Image image, int vitesse, List ressourcesNecessaires) {
+    public Armure(String nom, int reduction, Image image, int vitesse, Map<Integer, Integer> ressourcesNecessaires) {
         this.nom = nom;
         this.reduction = reduction;
         this.image = image;
-        this.vitesse = vitesse ;
+        this.vitesse = vitesse;
         this.ressourcesNecessaires = ressourcesNecessaires;
     }
 
-    // Retourne le bonus de vie de l'armure
+    // Retourne le bonus de réduction de l'armure
     public int getReduction() {
         return reduction;
     }
@@ -35,15 +38,21 @@ public abstract class Armure {
     }
 
     // Retourne l'image de l'armure
-    public Image getImage() {return image;}
+    public Image getImage() {
+        return image;
+    }
 
-    // Retourne le poids de l'armure
+    // Retourne l'impact sur la vitesse
     public int getVitesse() {
         return vitesse;
     }
 
-    // Retourne la liste des ressources nécessaires pour acheter / fabriquer l'armure
-    public List<String> getRessourcesNecessaires() {return ressourcesNecessaires;}
-
-
+    /**
+     * Retourne le dictionnaire des ressources nécessaires.
+     * Clé : ID de la ressource (0:Bois, 1:Pierre, 2:Fer, 3:Or)
+     * Valeur : Quantité requise
+     */
+    public Map<Integer, Integer> getRessourcesNecessaires() {
+        return ressourcesNecessaires;
+    }
 }

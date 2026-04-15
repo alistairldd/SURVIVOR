@@ -1,6 +1,6 @@
 package Modele.Armes;
 
-import java.util.List;
+import java.util.Map;
 
 import static Modele.Constantes.IMAGE_HACHE;
 
@@ -22,7 +22,7 @@ public class Hache extends Arme {
                 700,
                 Math.PI * 2,
                 IMAGE_HACHE, // Image non définie pour l'instant
-                List.of("Bois:10", "Fer:5") // Coût en ressources pour fabriquer la hache
+                Map.of(0, 10, 2, 5) // Coût en ressources pour fabriquer la hache (0 = Bois, 2 = Fer)
         );
     }
 
@@ -52,7 +52,7 @@ public class Hache extends Arme {
     }
 
     @Override
-    public List<String> getRessourcesNecessaires() {
+    public Map<Integer, Integer> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires();
     }
 }

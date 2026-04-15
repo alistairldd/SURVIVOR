@@ -1,6 +1,6 @@
 package Modele.Armes;
 
-import java.util.List;
+import java.util.Map;
 
 import static Modele.Constantes.IMAGE_LANCE;
 
@@ -14,7 +14,7 @@ public class Lance extends Arme{
                 1000,
                 Math.PI / 12, // Angle d'attaque plus étroit que l'épée, reflétant la nature plus précise et linéaire de la lance
                 IMAGE_LANCE, // Image non définie pour l'instant
-                List.of("Bois:20", "Pierre:10") // Coût en ressources pour fabriquer la lance
+                Map.of(0, 20, 1, 10) // Coût en ressources pour fabriquer la lance (0 = Bois, 1 = Pierre)
         );
     }
 
@@ -44,7 +44,7 @@ public class Lance extends Arme{
     }
 
     @Override
-    public List<String> getRessourcesNecessaires() {
+    public Map<Integer, Integer> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires();
     }
 }
