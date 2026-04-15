@@ -52,15 +52,25 @@ public class GestionnaireBatiments {
         return m.batTrouverJoueur(tente);
     }
 
-    /**
-     * NOUVELLE MÉTHODE : Arrêt propre de tous les threads avant de vider la mémoire.
-     */
     public void stopperTousLesThreads() {
         for (Batiment b : batiments) {
             if (b != null && b.isAlive()) {
                 b.interrupt(); // Envoie le signal de Game Over au Thread
             }
         }
+    }
+
+    /**
+     * Vérifie si une tente de soin est déjà présente sur la carte.
+     * @return true si une instance de TenteDeSoin est trouvée.
+     */
+    public boolean aDejaUneTente() {
+        for (Batiment b : batiments) {
+            if (b instanceof TenteDeSoin) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void clearBatiments() {

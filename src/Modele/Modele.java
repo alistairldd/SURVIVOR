@@ -217,8 +217,12 @@ public class Modele {
         // 1. On ne construit que le jour
         if (!leCycleJourNuit.isDay()) return false;
 
+        // --- NOUVEAU : Unicité de la Tente ---
+        if (modeConstruction == TypeConstruction.TENTE && gestionnaireBatiments.aDejaUneTente()) {
+            return false; // La tente existe déjà, zone non constructible !
+        }
+
         // 2. Vérification des limites de la carte
-        // On vérifie que les bords de la hitbox ne sortent pas des constantes de la map
         if (x - rayonHitbox < 0 || x + rayonHitbox > LARGEUR_MAP ||
                 y - rayonHitbox < 0 || y + rayonHitbox > HAUTEUR_MAP) {
             return false; // Emplacement hors limites
@@ -262,15 +266,17 @@ public class Modele {
             }
         }
         else if (modeConstruction == TypeConstruction.TENTE) {
+            // NOUVEAU : On ajoute !gestionnaireBatiments.aDejaUneTente()
             if (joueur.aAssezDeRessources(COUT_TENTE) &&
-                    peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TENTE)) {
+                    peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TENTE) &&
+                    !gestionnaireBatiments.aDejaUneTente()) {
 
                 joueur.consommerListeRessources(COUT_TENTE);
                 TenteDeSoin t = new TenteDeSoin((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
                 annulerConstruction(); // On désactive le mode
             } else {
-                System.out.println("Impossible de construire la Tente ici ou ressources insuffisantes !");
+                System.out.println("Impossible de construire la Tente : ressources insuffisantes, collision, ou déjà construite !");
             }
         }
     }
