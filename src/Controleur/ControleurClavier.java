@@ -52,13 +52,19 @@ public class ControleurClavier implements KeyListener {
 
             else {
                 if (!vue.getVueArme().getEnAnimation()) {
-                    modele.getJoueur().switchArmures();
+                    modele.getJoueur().switchArmes();
                 }
             }
         }
 
+        if (e.getKeyCode() == KeyEvent.VK_X){
+            modele.getJoueur().switchArmures();
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_E){
             modele.getJoueur().utilierConsommable(new PotionDegats());
+            modele.getJoueur().utilierConsommable(new PotionVie());
+            modele.getJoueur().utilierConsommable(new PotionVitesse());
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Z){
