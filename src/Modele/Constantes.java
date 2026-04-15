@@ -14,7 +14,9 @@ public final class Constantes {
     }
 
     /*** --- DIMENSIONS DE RENDU --- ***/
-    public static final int TAILLE_BATIMENT = 200;
+    public static final int TAILLE_TOUR = 200;
+    public static final int TAILLE_TENTE = 150;
+    public static final int TAILLE_MINE = 150;
     public static final int TAILLE_HQ = 400;
     public static final int TAILLE_BATIMENT_MINIMAP = 6;
 
@@ -35,10 +37,10 @@ public final class Constantes {
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
     public static final int MINE_BASE_RANGE = 100;
-    public static final int RAYON_HITBOX_TOUR =  10; // Rayon d'encombrement d'une tour
-    public static final int RAYON_HITBOX_MINE = TAILLE_BATIMENT + 10; // Rayon d'encombrment de la mine
-    public static final int RAYON_HITBOX_QG = TAILLE_HQ + 10;   // Le QG est plus gros, il prend plus de place
-    public static final int RAYON_HITBOX_TENTE = TAILLE_BATIMENT/2 + 5; // La tente de soin a une hitbox intermédiaire
+    public static final int RAYON_HITBOX_TOUR =  50; // Rayon d'encombrement d'une tour
+    public static final int RAYON_HITBOX_MINE = TAILLE_MINE / 2 + 10; // Rayon d'encombrment de la mine
+    public static final int RAYON_HITBOX_QG = TAILLE_HQ / 2 + 10;   // Le QG est plus gros, il prend plus de place
+    public static final int RAYON_HITBOX_TENTE = TAILLE_TENTE / 2 + 5; // La tente de soin a une hitbox intermédiaire
     /*--- Mine ---*/
     public static final int PROBA_PIERRE = 70; // 50% de chance d'obtenir de la pierre
     public static final int PROBA_FER = 25;   // 30% de chance d'obtenir du fer
@@ -54,7 +56,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 5;
+    public final static int DUREE_CYCLE_JOUR = 600;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -155,14 +157,14 @@ public final class Constantes {
             IMAGE_HQ = chargerEtRedimensionner("src/images/Batiments/HQ.png", TAILLE_HQ);
             IMAGE_HQ_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/HQ_endommage.png", TAILLE_HQ);
 
-            IMAGE_TOUR = chargerEtRedimensionner("src/images/Batiments/tour.png", TAILLE_BATIMENT);
-            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tour_endommage.png", TAILLE_BATIMENT);
+            IMAGE_TOUR = chargerEtRedimensionner("src/images/Batiments/tour.png", TAILLE_TOUR);
+            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tour_endommage.png", TAILLE_TOUR);
 
-            IMAGE_MINE = chargerEtRedimensionner("src/images/Batiments/mine.png", TAILLE_BATIMENT);
-            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/mine_endommage.png", TAILLE_BATIMENT);
+            IMAGE_MINE = chargerEtRedimensionner("src/images/Batiments/mine.png", TAILLE_MINE);
+            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/mine_endommage.png", TAILLE_MINE);
 
-            IMAGE_TENTE = chargerEtRedimensionner("src/images/Batiments/tente.png", TAILLE_BATIMENT);
-            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tente_endommage.png", TAILLE_BATIMENT);
+            IMAGE_TENTE = chargerEtRedimensionner("src/images/Batiments/tente.png", TAILLE_TENTE);
+            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tente_endommage.png", TAILLE_TENTE);
         } catch (Exception e) {
             System.err.println("ERREUR : Impossible de charger les images des bâtiments.");
             e.printStackTrace();

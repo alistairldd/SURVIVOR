@@ -47,7 +47,7 @@ public class VueBatiment {
         else {
             // Rendu par défaut pour les structures non répertoriées
             g2d.setColor(Color.GRAY);
-            int taille = minimap ? TAILLE_BATIMENT_MINIMAP : TAILLE_BATIMENT;
+            int taille = minimap ? TAILLE_BATIMENT_MINIMAP : TAILLE_TOUR;
             g2d.fillRect(x - (taille / 2), y - (taille / 2), taille, taille);
         }
 

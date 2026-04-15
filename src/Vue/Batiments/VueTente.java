@@ -60,11 +60,11 @@ public class VueTente {
 
             // Rendu final
             if (spriteAAfficher != null) {
-                g2d.drawImage(spriteAAfficher, x - (TAILLE_BATIMENT / 2), y - (TAILLE_BATIMENT / 2), null);
+                g2d.drawImage(spriteAAfficher, x - (TAILLE_TENTE / 2), y - (TAILLE_TENTE / 2), null);
             } else {
                 // Fallback si image introuvable
                 g2d.setColor(new Color(200, 200, 0));
-                g2d.fillRect(x - (TAILLE_BATIMENT / 2), y - (TAILLE_BATIMENT / 2), TAILLE_BATIMENT, TAILLE_BATIMENT);
+                g2d.fillRect(x - (TAILLE_TENTE / 2), y - (TAILLE_TENTE / 2), TAILLE_TENTE, TAILLE_TENTE);
             }
         }
     }

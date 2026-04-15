@@ -39,11 +39,11 @@ public class VueMine {
 
             // Rendu de l'image
             if (spriteAAfficher != null) {
-                g2d.drawImage(spriteAAfficher, x - (TAILLE_BATIMENT / 2), y - (TAILLE_BATIMENT /3), null);
+                g2d.drawImage(spriteAAfficher, x - (TAILLE_MINE / 2), y - (TAILLE_MINE * 3 / 4 ), null);
             } else {
                 // Fallback de sécurité si l'image manque
                 g2d.setColor(new Color(150, 75, 0));
-                g2d.fillRect(x - (TAILLE_BATIMENT / 2), y - (TAILLE_BATIMENT / 2), TAILLE_BATIMENT, TAILLE_BATIMENT);
+                g2d.fillRect(x - (TAILLE_MINE / 2), y - (TAILLE_MINE / 2), TAILLE_MINE, TAILLE_MINE);
             }
 
             // --- 2. AFFICHAGE DU TEXTE DES MINERAIS ---
@@ -55,7 +55,7 @@ public class VueMine {
             g2d.setFont(new Font("Arial", Font.BOLD, 12));
 
             // Dessin du texte juste au-dessus du sprite de la mine
-            g2d.drawString(stock + " Minerais", x - 30, y - (TAILLE_BATIMENT / 2) - 8);
+            g2d.drawString(stock + " Minerais", x - 30, y - (TAILLE_MINE * 4/5) - 8);
         }
     }
 }

@@ -51,10 +51,10 @@ public class VueTower {
             }
 
             if (spriteAAfficher != null) {
-                g2d.drawImage(spriteAAfficher, x - (TAILLE_BATIMENT / 2), y - TAILLE_BATIMENT* 4/5, null);
+                g2d.drawImage(spriteAAfficher, x - (TAILLE_TOUR / 2), y - TAILLE_TOUR* 4/5, null);
             } else {
                 g2d.setColor(couleurAura);
-                g2d.fillRect(x - (TAILLE_BATIMENT / 2), y - TAILLE_BATIMENT, TAILLE_BATIMENT, TAILLE_BATIMENT);
+                g2d.fillRect(x - (TAILLE_TOUR / 2), y - TAILLE_TOUR, TAILLE_TOUR, TAILLE_TOUR);
             }
 
             // --- 3. EFFET D'ATTAQUE (LASER ET RAYCASTING) ---
