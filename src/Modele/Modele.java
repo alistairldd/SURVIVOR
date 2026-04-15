@@ -206,11 +206,25 @@ public class Modele {
      * @param rayonHitbox Le rayon d'encombrement du bâtiment qu'on veut placer
      * @return true si la place est libre ET qu'il fait jour.
      */
+    /**
+     * Vérifie si l'emplacement (x, y) est libre, à l'intérieur de la carte et constructible.
+     * @param x Coordonnée X de la souris
+     * @param y Coordonnée Y de la souris
+     * @param rayonHitbox Le rayon d'encombrement du bâtiment qu'on veut placer
+     * @return true si la place est libre, dans les limites ET qu'il fait jour.
+     */
     public boolean peutConstruireIci(double x, double y, int rayonHitbox) {
         // 1. On ne construit que le jour
         if (!leCycleJourNuit.isDay()) return false;
 
-        // 2. Vérification des collisions avec les autres bâtiments existants
+        // 2. Vérification des limites de la carte
+        // On vérifie que les bords de la hitbox ne sortent pas des constantes de la map
+        if (x - rayonHitbox < 0 || x + rayonHitbox > LARGEUR_MAP ||
+                y - rayonHitbox < 0 || y + rayonHitbox > HAUTEUR_MAP) {
+            return false; // Emplacement hors limites
+        }
+
+        // 3. Vérification des collisions avec les autres bâtiments existants
         for (Batiment b : gestionnaireBatiments.getBatiments()) {
             double distance = Math.hypot(b.getX() - x, b.getY() - y);
             double distanceMinimaleRequise = b.getRayonHitbox() + rayonHitbox;
@@ -219,7 +233,7 @@ public class Modele {
                 return false; // Il y a déjà un bâtiment trop proche
             }
         }
-        return true; // La zone est libre !
+        return true; // La zone est libre, valide et dans la carte !
     }
 
     /**
