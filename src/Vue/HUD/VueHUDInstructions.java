@@ -1,77 +1,51 @@
 package Vue.HUD;
 
 import Modele.Modele;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * Overlay d'interface gérant le bouton d'aide et le popup des commandes.
- * Implémentation hybride : JButton pour l'interaction et dessin personnalisé pour le popup.
+ * Le popup s'adapte désormais dynamiquement à la taille du texte contenu.
  */
 public class VueHUDInstructions extends JPanel {
 
     private Modele modele;
     private JButton btnAide;
-    private BufferedImage imgManette;
-    private boolean imageChargee = false;
 
-    // Dimensions et marges constantes
     public static final int BTN_SIZE = 50;
     public static final int MARGIN = 20;
 
     public VueHUDInstructions(Modele modele) {
         this.modele = modele;
-
-        // Configuration du conteneur d'overlay
-        this.setOpaque(false); // Indispensable pour voir le jeu en dessous
-        this.setLayout(null);  // Positionnement absolu des composants UI
+        this.setOpaque(false);
+        this.setLayout(null);
         this.setFocusable(false);
-
-        // 1. Initialisation du bouton physique
         initButton();
     }
 
-    /**
-     * Initialise le JButton Swing avec protection du focus clavier.
-     */
     private void initButton() {
         btnAide = new JButton();
-
-        // Empêche le bouton de voler le focus au KeyListener du jeu
         btnAide.setFocusable(false);
-
-        // Style du bouton
         btnAide.setBorderPainted(false);
         btnAide.setContentAreaFilled(false);
         btnAide.setFocusPainted(false);
         btnAide.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Action Listener : Bascule l'état du popup dans le modèle
         btnAide.addActionListener(e -> {
             modele.toggleInstructions();
-            // Force le rafraîchissement visuel pour afficher/masquer le popup
             repaint();
         });
 
         this.add(btnAide);
     }
 
-    /**
-     * Gère le positionnement dynamique du bouton lors du redimensionnement.
-     */
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
-        // On replace le bouton en bas à gauche à chaque changement de taille de fenêtre
         btnAide.setBounds(MARGIN, height - BTN_SIZE - MARGIN, BTN_SIZE, BTN_SIZE);
     }
 
-    /**
-     * Rendu graphique du bouton (si image absente) et du popup.
-     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -79,53 +53,27 @@ public class VueHUDInstructions extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int h = getHeight();
-
-        // --- DESSIN DU BOUTON (Fond et icône) ---
         int btnY = h - BTN_SIZE - MARGIN;
+
+        // --- DESSIN DU BOUTON ---
         g2d.setColor(new Color(50, 50, 50, 200));
         g2d.fillRoundRect(MARGIN, btnY, BTN_SIZE, BTN_SIZE, 10, 10);
         g2d.setColor(Color.WHITE);
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(MARGIN, btnY, BTN_SIZE, BTN_SIZE, 10, 10);
 
-
         g2d.setFont(new Font("Monospaced", Font.BOLD, 25));
         g2d.drawString("?", MARGIN + 18, btnY + 35);
 
-
-        // --- DESSIN DU POPUP (Si actif dans le modèle) ---
+        // --- DESSIN DU POPUP DYNAMIQUE ---
         if (modele.isInstructionsOuvert()) {
             drawInstructionPopup(g2d, h);
         }
     }
 
-    /**
-     * Procédure de rendu du menu d'aide translucide.
-     */
     private void drawInstructionPopup(Graphics2D g2d, int screenHeight) {
-        int width = 320;
-        int height = 240;
-        int x = MARGIN;
-        int y = screenHeight - BTN_SIZE - MARGIN - height - 10;
-
-        // Background translucide (Layer Alpha 85%)
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
-        g2d.setColor(new Color(30, 30, 30));
-        g2d.fillRoundRect(x, y, width, height, 15, 15);
-
-        // Border rendering
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        g2d.setColor(new Color(180, 180, 180));
-        g2d.setStroke(new BasicStroke(2));
-        g2d.drawRoundRect(x, y, width, height, 15, 15);
-
-        // Header
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        g2d.drawString("COMMANDES SYSTÈME", x + 15, y + 35);
-
-        // Body text mapping
-        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        // 1. DÉFINITION DU CONTENU
+        String title = "COMMANDES SYSTÈME";
         String[] instructions = {
                 "• CLIC DROIT   : Déplacement",
                 "• CLIC GAUCHE  : Attaque",
@@ -138,8 +86,47 @@ public class VueHUDInstructions extends JPanel {
                 "• PAVÉ NUM     : Transaction Shop"
         };
 
+        // 2. CALCULS DE DIMENSIONS DYNAMIQUES
+        Font titleFont = new Font("Segoe UI", Font.BOLD, 16);
+        Font textFont = new Font("Segoe UI", Font.PLAIN, 13);
+        int lineSpacing = 22;
+        int paddingSide = 25;
+        int paddingTop = 50; // Espace pour le titre
+        int paddingBottom = 20;
+
+        // Mesurer la largeur nécessaire (basée sur la ligne la plus longue)
+        g2d.setFont(textFont);
+        FontMetrics fm = g2d.getFontMetrics();
+        int maxWidth = g2d.getFontMetrics(titleFont).stringWidth(title);
+        for (String s : instructions) {
+            maxWidth = Math.max(maxWidth, fm.stringWidth(s));
+        }
+
+        int width = maxWidth + (paddingSide * 2);
+        int height = paddingTop + (instructions.length * lineSpacing) + paddingBottom;
+
+        // Calcul de la position (s'élève vers le haut selon la taille)
+        int x = MARGIN;
+        int y = screenHeight - BTN_SIZE - MARGIN - height - 10;
+
+        // 3. RENDU DU CADRE
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.90f));
+        g2d.setColor(new Color(25, 25, 25));
+        g2d.fillRoundRect(x, y, width, height, 15, 15);
+
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        g2d.setColor(new Color(150, 150, 150));
+        g2d.setStroke(new BasicStroke(2));
+        g2d.drawRoundRect(x, y, width, height, 15, 15);
+
+        // 4. RENDU DU TEXTE
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(titleFont);
+        g2d.drawString(title, x + paddingSide, y + 35);
+
+        g2d.setFont(textFont);
         for (int i = 0; i < instructions.length; i++) {
-            g2d.drawString(instructions[i], x + 20, y + 70 + (i * 22));
+            g2d.drawString(instructions[i], x + paddingSide, y + paddingTop + (i * lineSpacing) + 15);
         }
     }
 }
