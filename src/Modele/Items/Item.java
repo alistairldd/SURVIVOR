@@ -2,6 +2,8 @@ package Modele.Items;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
+
 
 public abstract class Item{
     // Nom affiché de l'armure
@@ -36,6 +38,19 @@ public abstract class Item{
     // Retourne la liste des ressources nécessaires pour acheter / fabriquer l'armure
     public Integer getPrix() {return prix;}
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(nom, item.nom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nom);
+    }
 
 }
 

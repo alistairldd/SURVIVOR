@@ -2,14 +2,13 @@ package Modele;
 import Modele.Armes.Arme;
 import Modele.Armes.Epee;
 import Modele.Armes.EpeeBois;
-import Modele.Items.Armure;
-import Modele.Items.ArmureLegere;
+import Modele.Armure.Armure;
+import Modele.Armure.ArmureLegere;
 import Modele.Items.Item;
 import Modele.Items.PotionVie;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class GestionnaireShop {

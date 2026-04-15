@@ -1,4 +1,4 @@
-package Modele.Items;
+package Modele.Armure;
 
 import java.awt.*;
 import java.util.List;

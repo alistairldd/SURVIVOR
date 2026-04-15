@@ -279,6 +279,8 @@ public final class Constantes {
             // Charger l'image de l'armure légère
             IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/equipement/ArmureLegere.png"));
 
+            //Charger l'image de l'armure lourde
+            IMAGE_ARMURE_LOURDE = ImageIO.read(new File("src/images/equipement/ArmureLourde.png"));
             // Charger l'image de la potion de vie
             IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/PotionDeVie.png"));
         } catch (Exception e) {

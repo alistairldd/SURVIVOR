@@ -3,7 +3,7 @@ package Vue.HUD;
 import Modele.Items.Item;
 import Modele.Joueur;
 import Modele.Armes.Arme;
-import Modele.Items.Armure;
+import Modele.Armure.Armure;
 import Modele.GestionnaireShop;
 import Modele.Modele;
 import java.awt.*;

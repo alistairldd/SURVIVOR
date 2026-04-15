@@ -5,9 +5,8 @@ import Vue.Vue;
 import Modele.Joueur;
 
 import Modele.Armes.Arme;
-import Modele.Items.Armure;
+import Modele.Armure.Armure;
 import Modele.Items.Item;
-import Modele.GestionnaireShop;
 
 import Vue.AnimationArme;
 import Modele.DeplaceJoueur;

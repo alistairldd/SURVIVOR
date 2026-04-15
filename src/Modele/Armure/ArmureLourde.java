@@ -1,21 +1,19 @@
-package Modele.Items;
-
-import java.util.List;
+package Modele.Armure;
 
 import java.awt.*;
+import java.util.List;
 
-import static Modele.Constantes.IMAGE_ARMURE_LEGERE;
+import static Modele.Constantes.IMAGE_ARMURE_LOURDE;
 
-public class ArmureLegere extends Armure{
-    public ArmureLegere() {
+public class ArmureLourde extends Armure{
+    public ArmureLourde(){
         super(
-                "Armure légère",
-                20,
-                IMAGE_ARMURE_LEGERE,
-                List.of("Bois:5","Pierre:5")
-        ); // Bonus de 20 PV pour une armure légère
+                "Armure lourde",
+                50,
+                IMAGE_ARMURE_LOURDE,
+                List.of("Fer:20","Pierre:10")
+        );
     }
-
     @Override
     public int getBonusVie() {
         return super.getBonusVie(); // Récupère le bonus de vie défini dans la classe parente
@@ -35,5 +33,4 @@ public class ArmureLegere extends Armure{
     public List<String> getRessourcesNecessaires() {
         return super.getRessourcesNecessaires(); // Récupère les ressources nécessaires définies dans la classe parente
     }
-
 }

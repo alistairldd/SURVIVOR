@@ -4,12 +4,15 @@ import Modele.Armes.*;
 import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
 import Modele.Batiments.Tower;
-import Modele.Items.Armure;
+import Modele.Armure.Armure;
+import Modele.Armure.ArmureLegere;
+import Modele.Armure.ArmureLourde;
 import Modele.Items.Item;
 
 import static Modele.Constantes.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -40,7 +43,9 @@ public class Joueur implements Localisable {
     // Arme non équipée mais possédée par le joueur
     private Arme armePasEquipee;
     // Armure du joueur
-    private Item armureEquipee;
+    private Armure armurePrincipale;
+    // Armure secondaire
+    private Armure armureSecondaire;
     // Booléen pour déterminer si le joueur a la pioche ou non
     private boolean aPioche;
     // Référence au modèle global pour interagir avec l'environnement (monstres, cycle jour/nuit)
@@ -79,7 +84,7 @@ public class Joueur implements Localisable {
         hp = HP_JOUEUR;
         attack = ATTAQUE_BASE;
         // Initialisation de l'inventaire
-        inventaire = new ArrayList<>();
+        inventaire = new ArrayList<Item>();
         this.aPioche = false;
 
         // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
@@ -96,7 +101,9 @@ public class Joueur implements Localisable {
         // Arme non équipée existe pas encore
         armePasEquipee = new EpeeLourde();
         // Pas d'armure au départ
-        armureEquipee = null;
+        armurePrincipale = new ArmureLegere();
+        // armureSecondaire
+        armureSecondaire = new ArmureLourde();
         // Lie le joueur à son monde
         this.modele = modele;
     }
@@ -151,6 +158,18 @@ public class Joueur implements Localisable {
         inventaire.add(item);
     }
 
+    public void removeFromInventaire(Item item) {
+        inventaire.remove(item);
+    }
+
+    public LinkedHashMap<Item, Integer> getInventaireGroupé() {
+        LinkedHashMap<Item, Integer> map = new LinkedHashMap<>();
+        for (Item item : inventaire) {
+            map.merge(item, 1, Integer::sum); // nécessite que Item implémente equals() + hashCode() sur le nom
+        }
+        return map;
+    }
+
     private void addToRessource(Ressource r) {
         this.ressources.add(r);
     }
@@ -179,14 +198,31 @@ public class Joueur implements Localisable {
         armePasEquipee = temp;
     }
 
-    public Item getArmureEquipee(){return armureEquipee;}
+    // Getter pour l'armure équipée du joueur
+    public Armure getArmurePrincipale(){return armurePrincipale;}
 
-    public void setArmureEquipee(Item armureEquipee){this.armureEquipee = armureEquipee;}
+    // Setter pour l'armure équipée du joueur
+    public void setArmureEquipee(Armure armureEquipee){this.armurePrincipale = armureEquipee;}
 
+    // Getter pour l'armure secondaire du joueur
+    public Armure getArmureSecondaire(){return armureSecondaire;}
+
+    // Setter pour l'armure secondaire du joueur
+    public void setArmureSecondaire(Armure armureSecondaire){this.armureSecondaire = armureSecondaire;}
+
+    // Méthode pour échanger les armures principale et secondaire
+    public void switchArmures() {
+        Armure temp = armurePrincipale;
+        armurePrincipale = armureSecondaire;
+        armureSecondaire = temp;
+    }
+
+    // Getter pour l'armure la pioche
     public boolean hasPioche() {
         return aPioche;
     }
 
+    // Setter pour la pioche
     public void setaPioche(boolean aPioche) {
         this.aPioche = aPioche;
     }
@@ -197,11 +233,7 @@ public class Joueur implements Localisable {
             this.hp = HP_JOUEUR;
         }
     }
-
-    public void ajouterAInventaire(Item r) {
-        inventaire.add(r);
-    }
-
+    // Méthode pour ajouter une ressource à l'inventaire du joueur
     public void ajouterARessources(Ressource r) {
         ressources.add(r);
     }

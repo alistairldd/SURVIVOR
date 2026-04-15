@@ -1,5 +1,6 @@
 package Controleur;
 
+import Modele.Items.PotionVie;
 import Modele.Modele;
 import Vue.Vue;
 import Vue.VueArme;
@@ -53,7 +54,13 @@ public class ControleurClavier implements KeyListener {
             }
         }
 
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            modele.getJoueur().addToInventaire(new PotionVie());
+        }
 
+        if (e.getKeyCode() == KeyEvent.VK_E){
+            modele.getJoueur().removeFromInventaire(new PotionVie());
+        }
 
         /*** System.out.println("Action : La touche E a été pressée !");
          if (e.getKeyCode() == KeyEvent.VK_E) {
