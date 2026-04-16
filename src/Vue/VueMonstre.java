@@ -18,35 +18,7 @@ import static Modele.Constantes.*;
  * de sa zone de menace (portée d'attaque).
  */
 public class VueMonstre {
-    private BufferedImage imageOgreG;
-    private BufferedImage imageOgreGM;
-    private BufferedImage imageOgreD;
-    private BufferedImage imageOgreDM;
-    private BufferedImage imageOgreAttaqueG;
-    private BufferedImage imageOgreAttaqueD;
-    private BufferedImage imageOgreAttaqueGH;
-    private BufferedImage imageOgreAttaqueDH;
 
-
-
-    // Constructeur de la classe VueMonstre
-    public VueMonstre() {
-
-        try {
-            imageOgreG = ImageIO.read(new File("src/images/monstres/ogreGauche.png"));
-            imageOgreGM = ImageIO.read(new File("src/images/monstres/ogreGaucheM.png"));
-            imageOgreD = ImageIO.read(new File("src/images/monstres/ogreDroit.png"));
-            imageOgreDM = ImageIO.read(new File("src/images/monstres/ogreDroitM.png"));
-            imageOgreAttaqueG = ImageIO.read(new File("src/images/monstres/ogreAttaqueG.png"));
-            imageOgreAttaqueD = ImageIO.read(new File("src/images/monstres/ogreAttaqueD.png"));
-            imageOgreAttaqueGH = ImageIO.read(new File("src/images/monstres/ogreAttaqueGH.png"));
-            imageOgreAttaqueDH = ImageIO.read(new File("src/images/monstres/ogreAttaqueDH.png"));
-
-
-        } catch (Exception e) {
-            System.err.println("Erreur lors du chargement de l'image de la carte : " + e.getMessage());
-        }
-    }
 
     /**
      * Dessine le monstre et son cercle d'aggro.
@@ -114,35 +86,35 @@ public class VueMonstre {
                 case Ogre ogre -> {
                     // Calcul la taille des ogres proportionnellement à la taille définie (en hauteur) pour les ogres (TAILLE_OGRE) en fonction de la taille source des images
 
-                    int hpOGM = largeurProportionnelleOgre(imageOgreGM);
-                    int hpODM = largeurProportionnelleOgre(imageOgreDM);
-                    int hpOG = largeurProportionnelleOgre(imageOgreG);
-                    int hpOD = largeurProportionnelleOgre(imageOgreD);
+                    int hpOGM = largeurProportionnelleOgre(IMAGE_OGRE_GM);
+                    int hpODM = largeurProportionnelleOgre(IMAGE_OGRE_DM);
+                    int hpOG = largeurProportionnelleOgre(IMAGE_OGRE_G);
+                    int hpOD = largeurProportionnelleOgre(IMAGE_OGRE_D);
 
                     if (ogre.regardeGauche() && ogre.isMarche()){
 
                         if (ogre.getAnimationMarche()) { // Regarde à gauche et en marche
-                            g2d.drawImage(imageOgreGM, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                            g2d.drawImage(IMAGE_OGRE_GM, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
                         } else
-                            g2d.drawImage(imageOgreG, posX - hpOG / 2, posY - hpOG / 2, hpOG, hpOG, null);
+                            g2d.drawImage(IMAGE_OGRE_G, posX - hpOG / 2, posY - hpOG / 2, hpOG, hpOG, null);
                     } else if (ogre.regardeGauche() && !ogre.isMarche()){ // Attaque vers la gauche
                         if (ogre.getAnimationAttaque()) {
-                            g2d.drawImage(imageOgreAttaqueGH, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                            g2d.drawImage(IMAGE_OGRE_ATTAQUE_GH, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
                         } else {
-                            g2d.drawImage(imageOgreAttaqueG, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                            g2d.drawImage(IMAGE_OGRE_ATTAQUE_G, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
                         }
                     }
                     else if (!ogre.regardeGauche() && ogre.isMarche()){
                         if (ogre.getAnimationMarche()) { // Regarde vers la droite et marche
-                            g2d.drawImage(imageOgreDM, posX - hpODM / 2, posY - hpODM / 2, hpODM, hpODM, null);
+                            g2d.drawImage(IMAGE_OGRE_DM, posX - hpODM / 2, posY - hpODM / 2, hpODM, hpODM, null);
                         } else
-                            g2d.drawImage(imageOgreD, posX - hpOD / 2, posY - hpOD / 2, hpOD, hpOD, null);
+                            g2d.drawImage(IMAGE_OGRE_D, posX - hpOD / 2, posY - hpOD / 2, hpOD, hpOD, null);
                     }
                     else if (!ogre.regardeGauche() && !ogre.isMarche()){ // Attaque vers la droite
                         if (ogre.getAnimationAttaque()) {
-                            g2d.drawImage(imageOgreAttaqueDH, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                            g2d.drawImage(IMAGE_OGRE_ATTAQUE_DH, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
                         } else {
-                            g2d.drawImage(imageOgreAttaqueD, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                            g2d.drawImage(IMAGE_OGRE_ATTAQUE_D, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
                         }
                     }
 
