@@ -161,6 +161,29 @@ public final class Constantes {
 
 
     /*** --- Images --- ***/
+    // Images carte
+
+    public static BufferedImage ARBRE1 = null;
+    public static BufferedImage ARBRE2 = null;
+    public static BufferedImage ARBRE3 = null;
+    public static BufferedImage ARBRE4 = null;
+
+    static
+    {
+        try {
+            ARBRE1 = ImageIO.read(new File("src/images/carte/arbre1.png"));
+            ARBRE2 = ImageIO.read(new File("src/images/carte/arbre2.png"));
+            ARBRE3 = ImageIO.read(new File("src/images/carte/arbre3.png"));
+            ARBRE4 = ImageIO.read(new File("src/images/carte/arbre4.png"));
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image de la carte : " + e.getMessage());
+        }
+    }
+
+
+
+
+    // Images des bâtiments
 
     public static Image IMAGE_HQ = null;
     public static Image IMAGE_HQ_ENDOMMAGE = null;
@@ -259,6 +282,33 @@ public final class Constantes {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Erreur lors du chargement des images !");
+        }
+    }
+
+    // Images Ogres
+
+    public static BufferedImage IMAGE_OGRE_G = null;
+    public static BufferedImage IMAGE_OGRE_D = null;
+    public static BufferedImage IMAGE_OGRE_GM = null;
+    public static BufferedImage IMAGE_OGRE_DM = null;
+    public static BufferedImage IMAGE_OGRE_ATTAQUE_G = null;
+    public static BufferedImage IMAGE_OGRE_ATTAQUE_D = null;
+    public static BufferedImage IMAGE_OGRE_ATTAQUE_GH = null;
+    public static BufferedImage IMAGE_OGRE_ATTAQUE_DH = null;
+    static {
+        try {
+            IMAGE_OGRE_G = ImageIO.read(new File("src/images/monstres/ogreGauche.png"));
+            IMAGE_OGRE_GM = ImageIO.read(new File("src/images/monstres/ogreGaucheM.png"));
+            IMAGE_OGRE_D = ImageIO.read(new File("src/images/monstres/ogreDroit.png"));
+            IMAGE_OGRE_DM = ImageIO.read(new File("src/images/monstres/ogreDroitM.png"));
+            IMAGE_OGRE_ATTAQUE_G = ImageIO.read(new File("src/images/monstres/ogreAttaqueG.png"));
+            IMAGE_OGRE_ATTAQUE_D = ImageIO.read(new File("src/images/monstres/ogreAttaqueD.png"));
+            IMAGE_OGRE_ATTAQUE_GH = ImageIO.read(new File("src/images/monstres/ogreAttaqueGH.png"));
+            IMAGE_OGRE_ATTAQUE_DH = ImageIO.read(new File("src/images/monstres/ogreAttaqueDH.png"));
+
+
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image de la carte : " + e.getMessage());
         }
     }
 
