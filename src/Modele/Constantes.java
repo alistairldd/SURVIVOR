@@ -179,7 +179,7 @@ public final class Constantes {
             System.err.println("Erreur lors du chargement de l'image de la carte : " + e.getMessage());
         }
     }
-
+    public static final List<BufferedImage> LISTE_ARBRES = List.of(ARBRE1, ARBRE2, ARBRE3, ARBRE4);
 
 
 

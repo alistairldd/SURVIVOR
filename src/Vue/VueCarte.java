@@ -49,34 +49,37 @@ public class VueCarte {
 
 
         // On dessine la map
-        // Positionné à un offset fixe de (10, 10) et de taille globale fixée par le modèle (3000x3000)
-        g2d.drawImage(imageMap, 10, 10, LARGEUR_MAP, HAUTEUR_MAP, null);
+        // Positionné à (0,0) et de taille globale fixée par le modèle (3000x3000)
+        g2d.drawImage(imageMap, 0, 0, LARGEUR_MAP, HAUTEUR_MAP, null);
 
         // On crée une couche pour assombrir l'image
         g2d.setColor(new Color(0, 0, 0,150));
-        g2d.fillRect(10, 10, LARGEUR_MAP, HAUTEUR_MAP);
+        g2d.fillRect(0, 0, LARGEUR_MAP, HAUTEUR_MAP);
 
         // (Optionnel) Ajout d'une bordure rouge pour bien voir les limites de la map
         // Aide le joueur à comprendre pourquoi il ne peut pas aller plus loin (collision dans Joueur.deplaceX/Y)
         g2d.setColor(Color.RED);
-        g2d.drawRect(10, 10, LARGEUR_MAP, HAUTEUR_MAP);
-
+        g2d.drawRect(0, 0, LARGEUR_MAP, HAUTEUR_MAP);
         // On dessiner des arbres sur les bordures de la carte pour renforcer l'immersion et masquer les limites
         // (Note : Ces arbres sont purement décoratifs et n'ont pas de collision, ils sont dessinés par-dessus la bordure rouge pour la masquer visuellement)
         int deb = -900; // Décalage pour commencer à dessiner les arbres avant le bord de la carte
         int fin = LARGEUR_MAP + 900; // Décalage pour continuer à dessiner les arbres après le bord de la carte
         int haut = -600;
         int bas = HAUTEUR_MAP - ( ARBRE1.getHeight() / 2 ) ;
-        for (int h = haut; h < 0; h += ARBRE1.getHeight()) {
-            for (int i = deb; i < fin; i += ARBRE1.getWidth()) {
-                int i2 = i + ARBRE1.getWidth() / 2; // Décalage pour centrer les arbres sur les bords
-                g2d.drawImage(ARBRE1, i, h, ARBRE1.getWidth(), ARBRE1.getHeight(), null); // Arbres en haut
-                g2d.drawImage(ARBRE2, i2, h, ARBRE2.getWidth(), ARBRE2.getHeight(), null); // Arbres en haut
+            // Tire un nombre aléatoire entre 1 et 4 pour choisir aléatoirement entre 4 types d'arbres différents (ARBRE1, ARBRE2, ARBRE3, ARBRE4)
 
-                g2d.drawImage(ARBRE1, i, bas, ARBRE1.getWidth(), ARBRE1.getHeight(), null); // Arbres en bas
-                g2d.drawImage(ARBRE2, i2, bas, ARBRE2.getWidth(), ARBRE2.getHeight(), null); // Arbres en bas
+
+            for (int h = haut; h < 0; h += ARBRE1.getHeight()) {
+                for (int i = deb; i < fin; i += ARBRE1.getWidth()) {
+                    int i2 = i + ARBRE1.getWidth() / 2; // Décalage pour centrer les arbres sur les bords
+                    g2d.drawImage(ARBRE1, i, h, ARBRE1.getWidth(), ARBRE1.getHeight(), null); // Arbres en haut
+                    g2d.drawImage(ARBRE2, i2, h, ARBRE2.getWidth(), ARBRE2.getHeight(), null); // Arbres en haut
+
+                    g2d.drawImage(ARBRE1, i, bas, ARBRE1.getWidth(), ARBRE1.getHeight(), null); // Arbres en bas
+                    g2d.drawImage(ARBRE2, i2, bas, ARBRE2.getWidth(), ARBRE2.getHeight(), null); // Arbres en bas
+                }
             }
-        }
+
         for (int i = 0; i < HAUTEUR_MAP; i += 100) {
             g2d.drawImage(ARBRE1, 10 - 50, 10 + i, 50, 50, null); // Arbres à gauche
             g2d.drawImage(ARBRE1, 10 + LARGEUR_MAP, 10 + i, 50, 50, null); // Arbres à droite
