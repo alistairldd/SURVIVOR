@@ -52,6 +52,12 @@ public final class Constantes {
     public static final int HP_TENTE = 100;
     public static final int HEALING_RANGE = 100;
 
+    /*--- Abatis (Remparts) ---*/
+    public static final int HP_ABATIS = 500; // Sac à PV
+    public static final int TAILLE_ABATIS = 150; // Dimension de l'image pour le rendu
+    public static final double LARGEUR_HITBOX_ABATIS = 130.0; // Longueur physique du mur
+    public static final double HAUTEUR_HITBOX_ABATIS = 30.0; // Épaisseur du mur
+    public static final double ANGLE_ABATIS = Math.toRadians(15); // Inclinaison en radians
 
     /*--- Couts ---*/
     // Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)
@@ -68,6 +74,11 @@ public final class Constantes {
             1, 2,
             2, 4,
             3, 5
+    );
+
+    // Coût : 20 Bois (0)
+    public static final Map<Integer, Integer> COUT_ABATIS = Map.of(
+            0, 20
     );
 
     /*** ---Cycle Jour/Nuit--- ***/
@@ -193,6 +204,10 @@ public final class Constantes {
     public static Image IMAGE_MINE_ENDOMMAGE = null;
     public static Image IMAGE_TENTE = null;
     public static Image IMAGE_TENTE_ENDOMMAGE = null;
+    public static Image IMAGE_ABATIS_1 = null;
+    public static Image IMAGE_ABATIS_1_ENDOMMAGE = null;
+    public static Image IMAGE_ABATIS_2 = null;
+    public static Image IMAGE_ABATIS_2_ENDOMMAGE = null;
 
     static {
         try {
@@ -207,6 +222,11 @@ public final class Constantes {
 
             IMAGE_TENTE = chargerEtRedimensionner("src/images/batiments/tente.png", TAILLE_TENTE);
             IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tente_endommage.png", TAILLE_TENTE);
+
+            IMAGE_ABATIS_1 = chargerEtRedimensionner("src/images/batiments/abatis_1.png", TAILLE_ABATIS);
+            IMAGE_ABATIS_2 = chargerEtRedimensionner("src/images/batiments/abatis_2.png", TAILLE_ABATIS);
+            IMAGE_ABATIS_1_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/abatis_1_endommage.png", TAILLE_ABATIS);
+            IMAGE_ABATIS_2_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/abatis_2_endommage.png", TAILLE_ABATIS);
         } catch (Exception e) {
             System.err.println("ERREUR : Impossible de charger les images des bâtiments.");
             e.printStackTrace();

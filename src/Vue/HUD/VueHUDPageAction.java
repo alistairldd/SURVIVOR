@@ -17,6 +17,8 @@ public class VueHUDPageAction extends JPanel {
     // Boutons de construction
     private JButton btnTour;
     private JButton btnTente;
+    private JButton btnAbatis; // NOUVEAU
+    private JButton btnRotate; // NOUVEAU
     private JButton btnCancel;
 
     public VueHUDPageAction(Modele modele) {
@@ -42,6 +44,16 @@ public class VueHUDPageAction extends JPanel {
         btnTente = createStyledButton("+", new Color(34, 139, 34));
         btnTente.addActionListener(e -> modele.setModeConstruction(Modele.TypeConstruction.TENTE));
         this.add(btnTente);
+
+        // --- BOUTON ABATIS (+) en Vert Bullish ---
+        btnAbatis = createStyledButton("+", new Color(34, 139, 34));
+        btnAbatis.addActionListener(e -> modele.setModeConstruction(Modele.TypeConstruction.ABATIS));
+        this.add(btnAbatis);
+
+        // --- BOUTON ROTATION (↔) en Bleu (Couleur utilitaire) ---
+        btnRotate = createStyledButton("↔", new Color(0, 102, 204));
+        btnRotate.addActionListener(e -> modele.toggleRotationAbatis());
+        this.add(btnRotate);
 
         // --- BOUTON ANNULER (X) en Rouge ---
         btnCancel = createStyledButton("x", new Color(178, 34, 34));
@@ -84,11 +96,14 @@ public class VueHUDPageAction extends JPanel {
         int yPlacementButtons = y + 22;
         y = vueHUDBat.dessiner(g, y, modele, modele.getJoueur());
 
+        // Positionnement des boutons d'achat (+)
         btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons, 50, 20);
         btnTente.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 43, 50, 20);
+        btnAbatis.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 86, 50, 20);
 
-        // Le bouton cancel ("X") est reculé encore un peu plus à gauche
-        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons, 50, 20);
+        // Si on construit, on place le Cancel et le Rotate en haut du bloc
+        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons - 30, 50, 20);
+        btnRotate.setBounds(LARGEUR_HUD - 140, yPlacementButtons - 30, 50, 20);
 
         // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {
@@ -101,16 +116,19 @@ public class VueHUDPageAction extends JPanel {
         boolean isDay = modele.getLeCycleJourNuit().isDay();
         boolean buildActive = modele.getModeConstruction() != Modele.TypeConstruction.AUCUN;
 
-        // Logique de visibilité demandée :
-        // 1. Bouton Tour visible si Jour ET ressources suffisantes
+        // 1. Boutons d'achats visibles si Jour ET pas de construction en cours ET ressources OK
         btnTour.setVisible(isDay && !buildActive && modele.getJoueur().aAssezDeRessources(COUT_TOUR));
 
-        // 2. Bouton Tente visible si Jour ET ressources suffisantes ET qu'aucune tente n'existe
         btnTente.setVisible(isDay && !buildActive &&
                 modele.getJoueur().aAssezDeRessources(COUT_TENTE) &&
                 !modele.getGestionnaireBatiments().aDejaUneTente());
 
-        // 3. Bouton Annuler visible uniquement si un mode de construction est actif
+        btnAbatis.setVisible(isDay && !buildActive && modele.getJoueur().aAssezDeRessources(COUT_ABATIS));
+
+        // 2. Bouton Annuler (Bearish rouge) visible uniquement si on construit
         btnCancel.setVisible(buildActive);
+
+        // 3. Bouton Rotation visible UNIQUEMENT si on tient un Abatis
+        btnRotate.setVisible(buildActive && modele.getModeConstruction() == Modele.TypeConstruction.ABATIS);
     }
 }

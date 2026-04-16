@@ -55,12 +55,24 @@ public class VueHUDBat {
         yCourant += 15;
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
         if (tenteExiste) {
-            g2d.setColor(new Color(178, 34, 34)); // Rouge pour signifier l'indisponibilité
+            g2d.setColor(new Color(178, 34, 34)); // Rouge Bearish pour signifier l'indisponibilité
             g2d.drawString("Déjà construite sur le terrain", xOffset + 15, yCourant);
         } else {
             g2d.drawString("(Cout: 7 Bois, 2 Pierre, 4 Fer, 5 Or)", xOffset + 15, yCourant);
         }
 
+        // --- NOUVEAU : LIGNE ABATIS ---
+        yCourant += 28;
+        g2d.setFont(new Font("Arial", Font.BOLD, 13));
+        g2d.setColor(couleurTexte);
+        g2d.drawString("• Abatis (Rempart orientable)", xOffset + 5, yCourant);
+
+        yCourant += 15;
+        g2d.setFont(new Font("Arial", Font.ITALIC, 11));
+        g2d.drawString("(Cout: 20 Bois)", xOffset + 15, yCourant);
+
+        // On ajuste le retour de la coordonnée Y pour inclure ce nouvel espace
         return yCourant + 30;
     }
+
 }

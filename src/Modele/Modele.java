@@ -5,6 +5,7 @@ import Modele.Monstres.Monstre;
 import static Modele.Constantes.*;
 import Modele.Batiments.Tower;
 import Modele.Batiments.TenteDeSoin;
+import Modele.Batiments.Abatis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,10 @@ public class Modele {
     private Localisable cibleAffichage;
 
     private boolean partieTerminee = false;
+    private boolean rotationAbatis = false;
 
     // --- ÉTAT DE CONSTRUCTION (RTS) ---
-    public enum TypeConstruction { AUCUN, TOUR, TENTE }
+    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS }
     private TypeConstruction modeConstruction = TypeConstruction.AUCUN;
 
     public Modele() {
@@ -63,6 +65,10 @@ public class Modele {
     // --- LOGIQUE D'AFFICHAGE DES PV ---
     public boolean isAffichagePV() { return affichagePV; }
     public void toggleAffichagePV() { this.affichagePV = !this.affichagePV; }
+
+    // NOUVEAU : Getters et bascule pour la rotation
+    public boolean isRotationAbatis() { return rotationAbatis; }
+    public void toggleRotationAbatis() { this.rotationAbatis = !this.rotationAbatis; }
 
     // Suivi de la souris pour le rendu du fantôme
     private double sourisMondeX = 0;
@@ -206,28 +212,55 @@ public class Modele {
      * @param rayonHitbox Le rayon d'encombrement du bâtiment qu'on veut placer
      * @return true si la place est libre, dans les limites ET qu'il fait jour.
      */
+    /**
+     * Vérifie si l'emplacement (x, y) est libre, à l'intérieur de la carte et constructible.
+     */
     public boolean peutConstruireIci(double x, double y, int rayonHitbox) {
-        // 1. On ne construit que le jour
         if (!leCycleJourNuit.isDay()) return false;
 
-        // Unicité de la Tente
         if (modeConstruction == TypeConstruction.TENTE && gestionnaireBatiments.aDejaUneTente()) {
             return false;
         }
 
-        // 2. Vérification des limites de la carte
         if (x - rayonHitbox < 0 || x + rayonHitbox > LARGEUR_MAP ||
                 y - rayonHitbox < 0 || y + rayonHitbox > HAUTEUR_MAP) {
-            return false;
+            return false; // Bords de carte
         }
 
-        // 3. Vérification des collisions avec les autres bâtiments existants
+        // --- MOTEUR DE COLLISION HYBRIDE ---
         for (Batiment b : gestionnaireBatiments.getBatiments()) {
-            double distance = Math.hypot(b.getX() - x, b.getY() - y);
-            double distanceMinimaleRequise = b.getRayonHitbox() + rayonHitbox;
 
-            if (distance < distanceMinimaleRequise) {
-                return false;
+            // CAS 1 : On tient le fantôme d'un ABATIS (OBB) à la souris
+            if (modeConstruction == TypeConstruction.ABATIS) {
+                double angleGhost = rotationAbatis ? -Constantes.ANGLE_ABATIS : Constantes.ANGLE_ABATIS;
+
+                // Projection du bâtiment 'b' dans le repère local du fantôme
+                double dx = b.getX() - x;
+                double dy = b.getY() - y;
+                double cos = Math.cos(-angleGhost);
+                double sin = Math.sin(-angleGhost);
+                double localX = dx * cos - dy * sin;
+                double localY = dx * sin + dy * cos;
+
+                double marge = b.getRayonHitbox();
+                if (Math.abs(localX) <= (Constantes.LARGEUR_HITBOX_ABATIS / 2.0 + marge) &&
+                        Math.abs(localY) <= (Constantes.HAUTEUR_HITBOX_ABATIS / 2.0 + marge)) {
+                    return false; // Collision !
+                }
+            }
+            // CAS 2 : On tient un objet circulaire (Tour, Tente...) et on frôle un Abatis existant
+            else if (b instanceof Abatis) {
+                Abatis ab = (Abatis) b;
+                if (ab.contientPointIncline(x, y, rayonHitbox)) {
+                    return false; // Collision !
+                }
+            }
+            // CAS 3 : Classique (Cercle vs Cercle)
+            else {
+                double distance = Math.hypot(b.getX() - x, b.getY() - y);
+                if (distance < b.getRayonHitbox() + rayonHitbox) {
+                    return false; // Collision !
+                }
             }
         }
         return true;
@@ -263,6 +296,26 @@ public class Modele {
                 TenteDeSoin t = new TenteDeSoin((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
                 annulerConstruction();
+                return true;
+            }
+            return false;
+        } // --- CAS : ABATIS (REM PART) ---
+        else if (modeConstruction == TypeConstruction.ABATIS) {
+            // On utilise la largeur de la hitbox comme rayon de sécurité pour les bords de la map
+            int rayonSecurite = (int)(Constantes.LARGEUR_HITBOX_ABATIS / 2);
+
+            if (joueur.aAssezDeRessources(COUT_ABATIS) &&
+                    peutConstruireIci(x, y, rayonSecurite)) {
+
+                joueur.consommerListeRessources(COUT_ABATIS);
+                // On passe l'état de rotation actuel au constructeur
+                Abatis a = new Abatis((int)x, (int)y, gestionnaireBatiments, rotationAbatis);
+                gestionnaireBatiments.ajouterBatiment(a);
+
+                // Construction à la chaîne : le fantôme reste si on a encore 20 Bois !
+                if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
+                    annulerConstruction();
+                }
                 return true;
             }
             return false;

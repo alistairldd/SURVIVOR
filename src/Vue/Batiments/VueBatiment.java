@@ -48,6 +48,9 @@ public class VueBatiment {
         else if (b instanceof TenteDeSoin) {
             VueTente.dessinerSprite(g2d, (TenteDeSoin) b, x, y, minimap);
         }
+        else if (b instanceof Modele.Batiments.Abatis) {
+            VueAbatis.dessinerSprite(g2d, (Modele.Batiments.Abatis) b, x, y, minimap);
+        }
         else {
             // Rendu de secours
             g2d.setColor(Color.GRAY);

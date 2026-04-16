@@ -215,6 +215,9 @@ public class Vue extends JPanel {
     /**
      * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision.
      */
+    /**
+     * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision.
+     */
     private void dessinerFantomeConstruction(Graphics2D g2d) {
         Modele.TypeConstruction mode = modele.getModeConstruction();
         if (mode == Modele.TypeConstruction.AUCUN) return;
@@ -243,37 +246,61 @@ public class Vue extends JPanel {
             range = HEALING_RANGE;
             drawY = (int) sourisY - (taille / 2);
         }
+        // --- NOUVEAU : ABATIS ---
+        else if (mode == Modele.TypeConstruction.ABATIS) {
+            imgFantome = modele.isRotationAbatis() ? IMAGE_ABATIS_2 : IMAGE_ABATIS_1;
+            taille = TAILLE_ABATIS;
+            rayonHitbox = (int) (LARGEUR_HITBOX_ABATIS / 2); // Sécurité pour les bords
+            range = 0; // Pas d'aura de portée pour un mur
+            drawY = (int) sourisY - (taille / 2);
+        }
 
         if (imgFantome != null) {
             int drawX = (int) sourisX - (taille / 2);
             Joueur joueur = modele.getJoueur();
 
-            // 2. Vérification d'intégrité (Ressources + Collisions)
-            boolean aLesFonds = (mode == Modele.TypeConstruction.TOUR) ?
-                    joueur.aAssezDeRessources(COUT_TOUR) :
-                    joueur.aAssezDeRessources(COUT_TENTE);
+            // 2. Vérification d'intégrité (Ressources)
+            boolean aLesFonds = false;
+            if (mode == Modele.TypeConstruction.TOUR) aLesFonds = joueur.aAssezDeRessources(COUT_TOUR);
+            else if (mode == Modele.TypeConstruction.TENTE) aLesFonds = joueur.aAssezDeRessources(COUT_TENTE);
+            else if (mode == Modele.TypeConstruction.ABATIS) aLesFonds = joueur.aAssezDeRessources(COUT_ABATIS);
 
             boolean constructible = modele.peutConstruireIci(sourisX, sourisY, rayonHitbox) && aLesFonds;
 
-            // 3. Rendu de l'Aura de portée dynamique
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-            g2d.setColor(constructible ? Color.GREEN : Color.RED);
-            g2d.fillOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+            // 3. Rendu de l'Aura de portée dynamique (Seulement si range > 0)
+            if (range > 0) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+                g2d.setColor(constructible ? Color.GREEN : Color.RED);
+                g2d.fillOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
 
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-            g2d.setStroke(new BasicStroke(2));
-            g2d.drawOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
-            g2d.setStroke(new BasicStroke(1));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                g2d.setStroke(new BasicStroke(2));
+                g2d.drawOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+                g2d.setStroke(new BasicStroke(1));
+            }
 
             // 4. Rendu du Sprite Fantôme (Translucide)
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
             g2d.drawImage(imgFantome, drawX, drawY, null);
 
-            // 5. Overlay de collision (Filtre rouge si Bearish)
+            // 5. Overlay de collision (Filtre rouge si impossible)
             if (!constructible) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
                 g2d.setColor(Color.RED);
-                g2d.fillOval((int) sourisX - rayonHitbox, (int) sourisY - rayonHitbox, rayonHitbox * 2, rayonHitbox * 2);
+
+                if (mode == Modele.TypeConstruction.ABATIS) {
+                    // Rendu OBB : On tourne le pinceau pour dessiner le vrai rectangle incliné rouge
+                    Graphics2D g2dRotate = (Graphics2D) g2d.create();
+                    g2dRotate.translate(sourisX, sourisY);
+                    double angle = modele.isRotationAbatis() ? -ANGLE_ABATIS : ANGLE_ABATIS;
+                    g2dRotate.rotate(angle);
+                    g2dRotate.fillRect((int)(-LARGEUR_HITBOX_ABATIS/2), (int)(-HAUTEUR_HITBOX_ABATIS/2),
+                            (int)LARGEUR_HITBOX_ABATIS, (int)HAUTEUR_HITBOX_ABATIS);
+                    g2dRotate.dispose();
+                } else {
+                    // Cercle classique pour Tour et Tente
+                    g2d.fillOval((int) sourisX - rayonHitbox, (int) sourisY - rayonHitbox, rayonHitbox * 2, rayonHitbox * 2);
+                }
             }
 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
