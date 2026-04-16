@@ -3,10 +3,7 @@ import Modele.Armes.*;
 import Modele.Armure.Armure;
 import Modele.Armure.ArmureLegere;
 import Modele.Armure.ArmureLourde;
-import Modele.Items.Item;
-import Modele.Items.PotionDegats;
-import Modele.Items.PotionVie;
-import Modele.Items.PotionVitesse;
+import Modele.Items.*;
 
 import java.util.ArrayList;
 import java.util.Map; // Ajout de l'import pour le dictionnaire
@@ -62,9 +59,15 @@ public class GestionnaireShop {
         PotionVie pv = new PotionVie();
         PotionDegats pd = new PotionDegats();
         PotionVitesse pvi = new PotionVitesse();
+        PotionVieGrande pvGrande = new PotionVieGrande();
+
+        Pioche pioche = new Pioche();
+
+        objets.add(pioche);
         objets.add(pv);
         objets.add(pd);
         objets.add(pvi);
+        objets.add(pvGrande);
     }
 
     public ArrayList<Arme> getArmesDansShop() {
@@ -109,6 +112,10 @@ public class GestionnaireShop {
         } if (armures.size()>1){
             armuresDansShop.add(armures.get(1));
         }
+    }
+    // ça sert pour les objets dont l'achat est unique
+    public void enleverItemDuShop(Item i) {
+        objets.remove(i);
     }
 
     public void setObjets(ArrayList<Item> objets) {
@@ -171,6 +178,9 @@ public class GestionnaireShop {
 
         if (j.getPieces()>= besoins) {
             j.setPieces(j.getPieces()-besoins);
+            if (i instanceof Pioche){
+                enleverItemDuShop(i);
+            }
             if (i instanceof Item) {
                 j.addToInventaire(i);
             }

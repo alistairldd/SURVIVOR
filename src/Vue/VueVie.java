@@ -1,5 +1,8 @@
 package Vue;
 
+import Modele.Batiments.HQ;
+import Modele.Batiments.Mine;
+import Modele.Batiments.TenteDeSoin;
 import Modele.Batiments.Tower;
 import Modele.Modele;
 import java.awt.*;
@@ -8,6 +11,7 @@ import java.io.IOException;
 
 import Modele.*;
 import Modele.Monstres.Monstre;
+import Modele.Monstres.Ogre;
 import Modele.Monstres.Slime;
 import Modele.Monstres.SlimeMutant;
 
@@ -41,24 +45,33 @@ public class    VueVie {
             Color color;
             Image img = null;
 
-            color = Color.RED;
+            color = Color.GRAY; // Couleur par défaut si le type n'est pas reconnu
             switch (localisable) {
                 case Joueur ignored -> {
                     color = Color.GREEN;
                     img = IMAGE_JOUEUR;
                 }
-                case Tower ignored -> color = Color.BLUE;
-                case Slime ignored -> {
-                    Monstre m = (Monstre) localisable;
-                    img = m.getImage(); // Ton getter qui renvoie le slime aléatoire
+                case Tower ignored -> {
+                    color = Color.BLUE;
+                    img = IMAGE_TOUR;
                 }
-                case SlimeMutant ignored -> {
-                    Monstre m = (Monstre) localisable;
-                    img = m.getImage(); // Ton getter qui renvoie le slime mutant
+                case Mine ignored -> {
+                    color = Color.YELLOW;
+                    img = IMAGE_MINE;
+                }
+                case HQ ignored -> {
+                    color = Color.MAGENTA;
+                    img = IMAGE_HQ;
+                }
+                case TenteDeSoin ignored -> {
+                    color = Color.PINK;
+                    img = IMAGE_TENTE;
+                }
+                case Monstre m -> {
+                    color = Color.RED;
+                    img = m.getImage();
                 }
                 default -> {
-                    color = Color.GRAY;
-                    // Optionnel : on peux aussi essayer de charger une image générique pour les autres entités
                 }
             }
 

@@ -11,7 +11,7 @@ public class ArmureLegere extends Armure {
                 "Armure légère",
                 5,
                 IMAGE_ARMURE_LEGERE,
-                -1,
+                -2,
                 Map.of(0, 5, 1, 5) // 0 = Bois, 1 = Pierre
         );
     }

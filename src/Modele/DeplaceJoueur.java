@@ -47,11 +47,22 @@ public class DeplaceJoueur extends Thread {
             // Théorème de Pythagore pour calculer la distance absolue restante jusqu'à la cible
             double distance = Math.sqrt(dx * dx + dy * dy);
 
+            double facteurArmure  = 0;
+            if (joueur.getArmurePrincipale() != null) {
+                double vit = joueur.getArmurePrincipale().getVitesse()*0.5;
+                if (vit < 0) {
+                    facteurArmure = -vit;
+                }else if (vit > 0) { // si jamais on met une armure qui augmente la vitesse, on peut faire en sorte que ça augmente la vitesse de déplacement du joueur
+                    facteurArmure = vit;
+                }
+            }
+
             // Si la distance restante est plus grande que notre vitesse de déplacement par pas
             if (distance > VITESSE){
                 // Normalisation du vecteur (dx/distance) multiplié par la vitesse pour obtenir le déplacement exact sur X et Y
-                double moveX = (dx / distance) * VITESSE;
-                double moveY = (dy / distance) * VITESSE;
+                System.out.println(VITESSE - facteurArmure);
+                double moveX = (dx / distance) * (VITESSE - facteurArmure);
+                double moveY = (dy / distance) * (VITESSE - facteurArmure);
 
                 // Applique les nouvelles coordonnées calculées au joueur
                 joueur.deplaceX(posX + moveX);
@@ -67,14 +78,10 @@ public class DeplaceJoueur extends Thread {
             try {
                 // Met le thread en pause pendant 50ms (crée l'effet de mouvement fluide)
                 // La durée de sommeil est ajustée en fonction de la vitesse du joueur (plus il est rapide, moins il dort pour réagir plus vite)
-                if (joueur.getArmurePrincipale() != null) {
-                    long sleepBase = 50 / (1 + joueur.getVitesse());
-                    double facteurArmure = 1.0 + (-joueur.getArmurePrincipale().getVitesse()) * 0.3; // Plus l'armure est lourde, plus le facteur augmente (et donc le temps de sommeil)
-                    Thread.sleep(Math.max(1, (long) (sleepBase * facteurArmure)));
-                }
-                else {
-                    Thread.sleep(50 / (1 + joueur.getVitesse()));
-                }
+
+
+                Thread.sleep(50);
+
             } catch (InterruptedException e) {
                 // Si le thread est interrompu pendant son sommeil, on relance l'interruption pour sortir proprement de la boucle
                 Thread.currentThread().interrupt();

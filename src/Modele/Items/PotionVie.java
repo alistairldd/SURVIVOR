@@ -8,7 +8,7 @@ public class PotionVie extends Item{
 
     public PotionVie() {
         super("Potion de Vie",
-                10,
+                15,
                 IMAGE_POTION_DE_VIE,
                 15
         );

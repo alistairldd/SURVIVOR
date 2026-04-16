@@ -41,7 +41,7 @@ public class Modele {
     public Modele() {
         // Initialisation de l'entité joueur
         this.joueur = new Joueur(this);
-        this.joueur.setHp(10); // HP initial de test
+        //this.joueur.setHp(10); // HP initial de test
 
         // Initialisation des systèmes autonomes
         this.updateJN = new UpdateJN(this);

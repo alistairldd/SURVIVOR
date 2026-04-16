@@ -192,6 +192,8 @@ public class VueHUDEquipement {
     }
 
     private int dessinerItem(Graphics2D g2d, Joueur j, int x, int y) {
+        g2d.setColor(Color.BLACK);
+
         g2d.drawString("Inventaire", x, y - 5);
 
         LinkedHashMap<Item, Integer> inventaire = j.getInventaireGroupé();

@@ -173,17 +173,17 @@ public final class Constantes {
 
     static {
         try {
-            IMAGE_HQ = chargerEtRedimensionner("src/images/Batiments/HQ.png", TAILLE_HQ);
-            IMAGE_HQ_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/HQ_endommage.png", TAILLE_HQ);
+            IMAGE_HQ = chargerEtRedimensionner("src/images/batiments/HQ.png", TAILLE_HQ);
+            IMAGE_HQ_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/HQ_endommage.png", TAILLE_HQ);
 
-            IMAGE_TOUR = chargerEtRedimensionner("src/images/Batiments/tour.png", TAILLE_TOUR);
-            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tour_endommage.png", TAILLE_TOUR);
+            IMAGE_TOUR = chargerEtRedimensionner("src/images/batiments/tour.png", TAILLE_TOUR);
+            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tour_endommage.png", TAILLE_TOUR);
 
-            IMAGE_MINE = chargerEtRedimensionner("src/images/Batiments/mine.png", TAILLE_MINE);
-            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/mine_endommage.png", TAILLE_MINE);
+            IMAGE_MINE = chargerEtRedimensionner("src/images/batiments/mine.png", TAILLE_MINE);
+            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mine_endommage.png", TAILLE_MINE);
 
-            IMAGE_TENTE = chargerEtRedimensionner("src/images/Batiments/tente.png", TAILLE_TENTE);
-            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/Batiments/tente_endommage.png", TAILLE_TENTE);
+            IMAGE_TENTE = chargerEtRedimensionner("src/images/batiments/tente.png", TAILLE_TENTE);
+            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tente_endommage.png", TAILLE_TENTE);
         } catch (Exception e) {
             System.err.println("ERREUR : Impossible de charger les images des bâtiments.");
             e.printStackTrace();
@@ -277,38 +277,42 @@ public final class Constantes {
     public static Image IMAGE_POTION_DE_VIE = null;
     public static Image IMAGE_POTION_VITESSE = null;
     public static Image IMAGE_POTION_DEGATS = null;
+    public static Image IMAGE_POTION_GRANDE_VIE = null;
+
+    public static Image IMAGE_PIOCHE = null;
 
     static {
         try {
-            // Charger l'image de l'épée
-            IMAGE_EPEE = ImageIO.read(new File("src/images/equipement/Epee.png"));
-
-            // Charger l'image de l'épée en bois
-            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/equipement/EpeeBois.png"));
-
             // Charger image baton
             IMAGE_BATON = ImageIO.read(new File("src/images/equipement/Baton.png"));
-
+            // Charger l'image de l'épée en bois
+            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/equipement/EpeeBois.png"));
+            // Charger l'image de l'épée
+            IMAGE_EPEE = ImageIO.read(new File("src/images/equipement/Epee.png"));
             // Charger image hache
             IMAGE_HACHE = ImageIO.read(new File("src/images/equipement/Hache.png"));
-
+            // Charger image lance
+            IMAGE_LANCE = ImageIO.read(new File("src/images/equipement/Lance.png"));
             // Charger image épée lourde
             IMAGE_EPEE_LOURDE = ImageIO.read(new File("src/images/equipement/EpeeLourde.png"));
 
-            // Charger image lance
-            IMAGE_LANCE = ImageIO.read(new File("src/images/equipement/Lance.png"));
 
             // Charger l'image de l'armure légère
             IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/equipement/ArmureLegere.png"));
-
             //Charger l'image de l'armure lourde
             IMAGE_ARMURE_LOURDE = ImageIO.read(new File("src/images/equipement/ArmureLourde.png"));
+
             // Charger l'image de la potion de vie
             IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/items/PotionDeVie.png"));
             // Charger l'image de la potion de vitesse
             IMAGE_POTION_VITESSE = ImageIO.read(new File("src/images/items/PotionVitesse.png"));
             // Charger l'image de la potion de dégâts
             IMAGE_POTION_DEGATS = ImageIO.read(new File("src/images/items/PotionDegats.png"));
+            // Charger l'image de la potion de grande vie
+            IMAGE_POTION_GRANDE_VIE = ImageIO.read(new File("src/images/items/GrandePotionVie.png"));
+
+            // Charger l'image de la pioche
+            IMAGE_PIOCHE = ImageIO.read(new File("src/images/items/Pioche.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

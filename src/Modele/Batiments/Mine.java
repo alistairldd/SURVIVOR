@@ -1,6 +1,7 @@
 package Modele.Batiments;
 
 import Modele.GestionnaireBatiments;
+import Modele.Localisable;
 import Modele.Ressource;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import static Modele.Constantes.*;
  * sa propre logique de combat (portée, dégâts, cadence) et un système de ciblage
  * pour interagir avec le ThreadBatiments de manière indépendante.
  */
-public class Mine extends Batiment{
+public class Mine extends Batiment implements Localisable {
 
     // Portée effective de cette instance précise
     private int range;
