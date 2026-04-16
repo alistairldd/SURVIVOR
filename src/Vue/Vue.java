@@ -44,6 +44,9 @@ public class Vue extends JPanel {
     private VueEffetSoin vueEffetSoin;
     private VueEffetTente vueEffetTente;
 
+    // NOUVEAU : Système de feedback visuel (textes flottants d'erreur)
+    private final VueTexteFlottant vueTexteFlottant;
+
     // Overlay Instructions (Composant Swing natif)
     private final VueHUDInstructions vueInstructions;
 
@@ -73,7 +76,10 @@ public class Vue extends JPanel {
         this.vueEffetSoin = new VueEffetSoin(modele);
         this.vueEffetTente = new VueEffetTente(modele);
 
-        // 5. Initialisation du composant Overlay
+        // 5. Initialisation du système de textes flottants
+        this.vueTexteFlottant = new VueTexteFlottant();
+
+        // 6. Initialisation du composant Overlay
         this.vueInstructions = new VueHUDInstructions(modele);
 
         // --- ASSEMBLAGE DES COUCHES ---
@@ -82,7 +88,7 @@ public class Vue extends JPanel {
 
         maFenetre.add(layeredPane, BorderLayout.CENTER);
 
-        // 6. Injection des Contrôleurs
+        // 7. Injection des Contrôleurs
         ControleurSouris controleurSouris = new ControleurSouris(this, modele);
         this.addMouseListener(controleurSouris);
         this.addMouseMotionListener(controleurSouris);
@@ -178,6 +184,11 @@ public class Vue extends JPanel {
             }
         }
 
+        // --- PASSE 5 : TEXTES FLOTTANTS (Feedback d'erreur) ---
+        // Dessinés en dernier dans l'espace monde pour apparaître au-dessus de tout
+        vueTexteFlottant.miseAJour();
+        vueTexteFlottant.dessiner(g2d);
+
         // --- RESET TRANSLATION ---
         g2d.translate(camX, camY);
 
@@ -187,6 +198,18 @@ public class Vue extends JPanel {
         }
 
         dessineMinimap(g2d);
+    }
+
+    /**
+     * Affiche un texte rouge flottant à une position dans l'espace monde.
+     * À appeler depuis les contrôleurs lorsqu'une action échoue.
+     *
+     * @param texte   Message à afficher (ex. "Impossible !", "Rechargement…")
+     * @param mondeX  Coordonnée X dans l'espace monde
+     * @param mondeY  Coordonnée Y dans l'espace monde
+     */
+    public void afficherTexteErreur(String texte, double mondeX, double mondeY) {
+        vueTexteFlottant.ajouter(texte, mondeX, mondeY);
     }
 
     /**

@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import static Modele.Constantes.*;
+
 /**
  * Contrôleur dédié à la gestion des événements de la souris.
  * Gère le mode RTS (Construction) ou les actions classiques (Attaque/Déplacement).
@@ -71,7 +73,12 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
                 // A. MODE CONSTRUCTION (RTS)
                 if (modele.getModeConstruction() != Modele.TypeConstruction.AUCUN) {
-                    modele.finaliserConstruction(destX, destY);
+                    boolean succes = modele.finaliserConstruction(destX, destY);
+                    if (!succes) {
+                        // Feedback visuel : on détermine le message selon la cause de l'échec
+                        String message = resoudreMessageErreurConstruction(joueur, destX, destY);
+                        vue.afficherTexteErreur(message, destX, destY);
+                    }
                 }
                 // B. MODE COMBAT (Classique)
                 else {
@@ -87,10 +94,43 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                         AnimationArme animation = new AnimationArme(vue.getVueArme(), cadence, modele);
                         vue.getVueArme().setEnAnimation(true);
                         animation.start();
+                    } else {
+                        // Feedback visuel : l'arme est en rechargement
+                        //vue.afficherTexteErreur("Rechargement...", destX, destY);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Analyse la cause de l'échec de construction et retourne un message adapté.
+     * Permet d'afficher un feedback précis plutôt qu'un message générique.
+     */
+    private String resoudreMessageErreurConstruction(Joueur joueur, double x, double y) {
+        Modele.TypeConstruction mode = modele.getModeConstruction();
+
+        // Cas 1 : Tente déjà construite
+        if (mode == Modele.TypeConstruction.TENTE &&
+                modele.getGestionnaireBatiments().aDejaUneTente()) {
+            return "Tente déjà construite !";
+        }
+
+        // Cas 2 : C'est la nuit
+        if (!modele.getLeCycleJourNuit().isDay()) {
+            return "Construisez le jour !";
+        }
+
+        // Cas 3 : Ressources insuffisantes
+        boolean aLesFonds = (mode == Modele.TypeConstruction.TOUR)
+                ? joueur.aAssezDeRessources(COUT_TOUR)
+                : joueur.aAssezDeRessources(COUT_TENTE);
+        if (!aLesFonds) {
+            return "Ressources insuffisantes !";
+        }
+
+        // Cas 4 : Collision ou hors limites
+        return "Emplacement invalide !";
     }
 
     @Override

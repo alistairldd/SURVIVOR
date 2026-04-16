@@ -204,9 +204,16 @@ public class Joueur implements Localisable {
     public void setArmePasEquipee(Arme armePasEquipee) {this.armePasEquipee = armePasEquipee;}
     // Méthode pour échanger les armes équipée et non équipée
     public void switchArmes() {
-        Arme temp = armeEquipee;
-        armeEquipee = armePasEquipee;
-        armePasEquipee = temp;
+        if (armePasEquipee != null) {
+            Arme temp = armeEquipee;
+            armeEquipee = armePasEquipee;
+            armePasEquipee = temp;
+        }
+    }
+    // Méthode pour ajouter une deuxieme arme à l'inventaire en mettant l'arme actuelle dans le deuxieme slot
+    public void ajouterDeuxiemeArme(Arme nouvelleArme){
+        armePasEquipee = armeEquipee;
+        armeEquipee = nouvelleArme;
     }
 
     // Getter pour l'armure équipée du joueur
@@ -217,13 +224,10 @@ public class Joueur implements Localisable {
         this.armurePrincipale = armureEquipee;
         setReductionDegats(armureEquipee.getReduction());
     }
-
-    public void setReductionDegats(int reduction) {
-        this.reduction = reduction;
-    }
-
-    public int getReductionDegats() {
-        return this.reduction;
+    // Méthode pour ajouter une deuxieme armure à l'inventaire en mettant l'armure actuelle dans le deuxieme slot
+    public void ajouterDeuxiemeArmure(Armure a) {
+        armureSecondaire = armurePrincipale;
+        setArmureEquipee(a);
     }
 
     // Getter pour l'armure secondaire du joueur
@@ -234,9 +238,19 @@ public class Joueur implements Localisable {
 
     // Méthode pour échanger les armures principale et secondaire
     public void switchArmures() {
-        Armure temp = armurePrincipale;
-        armurePrincipale = armureSecondaire;
-        armureSecondaire = temp;
+        if (armureSecondaire != null) {
+            Armure temp = armurePrincipale;
+            armurePrincipale = armureSecondaire;
+            armureSecondaire = temp;
+        }
+    }
+    // Setter pour la réduction de dégâts de l'armure
+    public void setReductionDegats(int reduction) {
+        this.reduction = reduction;
+    }
+    // Getter pour la réduction de dégâts de l'armure
+    public int getReductionDegats() {
+        return this.reduction;
     }
 
     // Getter pour l'armure la pioche
@@ -633,4 +647,6 @@ public class Joueur implements Localisable {
             this.consommerRessource(typeRessource, quantiteRequise);
         }
     }
+
+
 }

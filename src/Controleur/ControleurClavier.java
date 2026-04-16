@@ -4,6 +4,7 @@ import Modele.Items.PotionDegats;
 import Modele.Items.PotionVie;
 import Modele.Items.PotionVitesse;
 import Modele.Modele;
+import Modele.Joueur;
 import Vue.Vue;
 import Vue.VueArme;
 
@@ -22,6 +23,7 @@ public class ControleurClavier implements KeyListener {
 
     private Modele modele;
     private Vue vue;
+
 
     public ControleurClavier(Vue vue, Modele modele) {
         this.modele = modele;
@@ -43,6 +45,11 @@ public class ControleurClavier implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
+        Joueur joueur = modele.getJoueur();
+        double camX = joueur.getX();
+        double camY = joueur.getY();
+
+
         // --- RELANCE DU JEU ---
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if (modele.getPartieTerminee()) {
@@ -51,14 +58,21 @@ public class ControleurClavier implements KeyListener {
             }
 
             else {
-                if (!vue.getVueArme().getEnAnimation()) {
-                    modele.getJoueur().switchArmes();
+                if (modele.getJoueur().getArmePasEquipee() != null){
+                    if (!vue.getVueArme().getEnAnimation()) {
+                        modele.getJoueur().switchArmes();
+                    } else {
+                        vue.afficherTexteErreur("Impossible de changer d'arme pendant une attaque !", camX, camY - (double) vue.getHeight() /16);
+                    }
+                } else {
+                    vue.afficherTexteErreur("Aucune autre arme à équiper !", camX, camY - (double) vue.getHeight() /16);
                 }
+
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_X){
-            modele.getJoueur().switchArmures();
+            modele.getJoueur().switchArmes();
         }
 
         if (e.getKeyCode() == KeyEvent.VK_E){

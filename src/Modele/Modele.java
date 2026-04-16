@@ -200,13 +200,6 @@ public class Modele {
     }
 
     /**
-     * Vérifie si l'emplacement (x, y) est libre et constructible.
-     * @param x Coordonnée X de la souris
-     * @param y Coordonnée Y de la souris
-     * @param rayonHitbox Le rayon d'encombrement du bâtiment qu'on veut placer
-     * @return true si la place est libre ET qu'il fait jour.
-     */
-    /**
      * Vérifie si l'emplacement (x, y) est libre, à l'intérieur de la carte et constructible.
      * @param x Coordonnée X de la souris
      * @param y Coordonnée Y de la souris
@@ -217,15 +210,15 @@ public class Modele {
         // 1. On ne construit que le jour
         if (!leCycleJourNuit.isDay()) return false;
 
-        // --- NOUVEAU : Unicité de la Tente ---
+        // Unicité de la Tente
         if (modeConstruction == TypeConstruction.TENTE && gestionnaireBatiments.aDejaUneTente()) {
-            return false; // La tente existe déjà, zone non constructible !
+            return false;
         }
 
         // 2. Vérification des limites de la carte
         if (x - rayonHitbox < 0 || x + rayonHitbox > LARGEUR_MAP ||
                 y - rayonHitbox < 0 || y + rayonHitbox > HAUTEUR_MAP) {
-            return false; // Emplacement hors limites
+            return false;
         }
 
         // 3. Vérification des collisions avec les autres bâtiments existants
@@ -234,26 +227,21 @@ public class Modele {
             double distanceMinimaleRequise = b.getRayonHitbox() + rayonHitbox;
 
             if (distance < distanceMinimaleRequise) {
-                return false; // Il y a déjà un bâtiment trop proche
+                return false;
             }
         }
-        return true; // La zone est libre, valide et dans la carte !
+        return true;
     }
 
     /**
-     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources.
+     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources ET la place.
+     *
      * @param x Coordonnée X du clic
      * @param y Coordonnée Y du clic
+     * @return true si la construction a réussi, false sinon (pour déclencher un feedback visuel)
      */
-    /**
-     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources ET la place.
-     */
-    /**
-     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources ET la place.
-     */
-    public void finaliserConstruction(double x, double y) {
+    public boolean finaliserConstruction(double x, double y) {
         if (modeConstruction == TypeConstruction.TOUR) {
-            // On vérifie le prix ET la collision
             if (joueur.aAssezDeRessources(COUT_TOUR) &&
                     peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TOUR)) {
 
@@ -261,13 +249,12 @@ public class Modele {
                 Tower t = new Tower((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
 
-                if (!(joueur.aAssezDeRessources(COUT_TOUR))) annulerConstruction(); // On désactive le mode
-            } else {
-                System.out.println("Impossible de construire la Tour ici ou ressources insuffisantes !");
+                if (!(joueur.aAssezDeRessources(COUT_TOUR))) annulerConstruction();
+                return true;
             }
+            return false;
         }
         else if (modeConstruction == TypeConstruction.TENTE) {
-            // NOUVEAU : On ajoute !gestionnaireBatiments.aDejaUneTente()
             if (joueur.aAssezDeRessources(COUT_TENTE) &&
                     peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TENTE) &&
                     !gestionnaireBatiments.aDejaUneTente()) {
@@ -275,10 +262,11 @@ public class Modele {
                 joueur.consommerListeRessources(COUT_TENTE);
                 TenteDeSoin t = new TenteDeSoin((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
-                annulerConstruction(); // On désactive le mode
-            } else {
-                System.out.println("Impossible de construire la Tente : ressources insuffisantes, collision, ou déjà construite !");
+                annulerConstruction();
+                return true;
             }
+            return false;
         }
+        return false;
     }
 }

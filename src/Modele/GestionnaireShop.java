@@ -125,12 +125,11 @@ public class GestionnaireShop {
         if (j.aAssezDeRessources(besoins)) {
             j.consommerListeRessources(besoins);
 
-            if (j.getArmePasEquipee() == null){
-                j.switchArmes();
+            if (j.getArmePasEquipee() != null){ // si on a une deuxieme arme on remplace la premiere
                 j.setArmeEquipee(a);
             }
-            else {
-                j.setArmeEquipee(a);
+            else { // si on en a pas on la rajoute en principale
+                j.ajouterDeuxiemeArme(a);
             }
             enleverArmeDuShop(a);
             updateArmesDansShop();
@@ -149,12 +148,11 @@ public class GestionnaireShop {
         if (j.aAssezDeRessources(besoins)) {
             j.consommerListeRessources(besoins);
 
-            if (j.getArmureSecondaire() == null){
-                j.switchArmures();
+            if (j.getArmureSecondaire() != null){
                 j.equiperArmure(a);
             }
             else {
-                j.setArmureEquipee(a);
+                j.ajouterDeuxiemeArmure(a);
             }
             enleverArmureDuShop(a);
             updateArmuresDansShop();
