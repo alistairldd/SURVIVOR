@@ -57,12 +57,14 @@ public class DeplaceJoueur extends Thread {
                 }
             }
 
+            double vitesseEffective = VITESSE - facteurArmure + (double) joueur.getVitesse();
+            System.out.println(vitesseEffective);
+
             // Si la distance restante est plus grande que notre vitesse de déplacement par pas
-            if (distance > VITESSE){
+            if (distance > vitesseEffective){
                 // Normalisation du vecteur (dx/distance) multiplié par la vitesse pour obtenir le déplacement exact sur X et Y
-                System.out.println(VITESSE - facteurArmure);
-                double moveX = (dx / distance) * (VITESSE - facteurArmure);
-                double moveY = (dy / distance) * (VITESSE - facteurArmure);
+                double moveX = (dx / distance) * vitesseEffective;
+                double moveY = (dy / distance) * vitesseEffective;
 
                 // Applique les nouvelles coordonnées calculées au joueur
                 joueur.deplaceX(posX + moveX);
