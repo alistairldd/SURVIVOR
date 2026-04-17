@@ -24,8 +24,6 @@ public class Tower extends Batiment{
     // Mémorisation de la cible pour la vue
     // Stocke temporairement l'ennemi visé pour que la VueBatiment sache où dessiner le laser/projectile
     private Monstre monstreCible = null;
-
-    private Map<Integer, Integer> coutConstruction = COUT_TOUR;
     /**
      * Construit une tour défensive à des coordonnées précises.
      * @param x Coordonnée X de placement.

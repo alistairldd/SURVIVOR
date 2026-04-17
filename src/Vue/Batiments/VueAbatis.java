@@ -18,7 +18,7 @@ public class VueAbatis {
         }
 
         Image imgAffichee;
-        boolean estEndommage = a.getHp() <= (HP_ABATIS / 2);
+        boolean estEndommage = (!a.isFonctionnel());
 
         // Sélection de l'image selon la rotation (Miroir) et l'état de santé
         if (!a.isRotation()) {
@@ -34,13 +34,6 @@ public class VueAbatis {
             int offsetX = x - (TAILLE_ABATIS / 2);
             int offsetY = y - (TAILLE_ABATIS / 2);
             g2d.drawImage(imgAffichee, offsetX, offsetY, null);
-        }
-
-        // --- OPTIONNEL : Feedback visuel de santé ---
-        if (estEndommage) {
-            g2d.setColor(new Color(255, 0, 0, 100)); // Overlay rouge très léger
-            g2d.setFont(new Font("Arial", Font.BOLD, 10));
-            g2d.drawString("CRASHING", x - 25, y - 40);
         }
     }
 }

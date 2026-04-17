@@ -11,7 +11,7 @@ import static Modele.Constantes.*;
 public class Abatis extends Batiment {
 
     private boolean rotation;
-    private double angleActuel;
+    private final double angleActuel;
 
     /**
      * Construit un Abatis.
@@ -24,7 +24,7 @@ public class Abatis extends Batiment {
         super(x, y, gB, 0); // Portée 0 : bâtiment purement passif
         this.hp = HP_ABATIS;
         this.rotation = rotation;
-        this.rayonHitbox = TAILLE_ABATIS / 2; // Valeur par défaut pour compatibilité basique
+        this.rayonHitbox = TAILLE_ABATIS / 3; // Valeur par défaut pour compatibilité basique
 
         // L'inclinaison change de sens selon l'état du miroir
         this.angleActuel = rotation ? -ANGLE_ABATIS : ANGLE_ABATIS;
@@ -32,8 +32,13 @@ public class Abatis extends Batiment {
 
     @Override
     public void run() {
-        // OVERRIDE CRUCIAL : Structure purement passive.
-        // On laisse la méthode vide pour que le Thread se termine immédiatement et libère la RAM.
+        while (!gBatiments.getPartieTerminee()) {
+            // Si les PV tombent à 0 ou moins, le bâtiment ne fait plus rien
+            if (this.hp <= 0 && isFonctionnel()) {
+                setFonctionnel(false);
+                setAttaquable(false);
+            }
+        }
     }
 
     /**

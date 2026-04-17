@@ -30,7 +30,7 @@ public class Mine extends Batiment implements Localisable {
         // Applique les statistiques de combat par défaut
         this.range = MINE_BASE_RANGE;
         this.rayonHitbox = RAYON_HITBOX_MINE;
-        this.ressources = new ArrayList<Ressource>();
+        this.ressources = new ArrayList<>();
         this.attaquable = false; // La mine n'est pas attaquable, elle ne peut pas être détruite par les monstres
     }
 

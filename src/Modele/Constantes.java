@@ -57,7 +57,7 @@ public final class Constantes {
     public static final int TAILLE_ABATIS = 150; // Dimension de l'image pour le rendu
     public static final double LARGEUR_HITBOX_ABATIS = 130.0; // Longueur physique du mur
     public static final double HAUTEUR_HITBOX_ABATIS = 30.0; // Épaisseur du mur
-    public static final double ANGLE_ABATIS = Math.toRadians(15); // Inclinaison en radians
+    public static final double ANGLE_ABATIS = Math.toRadians(29); // Inclinaison en radians
 
     /*--- Couts ---*/
     // Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)

@@ -18,7 +18,7 @@ public class VueHQ {
         } else {
             Image spriteAAfficher;
 
-            if (!hq.isFonctionnel() || hq.getHp() <= (hq.getMaxHp() / 2)) {
+            if (!hq.isFonctionnel() || hq.getHp() <= (hq.getMaxHp() * 0.10)) {
                 spriteAAfficher = IMAGE_HQ_ENDOMMAGE;
             } else {
                 spriteAAfficher = IMAGE_HQ;

@@ -102,8 +102,8 @@ public class VueHUDPageAction extends JPanel {
         btnAbatis.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 86, 50, 20);
 
         // Si on construit, on place le Cancel et le Rotate en haut du bloc
-        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons - 30, 50, 20);
-        btnRotate.setBounds(LARGEUR_HUD - 140, yPlacementButtons - 30, 50, 20);
+        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 100, 50, 20);
+        btnRotate.setBounds(LARGEUR_HUD - 150, yPlacementButtons +101, 60, 20);
 
         // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {

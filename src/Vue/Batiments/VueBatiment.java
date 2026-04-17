@@ -1,11 +1,8 @@
 package Vue.Batiments;
 
 import java.awt.*;
-import Modele.Batiments.Batiment;
-import Modele.Batiments.HQ;
-import Modele.Batiments.Mine;
-import Modele.Batiments.Tower;
-import Modele.Batiments.TenteDeSoin;
+
+import Modele.Batiments.*;
 
 import static Modele.Constantes.*;
 

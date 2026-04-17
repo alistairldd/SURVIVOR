@@ -47,7 +47,7 @@ public class VueTower {
         } else {
             // 1. DÉTERMINATION DU SPRITE SELON L'ÉTAT
             Image spriteAAfficher;
-            if (!t.isFonctionnel() || t.getHp() <= (t.getMaxHp() / 2)) {
+            if (!t.isFonctionnel()) {
                 spriteAAfficher = IMAGE_TOUR_ENDOMMAGE;
             } else {
                 spriteAAfficher = IMAGE_TOUR;

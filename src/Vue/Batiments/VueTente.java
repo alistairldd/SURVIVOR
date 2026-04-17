@@ -44,7 +44,7 @@ public class VueTente {
         } else {
             // Logique d'état visuel
             Image spriteAAfficher;
-            if (!tente.isFonctionnel() || tente.getHp() <= (tente.getMaxHp() / 2)) {
+            if (!tente.isFonctionnel()) {
                 spriteAAfficher = IMAGE_TENTE_ENDOMMAGE;
             } else {
                 spriteAAfficher = IMAGE_TENTE;

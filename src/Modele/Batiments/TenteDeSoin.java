@@ -21,8 +21,6 @@ public class TenteDeSoin extends Batiment{
     // Mémorisation de la cible pour la vue
     private Joueur joueur = null;
 
-    private Map<Integer, Integer> coutConstruction = COUT_TENTE;
-
     /**
      * Construit une tente de soin à des coordonnées précises.
      * @param x Coordonnée X de placement.
@@ -54,6 +52,7 @@ public class TenteDeSoin extends Batiment{
         while (!gBatiments.getPartieTerminee()) {
             if (this.hp <= 0 && isFonctionnel()) {
                 setFonctionnel(false);
+                setAttaquable(false);
             }
 
             if (isFonctionnel()) {
