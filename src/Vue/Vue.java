@@ -218,6 +218,9 @@ public class Vue extends JPanel {
     /**
      * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision.
      */
+    /**
+     * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision rectangulaire.
+     */
     private void dessinerFantomeConstruction(Graphics2D g2d) {
         Modele.TypeConstruction mode = modele.getModeConstruction();
         if (mode == Modele.TypeConstruction.AUCUN) return;
@@ -227,30 +230,40 @@ public class Vue extends JPanel {
 
         Image imgFantome = null;
         int taille = 0;
-        int rayonHitbox = 0;
         int range = 0;
         int drawY = 0;
+
+        // --- NOUVELLES VARIABLES POUR L'ENCOMBREMENT RECTANGULAIRE ---
+        double wEnc = 0;
+        double hEnc = 0;
+        double angle = 0;
 
         // 1. Définition des propriétés selon l'objet tenu
         if (mode == Modele.TypeConstruction.TOUR) {
             imgFantome = IMAGE_TOUR;
             taille = TAILLE_TOUR;
-            rayonHitbox = RAYON_HITBOX_TOUR;
+            wEnc = TOUR_LARGEUR_ENC;
+            hEnc = TOUR_HAUTEUR_ENC;
+            angle = 0; // Bâtiment droit
             range = TOWER_BASE_RANGE;
             drawY = (int) sourisY - (taille * 4 / 5);
         }
         else if (mode == Modele.TypeConstruction.TENTE) {
             imgFantome = IMAGE_TENTE;
             taille = TAILLE_TENTE;
-            rayonHitbox = RAYON_HITBOX_TENTE;
+            wEnc = TENTE_LARGEUR_ENC;
+            hEnc = TENTE_HAUTEUR_ENC;
+            angle = 0; // Bâtiment droit
             range = HEALING_RANGE;
             drawY = (int) sourisY - (taille / 2);
         }
-        // --- NOUVEAU : ABATIS ---
         else if (mode == Modele.TypeConstruction.ABATIS) {
             imgFantome = modele.isRotationAbatis() ? IMAGE_ABATIS_2 : IMAGE_ABATIS_1;
             taille = TAILLE_ABATIS;
-            rayonHitbox = (int) (LARGEUR_HITBOX_ABATIS / 2); // Sécurité pour les bords
+            wEnc = ABATIS_LARGEUR;
+            hEnc = ABATIS_HAUTEUR;
+            // Angle positif ou négatif selon la rotation (OBB)
+            angle = modele.isRotationAbatis() ? -ABATIS_ANGLE_RAD : ABATIS_ANGLE_RAD;
             range = 0; // Pas d'aura de portée pour un mur
             drawY = (int) sourisY - (taille / 2);
         }
@@ -265,7 +278,8 @@ public class Vue extends JPanel {
             else if (mode == Modele.TypeConstruction.TENTE) aLesFonds = joueur.aAssezDeRessources(COUT_TENTE);
             else if (mode == Modele.TypeConstruction.ABATIS) aLesFonds = joueur.aAssezDeRessources(COUT_ABATIS);
 
-            boolean constructible = modele.peutConstruireIci(sourisX, sourisY, rayonHitbox) && aLesFonds;
+            // NOUVEAU : On utilise la nouvelle signature du moteur de collision (Phase 2)
+            boolean constructible = modele.peutConstruireIci(sourisX, sourisY, wEnc, hEnc, angle) && aLesFonds;
 
             // 3. Rendu de l'Aura de portée dynamique (Seulement si range > 0)
             if (range > 0) {
@@ -283,25 +297,25 @@ public class Vue extends JPanel {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
             g2d.drawImage(imgFantome, drawX, drawY, null);
 
-            // 5. Overlay de collision (Filtre rouge si impossible)
-            if (!constructible) {
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-                g2d.setColor(Color.RED);
+            // 5. NOUVEAU : Overlay d'encombrement (Zone de construction exacte)
+            // On affiche le rectangle exact (vert si OK, rouge si bloqué/sans argent)
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+            g2d.setColor(constructible ? Color.GREEN : Color.RED);
 
-                if (mode == Modele.TypeConstruction.ABATIS) {
-                    // Rendu OBB : On tourne le pinceau pour dessiner le vrai rectangle incliné rouge
-                    Graphics2D g2dRotate = (Graphics2D) g2d.create();
-                    g2dRotate.translate(sourisX, sourisY);
-                    double angle = modele.isRotationAbatis() ? -ANGLE_ABATIS : ANGLE_ABATIS;
-                    g2dRotate.rotate(angle);
-                    g2dRotate.fillRect((int)(-LARGEUR_HITBOX_ABATIS/2), (int)(-HAUTEUR_HITBOX_ABATIS/2),
-                            (int)LARGEUR_HITBOX_ABATIS, (int)HAUTEUR_HITBOX_ABATIS);
-                    g2dRotate.dispose();
-                } else {
-                    // Cercle classique pour Tour et Tente
-                    g2d.fillOval((int) sourisX - rayonHitbox, (int) sourisY - rayonHitbox, rayonHitbox * 2, rayonHitbox * 2);
-                }
-            }
+            // On crée un calque temporaire pour la rotation
+            Graphics2D g2dRotate = (Graphics2D) g2d.create();
+            g2dRotate.translate(sourisX, sourisY); // On place l'origine au centre
+            g2dRotate.rotate(angle); // On pivote le calque
+
+            // On dessine le rectangle centré sur sa nouvelle origine
+            g2dRotate.fillRect((int)(-wEnc / 2), (int)(-hEnc / 2), (int)wEnc, (int)hEnc);
+
+            // Petite bordure pour que le joueur visualise parfaitement les limites
+            g2dRotate.setColor(constructible ? new Color(0, 200, 0) : new Color(200, 0, 0));
+            g2dRotate.setStroke(new BasicStroke(2));
+            g2dRotate.drawRect((int)(-wEnc / 2), (int)(-hEnc / 2), (int)wEnc, (int)hEnc);
+
+            g2dRotate.dispose(); // On détruit le calque temporaire
 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }

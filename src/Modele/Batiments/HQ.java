@@ -17,7 +17,11 @@ public class HQ extends Batiment {
         // Appelle le constructeur parent (Batiment) en lui passant le centre de la Map calculé dynamiquement
         super(LARGEUR_MAP/2, HAUTEUR_MAP/2, gB, 0);
         this.hp = HP_HQ;
-        this.rayonHitbox = RAYON_HITBOX_QG;
+        this.largeurEncombrement = HQ_LARGEUR_ENC;
+        this.hauteurEncombrement = HQ_HAUTEUR_ENC;
+        this.largeurHitbox = HQ_LARGEUR_HIT;
+        this.hauteurHitbox = HQ_HAUTEUR_HIT;
+        this.offsetYHitbox = HQ_OFFSET_Y;
     }
 
     // Récupère la position horizontale sur la carte

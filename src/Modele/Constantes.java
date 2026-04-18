@@ -38,10 +38,7 @@ public final class Constantes {
     // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
     public static final int MINE_BASE_RANGE = 100;
-    public static final int RAYON_HITBOX_TOUR =  50; // Rayon d'encombrement d'une tour
-    public static final int RAYON_HITBOX_MINE = TAILLE_MINE / 2 + 10; // Rayon d'encombrment de la mine
-    public static final int RAYON_HITBOX_QG = TAILLE_HQ / 2 + 10;   // Le QG est plus gros, il prend plus de place
-    public static final int RAYON_HITBOX_TENTE = TAILLE_TENTE / 2 + 5; // La tente de soin a une hitbox intermédiaire
+
     /*--- Mine ---*/
     public static final int PROBA_PIERRE = 70; // 50% de chance d'obtenir de la pierre
     public static final int PROBA_FER = 25;   // 30% de chance d'obtenir du fer
@@ -58,6 +55,44 @@ public final class Constantes {
     public static final double LARGEUR_HITBOX_ABATIS = 130.0; // Longueur physique du mur
     public static final double HAUTEUR_HITBOX_ABATIS = 30.0; // Épaisseur du mur
     public static final double ANGLE_ABATIS = Math.toRadians(29); // Inclinaison en radians
+
+    // ==========================================================
+    // --- DIMENSIONS RECTANGULAIRES DES BATIMENTS (2.5D) ---
+    // ==========================================================
+
+    // HQ
+    public static final int HQ_LARGEUR_ENC = 500;
+    public static final int HQ_HAUTEUR_ENC = 500;
+    public static final int HQ_LARGEUR_HIT = 200;
+    public static final int HQ_HAUTEUR_HIT = 200;
+    public static final int HQ_OFFSET_Y = 45; // Décalage vers le bas (les pieds)
+
+    // Tour
+    public static final int TOUR_LARGEUR_ENC = 80;
+    public static final int TOUR_HAUTEUR_ENC = 80;
+    public static final int TOUR_LARGEUR_HIT = 60;
+    public static final int TOUR_HAUTEUR_HIT = 40;
+    public static final int TOUR_OFFSET_Y = 20;
+
+    // Tente de Soin
+    public static final int TENTE_LARGEUR_ENC = 100;
+    public static final int TENTE_HAUTEUR_ENC = 80;
+    public static final int TENTE_LARGEUR_HIT = 90;
+    public static final int TENTE_HAUTEUR_HIT = 40;
+    public static final int TENTE_OFFSET_Y = 20;
+
+    // Mine
+    public static final int MINE_LARGEUR_ENC = 120;
+    public static final int MINE_HAUTEUR_ENC = 100;
+    public static final int MINE_LARGEUR_HIT = 100;
+    public static final int MINE_HAUTEUR_HIT = 50;
+    public static final int MINE_OFFSET_Y = 25;
+
+    // Abatis (Spécial : Encombrement = Hitbox)
+    public static final int ABATIS_LARGEUR = 150;
+    public static final int ABATIS_HAUTEUR = 30;
+    public static final int ABATIS_OFFSET_Y = 0; // Centré sur son point d'origine
+    public static final double ABATIS_ANGLE_RAD = Math.toRadians(29); // Angle exact de 29°
 
     /*--- Couts ---*/
     // Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)

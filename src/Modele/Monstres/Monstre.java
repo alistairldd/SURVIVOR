@@ -134,22 +134,54 @@ public abstract class Monstre extends Thread implements Localisable {
 
     public boolean getAnimationAttaque() { return animationAttaque; }
 
+    // Met à jour la position du monstre
     public void mettreAJourPosition(Localisable cible, double dt) {
+        if (cible == null) return;
+
         double diffX = cible.getX() - this.x;
         double diffY = cible.getY() - this.y;
-        double distance = Math.sqrt(diffX * diffX + diffY * diffY);
+        double distanceActuelle = Math.sqrt(diffX * diffX + diffY * diffY);
 
+        // --- NOUVEAU : Logique de distance d'arrêt (2.5D vs 2D) ---
+        double distanceDArretNecessaire = this.portee;
 
-        if (distance > this.portee) {
+        if (cible instanceof Modele.Batiments.Batiment) {
+            Modele.Batiments.Batiment b = (Modele.Batiments.Batiment) cible;
+            // On calcule l'empreinte au sol du bâtiment ciblé (Hitbox 2.5D)
+            double bLargeur = b.getLargeurHitbox();
+            double bHauteur = b.getHauteurHitbox();
+
+            // On gère l'offset Y pour que le monstre vise la BASE du bâtiment et non son centre
+            double centreBaseY = cible.getY() + b.getOffsetYHitbox();
+            double vraiDiffY = centreBaseY - this.y;
+
+            // Calcul de la distance vers le BORD du rectangle le plus proche du monstre
+            double dx = Math.max(Math.abs(diffX) - bLargeur / 2.0, 0);
+            double dy = Math.max(Math.abs(vraiDiffY) - bHauteur / 2.0, 0);
+            double distanceAuBord = Math.sqrt(dx * dx + dy * dy);
+
+            // Si la distance au bord est inférieure ou égale à notre portée d'attaque, on doit s'arrêter
+            if (distanceAuBord <= this.portee) {
+                // On force la distance actuelle à être considérée comme "à portée" pour déclencher l'attaque
+                distanceActuelle = this.portee;
+            }
+        }
+        else if (cible instanceof Joueur) {
+            // Si la cible est le Joueur, on ajoute la moitié de sa taille à notre portée
+            distanceDArretNecessaire = this.portee + (J_TAILLE / 2.0);
+        }
+
+        // --- Logique de mouvement et d'attaque ---
+        if (distanceActuelle > distanceDArretNecessaire) {
             // Marcher
             this.marche = true;
-            // Calculer la direction en normalisant le vecteur de différence
-            this.directionX = diffX / distance;
+            // Calculer la direction en normalisant le vecteur de différence original
+            this.directionX = diffX / distanceActuelle;
 
-            this.x += (diffX / distance) * this.vitesse;
-            this.y += (diffY / distance) * this.vitesse;
+            this.x += (diffX / distanceActuelle) * this.vitesse;
+            this.y += (diffY / distanceActuelle) * this.vitesse;
         } else {
-            // S'arrêter et attaquer
+            // S'arrêter et attaquer (Le monstre est contre le mur ou le joueur)
             this.marche = false;
             attaquer(cible, dt);
         }

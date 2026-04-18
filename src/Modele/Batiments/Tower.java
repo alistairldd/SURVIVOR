@@ -36,7 +36,11 @@ public class Tower extends Batiment{
         // Applique les statistiques de combat par défaut
         this.range = TOWER_BASE_RANGE;
         this.damage = TOWER_BASE_DAMAGE;
-        this.rayonHitbox = RAYON_HITBOX_TOUR;
+        this.largeurEncombrement = TOUR_LARGEUR_ENC;
+        this.hauteurEncombrement = TOUR_HAUTEUR_ENC;
+        this.largeurHitbox = TOUR_LARGEUR_HIT;
+        this.hauteurHitbox = TOUR_HAUTEUR_HIT;
+        this.offsetYHitbox = TOUR_OFFSET_Y;
     }
 
     // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)

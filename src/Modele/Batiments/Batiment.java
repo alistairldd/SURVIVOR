@@ -22,11 +22,21 @@ public abstract class Batiment extends Thread implements Localisable {
     protected int range;
 
     protected boolean attaquable;
-    // Taille physique d'encombrement du bâtiment
-    protected int rayonHitbox;
 
     private boolean fonctionnel = true;
 
+    // --- NOUVELLES PROPRIÉTÉS DE COLLISION RECTANGULAIRES ---
+    // Rectangle d'encombrement (Zone de construction)
+    protected int largeurEncombrement;
+    protected int hauteurEncombrement;
+
+    // Rectangle de Hitbox (Zone de combat 2.5D)
+    protected int largeurHitbox;
+    protected int hauteurHitbox;
+    protected int offsetYHitbox;
+
+    // Angle de rotation en radians (0 par défaut pour les bâtiments droits)
+    protected double angleRotation = 0;
 
     /**
      * Initialise un bâtiment à une position spécifique avec ses points de vie maximum.
@@ -75,11 +85,6 @@ public abstract class Batiment extends Thread implements Localisable {
         return range;
     }
 
-    // Récupère le rayon d'encombrement physique du bâtiment
-    public int getRayonHitbox() {
-        return rayonHitbox;
-    }
-
     public boolean isAttaquable() {
         return attaquable;
     }
@@ -95,4 +100,13 @@ public abstract class Batiment extends Thread implements Localisable {
     public void setFonctionnel(boolean fonctionnel) {
         this.fonctionnel = fonctionnel;
     }
+
+
+    public int getLargeurEncombrement() { return largeurEncombrement; }
+    public int getHauteurEncombrement() { return hauteurEncombrement; }
+    public int getLargeurHitbox() { return largeurHitbox; }
+    public int getHauteurHitbox() { return hauteurHitbox; }
+    public int getOffsetYHitbox() { return offsetYHitbox; }
+    public double getAngleRotation() { return angleRotation; }
+
 }

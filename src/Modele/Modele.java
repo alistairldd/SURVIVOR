@@ -205,64 +205,125 @@ public class Modele {
         this.cibleAffichage = joueur;
     }
 
-    /**
-     * Vérifie si l'emplacement (x, y) est libre, à l'intérieur de la carte et constructible.
-     * @param x Coordonnée X de la souris
-     * @param y Coordonnée Y de la souris
-     * @param rayonHitbox Le rayon d'encombrement du bâtiment qu'on veut placer
-     * @return true si la place est libre, dans les limites ET qu'il fait jour.
-     */
-    /**
-     * Vérifie si l'emplacement (x, y) est libre, à l'intérieur de la carte et constructible.
-     */
-    public boolean peutConstruireIci(double x, double y, int rayonHitbox) {
-        if (!leCycleJourNuit.isDay()) return false;
+    // ==========================================================
+    // --- MOTEUR DE COLLISION RECTANGULAIRE (Théorème SAT) ---
+    // ==========================================================
 
-        if (modeConstruction == TypeConstruction.TENTE && gestionnaireBatiments.aDejaUneTente()) {
+    /**
+     * Calcule les coordonnées exactes des 4 coins d'un rectangle en tenant compte de sa rotation.
+     * x, y : Centre du rectangle. w, h : Largeur et Hauteur. angle : Rotation en radians.
+     */
+    private double[][] getCoinsRectangle(double cx, double cy, double w, double h, double angle) {
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        double[][] coins = new double[4][2];
+
+        // Demi-largeur et demi-hauteur depuis le centre
+        double hw = w / 2.0;
+        double hh = h / 2.0;
+
+        // Les 4 coins relatifs au centre (avant rotation)
+        double[][] relatifs = {
+                {-hw, -hh}, {hw, -hh}, {hw, hh}, {-hw, hh}
+        };
+
+        for (int i = 0; i < 4; i++) {
+            double rx = relatifs[i][0];
+            double ry = relatifs[i][1];
+            // Application de la matrice de rotation 2D et translation vers (cx, cy)
+            coins[i][0] = cx + (rx * cos - ry * sin);
+            coins[i][1] = cy + (rx * sin + ry * cos);
+        }
+        return coins;
+    }
+
+    /**
+     * Vérifie si deux rectangles (droits ou orientés) se chevauchent.
+     * poly1 et poly2 sont les tableaux des 4 coins générés par getCoinsRectangle().
+     */
+    private boolean chevauchementPolygones(double[][] poly1, double[][] poly2) {
+        double[][][] polygones = {poly1, poly2};
+        for (int i = 0; i < polygones.length; i++) {
+            double[][] polygone = polygones[i];
+            for (int i1 = 0; i1 < polygone.length; i1++) {
+                int i2 = (i1 + 1) % polygone.length;
+                double p1X = polygone[i1][0];
+                double p1Y = polygone[i1][1];
+                double p2X = polygone[i2][0];
+                double p2Y = polygone[i2][1];
+
+                // Calcul de la normale (l'axe sur lequel on va projeter)
+                double normalX = p2Y - p1Y;
+                double normalY = p1X - p2X;
+
+                // Projection du premier polygone
+                double minA = Double.POSITIVE_INFINITY;
+                double maxA = Double.NEGATIVE_INFINITY;
+                for (double[] p : poly1) {
+                    double proj = normalX * p[0] + normalY * p[1];
+                    if (proj < minA) minA = proj;
+                    if (proj > maxA) maxA = proj;
+                }
+
+                // Projection du deuxième polygone
+                double minB = Double.POSITIVE_INFINITY;
+                double maxB = Double.NEGATIVE_INFINITY;
+                for (double[] p : poly2) {
+                    double proj = normalX * p[0] + normalY * p[1];
+                    if (proj < minB) minB = proj;
+                    if (proj > maxB) maxB = proj;
+                }
+
+                // Si on trouve un axe où les projections ne se touchent pas, c'est qu'il n'y a pas de collision !
+                if (maxA < minB || maxB < minA) {
+                    return false;
+                }
+            }
+        }
+        return true; // Aucune ligne de séparation trouvée : les rectangles se chevauchent.
+    }
+
+    /**
+     * Vérifie si un bâtiment peut être construit à une position donnée en utilisant des rectangles.
+     * @param x Coordonnée X du centre.
+     * @param y Coordonnée Y du centre.
+     * @param w Largeur du rectangle d'encombrement.
+     * @param h Hauteur du rectangle d'encombrement.
+     * @param angle Angle de rotation en radians.
+     * @return true si l'emplacement est libre.
+     */
+    public boolean peutConstruireIci(double x, double y, double w, double h, double angle) {
+        // 1. Calculer les coins du futur bâtiment (le fantôme)
+        double[][] coinsNouveau = getCoinsRectangle(x, y, w, h, angle);
+
+        // 2. Vérifie si le bâtiment est dans les limites de la carte
+        for (double[] coin : coinsNouveau) {
+            if (coin[0] < 0 || coin[0] > LARGEUR_MAP || coin[1] < 0 || coin[1] > HAUTEUR_MAP) {
+                return false;
+            }
+        }
+
+        // 3. Vérifie si l'emplacement est déjà occupé par un autre bâtiment
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+            double[][] coinsExistant = getCoinsRectangle(
+                    b.getX(),
+                    b.getY(),
+                    b.getLargeurEncombrement(),
+                    b.getHauteurEncombrement(),
+                    b.getAngleRotation()
+            );
+            if (chevauchementPolygones(coinsNouveau, coinsExistant)) {
+                return false;
+            }
+        }
+
+        // 4. Vérifie si l'emplacement est trop proche du joueur
+        // On traite le joueur comme un rectangle de J_TAILLE x J_TAILLE pour la collision SAT
+        double[][] coinsJoueur = getCoinsRectangle(joueur.getX(), joueur.getY(), J_TAILLE, J_TAILLE, 0);
+        if (chevauchementPolygones(coinsNouveau, coinsJoueur)) {
             return false;
         }
 
-        if (x - rayonHitbox < 0 || x + rayonHitbox > LARGEUR_MAP ||
-                y - rayonHitbox < 0 || y + rayonHitbox > HAUTEUR_MAP) {
-            return false; // Bords de carte
-        }
-
-        // --- MOTEUR DE COLLISION HYBRIDE ---
-        for (Batiment b : gestionnaireBatiments.getBatiments()) {
-
-            // CAS 1 : On tient le fantôme d'un ABATIS (OBB) à la souris
-            if (modeConstruction == TypeConstruction.ABATIS) {
-                double angleGhost = rotationAbatis ? -Constantes.ANGLE_ABATIS : Constantes.ANGLE_ABATIS;
-
-                // Projection du bâtiment 'b' dans le repère local du fantôme
-                double dx = b.getX() - x;
-                double dy = b.getY() - y;
-                double cos = Math.cos(-angleGhost);
-                double sin = Math.sin(-angleGhost);
-                double localX = dx * cos - dy * sin;
-                double localY = dx * sin + dy * cos;
-
-                double marge = b.getRayonHitbox();
-                if (Math.abs(localX) <= (Constantes.LARGEUR_HITBOX_ABATIS / 2.0 + marge) &&
-                        Math.abs(localY) <= (Constantes.HAUTEUR_HITBOX_ABATIS / 2.0 + marge)) {
-                    return false; // Collision !
-                }
-            }
-            // CAS 2 : On tient un objet circulaire (Tour, Tente...) et on frôle un Abatis existant
-            else if (b instanceof Abatis) {
-                Abatis ab = (Abatis) b;
-                if (ab.contientPointIncline(x, y, rayonHitbox)) {
-                    return false; // Collision !
-                }
-            }
-            // CAS 3 : Classique (Cercle vs Cercle)
-            else {
-                double distance = Math.hypot(b.getX() - x, b.getY() - y);
-                if (distance < b.getRayonHitbox() + rayonHitbox) {
-                    return false; // Collision !
-                }
-            }
-        }
         return true;
     }
 
@@ -273,23 +334,33 @@ public class Modele {
      * @param y Coordonnée Y du clic
      * @return true si la construction a réussi, false sinon (pour déclencher un feedback visuel)
      */
+    /**
+     * Tente de placer définitivement le bâtiment sur la carte.
+     * @param x Coordonnée X de la souris.
+     * @param y Coordonnée Y de la souris.
+     * @return true si la construction a réussi.
+     */
     public boolean finaliserConstruction(double x, double y) {
+        // --- CAS : TOUR ---
         if (modeConstruction == TypeConstruction.TOUR) {
             if (joueur.aAssezDeRessources(COUT_TOUR) &&
-                    peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TOUR)) {
+                    peutConstruireIci(x, y, TOUR_LARGEUR_ENC, TOUR_HAUTEUR_ENC, 0)) {
 
                 joueur.consommerListeRessources(COUT_TOUR);
                 Tower t = new Tower((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
 
-                if (!(joueur.aAssezDeRessources(COUT_TOUR))) annulerConstruction();
+                /*if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
+                    annulerConstruction();
+                }*/
                 return true;
             }
             return false;
         }
+        // --- CAS : TENTE ---
         else if (modeConstruction == TypeConstruction.TENTE) {
             if (joueur.aAssezDeRessources(COUT_TENTE) &&
-                    peutConstruireIci(x, y, Constantes.RAYON_HITBOX_TENTE) &&
+                    peutConstruireIci(x, y, TENTE_LARGEUR_ENC, TENTE_HAUTEUR_ENC, 0) &&
                     !gestionnaireBatiments.aDejaUneTente()) {
 
                 joueur.consommerListeRessources(COUT_TENTE);
@@ -299,24 +370,21 @@ public class Modele {
                 return true;
             }
             return false;
-        } // --- CAS : ABATIS (REM PART) ---
+        }
+        // --- CAS : ABATIS ---
         else if (modeConstruction == TypeConstruction.ABATIS) {
-            // On utilise la largeur de la hitbox comme rayon de sécurité pour les bords de la map
-            int rayonSecurite = (int)(Constantes.LARGEUR_HITBOX_ABATIS / 2);
+            double angle = rotationAbatis ? -ABATIS_ANGLE_RAD : ABATIS_ANGLE_RAD;
 
             if (joueur.aAssezDeRessources(COUT_ABATIS) &&
-                    peutConstruireIci(x, y, rayonSecurite)) {
+                    peutConstruireIci(x, y, ABATIS_LARGEUR, ABATIS_HAUTEUR, angle)) {
+
                 joueur.consommerListeRessources(COUT_ABATIS);
-                // On passe l'état de rotation actuel au constructeur
                 Abatis a = new Abatis((int)x, (int)y, gestionnaireBatiments, rotationAbatis);
                 gestionnaireBatiments.ajouterBatiment(a);
 
-                // Construction à la chaîne : le fantôme reste si on a encore 20 Bois !
-                if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
+                /*if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
                     annulerConstruction();
-                }
-
-
+                }*/
                 return true;
             }
             return false;

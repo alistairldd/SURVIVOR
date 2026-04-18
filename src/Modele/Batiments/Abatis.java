@@ -24,7 +24,12 @@ public class Abatis extends Batiment {
         super(x, y, gB, 0); // Portée 0 : bâtiment purement passif
         this.hp = HP_ABATIS;
         this.rotation = rotation;
-        this.rayonHitbox = TAILLE_ABATIS / 3; // Valeur par défaut pour compatibilité basique
+        this.largeurEncombrement = ABATIS_LARGEUR;
+        this.hauteurEncombrement = ABATIS_HAUTEUR;
+        this.largeurHitbox = ABATIS_LARGEUR;
+        this.hauteurHitbox = ABATIS_HAUTEUR;
+        this.offsetYHitbox = ABATIS_OFFSET_Y;
+        this.angleRotation = ABATIS_ANGLE_RAD;
 
         // L'inclinaison change de sens selon l'état du miroir
         this.angleActuel = rotation ? -ANGLE_ABATIS : ANGLE_ABATIS;
