@@ -123,12 +123,12 @@ public class UpdateJN {
     }
 
     // Getter pour exposer directement la liste des ressources présentes pendant le jour au reste du Modèle
-    public ArrayList<Ressource> getRessources() {
+    public List<Ressource> getRessources() {
         return monGestionnaireRessources.getRessources();
     }
 
     public Localisable monstreTrouverCible(Localisable m) {
-        ArrayList<Batiment> batiments = modele.getGestionnaireBatiments().getBatiments();
+        List<Batiment> batiments = modele.getGestionnaireBatiments().getBatiments();
         Joueur joueur = modele.getJoueur();
         // On crée une liste de tout ce qui est attaquable par les monstres
         List<Localisable> ciblesPotentielles = new ArrayList<>();

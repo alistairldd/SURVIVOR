@@ -348,7 +348,7 @@ public class Joueur implements Localisable {
      */
     // quand le joueur est sur la ressource et qu'il appuie sur e, le joueur ajoute à son inventaire la ressource.
     public void ramasseRessource(){
-        ArrayList<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
+        List<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
         // Parcourt la liste à l'envers pour éviter les bugs d'index lors de la suppression d'un élément
         for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
             Ressource r = ressourcesDispo.get(i);

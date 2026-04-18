@@ -17,7 +17,7 @@ import Modele.Monstres.SlimeMutant;
 
 import static Modele.Constantes.*;
 
-public class    VueVie {
+public class VueVie {
 
     private Modele modele;
 

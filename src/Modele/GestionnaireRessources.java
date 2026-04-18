@@ -1,23 +1,25 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import static Modele.Constantes.*;
 /**
  * Classe dédiée à la gestion centralisée des ressources
  */
 public class GestionnaireRessources {
 
-    private ArrayList<Ressource> ressources;
+    private List<Ressource> ressources;
 
     public GestionnaireRessources() {
-        this.ressources = new ArrayList<>();
+        this.ressources = new CopyOnWriteArrayList<>();
     }
 
     /**
      * Getter pour accéder à la liste des ressources présentes sur la carte.
      * @return La liste actuelle des ressources.
      */
-    public ArrayList<Ressource> getRessources() {
+    public List<Ressource> getRessources() {
         return ressources;
     }
 

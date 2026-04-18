@@ -41,7 +41,6 @@ public abstract class Batiment extends Thread implements Localisable {
         // Fixe la zone d'interaction par défaut à 10 pixels
         this.reparationRange = REPARATION_RANGE;
         this.range = range;
-        this.start();
         this.attaquable = true;
     }
 

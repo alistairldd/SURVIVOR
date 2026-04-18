@@ -5,15 +5,17 @@ import Modele.Monstres.Monstre;
 
 import java.util.ArrayList;
 import static Modele.Constantes.*;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GestionnaireBatiments {
-    private ArrayList<Batiment> batiments;
+    private List<Batiment> batiments;
     private Modele m;
     private HQ hq;
 
     public GestionnaireBatiments(Modele m) {
         this.m = m;
-        this.batiments = new ArrayList<Batiment>();
+        this.batiments = new CopyOnWriteArrayList<>();
 
         // On initialise le HQ en lui passant l'instance actuelle du gestionnaire
         this.hq = new HQ(this);
@@ -40,7 +42,7 @@ public class GestionnaireBatiments {
         }
     }
 
-    public ArrayList<Batiment> getBatiments() {
+    public List<Batiment> getBatiments() {
         return batiments;
     }
 

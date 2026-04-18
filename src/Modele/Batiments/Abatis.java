@@ -38,6 +38,14 @@ public class Abatis extends Batiment {
                 setFonctionnel(false);
                 setAttaquable(false);
             }
+
+            try {
+                Thread.sleep(500); // Pause de 500 millisecondes
+            } catch (InterruptedException e) {
+                // Si le jeu se ferme ou que le thread est tué de l'extérieur
+                Thread.currentThread().interrupt();
+                break; // On quitte proprement la boucle
+            }
         }
     }
 
