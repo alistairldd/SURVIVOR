@@ -58,7 +58,6 @@ public class DeplaceJoueur extends Thread {
             }
 
             double vitesseEffective = VITESSE - facteurArmure + (double) joueur.getVitesse();
-            System.out.println(vitesseEffective);
 
             // Si la distance restante est plus grande que notre vitesse de déplacement par pas
             if (distance > vitesseEffective){

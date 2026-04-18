@@ -306,7 +306,6 @@ public class Modele {
 
             if (joueur.aAssezDeRessources(COUT_ABATIS) &&
                     peutConstruireIci(x, y, rayonSecurite)) {
-
                 joueur.consommerListeRessources(COUT_ABATIS);
                 // On passe l'état de rotation actuel au constructeur
                 Abatis a = new Abatis((int)x, (int)y, gestionnaireBatiments, rotationAbatis);
@@ -316,6 +315,8 @@ public class Modele {
                 if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
                     annulerConstruction();
                 }
+
+
                 return true;
             }
             return false;

@@ -129,4 +129,9 @@ public class VueHUDInstructions extends JPanel {
             g2d.drawString(instructions[i], x + paddingSide, y + paddingTop + (i * lineSpacing) + 15);
         }
     }
+
+    @Override
+    public boolean contains(int x, int y) {
+        return false; // Transparent aux clics : les events passent directement à la couche en dessous
+    }
 }

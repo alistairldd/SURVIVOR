@@ -39,6 +39,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+
         // 1. Priorité UI : Vérifier si on clique dans la boutique
         Object cible = vue.identifierElementClique(e.getX(), e.getY(), e.getSource());
 
@@ -52,6 +53,9 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             }
             return;
         }
+        // si l'élément cliqué n'est pas dans l'UI, on continue avec les actions sur le monde
+        if (e.getSource() != vue) return;
+
 
         Joueur joueur = modele.getJoueur();
         double camX = joueur.getX() - (double) vue.getWidth() / 2;
@@ -74,6 +78,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
                 // A. MODE CONSTRUCTION (RTS)
                 if (modele.getModeConstruction() != Modele.TypeConstruction.AUCUN) {
                     boolean succes = modele.finaliserConstruction(destX, destY);
+                    System.out.println(succes);
                     if (!succes) {
                         // Feedback visuel : on détermine le message selon la cause de l'échec
                         String message = resoudreMessageErreurConstruction(joueur, destX, destY);
