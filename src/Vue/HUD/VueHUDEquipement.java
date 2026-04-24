@@ -79,7 +79,8 @@ public class VueHUDEquipement {
         Image img           = armePrincipale  != null ? armePrincipale.getImage()  : null;
         Image imgSecondaire = armeSecondaire  != null ? armeSecondaire.getImage()  : null;
 
-        String nomArmePrincipale = armePrincipale.getNom();
+        assert armePrincipale != null;
+        String nomArmePrincipale = armePrincipale.getNom() != null ? armePrincipale.getNom() : "Aucune arme équipée";
 
         int TailleIconePrinc = TAILLE_ICONE * 3;
 
@@ -252,7 +253,7 @@ public class VueHUDEquipement {
         g2d.setColor(Color.BLACK);
         g2d.drawString("Inventaire", x, y - 5);
 
-        LinkedHashMap<Item, Integer> inventaire = j.getInventaireGroupé();
+        LinkedHashMap<Item, Integer> inventaire = j.getInventaireGroupe();
         int cpt = 0;
 
         // Première ligne de slots

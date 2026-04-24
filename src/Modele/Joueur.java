@@ -3,10 +3,7 @@ package Modele;
 import Modele.Armes.*;
 import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
-import Modele.Batiments.Tower;
 import Modele.Armure.Armure;
-import Modele.Armure.ArmureLegere;
-import Modele.Armure.ArmureLourde;
 import Modele.Items.Item;
 import Modele.Items.PotionDegats;
 import Modele.Items.PotionVie;
@@ -84,8 +81,8 @@ public class Joueur implements Localisable {
     // Constructeur de la classe Joueur, il initialise les données du joueur.
     public Joueur(Modele modele) {
         // on initialise la position au centre exact de la carte
-        positionX = LARGEUR_MAP /2;
-        positionY = HAUTEUR_MAP /2;
+        positionX = (double) LARGEUR_MAP /2;
+        positionY = (double) HAUTEUR_MAP /2;
         // Statistiques de base
         hp = HP_JOUEUR;
         attack = 0;
@@ -173,7 +170,7 @@ public class Joueur implements Localisable {
         inventaire.remove(item);
     }
 
-    public LinkedHashMap<Item, Integer> getInventaireGroupé() {
+    public LinkedHashMap<Item, Integer> getInventaireGroupe() {
         LinkedHashMap<Item, Integer> map = new LinkedHashMap<>();
         for (Item item : inventaire) {
             map.merge(item, 1, Integer::sum); // nécessite que Item implémente equals() + hashCode() sur le nom
