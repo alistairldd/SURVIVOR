@@ -77,4 +77,8 @@ public class VueHUDPageEtat extends JPanel {
             this.revalidate(); // Prévient le JScrollPane du changement de taille
         }
     }
+
+    public VueHUDEquipement getVueHUDEquipement() {
+        return vueHUDEquipement;
+    }
 }

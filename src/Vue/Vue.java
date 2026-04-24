@@ -11,6 +11,7 @@ import Vue.Batiments.VueBatiment;
 import Vue.Batiments.VueEffetSoin;
 import Vue.Batiments.VueEffetTente;
 import Vue.HUD.VueHUD;
+import Vue.HUD.VueHUDEquipement;
 import Vue.HUD.VueHUDInstructions;
 
 import javax.swing.*;
@@ -96,6 +97,8 @@ public class Vue extends JPanel {
 
         // Liaison du shop pour la détection de clic
         this.vueHUD.getPageBoutique().addMouseListener(controleurSouris);
+        this.vueHUD.getPageEtat().addMouseListener(controleurSouris);
+
 
         this.vueArme = new VueArme(controleurSouris, this, modele);
 
@@ -395,5 +398,10 @@ public class Vue extends JPanel {
             return vueHUD.getPageBoutique().getVueHUDShop().getObjetAuClic(x, y);
         }
         return null;
+    }
+
+
+    public VueHUDEquipement getVueHUDEquipement() {
+        return vueHUD.getHUDEquipement();
     }
 }

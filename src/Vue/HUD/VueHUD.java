@@ -163,4 +163,16 @@ public class VueHUD extends JPanel {
     public VueHUDPageBoutique getPageBoutique() {
         return pageBoutique;
     }
+
+    public VueHUDPageAction getPageAction() {
+        return pageAction;
+    }
+
+    public VueHUDEquipement getHUDEquipement() {
+        return pageEtat.getVueHUDEquipement(); // ou pageAction selon où elle est instanciée
+    }
+
+    public Component getPageEtat() {
+        return pageEtat;
+    }
 }

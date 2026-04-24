@@ -82,8 +82,7 @@ public class VueHUDInstructions extends JPanel {
                 "• P            : Afficher PVs",
                 "• C            : Afficher la portée",
                 "• ESPACE       : Changer d'arme",
-                "• FLÈCHES      : Switch HUD Pages",
-                "• PAVÉ NUM     : Transaction Shop"
+                "• FLÈCHES      : Switch HUD Pages"
         };
 
         // 2. CALCULS DE DIMENSIONS DYNAMIQUES
@@ -130,8 +129,5 @@ public class VueHUDInstructions extends JPanel {
         }
     }
 
-    @Override
-    public boolean contains(int x, int y) {
-        return false; // Transparent aux clics : les events passent directement à la couche en dessous
-    }
+
 }
