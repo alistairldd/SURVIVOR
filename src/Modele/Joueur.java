@@ -4,10 +4,7 @@ import Modele.Armes.*;
 import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
 import Modele.Armure.Armure;
-import Modele.Items.Item;
-import Modele.Items.PotionDegats;
-import Modele.Items.PotionVie;
-import Modele.Items.PotionVitesse;
+import Modele.Items.*;
 
 import static Modele.Constantes.*;
 
@@ -265,6 +262,12 @@ public class Joueur implements Localisable {
             soigner(item.getEffet());
             removeFromInventaire(item);
         }
+
+        if (item instanceof PotionVieGrande) {
+            soigner(item.getEffet());
+            removeFromInventaire(item);
+        }
+
         if (item instanceof PotionVitesse){
             incrVitesse(item.getEffet());
             removeFromInventaire(item);
