@@ -75,18 +75,6 @@ public class ControleurClavier implements KeyListener {
             modele.getJoueur().switchArmes();
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_E){
-            modele.getJoueur().utilierConsommable(new PotionDegats());
-            modele.getJoueur().utilierConsommable(new PotionVie());
-            modele.getJoueur().utilierConsommable(new PotionVitesse());
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_Z){
-            modele.getJoueur().addToInventaire(new PotionVie());
-            modele.getJoueur().addToInventaire(new PotionDegats());
-            modele.getJoueur().addToInventaire(new PotionVitesse());
-
-        }
 
         /*** System.out.println("Action : La touche E a été pressée !");
          if (e.getKeyCode() == KeyEvent.VK_E) {

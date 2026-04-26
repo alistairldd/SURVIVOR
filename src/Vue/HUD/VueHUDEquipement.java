@@ -17,9 +17,11 @@ public class VueHUDEquipement {
     // Identifiants des actions de switch — même principe que zonesCliquables dans VueHUDShop
     public static final String ACTION_SWITCH_ARME   = "switchArmes";
     public static final String ACTION_SWITCH_ARMURE = "switchArmure";
+    public static final String ACTION_UTILISER_CONSOMMABLE = "utiliserConsommable";
 
     // Zones cliquables : Rectangle → nom de l'action à déclencher
     private final Map<Rectangle, String> zonesCliquables = new HashMap<>();
+    private final Map<Rectangle, Item> zonesItemsCliquables = new HashMap<>();
 
 
     // -------------------------------------------------------------------------
@@ -27,7 +29,9 @@ public class VueHUDEquipement {
     // -------------------------------------------------------------------------
 
     public int dessiner(Graphics g, int y, Joueur j) {
-        zonesCliquables.clear();                      // on refrais le mapping à chaque frame
+        zonesCliquables.clear(); // on refrais le mapping à chaque frame
+        zonesItemsCliquables.clear();
+
         Graphics2D g2d = (Graphics2D) g;
 
         int xEquip = xOffset;
@@ -58,6 +62,20 @@ public class VueHUDEquipement {
      */
     public String getActionAuClic(int x, int y) {
         for (Map.Entry<Rectangle, String> entry : zonesCliquables.entrySet()) {
+            if (entry.getKey().contains(x, y)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Retourne l'item associée aux coordonnées du clic, ou {@code null} si
+     * aucun item n'est touché.
+     * Valeurs possibles : {@link #ACTION_UTILISER_CONSOMMABLE}.
+     */
+    public Item getItemAuClic(int x, int y) {
+        for (Map.Entry<Rectangle, Item> entry : zonesItemsCliquables.entrySet()) {
             if (entry.getKey().contains(x, y)) {
                 return entry.getValue();
             }
@@ -298,6 +316,9 @@ public class VueHUDEquipement {
                 g2d.drawString(String.valueOf(count), slotX + TAILLE_ICONE - 15, y + TAILLE_ICONE - 3);
             }
 
+            Rectangle zoneItem = new Rectangle(slotX, y, TAILLE_ICONE, TAILLE_ICONE);
+            zonesCliquables.put(zoneItem, ACTION_UTILISER_CONSOMMABLE);
+            zonesItemsCliquables.put(zoneItem, item);
             cpt++;
         }
 

@@ -16,8 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import static Modele.Constantes.*;
-import static Vue.HUD.VueHUDEquipement.ACTION_SWITCH_ARME;
-import static Vue.HUD.VueHUDEquipement.ACTION_SWITCH_ARMURE;
+import static Vue.HUD.VueHUDEquipement.*;
 
 /**
  * Contrôleur dédié à la gestion des événements de la souris.
@@ -46,6 +45,12 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             String action = vue.getVueHUDEquipement().getActionAuClic(e.getX(), e.getY());
             if (ACTION_SWITCH_ARME.equals(action))   { modele.getJoueur().switchArmes();   return; }
             if (ACTION_SWITCH_ARMURE.equals(action)) { modele.getJoueur().switchArmures(); return; }
+            if (ACTION_UTILISER_CONSOMMABLE.equals(action)) {
+                Item itemCLique = vue.getVueHUDEquipement().getItemAuClic(e.getX(), e.getY());
+                if (itemCLique != null) {
+                    modele.getJoueur().utiliserConsommable(itemCLique);
+                }
+            }
         }
         // 1. Priorité UI : Vérifier si on clique dans la boutique
         Object cible = vue.identifierElementClique(e.getX(), e.getY(), e.getSource());

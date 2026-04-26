@@ -260,7 +260,7 @@ public class Joueur implements Localisable {
         this.aPioche = aPioche;
     }
 
-    public void utilierConsommable(Item item) {
+    public void utiliserConsommable(Item item) {
         if (item instanceof PotionVie) {
             soigner(item.getEffet());
             removeFromInventaire(item);

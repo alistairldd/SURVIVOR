@@ -163,6 +163,11 @@ public class VueHUDShop {
         return y + 20;
     }
 
+    /**
+     * Retourne l'action associée aux coordonnées du clic, ou {@code null} si
+     * aucun bouton n'est touché.
+     * Valeurs possibles : Arme, Armure, Item
+     **/
     public Object getObjetAuClic(int x, int y) {
         for (Rectangle r : zonesCliquables.keySet()) {
             if (r.contains(x, y)) return zonesCliquables.get(r);
