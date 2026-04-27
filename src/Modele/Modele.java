@@ -1,11 +1,10 @@
 package Modele;
 
 import Modele.Batiments.Batiment;
+import Modele.Items.Item;
+import Modele.Batiments.*;
 import Modele.Monstres.Monstre;
 import static Modele.Constantes.*;
-import Modele.Batiments.Tower;
-import Modele.Batiments.TenteDeSoin;
-import Modele.Batiments.Abatis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,10 @@ public class Modele {
     private GestionnaireBatiments gestionnaireBatiments;
     private CycleJourNuit leCycleJourNuit;
     private GestionnaireShop gestionnaireShop;
+    private GestionnaireSorts gestionnaireSorts;
+    private Item sortEnAttente = null;
+
+
     private UpdateJN updateJN;
 
     // Entité actuellement ciblée par l'interface
@@ -37,7 +40,7 @@ public class Modele {
     private boolean rotationAbatis = false;
 
     // --- ÉTAT DE CONSTRUCTION (RTS) ---
-    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS }
+    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS, MORTIER }
     private TypeConstruction modeConstruction = TypeConstruction.AUCUN;
 
     public Modele() {
@@ -50,6 +53,8 @@ public class Modele {
         this.leCycleJourNuit = new CycleJourNuit(updateJN);
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
+        this.gestionnaireSorts = new GestionnaireSorts(this);
+
 
         this.cibleAffichage = joueur;
     }
@@ -88,6 +93,10 @@ public class Modele {
     public UpdateJN getUpdateJN() { return updateJN; }
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
     public GestionnaireBatiments getGestionnaireBatiments() { return gestionnaireBatiments; }
+    public GestionnaireSorts getGestionnaireSorts() { return gestionnaireSorts; }
+    public void preparerSort(Item sort) { this.sortEnAttente = sort; }
+    public Item getSortEnAttente() { return this.sortEnAttente; }
+    public void setSortEnAttente() { this.sortEnAttente = null; }
     public boolean getPartieTerminee() { return partieTerminee; }
 
     public TypeConstruction getModeConstruction() { return modeConstruction; }
@@ -190,6 +199,17 @@ public class Modele {
         return null;
     }
 
+    public Monstre batTrouverMonstreMortier(Mortier m) {
+        for (Monstre monstre : updateJN.getMonstres()) {
+            double distance = Math.hypot(monstre.getX() - m.getX(), monstre.getY() - m.getY());
+            // Condition cruciale : Le monstre doit être ENTRE la portée min et la portée max
+            if (distance >= m.getMinRange() && distance <= m.getRange()) {
+                return monstre;
+            }
+        }
+        return null;
+    }
+
     /**
      * Réinitialisation complète du jeu.
      */
@@ -235,6 +255,42 @@ public class Modele {
             coins[i][1] = cy + (rx * sin + ry * cos);
         }
         return coins;
+    }
+
+    /**
+     * NOUVEAU : Vérifie si le joueur entre en collision avec la HITBOX d'un bâtiment solide.
+     * @param testX La future position X du joueur.
+     * @param testY La future position Y du joueur.
+     * @return true si la position chevauche la Hitbox d'un bâtiment (hors Abatis).
+     */
+    public boolean collisionAvecBatimentSolide(double testX, double testY) {
+        // Le joueur est un carré de taille J_TAILLE x J_TAILLE
+        double[][] coinsJoueur = getCoinsRectangle(testX, testY, Constantes.J_TAILLE, Constantes.J_TAILLE, 0);
+
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+            // EXCEPTION : Le joueur passe à travers l'Abatis, on l'ignore de la détection
+            if (b instanceof Abatis) {
+                continue;
+            }
+
+            // On utilise la Hitbox de combat (et non l'encombrement global)
+            // IMPORTANT : On applique le décalage 2.5D (offset Y) pour cibler la BASE du bâtiment
+            double centreHitboxY = b.getY() + b.getOffsetYHitbox();
+
+            double[][] coinsHitbox = getCoinsRectangle(
+                    b.getX(),
+                    centreHitboxY,
+                    b.getLargeurHitbox(),
+                    b.getHauteurHitbox(),
+                    b.getAngleRotation()
+            );
+
+            // Si le polygone du joueur touche le polygone du bâtiment, c'est un mur !
+            if (chevauchementPolygones(coinsJoueur, coinsHitbox)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -385,6 +441,19 @@ public class Modele {
                 /*if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
                     annulerConstruction();
                 }*/
+                return true;
+            }
+            return false;
+        }
+
+        if (modeConstruction == TypeConstruction.MORTIER) {
+            if (joueur.aAssezDeRessources(COUT_MORTIER) &&
+                    peutConstruireIci(x, y, MORTIER_LARGEUR_ENC, MORTIER_HAUTEUR_ENC, 0)) {
+
+                joueur.consommerListeRessources(COUT_MORTIER);
+                Mortier m = new Mortier((int)x, (int)y, gestionnaireBatiments);
+                gestionnaireBatiments.ajouterBatiment(m);
+                annulerConstruction();
                 return true;
             }
             return false;

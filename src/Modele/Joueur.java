@@ -79,7 +79,7 @@ public class Joueur implements Localisable {
     public Joueur(Modele modele) {
         // on initialise la position au centre exact de la carte
         positionX = (double) LARGEUR_MAP /2;
-        positionY = (double) HAUTEUR_MAP /2;
+        positionY = (double) HAUTEUR_MAP /2 + 200;
         // Statistiques de base
         hp = HP_JOUEUR;
         attack = 0;
@@ -130,6 +130,7 @@ public class Joueur implements Localisable {
     }
 
     public int getHpMax() {return hpMax;}
+
     public void setHpMax(int hpMax) {this.hpMax = hpMax;}
 
     public int getHp() {return hp;}
@@ -266,7 +267,7 @@ public class Joueur implements Localisable {
         if (item instanceof PotionVieGrande) {
             soigner(item.getEffet());
             removeFromInventaire(item);
-        }
+        } 
 
         if (item instanceof PotionVitesse){
             incrVitesse(item.getEffet());
@@ -278,6 +279,16 @@ public class Joueur implements Localisable {
             removeFromInventaire(item);
         }
     }
+
+    public void utiliserSort(Item item, double directionX, double directionY) {
+        if (item instanceof SortFeu) {
+            SortFeu sort = new SortFeu(this.positionX, this.positionY, directionX, directionY);
+            modele.getGestionnaireSorts().ajouterSort(sort);
+            removeFromInventaire(item);
+        }
+    }
+
+
 
     // Méthode pour augmenter (ou baisser) la vitesse du joueur
     private void incrVitesse(int i) {vitesse += i;}
@@ -297,18 +308,26 @@ public class Joueur implements Localisable {
     }
 
     public ThreadReparation getThreadReparation() { return threadReparation; }
+
+
     /**
-     * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte.
+     * Met à jour la position X tout en empêchant le joueur de sortir des limites de la carte
+     * ET de traverser les bâtiments (glissement).
      * @param x La nouvelle coordonnée X voulue.
      */
     // Méthode pour déplacer le joueur en x,
     // elle prend en paramètre le déplacement en x,
     // elle met à jour la position du joueur en x.
     public synchronized void deplaceX(double x) {
-        // On vérifie que le déplacement en x est dans les limites de la carte (en tenant compte de la taille du sprite), sinon on le met à la limite.
+        // Vérification des limites du monde
         if (x >= 10+J_TAILLE/2 && x <= LARGEUR_MAP) {
-            // Mouvement valide
-            setPositionX(x);
+
+            // NOUVEAU : On vérifie si ce déplacement X nous encastre dans un bâtiment
+            if (!modele.collisionAvecBatimentSolide(x, this.positionY)) {
+                setPositionX(x); // Mouvement valide
+            }
+            // Si collision, on ne fait rien (on annule ce pas en X, ce qui permet de glisser)
+
         }
         else if (x <= 10+J_TAILLE/2) {
             // Bloqué au bord gauche
@@ -321,24 +340,25 @@ public class Joueur implements Localisable {
     }
 
     /**
-     * Met à jour la position Y tout en empêchant le joueur de sortir des limites de la carte.
+     * Met à jour la position Y tout en empêchant le joueur de sortir des limites de la carte
+     * ET de traverser les bâtiments (glissement).
      * @param y La nouvelle coordonnée Y voulue.
      */
-    // Méthode pour déplacer le joueur en y,
-    // elle prend en paramètre le déplacement en y,
-    // elle met à jour la position du joueur en y.
     public synchronized void deplaceY(double y) {
-        // On vérifie que le déplacement en y est dans les limites de la carte, sinon on le met à la limite.
+        // Vérification des limites du monde
         if (y >= 10+J_TAILLE/2 && y <= HAUTEUR_MAP) {
-            // Mouvement valide
-            setPositionY(y);
+
+            // NOUVEAU : On vérifie si ce déplacement Y nous encastre dans un bâtiment
+            if (!modele.collisionAvecBatimentSolide(this.positionX, y)) {
+                setPositionY(y); // Mouvement valide
+            }
+            // Si collision, on ne fait rien (on annule ce pas en Y, ce qui permet de glisser)
+
         }
         else if (y <= 10+J_TAILLE/2) {
-            // Bloqué au bord supérieur
             setPositionY(10+J_TAILLE/2);
         }
         else {
-            // Bloqué au bord inférieur
             setPositionY(HAUTEUR_MAP);
         }
     }
@@ -511,6 +531,10 @@ public class Joueur implements Localisable {
      * Demande au modèle s'il y a un bâtiment à soigner à proximité.
      * Si oui, lance le thread autonome de réparation.
      */
+    /**
+     * Demande au modèle s'il y a un bâtiment à soigner à proximité.
+     * Si oui, lance le thread autonome de réparation.
+     */
     public void lancerReparation() {
 
         // Sécurité 0 : Évite le NullPointerException si le Thread démarre avant le chargement complet du jeu
@@ -523,18 +547,24 @@ public class Joueur implements Localisable {
         if (enReparation) return;
 
         Batiment batimentAReparer = null;
-        double distMin = REPARATION_RANGE;
+        double plusProcheDist = Double.MAX_VALUE;
 
-        // On cherche le bâtiment endommagé le plus proche dans le rayon de réparation
+        // On cherche le bâtiment endommagé le plus proche dans le rayon dynamique de réparation
         for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
             if (b.getHp() < b.getMaxHp()) {
                 double diffX = this.positionX - b.getX();
                 double diffY = this.positionY - b.getY();
-                double dist = Math.hypot(diffX, diffY);
+                double distCentrale = Math.hypot(diffX, diffY);
 
-                if (dist <= distMin) {
-                    distMin = dist;
-                    batimentAReparer = b;
+                // NOUVEAU : Calcul de la portée dynamique (50 + la moitié de la plus grande dimension du bâtiment)
+                double dimensionMaxBatiment = Math.max(b.getLargeurHitbox(), b.getHauteurHitbox());
+                double porteeDynamique = REPARATION_RANGE + (dimensionMaxBatiment / 2.0);
+
+                if (distCentrale <= porteeDynamique) {
+                    if (distCentrale < plusProcheDist) {
+                        plusProcheDist = distCentrale;
+                        batimentAReparer = b;
+                    }
                 }
             }
         }
@@ -553,10 +583,13 @@ public class Joueur implements Localisable {
                             break; // La nuit tombe, on arrête le marteau
                         }
 
-                        // Vérification 2 : Le joueur est-il toujours à portée ?
+                        // Vérification 2 : Le joueur est-il toujours à portée dynamique ?
                         double dX = this.positionX - cible.getX();
                         double dY = this.positionY - cible.getY();
-                        if (Math.hypot(dX, dY) > REPARATION_RANGE) {
+                        double dimMaxBat = Math.max(cible.getLargeurHitbox(), cible.getHauteurHitbox());
+                        double porteeDyn = REPARATION_RANGE + (dimMaxBat / 2.0);
+
+                        if (Math.hypot(dX, dY) > porteeDyn) {
                             break; // Le joueur s'est éloigné, on arrête de réparer
                         }
 

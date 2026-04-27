@@ -104,6 +104,8 @@ public class UpdateJN {
         if (modele.getJoueur().getHp() <= 0 || modele.getGestionnaireBatiments().getHQ().getHp() <= 0) {
             modele.declencherGameOver();
         }
+        // Vérifier les collisions des sorts avec les monstres
+        modele.getGestionnaireSorts().verifierCollisions(this.getMonstres());
 
         // Met à jour la position des ressources (aspiration des drops de monstres la nuit)
         monGestionnaireRessources.actualiserAspiration(modele.getJoueur());

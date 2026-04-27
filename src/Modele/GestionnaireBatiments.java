@@ -23,11 +23,12 @@ public class GestionnaireBatiments {
 
         ajouterBatiment(new Mine(this));
 
-        Tower tourEndommagee = new Tower(HAUTEUR_MAP/2, LARGEUR_MAP/3, this);
+        /**Tower tourEndommagee = new Tower(HAUTEUR_MAP/2, LARGEUR_MAP/3, this);
         tourEndommagee.setHp(0);
         ajouterBatiment(tourEndommagee);
 
-        ajouterBatiment(new TenteDeSoin(HAUTEUR_MAP/3, LARGEUR_MAP/2, this));
+        ajouterBatiment(new TenteDeSoin(HAUTEUR_MAP/3, LARGEUR_MAP/2, this));**/
+
     }
 
     /**
@@ -50,8 +51,34 @@ public class GestionnaireBatiments {
         return m.batTrouverMonstre(t);
     }
 
+    public Monstre trouverCibleMortier(Mortier m) {
+        return this.m.batTrouverMonstreMortier(m);
+    }
+
     public Joueur trouverJoueur(TenteDeSoin tente) {
         return m.batTrouverJoueur(tente);
+    }
+
+    /**
+     * Calcule et applique les dégâts de zone de l'explosion.
+     */
+    public void declencherExplosion(double impactX, double impactY, int coreR, int outerR, int coreDmg, int outerDmg) {
+        // On récupère la liste des monstres depuis l'UpdateJN
+        List<Monstre> cibles = m.getUpdateJN().getMonstres();
+
+        for (Monstre monstre : cibles) {
+            double distance = Math.hypot(monstre.getX() - impactX, monstre.getY() - impactY);
+
+            if (distance <= coreR) {
+                // Zone d'impact direct : Dégâts maximum
+                monstre.perdreHp(coreDmg);
+            }
+            else if (distance <= outerR) {
+                // Zone de souffle : Dégâts moyens
+                monstre.perdreHp(outerDmg);
+            }
+             // En dehors de la portée d'explosion : pas de dégâts
+        }
     }
 
     public void stopperTousLesThreads() {

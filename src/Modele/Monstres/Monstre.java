@@ -207,4 +207,7 @@ public abstract class Monstre extends Thread implements Localisable {
         }
     }
 
+    public void prendreDegats(int i) {
+        this.hp -= i;
+    }
 }

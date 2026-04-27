@@ -60,6 +60,7 @@ public class GestionnaireShop {
         PotionDegats pd = new PotionDegats();
         PotionVitesse pvi = new PotionVitesse();
         PotionVieGrande pvGrande = new PotionVieGrande();
+        SortFeu sortFeu = new SortFeu();
 
         Pioche pioche = new Pioche();
 
@@ -68,6 +69,7 @@ public class GestionnaireShop {
         objets.add(pd);
         objets.add(pvi);
         objets.add(pvGrande);
+        objets.add(sortFeu);
     }
 
     public ArrayList<Arme> getArmesDansShop() {

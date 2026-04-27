@@ -25,6 +25,9 @@ public class VueBatiment {
         else if (b instanceof TenteDeSoin) {
             VueTente.dessinerAura(g2d, (TenteDeSoin) b, x, y);
         }
+        else if (b instanceof Mortier) {
+            VueMortier.dessinerAura(g2d, (Mortier) b, x, y);
+        }
         // Le HQ et la Mine n'ont pas d'auras au sol à dessiner dans cette passe.
     }
 
@@ -47,6 +50,9 @@ public class VueBatiment {
         }
         else if (b instanceof Modele.Batiments.Abatis) {
             VueAbatis.dessinerSprite(g2d, (Modele.Batiments.Abatis) b, x, y, minimap);
+        }
+        else if (b instanceof Mortier) { // NOUVEAU
+            VueMortier.dessinerSprite(g2d, (Mortier) b, x, y, minimap);
         }
         else {
             // Rendu de secours

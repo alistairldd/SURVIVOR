@@ -6,6 +6,8 @@ import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
 import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
+import Modele.Items.Sort;
+import Modele.Items.SortFeu;
 import Modele.Monstres.Monstre;
 import Vue.Batiments.VueBatiment;
 import Vue.Batiments.VueEffetSoin;
@@ -13,6 +15,8 @@ import Vue.Batiments.VueEffetTente;
 import Vue.HUD.VueHUD;
 import Vue.HUD.VueHUDEquipement;
 import Vue.HUD.VueHUDInstructions;
+import Vue.VueSort.VueSort;
+import Vue.VueSort.VueSortFeu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +42,7 @@ public class Vue extends JPanel {
     private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
     private final VueArbre vueArbre;
+    private VueSort vueSort;
 
     // Logique métier
     private final Modele modele;
@@ -75,9 +80,11 @@ public class Vue extends JPanel {
         this.vueRessource = new VueRessource();
         this.vueBatiment = new VueBatiment();
         this.vueMonstre = new VueMonstre();
+        this.vueSort = new VueSort();
         this.vueEffetSoin = new VueEffetSoin(modele);
         this.vueEffetTente = new VueEffetTente(modele);
         this.vueArbre = new VueArbre();
+
 
         // 5. Initialisation du système de textes flottants
         this.vueTexteFlottant = new VueTexteFlottant();
@@ -175,6 +182,12 @@ public class Vue extends JPanel {
             }
         }
 
+        for (Sort sort : modele.getGestionnaireSorts().getSortsActifs()) {
+            vueSort.dessiner(g2d, sort,0, 0);
+        }
+
+
+
         // --- PASSE 3 : FANTÔME DE CONSTRUCTION (RTS) ---
         dessinerFantomeConstruction(g2d);
 
@@ -230,6 +243,10 @@ public class Vue extends JPanel {
     /**
      * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision rectangulaire.
      */
+    /**
+     * Dessine l'hologramme du bâtiment sous la souris avec indicateur visuel de collision.
+     * Optimisé pour le Mortier : affiche uniquement la zone d'attaque utile (Donut).
+     */
     private void dessinerFantomeConstruction(Graphics2D g2d) {
         Modele.TypeConstruction mode = modele.getModeConstruction();
         if (mode == Modele.TypeConstruction.AUCUN) return;
@@ -238,22 +255,15 @@ public class Vue extends JPanel {
         double sourisY = modele.getSourisMondeY();
 
         Image imgFantome = null;
-        int taille = 0;
-        int range = 0;
-        int drawY = 0;
+        int taille = 0, range = 0, drawY = 0, minRange = 0;
+        double wEnc = 0, hEnc = 0, angle = 0;
 
-        // --- NOUVELLES VARIABLES POUR L'ENCOMBREMENT RECTANGULAIRE ---
-        double wEnc = 0;
-        double hEnc = 0;
-        double angle = 0;
-
-        // 1. Définition des propriétés selon l'objet tenu
+        // 1. Définition des propriétés selon le bâtiment tenu
         if (mode == Modele.TypeConstruction.TOUR) {
             imgFantome = IMAGE_TOUR;
             taille = TAILLE_TOUR;
             wEnc = TOUR_LARGEUR_ENC;
             hEnc = TOUR_HAUTEUR_ENC;
-            angle = 0; // Bâtiment droit
             range = TOWER_BASE_RANGE;
             drawY = (int) sourisY - (taille * 4 / 5);
         }
@@ -262,7 +272,6 @@ public class Vue extends JPanel {
             taille = TAILLE_TENTE;
             wEnc = TENTE_LARGEUR_ENC;
             hEnc = TENTE_HAUTEUR_ENC;
-            angle = 0; // Bâtiment droit
             range = HEALING_RANGE;
             drawY = (int) sourisY - (taille / 2);
         }
@@ -271,9 +280,16 @@ public class Vue extends JPanel {
             taille = TAILLE_ABATIS;
             wEnc = ABATIS_LARGEUR;
             hEnc = ABATIS_HAUTEUR;
-            // Angle positif ou négatif selon la rotation (OBB)
             angle = modele.isRotationAbatis() ? -ABATIS_ANGLE_RAD : ABATIS_ANGLE_RAD;
-            range = 0; // Pas d'aura de portée pour un mur
+            drawY = (int) sourisY - (taille / 2);
+        }
+        else if (mode == Modele.TypeConstruction.MORTIER) {
+            imgFantome = IMAGE_MORTIER;
+            taille = TAILLE_MORTIER;
+            wEnc = MORTIER_LARGEUR_ENC;
+            hEnc = MORTIER_HAUTEUR_ENC;
+            range = MORTIER_MAX_RANGE;
+            minRange = MORTIER_MIN_RANGE;
             drawY = (int) sourisY - (taille / 2);
         }
 
@@ -281,50 +297,52 @@ public class Vue extends JPanel {
             int drawX = (int) sourisX - (taille / 2);
             Joueur joueur = modele.getJoueur();
 
-            // 2. Vérification d'intégrité (Ressources)
+            // 2. CORRECTION : Vérification des ressources pour le Mortier
             boolean aLesFonds = false;
             if (mode == Modele.TypeConstruction.TOUR) aLesFonds = joueur.aAssezDeRessources(COUT_TOUR);
             else if (mode == Modele.TypeConstruction.TENTE) aLesFonds = joueur.aAssezDeRessources(COUT_TENTE);
             else if (mode == Modele.TypeConstruction.ABATIS) aLesFonds = joueur.aAssezDeRessources(COUT_ABATIS);
+            else if (mode == Modele.TypeConstruction.MORTIER) aLesFonds = joueur.aAssezDeRessources(COUT_MORTIER);
 
             // NOUVEAU : On utilise la nouvelle signature du moteur de collision (Phase 2)
             boolean constructible = modele.peutConstruireIci(sourisX, sourisY, wEnc, hEnc, angle) && aLesFonds;
 
-            // 3. Rendu de l'Aura de portée dynamique (Seulement si range > 0)
+            // 3. Rendu de l'Aura de portée en forme de Donut (Centre transparent)
             if (range > 0) {
+                // On crée une forme géométrique pour le cercle extérieur
+                java.awt.geom.Ellipse2D exterieur = new java.awt.geom.Ellipse2D.Double(sourisX - range, sourisY - range, range * 2, range * 2);
+                java.awt.geom.Area zoneUtile = new java.awt.geom.Area(exterieur);
+
+                // On soustrait le cercle intérieur (angle mort) si nécessaire
+                if (minRange > 0) {
+                    java.awt.geom.Ellipse2D interieur = new java.awt.geom.Ellipse2D.Double(sourisX - minRange, sourisY - minRange, minRange * 2, minRange * 2);
+                    zoneUtile.subtract(new java.awt.geom.Area(interieur));
+                }
+
+                // Dessin de la zone de portée
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
                 g2d.setColor(constructible ? Color.GREEN : Color.RED);
-                g2d.fillOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+                g2d.fill(zoneUtile);
 
+                // Bordures
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
                 g2d.setStroke(new BasicStroke(2));
-                g2d.drawOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+                g2d.draw(zoneUtile);
                 g2d.setStroke(new BasicStroke(1));
             }
 
-            // 4. Rendu du Sprite Fantôme (Translucide)
+            // 4. Rendu du Sprite Fantôme
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
             g2d.drawImage(imgFantome, drawX, drawY, null);
 
-            // 5. NOUVEAU : Overlay d'encombrement (Zone de construction exacte)
-            // On affiche le rectangle exact (vert si OK, rouge si bloqué/sans argent)
+            // 5. Overlay d'encombrement rectangulaire
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
             g2d.setColor(constructible ? Color.GREEN : Color.RED);
-
-            // On crée un calque temporaire pour la rotation
             Graphics2D g2dRotate = (Graphics2D) g2d.create();
-            g2dRotate.translate(sourisX, sourisY); // On place l'origine au centre
-            g2dRotate.rotate(angle); // On pivote le calque
-
-            // On dessine le rectangle centré sur sa nouvelle origine
+            g2dRotate.translate(sourisX, sourisY);
+            g2dRotate.rotate(angle);
             g2dRotate.fillRect((int)(-wEnc / 2), (int)(-hEnc / 2), (int)wEnc, (int)hEnc);
-
-            // Petite bordure pour que le joueur visualise parfaitement les limites
-            g2dRotate.setColor(constructible ? new Color(0, 200, 0) : new Color(200, 0, 0));
-            g2dRotate.setStroke(new BasicStroke(2));
-            g2dRotate.drawRect((int)(-wEnc / 2), (int)(-hEnc / 2), (int)wEnc, (int)hEnc);
-
-            g2dRotate.dispose(); // On détruit le calque temporaire
+            g2dRotate.dispose();
 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
@@ -397,6 +415,7 @@ public class Vue extends JPanel {
 
     public VueHUD getVueHUD() { return vueHUD; }
     public VueArme getVueArme() { return vueArme; }
+    public VueSort getVueSort() { return vueSort; }
     public JFrame getMaFenetre() { return maFenetre; }
 
     public Object identifierElementClique(int x, int y, Object source) {
