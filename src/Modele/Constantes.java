@@ -19,6 +19,7 @@ public final class Constantes {
     public static final int TAILLE_TENTE = 150;
     public static final int TAILLE_MINE = 150;
     public static final int TAILLE_HQ = 400;
+    public static final int TAILLE_MORTIER = 150;
     public static final int TAILLE_BATIMENT_MINIMAP = 6;
 
     /*** ---Bâtiments--- ***/
@@ -26,9 +27,10 @@ public final class Constantes {
     public static int SOIN_BAT = 1; // Nombre de PV restaurés par itération
     // Constante : Points de vie maximum d'un bâtiment neuf
     public static final int HP_TOWER = 100;
-    public static final int HP_HQ = 150;
+    public static final int HP_HQ = 300;
     public static final int HP_MINE = 100;
     public static final int HP_DEFAUT = 100;
+    public static final int HP_MORTIER = 200;
     public static final int REPARATION_RANGE = 50;
 
     /*--- Tower ---*/
@@ -56,43 +58,63 @@ public final class Constantes {
     public static final double HAUTEUR_HITBOX_ABATIS = 30.0; // Épaisseur du mur
     public static final double ANGLE_ABATIS = Math.toRadians(29); // Inclinaison en radians
 
+    /*--- Mortier ---*/
+    public static final int MORTIER_MIN_RANGE = 150; // L'angle mort (trop près)
+    public static final int MORTIER_MAX_RANGE = 300; // La portée maximale
+
+    public static final int EXPLOSION_CORE_RADIUS = 60; // Zone de dégâts critiques (Centre)
+    public static final int EXPLOSION_OUTER_RADIUS = 120; // Zone de dégâts moyens (Bords)
+
+    public static final int MORTIER_CORE_DAMAGE = 100; // Dégâts au centre
+    public static final int MORTIER_OUTER_DAMAGE = 45; // Dégâts sur les bords de l'explosion
+
+    public static final int MORTIER_DELAY = 2500; // Cadence de tir (3 secondes)
+    public static final int TEMPS_DE_VOL = 750; // Temps de vol de l'obus (1/2 seconde)
+
     // ==========================================================
     // --- DIMENSIONS RECTANGULAIRES DES BATIMENTS (2.5D) ---
     // ==========================================================
 
     // HQ
     public static final int HQ_LARGEUR_ENC = 500;
-    public static final int HQ_HAUTEUR_ENC = 500;
-    public static final int HQ_LARGEUR_HIT = 200;
-    public static final int HQ_HAUTEUR_HIT = 200;
-    public static final int HQ_OFFSET_Y = 45; // Décalage vers le bas (les pieds)
+    public static final int HQ_HAUTEUR_ENC = 450;
+    public static final int HQ_LARGEUR_HIT = 270;
+    public static final int HQ_HAUTEUR_HIT = 180;
+    public static final int HQ_OFFSET_Y = 20; // Décalage vers le bas (les pieds)
 
     // Tour
     public static final int TOUR_LARGEUR_ENC = 80;
     public static final int TOUR_HAUTEUR_ENC = 80;
     public static final int TOUR_LARGEUR_HIT = 60;
     public static final int TOUR_HAUTEUR_HIT = 40;
-    public static final int TOUR_OFFSET_Y = 20;
+    public static final int TOUR_OFFSET_Y = 0;
 
     // Tente de Soin
     public static final int TENTE_LARGEUR_ENC = 100;
     public static final int TENTE_HAUTEUR_ENC = 80;
     public static final int TENTE_LARGEUR_HIT = 90;
     public static final int TENTE_HAUTEUR_HIT = 40;
-    public static final int TENTE_OFFSET_Y = 20;
+    public static final int TENTE_OFFSET_Y = 10;
 
     // Mine
     public static final int MINE_LARGEUR_ENC = 120;
     public static final int MINE_HAUTEUR_ENC = 100;
     public static final int MINE_LARGEUR_HIT = 100;
-    public static final int MINE_HAUTEUR_HIT = 50;
-    public static final int MINE_OFFSET_Y = 25;
+    public static final int MINE_HAUTEUR_HIT = 100;
+    public static final int MINE_OFFSET_Y = -60;
 
     // Abatis (Spécial : Encombrement = Hitbox)
     public static final int ABATIS_LARGEUR = 150;
     public static final int ABATIS_HAUTEUR = 30;
     public static final int ABATIS_OFFSET_Y = 0; // Centré sur son point d'origine
     public static final double ABATIS_ANGLE_RAD = Math.toRadians(29); // Angle exact de 29°
+
+    // Mortier
+    public static final int MORTIER_LARGEUR_ENC = 120;
+    public static final int MORTIER_HAUTEUR_ENC = 100;
+    public static final int MORTIER_LARGEUR_HIT = 100;
+    public static final int MORTIER_HAUTEUR_HIT = 60;
+    public static final int MORTIER_OFFSET_Y = 20;
 
     /*--- Couts ---*/
     // Coût : 4 Bois (0), 4 Pierre (1), 2 Fer (2), 1 Or (3)
@@ -116,12 +138,20 @@ public final class Constantes {
             0, 20
     );
 
+    // Coût : 5 Bois (0), 4 Pierre (1), 10 Fer (2), 3 Or (3)
+    public static final Map<Integer, Integer> COUT_MORTIER = Map.of(
+            0, 5,
+            1, 4,
+            2, 10,
+            3, 3
+    );
+
     /*** ---Cycle Jour/Nuit--- ***/
     // Constantes pour le cycle
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 60;
+    public final static int DUREE_CYCLE_JOUR = 30;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -243,6 +273,9 @@ public final class Constantes {
     public static Image IMAGE_ABATIS_1_ENDOMMAGE = null;
     public static Image IMAGE_ABATIS_2 = null;
     public static Image IMAGE_ABATIS_2_ENDOMMAGE = null;
+    public static Image IMAGE_MORTIER = null;
+    public static Image IMAGE_MORTIER_ENDOMMAGE = null;
+    public static Image IMAGE_MORTIER_PROJECTILE = null;
 
     static {
         try {
@@ -253,7 +286,7 @@ public final class Constantes {
             IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tour_endommage.png", TAILLE_TOUR);
 
             IMAGE_MINE = chargerEtRedimensionner("src/images/batiments/mine.png", TAILLE_MINE);
-            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mine_endommage.png", TAILLE_MINE);
+            //IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mine_endommage.png", TAILLE_MINE);
 
             IMAGE_TENTE = chargerEtRedimensionner("src/images/batiments/tente.png", TAILLE_TENTE);
             IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tente_endommage.png", TAILLE_TENTE);
@@ -262,6 +295,10 @@ public final class Constantes {
             IMAGE_ABATIS_2 = chargerEtRedimensionner("src/images/batiments/abatis_2.png", TAILLE_ABATIS);
             IMAGE_ABATIS_1_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/abatis_1_endommage.png", TAILLE_ABATIS);
             IMAGE_ABATIS_2_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/abatis_2_endommage.png", TAILLE_ABATIS);
+
+            IMAGE_MORTIER = chargerEtRedimensionner("src/images/batiments/mortier.png", TAILLE_MORTIER);
+            IMAGE_MORTIER_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mortier_endommage.png", TAILLE_MORTIER);
+            IMAGE_MORTIER_PROJECTILE = chargerEtRedimensionner("src/images/batiments/mortier_projectile.png", 50);
         } catch (Exception e) {
             System.err.println("ERREUR : Impossible de charger les images des bâtiments.");
             e.printStackTrace();
@@ -453,6 +490,19 @@ public final class Constantes {
             IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/perso_topview.png"));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // NOUVEAU : Image pour le fond répétitif de la carte
+    public static BufferedImage IMAGE_FOND_MAP = null;
+
+    static {
+        try {
+            // Remplace "gazon.png" par le nom de ton image de pattern
+            IMAGE_FOND_MAP = ImageIO.read(new File("src/images/carte/herbe.png"));
+            //IMAGE_FOND_MAP = ImageIO.read(new File("src/images/map.png"));
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image de fond : " + e.getMessage());
         }
     }
 

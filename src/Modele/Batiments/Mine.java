@@ -5,6 +5,7 @@ import Modele.Localisable;
 import Modele.Ressource;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static Modele.Constantes.*;
 
@@ -25,7 +26,10 @@ public class Mine extends Batiment implements Localisable {
      */
     public Mine(GestionnaireBatiments gB) {
         // Initialise la structure via le constructeur parent (Batiment)
-        super(100, HAUTEUR_MAP, gB, TOWER_BASE_RANGE);
+        Random randomNumbers = new Random();
+        int latitude = randomNumbers.nextInt(HAUTEUR_MAP);
+        int longitude = randomNumbers.nextInt(LARGEUR_MAP);
+        super(longitude, latitude, gB, TOWER_BASE_RANGE);
         this.hp = HP_MINE;
         // Applique les statistiques de combat par défaut
         this.range = MINE_BASE_RANGE;

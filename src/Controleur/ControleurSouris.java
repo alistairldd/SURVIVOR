@@ -148,6 +148,9 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      * Analyse la cause de l'échec de construction et retourne un message adapté.
      * Permet d'afficher un feedback précis plutôt qu'un message générique.
      */
+    /**
+     * Analyse la cause de l'échec de construction et retourne un message adapté.
+     */
     private String resoudreMessageErreurConstruction(Joueur joueur, double x, double y) {
         Modele.TypeConstruction mode = modele.getModeConstruction();
 
@@ -162,10 +165,13 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             return "Construisez le jour !";
         }
 
-        // Cas 3 : Ressources insuffisantes
-        boolean aLesFonds = (mode == Modele.TypeConstruction.TOUR)
-                ? joueur.aAssezDeRessources(COUT_TOUR)
-                : joueur.aAssezDeRessources(COUT_TENTE);
+        // Cas 3 : Ressources insuffisantes (Mise à jour exhaustive)
+        boolean aLesFonds = false;
+        if (mode == Modele.TypeConstruction.TOUR) aLesFonds = joueur.aAssezDeRessources(COUT_TOUR);
+        else if (mode == Modele.TypeConstruction.TENTE) aLesFonds = joueur.aAssezDeRessources(COUT_TENTE);
+        else if (mode == Modele.TypeConstruction.ABATIS) aLesFonds = joueur.aAssezDeRessources(COUT_ABATIS);
+        else if (mode == Modele.TypeConstruction.MORTIER) aLesFonds = joueur.aAssezDeRessources(COUT_MORTIER);
+
         if (!aLesFonds) {
             return "Ressources insuffisantes !";
         }
