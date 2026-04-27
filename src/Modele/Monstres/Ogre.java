@@ -18,7 +18,7 @@ public class Ogre extends Monstre {
     // Référence au gestionnaire de monstres
     private final GestionnaireMonstres gestionnaireMonstres;
 
-    // Variable pour gérer l'animation du slime
+    // Variable pour gérer l'animation de l'ogre
 
     /**
      * Crée un Ogre à des coordonnées précises (généralement fournies par le GestionnaireMonstres).

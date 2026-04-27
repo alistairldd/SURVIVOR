@@ -72,6 +72,7 @@ public class UpdateJN {
     // Méthode pour changer à la nuit (appelé une seule fois)
     public void changeNuit() {
         // Logique pour changer à la nuit, comme faire apparaître les monstres
+        incrNbNuit();
         // Met à jour l'état global
         jour = false;
 
@@ -80,11 +81,11 @@ public class UpdateJN {
 
         // Créer les monstres
         // Lance une vague massive de 10 ennemis répartis sur les bords de la carte
-        monGestionnaireMonstres.genererMonstre(15); // Génère les monstres pour la nuit
+        monGestionnaireMonstres.genererMonstre(nbNuits); // Génère les monstres pour la nuit
 
         // Vider les ressources chaque nuit pour forcer les joueurs à se déplacer et à en chercher de nouvelles
         monGestionnaireRessources.viderRessources();
-        incrNbNuit();
+
     }
 
     // Méthode à boucler le jour

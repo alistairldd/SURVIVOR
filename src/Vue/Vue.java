@@ -37,6 +37,7 @@ public class Vue extends JPanel {
     private final VueRessource vueRessource;
     private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
+    private final VueArbre vueArbre;
 
     // Logique métier
     private final Modele modele;
@@ -76,6 +77,7 @@ public class Vue extends JPanel {
         this.vueMonstre = new VueMonstre();
         this.vueEffetSoin = new VueEffetSoin(modele);
         this.vueEffetTente = new VueEffetTente(modele);
+        this.vueArbre = new VueArbre();
 
         // 5. Initialisation du système de textes flottants
         this.vueTexteFlottant = new VueTexteFlottant();
@@ -191,6 +193,10 @@ public class Vue extends JPanel {
         // Dessinés en dernier dans l'espace monde pour apparaître au-dessus de tout
         vueTexteFlottant.miseAJour();
         vueTexteFlottant.dessiner(g2d);
+
+        // On dessine les arbres en dernier pour qu'ils soient toujours au-dessus du joueur et des monstres
+        vueArbre.dessiner(g2d);
+
 
         // --- RESET TRANSLATION ---
         g2d.translate(camX, camY);

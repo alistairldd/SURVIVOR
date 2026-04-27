@@ -121,7 +121,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 60;
+    public final static int DUREE_CYCLE_JOUR = 5;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -188,8 +188,10 @@ public final class Constantes {
 
     // Taille physique de l'ennemi sur l'écran principal
     public static final int TAILLE_MONSTRE = 40;
-    // Taile ogre
+    // Taille ogre
     public static final int TAILLE_OGRE = 120;
+    // Taille gobelin
+    public static final int TAILLE_GOBELIN = 50;
     // Taille drastiquement réduite pour que le monstre soit juste un point rouge sur la minimap
     public static final int TAILLE_MINIMAP_MONSTRE = 10;
 
@@ -236,7 +238,6 @@ public final class Constantes {
     public static Image IMAGE_TOUR = null;
     public static Image IMAGE_TOUR_ENDOMMAGE = null;
     public static Image IMAGE_MINE = null;
-    public static Image IMAGE_MINE_ENDOMMAGE = null;
     public static Image IMAGE_TENTE = null;
     public static Image IMAGE_TENTE_ENDOMMAGE = null;
     public static Image IMAGE_ABATIS_1 = null;
@@ -253,7 +254,6 @@ public final class Constantes {
             IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tour_endommage.png", TAILLE_TOUR);
 
             IMAGE_MINE = chargerEtRedimensionner("src/images/batiments/mine.png", TAILLE_MINE);
-            IMAGE_MINE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mine_endommage.png", TAILLE_MINE);
 
             IMAGE_TENTE = chargerEtRedimensionner("src/images/batiments/tente.png", TAILLE_TENTE);
             IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tente_endommage.png", TAILLE_TENTE);
@@ -365,6 +365,34 @@ public final class Constantes {
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement de l'image de la carte : " + e.getMessage());
         }
+    }
+
+    // Images Gobelin
+
+    public static BufferedImage IMAGE_GOB_G;
+    public static BufferedImage IMAGE_GOB_D = null;
+    public static BufferedImage IMAGE_GOB_GM = null;
+    public static BufferedImage IMAGE_GOB_DM = null;
+    public static BufferedImage IMAGE_GOB_ATTAQUE_G = null;
+    public static BufferedImage IMAGE_GOB_ATTAQUE_D = null;
+    public static BufferedImage IMAGE_GOB_ATTAQUE_GH = null;
+    public static BufferedImage IMAGE_GOB_ATTAQUE_DH = null;
+
+    static {
+        try {
+            IMAGE_GOB_G = ImageIO.read(new File("src/images/monstres/gobGauche.png"));
+            IMAGE_GOB_GM = ImageIO.read(new File("src/images/monstres/gobGaucheM.png"));
+            IMAGE_GOB_D = ImageIO.read(new File("src/images/monstres/gobDroit.png"));
+            IMAGE_GOB_DM = ImageIO.read(new File("src/images/monstres/gobDroitM.png"));
+            IMAGE_GOB_ATTAQUE_G = ImageIO.read(new File("src/images/monstres/gobAttaqueG.png"));
+            IMAGE_GOB_ATTAQUE_D = ImageIO.read(new File("src/images/monstres/gobAttaqueD.png"));
+            IMAGE_GOB_ATTAQUE_GH = ImageIO.read(new File("src/images/monstres/gobAttaqueGH.png"));
+            IMAGE_GOB_ATTAQUE_DH = ImageIO.read(new File("src/images/monstres/gobAttaqueDH.png"));
+
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image de la carte : " + e.getMessage());
+        }
+
     }
 
     // Chargement des images des équipements et consommables

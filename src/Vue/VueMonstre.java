@@ -1,9 +1,6 @@
 package Vue;
 
-import Modele.Monstres.Monstre;
-import Modele.Monstres.Ogre;
-import Modele.Monstres.Slime;
-import Modele.Monstres.SlimeMutant;
+import Modele.Monstres.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -119,6 +116,42 @@ public class VueMonstre {
                     }
 
                 }
+                case Gobelin gobelin -> {
+                    // Calcul la taille des ogres proportionnellement à la taille définie (en hauteur) pour les ogres (TAILLE_OGRE) en fonction de la taille source des images
+
+                    int hpOGM = largeurProportionnelleGobelin(IMAGE_GOB_GM);
+                    int hpODM = largeurProportionnelleGobelin(IMAGE_GOB_DM);
+                    int hpOG = largeurProportionnelleGobelin(IMAGE_GOB_G);
+                    int hpOD = largeurProportionnelleGobelin(IMAGE_GOB_D);
+
+                    if (gobelin.regardeGauche() && gobelin.isMarche()){
+
+                        if (gobelin.getAnimationMarche()) { // Regarde à gauche et en marche
+                            g2d.drawImage(IMAGE_GOB_GM, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                        } else
+                            g2d.drawImage(IMAGE_GOB_G, posX - hpOG / 2, posY - hpOG / 2, hpOG, hpOG, null);
+                    } else if (gobelin.regardeGauche() && !gobelin.isMarche()){ // Attaque vers la gauche
+                        if (gobelin.getAnimationAttaque()) {
+                            g2d.drawImage(IMAGE_GOB_ATTAQUE_GH, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                        } else {
+                            g2d.drawImage(IMAGE_GOB_ATTAQUE_G, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                        }
+                    }
+                    else if (!gobelin.regardeGauche() && gobelin.isMarche()){
+                        if (gobelin.getAnimationMarche()) { // Regarde vers la droite et marche
+                            g2d.drawImage(IMAGE_GOB_DM, posX - hpODM / 2, posY - hpODM / 2, hpODM, hpODM, null);
+                        } else
+                            g2d.drawImage(IMAGE_GOB_D, posX - hpOD / 2, posY - hpOD / 2, hpOD, hpOD, null);
+                    }
+                    else if (!gobelin.regardeGauche() && !gobelin.isMarche()){ // Attaque vers la droitee
+                        if (gobelin.getAnimationAttaque()) {
+                            g2d.drawImage(IMAGE_GOB_ATTAQUE_DH, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                        } else {
+                            g2d.drawImage(IMAGE_GOB_ATTAQUE_D, posX - hpOGM / 2, posY - hpOGM / 2, hpOGM, hpOGM, null);
+                        }
+                    }
+
+                }
                 default -> {
                     // Sécurité : si l'image n'est pas chargée, on met le carré rouge par défaut
                     g2d.setColor(Color.RED);
@@ -159,6 +192,10 @@ public class VueMonstre {
 
     private int largeurProportionnelleOgre(BufferedImage image) {
         return (int) (TAILLE_OGRE * ((double) image.getWidth() / image.getHeight()));
+    }
+
+    private int largeurProportionnelleGobelin(BufferedImage image) {
+        return (int) (TAILLE_GOBELIN * ((double) image.getWidth() / image.getHeight()));
     }
 
 }

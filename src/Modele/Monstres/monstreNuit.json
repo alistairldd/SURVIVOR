@@ -1,0 +1,38 @@
+[
+  {
+      "id" : 1,
+      "slime" : 10,
+      "slimeMutant" : 5,
+      "ogre" : 2,
+      "gobelin" : 5
+  },
+  {
+      "id" : 2,
+      "slime" : 20,
+      "slimeMutant" : 10,
+      "ogre" : 5,
+      "gobelin" : 10
+  },
+  {
+      "id" : 3,
+      "slime" : 30,
+      "slimeMutant" : 15,
+      "ogre" : 10,
+      "gobelin" : 20
+  },
+  {
+      "id" : 4,
+      "slime" : 40,
+      "slimeMutant" : 20,
+      "ogre" : 15,
+      "gobelin" : 30
+  },
+  {
+      "id" : 5,
+      "slime" : 50,
+      "slimeMutant" : 25,
+      "ogre" : 20,
+      "gobelin" : 40
+  }
+
+]

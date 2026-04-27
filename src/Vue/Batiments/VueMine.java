@@ -15,17 +15,8 @@ public class VueMine {
             g2d.setColor(new Color(150, 75, 0));
             g2d.fillRect(x - (TAILLE_BATIMENT_MINIMAP / 2), y - (TAILLE_BATIMENT_MINIMAP / 2), TAILLE_BATIMENT_MINIMAP, TAILLE_BATIMENT_MINIMAP);
         } else {
-            Image spriteAAfficher;
-
-            if (!mine.isFonctionnel() || mine.getHp() <= (mine.getMaxHp() / 2)) {
-                spriteAAfficher = IMAGE_MINE_ENDOMMAGE;
-            } else {
-                spriteAAfficher = IMAGE_MINE;
-            }
-
-            // Ancrage au sol (y - TAILLE_MINE)
-            if (spriteAAfficher != null) {
-                g2d.drawImage(spriteAAfficher, x - (TAILLE_MINE / 2), y - TAILLE_MINE, null);
+            if (IMAGE_MINE != null) {
+                g2d.drawImage(IMAGE_MINE, x - (TAILLE_MINE / 2), y - TAILLE_MINE, null);
             } else {
                 g2d.setColor(new Color(150, 75, 0));
                 g2d.fillRect(x - (TAILLE_MINE / 2), y - TAILLE_MINE, TAILLE_MINE, TAILLE_MINE);

@@ -1,9 +1,12 @@
 package Modele;
 
-import Modele.Monstres.Monstre;
-import Modele.Monstres.Ogre;
-import Modele.Monstres.Slime;
-import Modele.Monstres.SlimeMutant;
+import Modele.Monstres.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -40,66 +43,95 @@ public class GestionnaireMonstres {
     }
 
     /**
-     * Fait apparaître un nombre précis de monstres aléatoirement sur les bords de la carte.
-     * @param nombre Le nombre d'ennemis à générer (appelé par UpdateJN à la tombée de la nuit).
+     * Fait apparaître un nombre précis de monstres en fonction de la nuit aléatoirement sur les bords de la carte.
+     * @param numeroNuit Le nombre d'ennemis de la nuit à générer (appelé par UpdateJN à la tombée de la nuit).
      */
-    // Méthode pour générer un monstre aléatoire
-    public void genererMonstre(int nombre) {
 
-        // Boucle pour créer autant de monstres que demandé
-        for (int i = 0; i < nombre; i++) {
-            // Variables pour stocker les futures coordonnées d'apparition
-            int x, y;
-            // Génère un nombre entre 0 et 3 (inclus) pour choisir aléatoirement l'un des 4 bords de la carte
-            int edge = (int) (Math.random() * 4); // 0: haut, 1: droite, 2: bas, 3: gauche
+    public void genererMonstre(int numeroNuit) {
+        try {
+            String contenu = new String(Files.readAllBytes(Paths.get("src/Modele/Monstres/monstreNuit.json")));
 
-            // Applique les coordonnées en fonction du bord choisi
-            switch (edge) {
-                case 0: // Haut
-                    // X aléatoire sur toute la largeur, Y tout en haut (0)
-                    x = (int) (Math.random() * LARGEUR_MAP);
-                    y = 0;
+            JsonArray nuits = JsonParser.parseString(contenu).getAsJsonArray();
+
+            JsonObject nuitActuelle = null;
+            for (JsonElement element : nuits) {
+                JsonObject obj = element.getAsJsonObject();
+                if (obj.get("id").getAsInt() == numeroNuit) {
+                    nuitActuelle = obj;
                     break;
-                case 1: // Droite
-                    // X collé à droite, Y aléatoire sur toute la hauteur
-                    x = LARGEUR_MAP;
-                    y = (int) (Math.random() * HAUTEUR_MAP);
-                    break;
-                case 2: // Bas
-                    // X aléatoire sur toute la largeur, Y tout en bas
-                    x = (int) (Math.random() * LARGEUR_MAP);
-                    y = HAUTEUR_MAP;
-                    break;
-                case 3: // Gauche
-                    // X collé à gauche (0), Y aléatoire sur toute la hauteur
-                    x = 0;
-                    y = (int) (Math.random() * HAUTEUR_MAP);
-                    break;
-                default: // Sécurité (normalement inatteignable) : par défaut à gauche
-                    x = 0;
-                    y = (int) (Math.random() * HAUTEUR_MAP);
+                }
             }
 
-            // Génère un nombre pour choisir le type d'ennemi (prévu pour ajouter d'autres monstres plus tard)
-            int type = (int) (Math.random() * 3); // Génère un nombre entre 0 et 2 pour savoir quel monstre faire apparaître
+            if (nuitActuelle != null) {
+                int nbSlimes = nuitActuelle.get("slime").getAsInt();
+                int nbSlimeMutants = nuitActuelle.get("slimeMutant").getAsInt();
+                int nbOgres = nuitActuelle.get("ogre").getAsInt();
+                int nbGobelins = nuitActuelle.get("gobelin").getAsInt();
+
+                genererTypeMonstre("Slime", nbSlimes);
+                genererTypeMonstre("SlimeMutant", nbSlimeMutants);
+                genererTypeMonstre("Ogre", nbOgres);
+                genererTypeMonstre("Gobelin", nbGobelins);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void genererTypeMonstre(String type, int quantite) {
+        for (int i = 0; i < quantite; i++) {
+            // On calcule toujours une position aléatoire sur les bords de la map
+            int[] pos = calculerPositionAleatoireBords();
+
             switch (type) {
-                case 0:
-                    // Ajoute un nouveau Slime à la liste aux coordonnées calculées
-                    monstres.add(new Slime(x,y, this));
+                case "Slime":
+                    monstres.add(new Slime(pos[0], pos[1], this));
                     break;
-                case 1:
-                    // Ajoute un nouveau Slime Mutant à la liste aux coordonnées calculées
-                    monstres.add(new SlimeMutant(x,y, this));
+                case "SlimeMutant":
+                    monstres.add(new SlimeMutant(pos[0], pos[1], this));
                     break;
-                case 2:
-                    // Ajoute un nouveau Ogre à la liste aux coordonnées calculées
-                    monstres.add(new Ogre(x,y, this));
+                case "Ogre":
+                    monstres.add(new Ogre(pos[0], pos[1], this));
                     break;
-                default:
-                    // Par défaut (si type = 1 ou 2), crée un Slime pour le moment
-                    monstres.add(new Slime(x,y, this)); // Par défaut, retourne un Slime
+                case "Gobelin":
+                    monstres.add(new Gobelin(pos[0], pos[1], this));
+                    break;
             }
         }
+    }
+
+    private int[] calculerPositionAleatoireBords() {
+        int x, y;
+        // Génère un nombre entre 0 et 3 (inclus) pour choisir aléatoirement l'un des 4 bords de la carte
+        int edge = (int) (Math.random() * 4); // 0: haut, 1: droite, 2: bas, 3: gauche
+
+        // Applique les coordonnées en fonction du bord choisi
+        switch (edge) {
+            case 0: // Haut
+                // X aléatoire sur toute la largeur, Y tout en haut (0)
+                x = (int) (Math.random() * LARGEUR_MAP);
+                y = 0;
+                break;
+            case 1: // Droite
+                // X collé à droite, Y aléatoire sur toute la hauteur
+                x = LARGEUR_MAP;
+                y = (int) (Math.random() * HAUTEUR_MAP);
+                break;
+            case 2: // Bas
+                // X aléatoire sur toute la largeur, Y tout en bas
+                x = (int) (Math.random() * LARGEUR_MAP);
+                y = HAUTEUR_MAP;
+                break;
+            case 3: // Gauche
+                // X collé à gauche (0), Y aléatoire sur toute la hauteur
+                x = 0;
+                y = (int) (Math.random() * HAUTEUR_MAP);
+                break;
+            default: // Sécurité (normalement inatteignable) : par défaut à gauche
+                x = 0;
+                y = (int) (Math.random() * HAUTEUR_MAP);
+        }
+        return new int[]{x, y};
     }
 
     // Retourne la liste complète des monstres actuels (utilisée par la vue pour les dessiner)

@@ -25,7 +25,7 @@ public class Mine extends Batiment implements Localisable {
      */
     public Mine(GestionnaireBatiments gB) {
         // Initialise la structure via le constructeur parent (Batiment)
-        super(100, HAUTEUR_MAP, gB, TOWER_BASE_RANGE);
+        super(300, HAUTEUR_MAP - 300, gB, TOWER_BASE_RANGE);
         this.hp = HP_MINE;
         // Applique les statistiques de combat par défaut
         this.range = MINE_BASE_RANGE;

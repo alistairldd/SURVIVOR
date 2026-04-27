@@ -9,50 +9,38 @@ import java.util.concurrent.ThreadLocalRandom;
 import static Modele.Constantes.IMAGES_SLIMES_MUTANT;
 
 /**
- * Implémentation concrète d'un ennemi de base : le Slime.
+ * Implémentation concrète d'un ennemi : le gobelin.
  * Hérite de la classe abstraite Monstre et définit ses statistiques de combat.
  */
-public class SlimeMutant extends Monstre {
+
+public class Gobelin extends Monstre {
 
     // Référence au gestionnaire de monstres
     private final GestionnaireMonstres gestionnaireMonstres;
 
-    private final Image imageSlimeMutant;
-
-    // Variable pour gérer l'animation du slime
-
-    // on prend un index aléatoire pour commencer l'animation du slime à des frames différentes
-    int randomNum = ThreadLocalRandom.current().nextInt(0, 51);
+    // Variable pour gérer l'animation du gobelin
 
     /**
-     * Crée un Slime à des coordonnées précises (généralement fournies par le GestionnaireMonstres).
+     * Crée un Ogre à des coordonnées précises (généralement fournies par le GestionnaireMonstres).
+     *
      * @param x Coordonnée d'apparition horizontale.
      * @param y Coordonnée d'apparition verticale.
      */
-    public SlimeMutant(int x, int y, GestionnaireMonstres gestionnaireMonstres) {
+    public Gobelin(int x, int y, GestionnaireMonstres gestionnaireMonstres) {
         // Appelle le constructeur parent (Monstre) en lui injectant les statistiques de cette espèce :
-        // Nom: "SlimeMutant"
+        // Nom: "Gobelin"
         // PV: 80
-        // Attaque: 7 points de dégâts
-        // Portée: 35 pixels
-        // Vitesse: 6 pixel par déplacement
-        super("SlimeMutant", 80, 7, 35, 6);
+        // Attaque: 15 points de dégâts
+        // Portée: 50 pixels
+        // Vitesse: 8 pixels par déplacement
+        super("Gobelin", 65, 15, 50, 8);;
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;
         this.y = y;
-        // Choisit un index aléatoire entre 0 et 5
-        Random rand = new Random();
-        int indexAleatoire = rand.nextInt(IMAGES_SLIMES_MUTANT.size());
-        // Récupère l'image 30x30 correspondante
-        this.imageSlimeMutant = IMAGES_SLIMES_MUTANT.get(indexAleatoire); // Choix aléatoire d'une image de slime pour la variété visuelle
+
         this.gestionnaireMonstres = gestionnaireMonstres;
         this.start(); // Démarre le thread du monstre pour qu'il commence à agir immédiatement après sa création
-    }
-
-    // Getter Image
-    public Image getImage() {
-        return this.imageSlimeMutant;
     }
 
     @Override
@@ -60,16 +48,21 @@ public class SlimeMutant extends Monstre {
         // On définit le pas de temps (50ms exprimé en secondes)
         double dt = 0.05;
         // Boucle de comportement du monstre
-        while(true) {
+        while (true) {
 
             try {
-                if (randomNum <= 0){
-                    this.ajouterAnimation( Math.PI/8); // Incrémente l'animation pour faire osciller le slime
-                }
-                else {
-                    randomNum--; // Décrémente le compteur pour atteindre 0 et déclencher l'animation
-                }
+                if (marche) {
+                    animation += 1; // Incrémente l'animation pour faire bouger le monstre
+                    if (animation % 10 == 0) {
+                        animationMarche = !animationMarche;
+                    }
+                } else {
+                    animationAtt += 1; // Incrémente l'animation d'attaque pour faire bouger le monstre
+                    if (animationAtt % 10 == 0) {
+                        animationAttaque = !animationAttaque;
+                    }
 
+                }
                 this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this), dt);
                 Thread.sleep(50); // Petite pause pour ne pas surcharger le processeur
                 if (this.getHp() <= 0) {
@@ -88,6 +81,5 @@ public class SlimeMutant extends Monstre {
             }
         }
     }
-
-
 }
+
