@@ -7,7 +7,7 @@ import static Modele.Constantes.*;
 
 /**
  * Page d'action du HUD.
- * Gère désormais les boutons Swing pour le mode construction.
+ * Gère désormais l'achat du Mortier en plus des autres bâtiments.
  */
 public class VueHUDPageAction extends JPanel {
     private Modele modele;
@@ -18,67 +18,60 @@ public class VueHUDPageAction extends JPanel {
     private JButton btnTour;
     private JButton btnTente;
     private JButton btnAbatis;
+    private JButton btnMortier; // NOUVEAU
     private JButton btnRotate;
     private JButton btnCancel;
 
     public VueHUDPageAction(Modele modele) {
         this.modele = modele;
         this.setOpaque(false);
-        this.setLayout(null); // Positionnement absolu pour coller au dessin Graphics2D
+        this.setLayout(null);
 
         this.vueHUDInventaire = new VueHUDInventaire();
         this.vueHUDBat = new VueHUDBat();
 
         initButtons();
 
-        this.setPreferredSize(new Dimension(LARGEUR_HUD, 600));
+        this.setPreferredSize(new Dimension(LARGEUR_HUD, 800)); // Augmenté pour le scroll
     }
 
     private void initButtons() {
-        // --- BOUTON TOUR (+) en Vert ---
         btnTour = createStyledButton("+", new Color(34, 139, 34));
         btnTour.addActionListener(e -> modele.setModeConstruction(Modele.TypeConstruction.TOUR));
         this.add(btnTour);
 
-        // --- BOUTON TENTE (+) en Vert ---
         btnTente = createStyledButton("+", new Color(34, 139, 34));
         btnTente.addActionListener(e -> modele.setModeConstruction(Modele.TypeConstruction.TENTE));
         this.add(btnTente);
 
-        // --- BOUTON ABATIS (+) en Vert Bullish ---
         btnAbatis = createStyledButton("+", new Color(34, 139, 34));
         btnAbatis.addActionListener(e -> modele.setModeConstruction(Modele.TypeConstruction.ABATIS));
         this.add(btnAbatis);
 
-        // --- BOUTON ROTATION (↔) en Bleu (Couleur utilitaire) ---
+        // NOUVEAU : Bouton Mortier
+        btnMortier = createStyledButton("+", new Color(34, 139, 34));
+        btnMortier.addActionListener(e -> modele.setModeConstruction(Modele.TypeConstruction.MORTIER));
+        this.add(btnMortier);
+
         btnRotate = createStyledButton("↔", new Color(0, 102, 204));
         btnRotate.addActionListener(e -> modele.toggleRotationAbatis());
         this.add(btnRotate);
 
-        // --- BOUTON ANNULER (X) en Rouge ---
         btnCancel = createStyledButton("x", new Color(178, 34, 34));
         btnCancel.addActionListener(e -> modele.annulerConstruction());
         this.add(btnCancel);
     }
 
-    /**
-     * Crée un bouton stylisé avec une couleur de fond forcée.
-     * Les trois lignes correctives permettent de contourner le style natif du système (Look and Feel).
-     */
     private JButton createStyledButton(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setFocusable(false);
         btn.setFont(new Font("Arial", Font.BOLD, 12));
         btn.setForeground(Color.WHITE);
         btn.setBackground(bg);
-
-        // --- CORRECTIF POUR L'AFFICHAGE DES COULEURS ---
-        btn.setContentAreaFilled(false); // Désactive le remplissage natif (qui cache souvent la couleur)
-        btn.setOpaque(true);             // Force le bouton à peindre son propre fond avec la couleur 'bg'
-        btn.setBorderPainted(false);     // Supprime la bordure système pour un rendu plus net et coloré
-
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(true);
+        btn.setBorderPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setMargin(new Insets(0, 0, 0, 0)); // Marge Haut, Gauche, Bas, Droite à zéro
         return btn;
     }
 
@@ -86,32 +79,29 @@ public class VueHUDPageAction extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Mise à jour de l'affichage des boutons selon l'état du jeu
         updateButtonsState();
 
         int y = 40;
         y = vueHUDInventaire.dessiner(g, y, modele, modele.getJoueur());
 
-        // On récupère les positions Y pour caler nos boutons sur le texte
         int yPlacementButtons = y + 22;
         y = vueHUDBat.dessiner(g, y, modele, modele.getJoueur());
 
         int yTour = vueHUDBat.getYTour();
         int yTente = vueHUDBat.getYTente();
-        //int yAbatis = vueHUDBat.getyAbatis(); on en a besoin que si on rajoute d'autre batiments
+        int yAbatis = vueHUDBat.getyAbatis(); // NOUVEAU : On récupère enfin yAbatis
 
         // Positionnement des boutons d'achat (+)
-        btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons+30, 50, 20);
-        btnTente.setBounds(LARGEUR_HUD - 80, yTour+30, 50, 20);
-        btnAbatis.setBounds(LARGEUR_HUD - 80, yTente+30, 50, 20);
+        btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 30, 50, 20);
+        btnTente.setBounds(LARGEUR_HUD - 80, yTour + 30, 50, 20);
+        btnAbatis.setBounds(LARGEUR_HUD - 80, yTente + 30, 50, 20);
+        btnMortier.setBounds(LARGEUR_HUD - 80, yAbatis + 30, 50, 20); // NOUVEAU
 
-        // Si on construit, on place le Cancel et le Rotate en haut du bloc
-        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons-10, 50, 20);
-        btnRotate.setBounds(LARGEUR_HUD - 150, yPlacementButtons-10, 60, 20);
+        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons - 10, 50, 20);
+        btnRotate.setBounds(LARGEUR_HUD - 150, yPlacementButtons - 10, 60, 20);
 
-        // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {
-            this.setPreferredSize(new Dimension(getWidth(), y + 20));
+            this.setPreferredSize(new Dimension(getWidth(), y + 40));
             this.revalidate();
         }
     }
@@ -119,20 +109,15 @@ public class VueHUDPageAction extends JPanel {
     private void updateButtonsState() {
         boolean isDay = modele.getLeCycleJourNuit().isDay();
         boolean buildActive = modele.getModeConstruction() != Modele.TypeConstruction.AUCUN;
+        var joueur = modele.getJoueur();
 
-        // 1. Boutons d'achats visibles si Jour ET pas de construction en cours ET ressources OK
-        btnTour.setVisible(isDay && !buildActive && modele.getJoueur().aAssezDeRessources(COUT_TOUR));
+        // Visibilité si Jour + Pas de construction active + Assez de ressources
+        btnTour.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_TOUR));
+        btnTente.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_TENTE) && !modele.getGestionnaireBatiments().aDejaUneTente());
+        btnAbatis.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_ABATIS));
+        btnMortier.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_MORTIER)); // NOUVEAU
 
-        btnTente.setVisible(isDay && !buildActive &&
-                modele.getJoueur().aAssezDeRessources(COUT_TENTE) &&
-                !modele.getGestionnaireBatiments().aDejaUneTente());
-
-        btnAbatis.setVisible(isDay && !buildActive && modele.getJoueur().aAssezDeRessources(COUT_ABATIS));
-
-        // 2. Bouton Annuler (Bearish rouge) visible uniquement si on construit
         btnCancel.setVisible(buildActive);
-
-        // 3. Bouton Rotation visible UNIQUEMENT si on tient un Abatis
         btnRotate.setVisible(buildActive && modele.getModeConstruction() == Modele.TypeConstruction.ABATIS);
     }
 }

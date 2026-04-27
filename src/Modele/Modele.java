@@ -1,11 +1,8 @@
 package Modele;
 
-import Modele.Batiments.Batiment;
+import Modele.Batiments.*;
 import Modele.Monstres.Monstre;
 import static Modele.Constantes.*;
-import Modele.Batiments.Tower;
-import Modele.Batiments.TenteDeSoin;
-import Modele.Batiments.Abatis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,7 @@ public class Modele {
     private boolean rotationAbatis = false;
 
     // --- ÉTAT DE CONSTRUCTION (RTS) ---
-    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS }
+    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS, MORTIER }
     private TypeConstruction modeConstruction = TypeConstruction.AUCUN;
 
     public Modele() {
@@ -187,6 +184,17 @@ public class Modele {
 
     public Joueur batTrouverJoueur(Batiment b) {
         if (Math.hypot(joueur.getX() - b.getX(), joueur.getY() - b.getY()) <= b.getRange()) return joueur;
+        return null;
+    }
+
+    public Monstre batTrouverMonstreMortier(Mortier m) {
+        for (Monstre monstre : updateJN.getMonstres()) {
+            double distance = Math.hypot(monstre.getX() - m.getX(), monstre.getY() - m.getY());
+            // Condition cruciale : Le monstre doit être ENTRE la portée min et la portée max
+            if (distance >= m.getMinRange() && distance <= m.getRange()) {
+                return monstre;
+            }
+        }
         return null;
     }
 
@@ -421,6 +429,19 @@ public class Modele {
                 /*if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
                     annulerConstruction();
                 }*/
+                return true;
+            }
+            return false;
+        }
+
+        if (modeConstruction == TypeConstruction.MORTIER) {
+            if (joueur.aAssezDeRessources(COUT_MORTIER) &&
+                    peutConstruireIci(x, y, MORTIER_LARGEUR_ENC, MORTIER_HAUTEUR_ENC, 0)) {
+
+                joueur.consommerListeRessources(COUT_MORTIER);
+                Mortier m = new Mortier((int)x, (int)y, gestionnaireBatiments);
+                gestionnaireBatiments.ajouterBatiment(m);
+                annulerConstruction();
                 return true;
             }
             return false;

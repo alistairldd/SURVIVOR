@@ -240,6 +240,7 @@ public class Vue extends JPanel {
         double wEnc = 0;
         double hEnc = 0;
         double angle = 0;
+        int minRange = 0;
 
         // 1. Définition des propriétés selon l'objet tenu
         if (mode == Modele.TypeConstruction.TOUR) {
@@ -270,6 +271,16 @@ public class Vue extends JPanel {
             range = 0; // Pas d'aura de portée pour un mur
             drawY = (int) sourisY - (taille / 2);
         }
+        else if (mode == Modele.TypeConstruction.MORTIER) {
+            imgFantome = IMAGE_MORTIER;
+            taille = TAILLE_MORTIER;
+            wEnc = MORTIER_LARGEUR_ENC;
+            hEnc = MORTIER_HAUTEUR_ENC;
+            angle = 0;
+            range = MORTIER_MAX_RANGE;
+            minRange = MORTIER_MIN_RANGE; // On active l'angle mort visuel !
+            drawY = (int) sourisY - (taille / 2);
+        }
 
         if (imgFantome != null) {
             int drawX = (int) sourisX - (taille / 2);
@@ -285,14 +296,28 @@ public class Vue extends JPanel {
             boolean constructible = modele.peutConstruireIci(sourisX, sourisY, wEnc, hEnc, angle) && aLesFonds;
 
             // 3. Rendu de l'Aura de portée dynamique (Seulement si range > 0)
+            // 3. Rendu de l'Aura de portée dynamique (Seulement si range > 0)
             if (range > 0) {
+                // Grand cercle (Portée max)
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
                 g2d.setColor(constructible ? Color.GREEN : Color.RED);
                 g2d.fillOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
 
+                // NOUVEAU : Cercle intérieur rouge (Angle mort / Zone morte)
+                if (minRange > 0) {
+                    g2d.setColor(new Color(200, 0, 0, 150)); // Rouge translucide
+                    g2d.fillOval((int) sourisX - minRange, (int) sourisY - minRange, minRange * 2, minRange * 2);
+                }
+
+                // Bordures
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
                 g2d.setStroke(new BasicStroke(2));
+                g2d.setColor(constructible ? Color.GREEN : Color.RED);
                 g2d.drawOval((int) sourisX - range, (int) sourisY - range, range * 2, range * 2);
+                if (minRange > 0) {
+                    g2d.setColor(Color.RED);
+                    g2d.drawOval((int) sourisX - minRange, (int) sourisY - minRange, minRange * 2, minRange * 2);
+                }
                 g2d.setStroke(new BasicStroke(1));
             }
 

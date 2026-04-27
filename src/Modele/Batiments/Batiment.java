@@ -12,95 +12,55 @@ import static Modele.Constantes.*;
 public abstract class Batiment extends Thread implements Localisable {
 
     GestionnaireBatiments gBatiments;
-    // Coordonnées de placement sur la grille/carte globale
     protected double x,y;
-    // Points de vie actuels du bâtiment (diminue lors d'une attaque)
     protected int hp;
-    // Rayon d'action dans lequel le joueur doit se trouver pour pouvoir interagir ou réparer
     protected final int reparationRange;
 
     protected int range;
 
-    protected boolean attaquable;
+    // NOUVEAU : Portée minimale (Angle mort). Vaut 0 par défaut pour les tours.
+    protected int minRange = 0;
 
+    protected boolean attaquable;
     private boolean fonctionnel = true;
 
     // --- NOUVELLES PROPRIÉTÉS DE COLLISION RECTANGULAIRES ---
-    // Rectangle d'encombrement (Zone de construction)
     protected int largeurEncombrement;
     protected int hauteurEncombrement;
-
-    // Rectangle de Hitbox (Zone de combat 2.5D)
     protected int largeurHitbox;
     protected int hauteurHitbox;
     protected int offsetYHitbox;
-
-    // Angle de rotation en radians (0 par défaut pour les bâtiments droits)
     protected double angleRotation = 0;
 
-    /**
-     * Initialise un bâtiment à une position spécifique avec ses points de vie maximum.
-     * @param x Coordonnée X sur la carte globale.
-     * @param y Coordonnée Y sur la carte globale.
-     */
     public Batiment(int x, int y, GestionnaireBatiments gBatiments, int range ) {
         this.gBatiments = gBatiments;
-        // Enregistre les coordonnées choisies pour la construction
         this.x = x;
         this.y = y;
-        // Fixe la zone d'interaction par défaut à 10 pixels
         this.reparationRange = REPARATION_RANGE;
         this.range = range;
         this.attaquable = true;
     }
 
-    // Récupère les points de vie actuels du bâtiment
-    public int getHp() {
-        return hp;
-    }
-
-    // Restaure instantanément les points de vie à leur valeur maximale par défaut
-    public void resetHp(int hp) {
-        this.hp = hp;
-    }
-
-    // Récupère la position horizontale sur la carte
+    public int getHp() { return hp; }
+    public void resetHp(int hp) { this.hp = hp; }
     public double getX(){ return x; }
-
-    // Récupère la position verticale sur la carte
     public double getY(){ return y; }
+    public int getHealingRange() { return reparationRange; }
 
-    // Indique à quelle distance le joueur doit être pour initier une réparation
-    public int getHealingRange() {
-        return reparationRange;
-    }
-
-    // Permet de forcer une valeur spécifique de points de vie (ex: lors de dégâts subis)
     public void setHp(int hp) {
         this.hp = hp;
         if (hp <= 0 ) setAttaquable(false);
     }
 
-    public int getRange(){
-        return range;
-    }
+    public int getRange(){ return range; }
 
-    public boolean isAttaquable() {
-        return attaquable;
-    }
+    // NOUVEAU : Getter pour l'angle mort
+    public int getMinRange() { return minRange; }
 
-    public void setAttaquable(boolean attaquable) {
-        this.attaquable = attaquable;
-    }
-
-    public boolean isFonctionnel() {
-        return fonctionnel;
-    }
-
-    public void setFonctionnel(boolean fonctionnel) {
-        this.fonctionnel = fonctionnel;
-    }
-
+    public boolean isAttaquable() { return attaquable; }
+    public void setAttaquable(boolean attaquable) { this.attaquable = attaquable; }
+    public boolean isFonctionnel() { return fonctionnel; }
+    public void setFonctionnel(boolean fonctionnel) { this.fonctionnel = fonctionnel; }
 
     public int getLargeurEncombrement() { return largeurEncombrement; }
     public int getHauteurEncombrement() { return hauteurEncombrement; }
@@ -108,5 +68,4 @@ public abstract class Batiment extends Thread implements Localisable {
     public int getHauteurHitbox() { return hauteurHitbox; }
     public int getOffsetYHitbox() { return offsetYHitbox; }
     public double getAngleRotation() { return angleRotation; }
-
 }
