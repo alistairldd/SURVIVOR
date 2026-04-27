@@ -187,9 +187,6 @@ public final class Constantes {
     public static final int prixArmureLegere = 10;
     public static final int prixArmuresLourde = 20;
 
-    /*** ---Drop Monstres--- ***/
-    public static final int DEFAULT_DROP = 10; // Nombre de pièces par défaut donné par un monstre
-    public static final int SLIME_DROP = 5;
 
     /*** --- Threads --- ***/
     public static final int BAT_DELAY = 1000;
@@ -378,7 +375,7 @@ public final class Constantes {
     }
 
     // Images Ogres
-
+    public static BufferedImage IMAGE_OGRE = null;
     public static BufferedImage IMAGE_OGRE_G = null;
     public static BufferedImage IMAGE_OGRE_D = null;
     public static BufferedImage IMAGE_OGRE_GM = null;
@@ -389,6 +386,7 @@ public final class Constantes {
     public static BufferedImage IMAGE_OGRE_ATTAQUE_DH = null;
     static {
         try {
+            IMAGE_OGRE = ImageIO.read(new File("src/images/monstres/ogre.png"));
             IMAGE_OGRE_G = ImageIO.read(new File("src/images/monstres/ogreGauche.png"));
             IMAGE_OGRE_GM = ImageIO.read(new File("src/images/monstres/ogreGaucheM.png"));
             IMAGE_OGRE_D = ImageIO.read(new File("src/images/monstres/ogreDroit.png"));
@@ -508,11 +506,15 @@ public final class Constantes {
     public final static int HAUTEUR_TOP_JOUEUR_SOURCE = 50;
 
     public static Image IMAGE_JOUEUR = null;
+    public static Image IMAGE_JOUEUR_ARMURE = null;
     public static Image IMAGE_TOP_JOUEUR = null;
     static {
         try {
             // Charger l'image du joueur
             IMAGE_JOUEUR = ImageIO.read(new File("src/images/perso.png"));
+
+            // Charger l'image du joueur avec armure
+            IMAGE_JOUEUR_ARMURE = ImageIO.read(new File("src/images/perso_armure.png"));
 
             // Charger l'image du joueur vue de dessus
             IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/perso_topview.png"));

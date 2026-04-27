@@ -182,8 +182,7 @@ public class UpdateJN {
         }
     }
 
-    public void donnerRecompense(int Gm){
-        modele.getJoueur().addPieces(Gm);
-
+    public void monstreMort(Monstre m) {
+        modele.monstreMort(m);
     }
 }

@@ -89,16 +89,17 @@ public class VueHUDPageAction extends JPanel {
 
         int yTour = vueHUDBat.getYTour();
         int yTente = vueHUDBat.getYTente();
-        int yAbatis = vueHUDBat.getyAbatis(); // NOUVEAU : On récupère enfin yAbatis
+        int yAbatis = vueHUDBat.getyAbatis();
+        int yMortier = vueHUDBat.getyMortier();
 
         // Positionnement des boutons d'achat (+)
-        btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 30, 50, 20);
+        btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 30, 50, 25);
         btnTente.setBounds(LARGEUR_HUD - 80, yTour + 30, 50, 20);
         btnAbatis.setBounds(LARGEUR_HUD - 80, yTente + 30, 50, 20);
         btnMortier.setBounds(LARGEUR_HUD - 80, yAbatis + 30, 50, 20); // NOUVEAU
 
         btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons - 10, 50, 20);
-        btnRotate.setBounds(LARGEUR_HUD - 150, yPlacementButtons - 10, 60, 20);
+        btnRotate.setBounds(LARGEUR_HUD - 80, yTente + 30, 60, 20);
 
         if (y > getPreferredSize().height) {
             this.setPreferredSize(new Dimension(getWidth(), y + 40));
@@ -115,7 +116,7 @@ public class VueHUDPageAction extends JPanel {
         btnTour.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_TOUR));
         btnTente.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_TENTE) && !modele.getGestionnaireBatiments().aDejaUneTente());
         btnAbatis.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_ABATIS));
-        btnMortier.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_MORTIER)); // NOUVEAU
+        btnMortier.setVisible(isDay && !buildActive && joueur.aAssezDeRessources(COUT_MORTIER));
 
         btnCancel.setVisible(buildActive);
         btnRotate.setVisible(buildActive && modele.getModeConstruction() == Modele.TypeConstruction.ABATIS);

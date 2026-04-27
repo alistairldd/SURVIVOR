@@ -10,28 +10,49 @@ import java.util.Random;
 import static Modele.Constantes.*;
 
 /**
- * Bâtiment défensif automatisé (Tourelle).
- * Hérite des propriétés d'un Batiment classique (HP, position) mais intègre
- * sa propre logique de combat (portée, dégâts, cadence) et un système de ciblage
- * pour interagir avec le ThreadBatiments de manière indépendante.
+ * Bâtiment de production automatisé (Mine).
+ * Génère des ressources périodiquement. Se place aléatoirement sur la carte
+ * tout en évitant les bordures et la position du Quartier Général (HQ).
  */
 public class Mine extends Batiment implements Localisable {
 
-    // Portée effective de cette instance précise
     private int range;
     private ArrayList<Ressource> ressources;
-    Random randomNumbers = new Random();
-    //int latitude = randomNumbers.nextInt(HAUTEUR_MAP);
-    //int longitude = randomNumbers.nextInt(LARGEUR_MAP);
+    private Random randomNumbers = new Random();
 
     /**
-     * Construit une mine à des coordonnées précises.
+     * Construit une mine à des coordonnées aléatoires sécurisées.
      */
     public Mine(GestionnaireBatiments gB) {
-        // Initialise la structure via le constructeur parent (Batiment)
-        super(new Random().nextInt(LARGEUR_MAP), new Random().nextInt(HAUTEUR_MAP), gB, TOWER_BASE_RANGE);
+        // 1. Initialisation temporaire en (0, 0) pour satisfaire la classe mère
+        super(0, 0, gB, TOWER_BASE_RANGE);
+
+        // 2. Recherche d'une position de Spawn valide
+        int marge = 300; // Distance minimum des bords de la map
+        double distanceSecuriteHQ = 500.0; // Rayon d'exclusion autour du HQ (car le HQ est énorme)
+        boolean positionValide = false;
+
+        HQ hq = gB.getHQ();
+
+        // Boucle de recherche : on tire des coordonnées au sort jusqu'à en trouver des bonnes
+        while (!positionValide) {
+            // X et Y bornés entre [marge] et [TAILLE_MAX - marge]
+            this.x = marge + randomNumbers.nextInt(LARGEUR_MAP - 2 * marge);
+            this.y = marge + randomNumbers.nextInt(HAUTEUR_MAP - 2 * marge);
+
+            // Si le HQ est bien présent sur la carte, on vérifie l'éloignement
+            if (hq != null) {
+                double distance = Math.hypot(this.x - hq.getX(), this.y - hq.getY());
+                if (distance >= distanceSecuriteHQ) {
+                    positionValide = true; // Assez loin, on valide !
+                }
+            } else {
+                positionValide = true; // Sécurité si aucun HQ n'est trouvé
+            }
+        }
+
+        // 3. Initialisation des autres caractéristiques
         this.hp = HP_MINE;
-        // Applique les statistiques de combat par défaut
         this.range = MINE_BASE_RANGE;
         this.largeurEncombrement = MINE_LARGEUR_ENC;
         this.hauteurEncombrement = MINE_HAUTEUR_ENC;
@@ -41,13 +62,11 @@ public class Mine extends Batiment implements Localisable {
         this.ressources = new ArrayList<>();
         this.attaquable = false; // La mine n'est pas attaquable, elle ne peut pas être détruite par les monstres
         this.setFonctionnel(false);
+        this.attaquable = false; // La mine n'est pas attaquable
     }
 
-    // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)
     public int getRange() { return range; }
 
-    // Getters pour la vue (pour dessiner le laser)
-    // Retourne l'ennemi actuellement visé
     public ArrayList<Ressource> getRessources() {
         return ressources;
     }
@@ -57,11 +76,9 @@ public class Mine extends Batiment implements Localisable {
     }
 
     public void genererRessources() {
-        // Tirage d'un nombre aléatoire entre 0 et 99 (pour simuler 100%)
         int tirage = (int) (Math.random() * 100);
         int typeChoisi;
 
-        // Définition des paliers de probabilité
         if (tirage < PROBA_PIERRE) {
             typeChoisi = 1; // Pierre
         }
@@ -72,7 +89,6 @@ public class Mine extends Batiment implements Localisable {
             typeChoisi = 3; // Or
         }
 
-        // Ajout de la nouvelle ressource à la liste de stockage de la mine
         this.ressources.add(new Ressource(typeChoisi));
     }
 
@@ -86,25 +102,21 @@ public class Mine extends Batiment implements Localisable {
                 setFonctionnel(false);
             }
 
-            // Si la mine est allumée (soit neuve, soit réparée à 100%)
             if (isFonctionnel()) {
                 try {
                     genererRessources();
                     Thread.sleep(MINE_DELAY);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    break; // On quitte la boucle proprement si le jeu s'arrête
+                    break;
                 }
             } else {
-                // Le bâtiment est en panne : le Thread se repose (500ms)
-                // en attendant d'être réparé.
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
                 }
-
             }
         }
     }
@@ -118,5 +130,4 @@ public class Mine extends Batiment implements Localisable {
     public String getNom() {
         return "Mine";
     }
-
 }

@@ -95,7 +95,7 @@ public class Joueur implements Localisable {
             ressources.add(new Ressource(3)); // 3: Or
         }
         // triche/test : on donne 50 pieces au joueur au départ
-        pieces = 200;
+        pieces = 20000;
         // Équipe l'arme de départ
         armeEquipee = new Baton();
         // Arme non équipée existe pas encore

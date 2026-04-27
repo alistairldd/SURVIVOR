@@ -3,10 +3,8 @@ package Modele.Monstres;
 import Modele.GestionnaireMonstres;
 
 import java.awt.*;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-import static Modele.Constantes.IMAGES_SLIMES_MUTANT;
+import static Modele.Constantes.IMAGE_OGRE;
 
 /**
  * Implémentation concrète d'un ennemi : l'ogre.
@@ -33,7 +31,8 @@ public class Ogre extends Monstre {
         // Attaque: 15 points de dégâts
         // Portée: 50 pixels
         // Vitesse: 4 pixels par déplacement
-        super("Ogre", 300, 15, 50, 4);
+        // Drop: 10 pièces en récompense
+        super("Ogre", 300, 15, 50, 4, 10);
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;
@@ -80,6 +79,11 @@ public class Ogre extends Monstre {
                 break;
             }
         }
+    }
+
+    @Override
+    public Image getImage() {
+        return IMAGE_OGRE;
     }
 }
 

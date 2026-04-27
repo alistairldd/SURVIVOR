@@ -153,19 +153,13 @@ public class GestionnaireMonstres {
      *  Retirer les monstres dont les PV sont tombés à zéro.
      */
     public void supprimerMonstre (Monstre m){
-            monstres.remove(m);
+        updateJN.monstreMort(m);
+        monstres.remove(m);
+
     }
 
     public Localisable trouverCible(Localisable m){
         return updateJN.monstreTrouverCible(m);
     }
 
-    public Monstre getMonstreMort() {
-        for (Monstre m : monstres) {
-            if (m.getHp() <= 0) {
-                return m; // Retourne le premier monstre trouvé avec 0 PV ou moins
-            }
-        }
-        return null; // Si aucun monstre n'est mort, retourne null
-    }
 }
