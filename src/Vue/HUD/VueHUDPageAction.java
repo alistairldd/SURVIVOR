@@ -17,8 +17,8 @@ public class VueHUDPageAction extends JPanel {
     // Boutons de construction
     private JButton btnTour;
     private JButton btnTente;
-    private JButton btnAbatis; // NOUVEAU
-    private JButton btnRotate; // NOUVEAU
+    private JButton btnAbatis;
+    private JButton btnRotate;
     private JButton btnCancel;
 
     public VueHUDPageAction(Modele modele) {
@@ -96,14 +96,18 @@ public class VueHUDPageAction extends JPanel {
         int yPlacementButtons = y + 22;
         y = vueHUDBat.dessiner(g, y, modele, modele.getJoueur());
 
+        int yTour = vueHUDBat.getYTour();
+        int yTente = vueHUDBat.getYTente();
+        //int yAbatis = vueHUDBat.getyAbatis(); on en a besoin que si on rajoute d'autre batiments
+
         // Positionnement des boutons d'achat (+)
-        btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons, 50, 20);
-        btnTente.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 43, 50, 20);
-        btnAbatis.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 86, 50, 20);
+        btnTour.setBounds(LARGEUR_HUD - 80, yPlacementButtons+30, 50, 20);
+        btnTente.setBounds(LARGEUR_HUD - 80, yTour+30, 50, 20);
+        btnAbatis.setBounds(LARGEUR_HUD - 80, yTente+30, 50, 20);
 
         // Si on construit, on place le Cancel et le Rotate en haut du bloc
-        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons + 100, 50, 20);
-        btnRotate.setBounds(LARGEUR_HUD - 150, yPlacementButtons +101, 60, 20);
+        btnCancel.setBounds(LARGEUR_HUD - 80, yPlacementButtons-10, 50, 20);
+        btnRotate.setBounds(LARGEUR_HUD - 150, yPlacementButtons-10, 60, 20);
 
         // Trailing Stop pour le scroll
         if (y > getPreferredSize().height) {

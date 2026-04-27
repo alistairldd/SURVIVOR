@@ -130,6 +130,7 @@ public class Joueur implements Localisable {
     }
 
     public int getHpMax() {return hpMax;}
+
     public void setHpMax(int hpMax) {this.hpMax = hpMax;}
 
     public int getHp() {return hp;}
@@ -266,7 +267,7 @@ public class Joueur implements Localisable {
         if (item instanceof PotionVieGrande) {
             soigner(item.getEffet());
             removeFromInventaire(item);
-        }
+        } 
 
         if (item instanceof PotionVitesse){
             incrVitesse(item.getEffet());
