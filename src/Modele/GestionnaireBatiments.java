@@ -19,7 +19,6 @@ public class GestionnaireBatiments {
 
         // On initialise le HQ en lui passant l'instance actuelle du gestionnaire
         this.hq = new HQ(this);
-        this.hq.setHp(20);
         ajouterBatiment(this.hq);
 
         ajouterBatiment(new Mine(this));
