@@ -121,7 +121,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 1000;
+    public final static int DUREE_CYCLE_JOUR = 10;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -440,6 +440,19 @@ public final class Constantes {
             IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/perso_topview.png"));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // NOUVEAU : Image pour le fond répétitif de la carte
+    public static BufferedImage IMAGE_FOND_MAP = null;
+
+    static {
+        try {
+            // Remplace "gazon.png" par le nom de ton image de pattern
+            IMAGE_FOND_MAP = ImageIO.read(new File("src/images/carte/herbe.png"));
+            //IMAGE_FOND_MAP = ImageIO.read(new File("src/images/map.png"));
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'image de fond : " + e.getMessage());
         }
     }
 
