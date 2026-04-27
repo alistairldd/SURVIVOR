@@ -33,7 +33,8 @@ public class Ogre extends Monstre {
         // Attaque: 15 points de dégâts
         // Portée: 50 pixels
         // Vitesse: 4 pixels par déplacement
-        super("Ogre", 300, 15, 50, 4);
+        // Drop: 10 pièces en récompense
+        super("Ogre", 300, 15, 50, 4, 10);
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;

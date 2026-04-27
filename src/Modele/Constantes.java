@@ -187,9 +187,6 @@ public final class Constantes {
     public static final int prixArmureLegere = 10;
     public static final int prixArmuresLourde = 20;
 
-    /*** ---Drop Monstres--- ***/
-    public static final int DEFAULT_DROP = 10; // Nombre de pièces par défaut donné par un monstre
-    public static final int SLIME_DROP = 5;
 
     /*** --- Threads --- ***/
     public static final int BAT_DELAY = 1000;

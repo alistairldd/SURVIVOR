@@ -188,15 +188,21 @@ public class Modele {
 
                 if (produitScalaire >= seuilCosinus) {
                     m.perdreHp(joueur.getArmeEquipee().getDegats() + joueur.getAttack());
-                    if (m.getHp() <= 0) {
-                        joueur.addPieces(m.getDrop());
-                        // Ajout d'un texte flottant pour voir les pièces récoltés vive la richesse (après on remplace 10 par la qt d'or)
-                        pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), 10});
 
-                    }
                 }
             }
         }
+    }
+
+    /**
+     * Gère la récompense dans le cas de la mort d'un monstre
+     * @param m
+     */
+    public void monstreMort(Monstre m) {
+        joueur.addPieces(m.getDrop());
+        // Ajout d'un texte flottant pour voir les pièces récoltés vive la richesse (après on remplace 10 par la qt d'or)
+        pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), m.getDrop()});
+
     }
 
     /**
@@ -273,7 +279,7 @@ public class Modele {
     }
 
     /**
-     * NOUVEAU : Vérifie si le joueur entre en collision avec la HITBOX d'un bâtiment solide.
+     * Vérifie si le joueur entre en collision avec la HITBOX d'un bâtiment solide.
      * @param testX La future position X du joueur.
      * @param testY La future position Y du joueur.
      * @return true si la position chevauche la Hitbox d'un bâtiment (hors Abatis).

@@ -36,7 +36,8 @@ public class SlimeMutant extends Monstre {
         // Attaque: 7 points de dégâts
         // Portée: 35 pixels
         // Vitesse: 6 pixel par déplacement
-        super("SlimeMutant", 80, 7, 35, 6);
+        // Drop: 6 pièces en récompense
+        super("SlimeMutant", 80, 8, 35, 6, 6);
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;

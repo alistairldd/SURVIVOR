@@ -29,11 +29,12 @@ public class Gobelin extends Monstre {
     public Gobelin(int x, int y, GestionnaireMonstres gestionnaireMonstres) {
         // Appelle le constructeur parent (Monstre) en lui injectant les statistiques de cette espèce :
         // Nom: "Gobelin"
-        // PV: 80
-        // Attaque: 15 points de dégâts
-        // Portée: 50 pixels
+        // PV: 65
+        // Attaque: 10 points de dégâts
+        // Portée: 40 pixels
         // Vitesse: 8 pixels par déplacement
-        super("Gobelin", 65, 15, 50, 8);;
+        // Drop: 5 pièces en récompense
+        super("Gobelin", 65, 10, 40, 8, 5);;
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;

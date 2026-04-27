@@ -70,7 +70,7 @@ public abstract class Monstre extends Thread implements Localisable {
     private double tempsDepuisDerniereAttaque = 0;
 
     // Constructeur de la classe Monstre, il initialise les données du monstre.
-    public Monstre(String nom, int maxHp, int attack, int portee, int vitesse) {
+    public Monstre(String nom, int maxHp, int attack, int portee, int vitesse, int drop) {
         // Assigne la valeur actuelle du compteur comme ID unique, puis incrémente le compteur de 1 pour le prochain monstre
         this.id = compteurID++; // Attribue un ID unique au monstre et incrémente le compteur
 
@@ -81,7 +81,7 @@ public abstract class Monstre extends Thread implements Localisable {
         this.attack = attack;
         this.portee = portee;
         this.vitesse = vitesse;
-        this.drop = DEFAULT_DROP; // Valeur par défaut, peut être modifiée par les sous-classes
+        this.drop = drop; // Valeur par défaut, peut être modifiée par les sous-classes
     }
 
     // Getter id

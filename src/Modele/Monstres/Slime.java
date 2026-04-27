@@ -37,7 +37,8 @@ public class Slime extends Monstre {
         // Attaque: 5 points de dégâts
         // Portée: 30 pixels
         // Vitesse: 5 pixel par déplacement
-        super("Slime", 50, 5, 30, 5);
+        // Drop: 3 pièces en récompense
+        super("Slime", 50, 5, 30, 5, 3);
 
         // Initialise la position de départ avec les coordonnées fournies
         this.x = x;
@@ -48,7 +49,6 @@ public class Slime extends Monstre {
         // Récupère l'image 30x30 correspondante
         this.imageSlime = IMAGES_SLIMES.get(indexAleatoire); // Choix aléatoire d'une image de slime pour la variété visuelle
         this.gestionnaireMonstres = gestionnaireMonstres;
-        this.drop = SLIME_DROP; // Définit la récompense en pièces pour ce monstre
         this.start(); // Démarre le thread du monstre pour qu'il commence à agir immédiatement après sa création
     }
 
