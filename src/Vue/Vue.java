@@ -186,7 +186,14 @@ public class Vue extends JPanel {
             vueSort.dessiner(g2d, sort,0, 0);
         }
 
-
+        // Si l'Armageddon a été activé, on dessine un voile rouge semi-transparent
+        if (modele.isFlashRougeActif()) {
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+            g2d.setColor(Color.RED);
+            // On dessine le rectangle à la position actuelle de la vue (caméra)
+            g2d.fillRect((int)camX, (int)camY, getWidth(), getHeight());
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        }
 
         // --- PASSE 3 : FANTÔME DE CONSTRUCTION (RTS) ---
         dessinerFantomeConstruction(g2d);

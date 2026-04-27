@@ -29,6 +29,7 @@ public class Modele {
     private GestionnaireShop gestionnaireShop;
     private GestionnaireSorts gestionnaireSorts;
     private Item sortEnAttente = null;
+    private boolean flashRougeActif = false;
 
     private List<int[]> pendingFloatingTexts = new ArrayList<>();
 
@@ -492,4 +493,36 @@ public class Modele {
         // 2. On demande au gestionnaire d'activer les mines existantes
         gestionnaireBatiments.activerLaMine();
     }
+
+    /**
+     * Supprime instantanément tous les monstres du terrain.
+     */
+    public void declencherArmageddon() {
+        this.flashRougeActif = true;
+        List<Monstre> monstres = updateJN.getMonstres();
+
+        // 1. On élimine tous les monstres
+        for (int i = monstres.size() - 1; i >= 0; i--) {
+            Monstre m = monstres.get(i);
+            joueur.addPieces(m.getDrop());
+            pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), m.getDrop()});
+            m.interrupt();
+            monstres.remove(i);
+        }
+
+        // 2. On lance UN SEUL thread pour éteindre le flash après la boucle
+        new Thread(() -> {
+            try {
+                Thread.sleep(400); // Temps du flash
+                this.flashRougeActif = false;
+                System.out.println("Flash rouge désactivé.");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
+
+        System.out.println("Armageddon déclenché : Terrain nettoyé !");
+    }
+    public boolean isFlashRougeActif() { return flashRougeActif; }
+
 }

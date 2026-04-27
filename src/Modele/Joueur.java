@@ -278,6 +278,10 @@ public class Joueur implements Localisable {
             setAttack(getAttack() + item.getEffet());
             removeFromInventaire(item);
         }
+        if (item instanceof Armageddon) {
+            modele.declencherArmageddon();
+            removeFromInventaire(item);
+        }
     }
 
     public void utiliserSort(Item item, double directionX, double directionY) {

@@ -62,7 +62,6 @@ public class Mine extends Batiment implements Localisable {
         this.ressources = new ArrayList<>();
         this.attaquable = false; // La mine n'est pas attaquable, elle ne peut pas être détruite par les monstres
         this.setFonctionnel(false);
-        this.attaquable = false; // La mine n'est pas attaquable
     }
 
     public int getRange() { return range; }

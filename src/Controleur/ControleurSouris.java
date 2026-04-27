@@ -1,5 +1,6 @@
 package Controleur;
 
+import Modele.Items.Sort;
 import Modele.Modele;
 import Vue.Vue;
 import Modele.Joueur;
@@ -49,7 +50,7 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             if (ACTION_SWITCH_ARMURE.equals(action)) { modele.getJoueur().switchArmures(); return; }
             if (ACTION_UTILISER_CONSOMMABLE.equals(action)) {
                 Item itemClique = vue.getVueHUDEquipement().getItemAuClic(e.getX(), e.getY());
-                if (itemClique instanceof SortFeu) {
+                if (itemClique instanceof Sort) {
                     /*// Calculer la direction vers la souris
                     if (modele.getSortEnAttente() != null) {
                     int centerX = vue.getWidth() / 2;
