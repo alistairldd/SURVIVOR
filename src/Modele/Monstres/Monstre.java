@@ -120,8 +120,6 @@ public abstract class Monstre extends Thread implements Localisable {
 
     public double getY() { return y; }
 
-    public Image getImage() { return null; } // Getter d'image par défaut, les sous-classes comme Slime le redéfiniront pour fournir leur propre sprite
-
     public int getDrop() { return drop; }
 
     public void ajouterAnimation(double delta) { this.animation += delta; }
@@ -133,6 +131,8 @@ public abstract class Monstre extends Thread implements Localisable {
     public boolean getAnimationMarche() { return animationMarche; }
 
     public boolean getAnimationAttaque() { return animationAttaque; }
+
+    public abstract Image getImage();
 
     // Met à jour la position du monstre
     public void mettreAJourPosition(Localisable cible, double dt) {

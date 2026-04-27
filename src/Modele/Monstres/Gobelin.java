@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static Modele.Constantes.IMAGES_SLIMES_MUTANT;
+import static Modele.Constantes.IMAGE_GOB_D;
 
 /**
  * Implémentation concrète d'un ennemi : le gobelin.
@@ -81,6 +82,11 @@ public class Gobelin extends Monstre {
                 break;
             }
         }
+    }
+
+    @Override
+    public Image getImage() {
+        return IMAGE_GOB_D;
     }
 }
 

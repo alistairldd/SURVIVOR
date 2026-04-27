@@ -3,10 +3,8 @@ package Modele.Monstres;
 import Modele.GestionnaireMonstres;
 
 import java.awt.*;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-import static Modele.Constantes.IMAGES_SLIMES_MUTANT;
+import static Modele.Constantes.IMAGE_OGRE;
 
 /**
  * Implémentation concrète d'un ennemi : l'ogre.
@@ -81,6 +79,11 @@ public class Ogre extends Monstre {
                 break;
             }
         }
+    }
+
+    @Override
+    public Image getImage() {
+        return IMAGE_OGRE;
     }
 }
 

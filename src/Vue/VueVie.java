@@ -47,9 +47,13 @@ public class VueVie {
 
             color = Color.GRAY; // Couleur par défaut si le type n'est pas reconnu
             switch (localisable) {
-                case Joueur ignored -> {
+                case Joueur joueur -> {
                     color = Color.GREEN;
-                    img = IMAGE_JOUEUR;
+                    if (joueur.getArmurePrincipale() != null || joueur.getArmureSecondaire() != null) {
+                        img = IMAGE_JOUEUR_ARMURE;
+                    } else {
+                        img = IMAGE_JOUEUR;
+                    }
                 }
                 case Tower ignored -> {
                     color = Color.BLUE;
