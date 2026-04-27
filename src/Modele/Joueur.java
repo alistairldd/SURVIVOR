@@ -279,6 +279,16 @@ public class Joueur implements Localisable {
         }
     }
 
+    public void utiliserSort(Item item, double directionX, double directionY) {
+        if (item instanceof SortFeu) {
+            SortFeu sort = new SortFeu(this.positionX, this.positionY, directionX, directionY);
+            modele.getGestionnaireSorts().ajouterSort(sort);
+            removeFromInventaire(item);
+        }
+    }
+
+
+
     // Méthode pour augmenter (ou baisser) la vitesse du joueur
     private void incrVitesse(int i) {vitesse += i;}
 

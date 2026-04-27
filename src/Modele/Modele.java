@@ -1,6 +1,7 @@
 package Modele;
 
 import Modele.Batiments.Batiment;
+import Modele.Items.Item;
 import Modele.Monstres.Monstre;
 import static Modele.Constantes.*;
 import Modele.Batiments.Tower;
@@ -28,6 +29,10 @@ public class Modele {
     private GestionnaireBatiments gestionnaireBatiments;
     private CycleJourNuit leCycleJourNuit;
     private GestionnaireShop gestionnaireShop;
+    private GestionnaireSorts gestionnaireSorts;
+    private Item sortEnAttente = null;
+
+
     private UpdateJN updateJN;
 
     // Entité actuellement ciblée par l'interface
@@ -50,6 +55,8 @@ public class Modele {
         this.leCycleJourNuit = new CycleJourNuit(updateJN);
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
+        this.gestionnaireSorts = new GestionnaireSorts(this);
+
 
         this.cibleAffichage = joueur;
     }
@@ -88,6 +95,10 @@ public class Modele {
     public UpdateJN getUpdateJN() { return updateJN; }
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
     public GestionnaireBatiments getGestionnaireBatiments() { return gestionnaireBatiments; }
+    public GestionnaireSorts getGestionnaireSorts() { return gestionnaireSorts; }
+    public void preparerSort(Item sort) { this.sortEnAttente = sort; }
+    public Item getSortEnAttente() { return this.sortEnAttente; }
+    public void setSortEnAttente() { this.sortEnAttente = null; }
     public boolean getPartieTerminee() { return partieTerminee; }
 
     public TypeConstruction getModeConstruction() { return modeConstruction; }

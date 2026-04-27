@@ -7,6 +7,7 @@ import Modele.Joueur;
 import Modele.Armes.Arme;
 import Modele.Armure.Armure;
 import Modele.Items.Item;
+import Modele.Items.SortFeu;
 
 import Vue.AnimationArme;
 import Modele.DeplaceJoueur;
@@ -46,9 +47,23 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
             if (ACTION_SWITCH_ARME.equals(action))   { modele.getJoueur().switchArmes();   return; }
             if (ACTION_SWITCH_ARMURE.equals(action)) { modele.getJoueur().switchArmures(); return; }
             if (ACTION_UTILISER_CONSOMMABLE.equals(action)) {
-                Item itemCLique = vue.getVueHUDEquipement().getItemAuClic(e.getX(), e.getY());
-                if (itemCLique != null) {
-                    modele.getJoueur().utiliserConsommable(itemCLique);
+                Item itemClique = vue.getVueHUDEquipement().getItemAuClic(e.getX(), e.getY());
+                if (itemClique instanceof SortFeu) {
+                    /*// Calculer la direction vers la souris
+                    if (modele.getSortEnAttente() != null) {
+                    int centerX = vue.getWidth() / 2;
+                    int centerY = vue.getHeight() / 2;
+                    double angle = Math.atan2(mouseY - centerY, mouseX - centerX);
+                    double directionX = Math.cos(angle);
+                    double directionY = Math.sin(angle);
+
+                    modele.getJoueur().utiliserSort(itemClique, directionX, directionY);
+                    modele.setSortEnAttente();
+                    }*/
+                    modele.preparerSort(itemClique);
+
+                } else {
+                    modele.getJoueur().utiliserConsommable(itemClique);
                 }
             }
         }
@@ -86,9 +101,18 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
         // --- 2. ACTION (Clic Gauche) ---
         else if (SwingUtilities.isLeftMouseButton(e)){
             if (!modele.getPartieTerminee()){
+                if (modele.getSortEnAttente() != null) {
+                    int centerX = vue.getWidth() / 2;
+                    int centerY = vue.getHeight() / 2;
+                    double angle = Math.atan2(mouseY - centerY, mouseX - centerX);
+                    double directionX = Math.cos(angle);
+                    double directionY = Math.sin(angle);
 
+                    modele.getJoueur().utiliserSort(modele.getSortEnAttente(), directionX, directionY);
+                    modele.setSortEnAttente();
+                }
                 // A. MODE CONSTRUCTION (RTS)
-                if (modele.getModeConstruction() != Modele.TypeConstruction.AUCUN) {
+                else if (modele.getModeConstruction() != Modele.TypeConstruction.AUCUN) {
                     boolean succes = modele.finaliserConstruction(destX, destY);
                     System.out.println(succes);
                     if (!succes) {

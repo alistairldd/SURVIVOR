@@ -380,11 +380,18 @@ public final class Constantes {
     public static Image IMAGE_ARMURE_LOURDE = null;
 
     public static Image IMAGE_POTION_DE_VIE = null;
-    public static Image IMAGE_POTION_VITESSE = null;
-    public static Image IMAGE_POTION_DEGATS = null;
-    public static Image IMAGE_POTION_GRANDE_VIE = null;
 
     public static Image IMAGE_PIOCHE = null;
+
+    public static Image IMAGE_POTION_VITESSE = null;
+
+    public static Image IMAGE_POTION_DEGATS = null;
+
+    public static Image IMAGE_POTION_GRANDE_VIE = null;
+
+    public static Image IMAGE_SORT_FEU = null;
+
+    public  static Image IMAGE_BOULE_FEU = null;
 
     static {
         try {
@@ -418,6 +425,12 @@ public final class Constantes {
 
             // Charger l'image de la pioche
             IMAGE_PIOCHE = ImageIO.read(new File("src/images/items/Pioche.png"));
+
+            // Charger l'image du sort de feu
+            IMAGE_SORT_FEU = ImageIO.read(new File("src/images/items/SortFeu.png"));
+
+            // Charger l'image de la boule de feu
+            IMAGE_BOULE_FEU= ImageIO.read(new File("src/images/items/Boule_de_Feu.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

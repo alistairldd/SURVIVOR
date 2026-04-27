@@ -6,6 +6,8 @@ import Controleur.ControleurClavier;
 import Controleur.ControleurSouris;
 import Modele.Batiments.Batiment;
 import Modele.Batiments.Mine;
+import Modele.Items.Sort;
+import Modele.Items.SortFeu;
 import Modele.Monstres.Monstre;
 import Vue.Batiments.VueBatiment;
 import Vue.Batiments.VueEffetSoin;
@@ -13,6 +15,8 @@ import Vue.Batiments.VueEffetTente;
 import Vue.HUD.VueHUD;
 import Vue.HUD.VueHUDEquipement;
 import Vue.HUD.VueHUDInstructions;
+import Vue.VueSort.VueSort;
+import Vue.VueSort.VueSortFeu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +41,7 @@ public class Vue extends JPanel {
     private final VueRessource vueRessource;
     private final VueBatiment vueBatiment;
     private final VueMonstre vueMonstre;
+    private VueSort vueSort;
 
     // Logique métier
     private final Modele modele;
@@ -74,8 +79,10 @@ public class Vue extends JPanel {
         this.vueRessource = new VueRessource();
         this.vueBatiment = new VueBatiment();
         this.vueMonstre = new VueMonstre();
+        this.vueSort = new VueSort();
         this.vueEffetSoin = new VueEffetSoin(modele);
         this.vueEffetTente = new VueEffetTente(modele);
+
 
         // 5. Initialisation du système de textes flottants
         this.vueTexteFlottant = new VueTexteFlottant();
@@ -172,6 +179,12 @@ public class Vue extends JPanel {
                 vueArme.dessiner(g2d);
             }
         }
+
+        for (Sort sort : modele.getGestionnaireSorts().getSortsActifs()) {
+            vueSort.dessiner(g2d, sort,0, 0);
+        }
+
+
 
         // --- PASSE 3 : FANTÔME DE CONSTRUCTION (RTS) ---
         dessinerFantomeConstruction(g2d);
@@ -391,6 +404,7 @@ public class Vue extends JPanel {
 
     public VueHUD getVueHUD() { return vueHUD; }
     public VueArme getVueArme() { return vueArme; }
+    public VueSort getVueSort() { return vueSort; }
     public JFrame getMaFenetre() { return maFenetre; }
 
     public Object identifierElementClique(int x, int y, Object source) {
