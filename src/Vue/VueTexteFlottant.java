@@ -22,23 +22,30 @@ public class VueTexteFlottant {
 
         // Paramètres visuels
         private static final Font FONT_TEXTE  = new Font("Arial", Font.BOLD, 18);
-        private static final Color COULEUR_TEXTE  = new Color(255, 60,  60);
-        private static final Color COULEUR_OMBRE  = new Color(0,   0,   0,  180);
 
         // Paramètres d'animation (par frame, ~60 fps)
         private static final double VITESSE_MONTEE  = 0.9;  // pixels/frame
-        private static final float  VITESSE_FONDU   = 0.018f; // alpha/frame  → ~55 frames ≈ 0.9 s
+        private static final float  VITESSE_FONDU   = 0.1f; // alpha/frame  → ~55 frames ≈ 0.9 s
+
+        private Color couleur;
 
         final String texte;
         double x;
         double y;
         float  alpha;
 
-        TexteFlottant(String texte, double x, double y) {
+        /**
+         *
+         * @param texte
+         * @param x
+         * @param y
+         */
+        TexteFlottant(String texte, double x, double y, Color couleur) {
             this.texte = texte;
             this.x     = x;
             this.y     = y;
             this.alpha = 1.0f;
+            this.couleur = couleur;
         }
 
         /** Avance l'animation d'une frame. */
@@ -53,7 +60,6 @@ public class VueTexteFlottant {
 
         /** Dessine le texte avec son ombre portée. */
         void dessiner(Graphics2D g2d) {
-            float a = Math.max(0f, alpha);
 
             g2d.setFont(FONT_TEXTE);
             FontMetrics fm   = g2d.getFontMetrics();
@@ -61,20 +67,10 @@ public class VueTexteFlottant {
             int textX = (int) x - (int) (rect.getWidth()  / 2);
             int textY = (int) y;
 
-            // --- Ombre portée (légèrement décalée) ---
-            Composite ancienComposite = g2d.getComposite();
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                    a * (COULEUR_OMBRE.getAlpha() / 255f)));
-            g2d.setColor(COULEUR_OMBRE);
-            g2d.drawString(texte, textX + 1, textY + 1);
-
-            // --- Texte principal ---
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a));
-            g2d.setColor(COULEUR_TEXTE);
+            g2d.setColor(couleur);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)); // Appliquer la transparence
             g2d.drawString(texte, textX, textY);
 
-            // Restauration du composite pour ne pas polluer les passes suivantes
-            g2d.setComposite(ancienComposite);
         }
     }
 
@@ -90,8 +86,8 @@ public class VueTexteFlottant {
      * @param mondeX  Coordonnée X dans l'espace monde (pas écran)
      * @param mondeY  Coordonnée Y dans l'espace monde (pas écran)
      */
-    public void ajouter(String texte, double mondeX, double mondeY) {
-        textes.add(new TexteFlottant(texte, mondeX, mondeY));
+    public void ajouter(String texte, double mondeX, double mondeY, Color couleur) {
+        textes.add(new TexteFlottant(texte, mondeX, mondeY, couleur));
     }
 
     /**

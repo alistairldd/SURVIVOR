@@ -10,6 +10,7 @@ import Vue.VueArme;
 
 import Modele.GestionnaireShop;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.security.Key;
@@ -62,10 +63,10 @@ public class ControleurClavier implements KeyListener {
                     if (!vue.getVueArme().getEnAnimation()) {
                         modele.getJoueur().switchArmes();
                     } else {
-                        vue.afficherTexteErreur("Impossible de changer d'arme pendant une attaque !", camX, camY - (double) vue.getHeight() /16);
+                        vue.afficherTexteErreur("Impossible de changer d'arme pendant une attaque !", camX, camY - (double) vue.getHeight() /16, Color.RED);
                     }
                 } else {
-                    vue.afficherTexteErreur("Aucune autre arme à équiper !", camX, camY - (double) vue.getHeight() /16);
+                    vue.afficherTexteErreur("Aucune autre arme à équiper !", camX, camY - (double) vue.getHeight() /16, Color.RED);
                 }
 
             }

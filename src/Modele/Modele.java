@@ -30,6 +30,7 @@ public class Modele {
     private GestionnaireSorts gestionnaireSorts;
     private Item sortEnAttente = null;
 
+    private List<int[]> pendingFloatingTexts = new ArrayList<>();
 
     private UpdateJN updateJN;
 
@@ -38,6 +39,8 @@ public class Modele {
 
     private boolean partieTerminee = false;
     private boolean rotationAbatis = false;
+
+
 
     // --- ÉTAT DE CONSTRUCTION (RTS) ---
     public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS, MORTIER }
@@ -102,6 +105,15 @@ public class Modele {
     public TypeConstruction getModeConstruction() { return modeConstruction; }
     public void setModeConstruction(TypeConstruction mode) { this.modeConstruction = mode; }
     public void annulerConstruction() { this.modeConstruction = TypeConstruction.AUCUN; }
+
+    //méthode pour récuperer les textes flottants à afficher
+    public List<int[]> getPendingFloatingTexts() {
+        return pendingFloatingTexts;
+    }
+    //méthode pour vider la liste des textes flottants après les avoir affichés
+    public void clearPendingFloatingTexts() {
+        pendingFloatingTexts.clear();
+    }
 
     /**
      * Stoppe tous les processus actifs du jeu lors d'un Game Over.
@@ -178,6 +190,9 @@ public class Modele {
                     m.perdreHp(joueur.getArmeEquipee().getDegats() + joueur.getAttack());
                     if (m.getHp() <= 0) {
                         joueur.addPieces(m.getDrop());
+                        // Ajout d'un texte flottant pour voir les pièces récoltés vive la richesse (après on remplace 10 par la qt d'or)
+                        pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), 10});
+
                     }
                 }
             }

@@ -204,6 +204,10 @@ public class Vue extends JPanel {
 
         // --- PASSE 5 : TEXTES FLOTTANTS (Feedback d'erreur) ---
         // Dessinés en dernier dans l'espace monde pour apparaître au-dessus de tout
+        for (int[] pos : modele.getPendingFloatingTexts()) {
+            afficherTexteErreur("+"+pos[2]+" pieces", pos[0], pos[1], Color.YELLOW);
+        }
+        modele.clearPendingFloatingTexts();
         vueTexteFlottant.miseAJour();
         vueTexteFlottant.dessiner(g2d);
 
@@ -230,8 +234,8 @@ public class Vue extends JPanel {
      * @param mondeX  Coordonnée X dans l'espace monde
      * @param mondeY  Coordonnée Y dans l'espace monde
      */
-    public void afficherTexteErreur(String texte, double mondeX, double mondeY) {
-        vueTexteFlottant.ajouter(texte, mondeX, mondeY);
+    public void afficherTexteErreur(String texte, double mondeX, double mondeY, Color couleur) {
+        vueTexteFlottant.ajouter(texte, mondeX, mondeY, couleur);
     }
 
     /**
