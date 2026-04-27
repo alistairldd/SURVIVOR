@@ -68,8 +68,8 @@ public final class Constantes {
     public static final int MORTIER_CORE_DAMAGE = 100; // Dégâts au centre
     public static final int MORTIER_OUTER_DAMAGE = 45; // Dégâts sur les bords de l'explosion
 
-    public static final int MORTIER_DELAY = 4000; // Cadence de tir (4 secondes)
-    public static final int TEMPS_DE_VOL = 1000; // Temps de vol de l'obus (1 seconde)
+    public static final int MORTIER_DELAY = 2500; // Cadence de tir (3 secondes)
+    public static final int TEMPS_DE_VOL = 750; // Temps de vol de l'obus (1/2 seconde)
 
     // ==========================================================
     // --- DIMENSIONS RECTANGULAIRES DES BATIMENTS (2.5D) ---
@@ -298,7 +298,7 @@ public final class Constantes {
 
             IMAGE_MORTIER = chargerEtRedimensionner("src/images/batiments/mortier.png", TAILLE_MORTIER);
             IMAGE_MORTIER_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mortier_endommage.png", TAILLE_MORTIER);
-            IMAGE_MORTIER_PROJECTILE = chargerEtRedimensionner("src/images/batiments/mortier_projectile.png", 30); // 30px pour un obus visible
+            IMAGE_MORTIER_PROJECTILE = chargerEtRedimensionner("src/images/batiments/mortier_projectile.png", 50);
         } catch (Exception e) {
             System.err.println("ERREUR : Impossible de charger les images des bâtiments.");
             e.printStackTrace();

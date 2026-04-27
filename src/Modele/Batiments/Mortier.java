@@ -40,33 +40,37 @@ public class Mortier extends Batiment {
     /**
      * Séquence de tir asynchrone.
      */
+    /**
+     * Séquence de tir asynchrone modifiée pour laisser l'explosion visible.
+     */
     public void attaquer(Monstre cibleInitiale) {
         this.enTrainDeTirer = true;
         this.dernierTempsAttaque = System.currentTimeMillis();
         this.debutTir = System.currentTimeMillis();
 
-        // 1. Verrouillage des coordonnées à l'instant T (Le monstre peut bouger, l'obus ira ici !)
         this.cibleX = cibleInitiale.getX();
         this.cibleY = cibleInitiale.getY();
 
-        // 2. Le canon tire : on attend le temps de vol de l'obus
         try {
             Thread.sleep(TEMPS_DE_VOL);
+
+            // L'obus touche le sol
+            exploser(this.cibleX, this.cibleY);
+
+            // NOUVEAU : On attend 300ms pour que la Vue affiche l'onde violette
+            Thread.sleep(300);
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return;
         }
 
-        // 3. L'obus touche le sol -> BOOM !
-        exploser(this.cibleX, this.cibleY);
-        this.enTrainDeTirer = false;
+        this.enTrainDeTirer = false; // L'animation s'arrête seulement APRES les 300ms
 
-        // 4. On attend le reste du temps de rechargement (Cooldown) avant de pouvoir retirer
+        // Cooldown restant
         try {
-            long tempsRestant = MORTIER_DELAY - TEMPS_DE_VOL;
-            if (tempsRestant > 0) {
-                Thread.sleep(tempsRestant);
-            }
+            long tempsRestant = MORTIER_DELAY - TEMPS_DE_VOL - 300;
+            if (tempsRestant > 0) Thread.sleep(tempsRestant);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
