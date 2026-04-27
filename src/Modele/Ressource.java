@@ -29,8 +29,20 @@ public class Ressource {
         this.positionX = offsetDecale + (Math.random() * (LARGEUR_MAP - 2 * offsetDecale));
         this.positionY = offsetDecale + (Math.random() * (HAUTEUR_MAP - 2 * offsetDecale));
 
-        // Choisit un index aléatoire parmi les 4 types de ressources disponibles
-        int index = (int) (Math.random() * TYPE_RESSOURCE.length);
+        // --- NOUVELLE LOGIQUE DE PROBABILITÉ ---
+        double rand = Math.random(); // Génère un nombre entre 0.0 et 0.999...
+        int index;
+
+        if (rand < 0.55) {
+            index = 0; // 55% de chance
+        } else if (rand < 0.80) {
+            index = 1; // 25% de chance
+        } else if (rand < 0.90) {
+            index = 2; // 10% de chance
+        } else {
+            index = 3; // 10% de chance
+        }
+
         this.type = TYPE_RESSOURCE[index];
         this.estAspiree = false;
     }

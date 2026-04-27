@@ -421,7 +421,7 @@ public class Modele {
                 Tower t = new Tower((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
 
-                /*if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
+                /*if (!(joueur.aAssezDeRessources(COUT_TOUR))) {
                     annulerConstruction();
                 }*/
                 return true;
@@ -468,7 +468,7 @@ public class Modele {
                 joueur.consommerListeRessources(COUT_MORTIER);
                 Mortier m = new Mortier((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(m);
-                annulerConstruction();
+                //annulerConstruction();
                 return true;
             }
             return false;
