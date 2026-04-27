@@ -19,15 +19,17 @@ public class GestionnaireBatiments {
 
         // On initialise le HQ en lui passant l'instance actuelle du gestionnaire
         this.hq = new HQ(this);
+        this.hq.setHp(20);
         ajouterBatiment(this.hq);
 
         ajouterBatiment(new Mine(this));
 
-        Tower tourEndommagee = new Tower(HAUTEUR_MAP/2, LARGEUR_MAP/3, this);
+        /**Tower tourEndommagee = new Tower(HAUTEUR_MAP/2, LARGEUR_MAP/3, this);
         tourEndommagee.setHp(0);
         ajouterBatiment(tourEndommagee);
 
-        ajouterBatiment(new TenteDeSoin(HAUTEUR_MAP/3, LARGEUR_MAP/2, this));
+        ajouterBatiment(new TenteDeSoin(HAUTEUR_MAP/3, LARGEUR_MAP/2, this));**/
+
     }
 
     /**

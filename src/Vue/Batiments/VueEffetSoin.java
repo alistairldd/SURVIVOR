@@ -31,8 +31,12 @@ public class VueEffetSoin {
 
         // Si une réparation est en cours, on fait "poper" de nouvelles particules (ex: 2 par rafraîchissement)
         if (cible != null) {
+            // NOUVEAU : On calcule le rayon dynamique pour l'apparition des particules
+            int dimensionMax = Math.max(cible.getLargeurHitbox(), cible.getHauteurHitbox());
+            int rayonDynamique = cible.getHealingRange() + (dimensionMax / 2);
+
             for (int i = 0; i < 2; i++) {
-                particules.add(new VueParticuleSoin(cible.getX(), cible.getY(), cible.getHealingRange()));
+                particules.add(new VueParticuleSoin(cible.getX(), cible.getY(), rayonDynamique));
             }
         }
 
@@ -58,20 +62,23 @@ public class VueEffetSoin {
 
         // --- 1. Dessin de la zone de soin (Cercle vert au sol) ---
         if (cible != null) {
-            int rayon = cible.getHealingRange();
-            int diametre = rayon * 2;
+            // NOUVEAU : On calcule le rayon dynamique pour le dessin du cercle
+            int dimensionMax = Math.max(cible.getLargeurHitbox(), cible.getHauteurHitbox());
+            int rayonDynamique = cible.getHealingRange() + (dimensionMax / 2);
+
+            int diametre = rayonDynamique * 2;
             int cx = (int) cible.getX();
             int cy = (int) cible.getY();
 
             // Fond très transparent (15% d'opacité)
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
             g2d.setColor(Color.GREEN);
-            g2d.fillOval(cx - rayon, cy - rayon, diametre, diametre);
+            g2d.fillOval(cx - rayonDynamique, cy - rayonDynamique, diametre, diametre);
 
             // Bordure un peu plus marquée (40% d'opacité)
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
             g2d.setStroke(new BasicStroke(2));
-            g2d.drawOval(cx - rayon, cy - rayon, diametre, diametre);
+            g2d.drawOval(cx - rayonDynamique, cy - rayonDynamique, diametre, diametre);
             g2d.setStroke(new BasicStroke(1)); // Réinitialise l'épaisseur
         }
 

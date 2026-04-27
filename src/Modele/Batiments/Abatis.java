@@ -11,7 +11,6 @@ import static Modele.Constantes.*;
 public class Abatis extends Batiment {
 
     private boolean rotation;
-    private final double angleActuel;
 
     /**
      * Construit un Abatis.
@@ -29,10 +28,9 @@ public class Abatis extends Batiment {
         this.largeurHitbox = ABATIS_LARGEUR;
         this.hauteurHitbox = ABATIS_HAUTEUR;
         this.offsetYHitbox = ABATIS_OFFSET_Y;
-        this.angleRotation = ABATIS_ANGLE_RAD;
 
-        // L'inclinaison change de sens selon l'état du miroir
-        this.angleActuel = rotation ? -ANGLE_ABATIS : ANGLE_ABATIS;
+        // CORRECTION : L'angle de rotation envoyé au moteur SAT dépend maintenant du sens de l'Abatis
+        this.angleRotation = rotation ? -ABATIS_ANGLE_RAD : ABATIS_ANGLE_RAD;
     }
 
     @Override
@@ -52,33 +50,6 @@ public class Abatis extends Batiment {
                 break; // On quitte proprement la boucle
             }
         }
-    }
-
-    /**
-     * Détermine si un point (ex: coordonnées d'un monstre) entre en collision
-     * avec la hitbox rectangulaire inclinée de cet Abatis.
-     * * @param pointX Position X de l'entité à tester.
-     * @param pointY Position Y de l'entité à tester.
-     * @param marge Marge de tolérance (ex: rayon de la hitbox du monstre).
-     * @return true si collision détectée.
-     */
-    public boolean contientPointIncline(double pointX, double pointY, double marge) {
-        // 1. Translation vers l'origine (centre de l'abatis)
-        double dx = pointX - this.x;
-        double dy = pointY - this.y;
-
-        // 2. Rotation inverse pour aligner le rectangle avec les axes X/Y mathématiques
-        double cos = Math.cos(-angleActuel);
-        double sin = Math.sin(-angleActuel);
-
-        double localX = dx * cos - dy * sin;
-        double localY = dx * sin + dy * cos;
-
-        // 3. Test de collision classique (AABB) sur le repère local corrigé
-        double demiLargeur = (LARGEUR_HITBOX_ABATIS / 2.0) + marge;
-        double demiHauteur = (HAUTEUR_HITBOX_ABATIS / 2.0) + marge;
-
-        return (Math.abs(localX) <= demiLargeur) && (Math.abs(localY) <= demiHauteur);
     }
 
     public boolean isRotation() {
