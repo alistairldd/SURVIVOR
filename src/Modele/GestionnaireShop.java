@@ -182,6 +182,7 @@ public class GestionnaireShop {
             j.setPieces(j.getPieces()-besoins);
             if (i instanceof Pioche){
                 enleverItemDuShop(i);
+                modele.debloquerMinage();
             }
             if (i instanceof Item) {
                 j.addToInventaire(i);

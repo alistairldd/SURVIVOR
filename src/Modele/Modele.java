@@ -475,4 +475,15 @@ public class Modele {
         }
         return false;
     }
+
+    /**
+     * Action à appeler lors de l'achat de la pioche.
+     */
+    public void debloquerMinage() {
+        // 1. On marque l'état sur le joueur
+        joueur.setaPioche(true);
+
+        // 2. On demande au gestionnaire d'activer les mines existantes
+        gestionnaireBatiments.activerLaMine();
+    }
 }

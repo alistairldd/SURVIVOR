@@ -40,6 +40,7 @@ public class Mine extends Batiment implements Localisable {
         this.offsetYHitbox = MINE_OFFSET_Y;
         this.ressources = new ArrayList<>();
         this.attaquable = false; // La mine n'est pas attaquable, elle ne peut pas être détruite par les monstres
+        this.setFonctionnel(false);
     }
 
     // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)
@@ -78,6 +79,8 @@ public class Mine extends Batiment implements Localisable {
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
+
+
             // Si les PV tombent à 0 ou moins, la mine disjoncte et arrête de produire
             if (this.hp <= 0 && isFonctionnel()) {
                 setFonctionnel(false);
@@ -101,6 +104,7 @@ public class Mine extends Batiment implements Localisable {
                     Thread.currentThread().interrupt();
                     break;
                 }
+
             }
         }
     }

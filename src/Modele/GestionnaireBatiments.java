@@ -102,6 +102,17 @@ public class GestionnaireBatiments {
         return false;
     }
 
+    /**
+     * Active la mine présente sur la carte.
+     */
+    public void activerLaMine() {
+        for (Batiment b : batiments) {
+            if (b instanceof Mine) {
+                b.setFonctionnel(true); // Utilise le flag hérité de Batiment
+            }
+        }
+    }
+
     public void clearBatiments() {
         stopperTousLesThreads(); // Sécurité : on tue tout avant de vider la liste
         batiments.clear();
