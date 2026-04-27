@@ -151,7 +151,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 5;
+    public final static int DUREE_CYCLE_JOUR = 120;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière
@@ -221,7 +221,7 @@ public final class Constantes {
     // Taille ogre
     public static final int TAILLE_OGRE = 120;
     // Taille gobelin
-    public static final int TAILLE_GOBELIN = 50;
+    public static final int TAILLE_GOBELIN = 70;
     // Taille drastiquement réduite pour que le monstre soit juste un point rouge sur la minimap
     public static final int TAILLE_MINIMAP_MONSTRE = 10;
 

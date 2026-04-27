@@ -88,14 +88,14 @@ public class Joueur implements Localisable {
         this.aPioche = false;
 
         // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             ressources.add(new Ressource(0)); // 0: Bois
             ressources.add(new Ressource(1)); // 1: Pierre
             ressources.add(new Ressource(2)); // 2: Fer
             ressources.add(new Ressource(3)); // 3: Or
         }
         // triche/test : on donne 50 pieces au joueur au départ
-        pieces = 10000;
+        pieces = 200;
         // Équipe l'arme de départ
         armeEquipee = new Baton();
         // Arme non équipée existe pas encore
