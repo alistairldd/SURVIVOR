@@ -4,7 +4,10 @@ import Modele.Items.Item;
 import Modele.Joueur;
 import Modele.Modele;
 import Modele.Ressource;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import static Modele.Constantes.*;
 
@@ -65,8 +68,14 @@ public class VueHUDInventaire {
 
         // Boucle pour dessiner les 4 lignes de ressources
         for (int i = 0; i < noms.length; i++) {
-            // Concatène le nom et la quantité finale, et décale le texte vers le bas de 20px à chaque itération
-            g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 10, yCourant);
+            try{
+                Image img = ImageIO.read(new File("src/images/ressources/" + noms[i] + ".png"));
+                g2d.drawImage(img, xOffset, yCourant - 14, 16, 16, null);
+            } catch (Exception e) {
+                System.out.println("Erreur de chargement de l'image pour " + noms[i] + ": " + e.getMessage());
+            }
+            // Affiche le nom et la quantité de la ressource i
+            g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 20, yCourant);
             yCourant += 20; // Descend pour la ligne suivante
         }
 

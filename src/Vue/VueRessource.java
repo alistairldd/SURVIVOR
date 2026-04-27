@@ -21,10 +21,10 @@ public class VueRessource {
     public VueRessource() {
         // Importe les images des ressources
         try {
-            this.imageFer = ImageIO.read(new File("src/images/ressources/lingot_fer.png"));
-            this.imageOr = ImageIO.read(new File("src/images/ressources/lingot_or.png"));
-            this.imagePierre = ImageIO.read(new File("src/images/ressources/pierre.png"));
-             this.imageBois = ImageIO.read(new File("src/images/ressources/bois.png"));
+            this.imageFer = ImageIO.read(new File("src/images/ressources/Fer.png"));
+            this.imageOr = ImageIO.read(new File("src/images/ressources/Or.png"));
+            this.imagePierre = ImageIO.read(new File("src/images/ressources/Pierre.png"));
+            this.imageBois = ImageIO.read(new File("src/images/ressources/Bois.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
