@@ -62,31 +62,31 @@ public final class Constantes {
 
     // HQ
     public static final int HQ_LARGEUR_ENC = 500;
-    public static final int HQ_HAUTEUR_ENC = 500;
-    public static final int HQ_LARGEUR_HIT = 200;
-    public static final int HQ_HAUTEUR_HIT = 200;
-    public static final int HQ_OFFSET_Y = 45; // Décalage vers le bas (les pieds)
+    public static final int HQ_HAUTEUR_ENC = 450;
+    public static final int HQ_LARGEUR_HIT = 270;
+    public static final int HQ_HAUTEUR_HIT = 180;
+    public static final int HQ_OFFSET_Y = 20; // Décalage vers le bas (les pieds)
 
     // Tour
     public static final int TOUR_LARGEUR_ENC = 80;
     public static final int TOUR_HAUTEUR_ENC = 80;
     public static final int TOUR_LARGEUR_HIT = 60;
     public static final int TOUR_HAUTEUR_HIT = 40;
-    public static final int TOUR_OFFSET_Y = 20;
+    public static final int TOUR_OFFSET_Y = 0;
 
     // Tente de Soin
     public static final int TENTE_LARGEUR_ENC = 100;
     public static final int TENTE_HAUTEUR_ENC = 80;
     public static final int TENTE_LARGEUR_HIT = 90;
     public static final int TENTE_HAUTEUR_HIT = 40;
-    public static final int TENTE_OFFSET_Y = 20;
+    public static final int TENTE_OFFSET_Y = 10;
 
     // Mine
     public static final int MINE_LARGEUR_ENC = 120;
     public static final int MINE_HAUTEUR_ENC = 100;
     public static final int MINE_LARGEUR_HIT = 100;
-    public static final int MINE_HAUTEUR_HIT = 50;
-    public static final int MINE_OFFSET_Y = 25;
+    public static final int MINE_HAUTEUR_HIT = 100;
+    public static final int MINE_OFFSET_Y = -60;
 
     // Abatis (Spécial : Encombrement = Hitbox)
     public static final int ABATIS_LARGEUR = 150;
@@ -121,7 +121,7 @@ public final class Constantes {
     // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
     public final static int FPS = 60;
     // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 60;
+    public final static int DUREE_CYCLE_JOUR = 1000;
     // Durée fixe d'une phase nuit en secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120;
     // Nombre total de tours de boucle nécessaires pour terminer une phase entière

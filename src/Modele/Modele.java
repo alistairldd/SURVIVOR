@@ -238,6 +238,42 @@ public class Modele {
     }
 
     /**
+     * NOUVEAU : Vérifie si le joueur entre en collision avec la HITBOX d'un bâtiment solide.
+     * @param testX La future position X du joueur.
+     * @param testY La future position Y du joueur.
+     * @return true si la position chevauche la Hitbox d'un bâtiment (hors Abatis).
+     */
+    public boolean collisionAvecBatimentSolide(double testX, double testY) {
+        // Le joueur est un carré de taille J_TAILLE x J_TAILLE
+        double[][] coinsJoueur = getCoinsRectangle(testX, testY, Constantes.J_TAILLE, Constantes.J_TAILLE, 0);
+
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+            // EXCEPTION : Le joueur passe à travers l'Abatis, on l'ignore de la détection
+            if (b instanceof Abatis) {
+                continue;
+            }
+
+            // On utilise la Hitbox de combat (et non l'encombrement global)
+            // IMPORTANT : On applique le décalage 2.5D (offset Y) pour cibler la BASE du bâtiment
+            double centreHitboxY = b.getY() + b.getOffsetYHitbox();
+
+            double[][] coinsHitbox = getCoinsRectangle(
+                    b.getX(),
+                    centreHitboxY,
+                    b.getLargeurHitbox(),
+                    b.getHauteurHitbox(),
+                    b.getAngleRotation()
+            );
+
+            // Si le polygone du joueur touche le polygone du bâtiment, c'est un mur !
+            if (chevauchementPolygones(coinsJoueur, coinsHitbox)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Vérifie si deux rectangles (droits ou orientés) se chevauchent.
      * poly1 et poly2 sont les tableaux des 4 coins générés par getCoinsRectangle().
      */

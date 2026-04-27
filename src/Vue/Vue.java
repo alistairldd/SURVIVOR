@@ -187,6 +187,29 @@ public class Vue extends JPanel {
             }
         }
 
+        // --- PASSE 4.5 : DEBUG HITBOXES (Temporaire pour calibrage 2.5D) ---
+        // Affiche la base physique (Hitbox) de chaque bâtiment en rouge
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
+            Graphics2D g2dDebug = (Graphics2D) g2d.create();
+
+            // On calcule le centre de la hitbox (avec le fameux Offset Y)
+            double centreHitboxY = b.getY() + b.getOffsetYHitbox();
+
+            g2dDebug.translate(b.getX(), centreHitboxY);
+            g2dDebug.rotate(b.getAngleRotation());
+
+            // Rectangle rouge transparent
+            g2dDebug.setColor(new Color(255, 0, 0, 120));
+            g2dDebug.fillRect((int)(-b.getLargeurHitbox()/2.0), (int)(-b.getHauteurHitbox()/2.0), b.getLargeurHitbox(), b.getHauteurHitbox());
+
+            // Bordure rouge vif
+            g2dDebug.setColor(Color.RED);
+            g2dDebug.setStroke(new BasicStroke(2));
+            g2dDebug.drawRect((int)(-b.getLargeurHitbox()/2.0), (int)(-b.getHauteurHitbox()/2.0), b.getLargeurHitbox(), b.getHauteurHitbox());
+
+            g2dDebug.dispose();
+        }
+
         // --- PASSE 5 : TEXTES FLOTTANTS (Feedback d'erreur) ---
         // Dessinés en dernier dans l'espace monde pour apparaître au-dessus de tout
         vueTexteFlottant.miseAJour();
