@@ -11,59 +11,61 @@ import java.util.List;
 
 /**
  * Cœur du système (Architecture MVC).
- * Gère l'état global du monde, les entités et les flags d'affichage de l'interface.
+ * Gère l'état global du monde, les entités, la logique physique et l'état de l'UI.
  */
 public class Modele {
 
-    // --- ÉTAT DE L'INTERFACE (UI FLAGS) ---
+    /** ---------- [Propriétés - Énumérations] ---------- **/
+
+    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS, MORTIER }
+
+    /** ---------- [Propriétés - UI & Affichage] ---------- **/
+
     private int hudPageActuelle = 1;
     private boolean instructionsOuvert = false;
-
-    // NOUVEAU : Flag pour l'affichage des jauges de vie au-dessus des entités
     private boolean affichagePV = true;
+    private boolean rotationAbatis = false;
+    private boolean flashRougeActif = false;
 
-    // --- ENTITÉS ET GESTIONNAIRES ---
+    // Coordonnées monde du pointeur pour rendu et interactions
+    private double sourisMondeX = 0;
+    private double sourisMondeY = 0;
+
+    // Éléments d'interface dynamiques
+    private Localisable cibleAffichage;
+    private List<int[]> pendingFloatingTexts = new ArrayList<>();
+
+    /** ---------- [Propriétés - Moteur de Jeu] ---------- **/
+
     private Joueur joueur;
     private GestionnaireBatiments gestionnaireBatiments;
     private CycleJourNuit leCycleJourNuit;
     private GestionnaireShop gestionnaireShop;
     private GestionnaireSorts gestionnaireSorts;
-    private Item sortEnAttente = null;
-    private boolean flashRougeActif = false;
-
-    private List<int[]> pendingFloatingTexts = new ArrayList<>();
-
     private UpdateJN updateJN;
 
-    // Entité actuellement ciblée par l'interface
-    private Localisable cibleAffichage;
-
-    private boolean partieTerminee = false;
-    private boolean rotationAbatis = false;
-
-
-
-    // --- ÉTAT DE CONSTRUCTION (RTS) ---
-    public enum TypeConstruction { AUCUN, TOUR, TENTE, ABATIS, MORTIER }
+    private Item sortEnAttente = null;
     private TypeConstruction modeConstruction = TypeConstruction.AUCUN;
+    private boolean partieTerminee = false;
 
+
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Initialise le modèle, les systèmes autonomes (cycle, bâtiments) et le joueur.
+     */
     public Modele() {
-        // Initialisation de l'entité joueur
         this.joueur = new Joueur(this);
-        //this.joueur.setHp(10); // HP initial de test
-
-        // Initialisation des systèmes autonomes
         this.updateJN = new UpdateJN(this);
         this.leCycleJourNuit = new CycleJourNuit(updateJN);
         this.gestionnaireBatiments = new GestionnaireBatiments(this);
         this.gestionnaireShop = new GestionnaireShop(this);
         this.gestionnaireSorts = new GestionnaireSorts(this);
-
-
         this.cibleAffichage = joueur;
     }
 
-    /* ---- GETTERS ET SETTERS D'INTERFACE ---- */
+
+    /** ---------- [Getters & Setters - Interface & UI] ---------- **/
 
     public int getHudPageActuelle() { return hudPageActuelle; }
     public void setHudPageActuelle(int page) { this.hudPageActuelle = page; }
@@ -71,26 +73,28 @@ public class Modele {
     public boolean isInstructionsOuvert() { return instructionsOuvert; }
     public void toggleInstructions() { this.instructionsOuvert = !this.instructionsOuvert; }
 
-    // --- LOGIQUE D'AFFICHAGE DES PV ---
     public boolean isAffichagePV() { return affichagePV; }
     public void toggleAffichagePV() { this.affichagePV = !this.affichagePV; }
 
-    // NOUVEAU : Getters et bascule pour la rotation
     public boolean isRotationAbatis() { return rotationAbatis; }
     public void toggleRotationAbatis() { this.rotationAbatis = !this.rotationAbatis; }
 
-    // Suivi de la souris pour le rendu du fantôme
-    private double sourisMondeX = 0;
-    private double sourisMondeY = 0;
-
     public double getSourisMondeX() { return sourisMondeX; }
     public double getSourisMondeY() { return sourisMondeY; }
+
     public void setPositionSourisMonde(double x, double y) {
         this.sourisMondeX = x;
         this.sourisMondeY = y;
     }
 
-    /* ---- LOGIQUE MÉTIER ET GESTION DU MONDE ---- */
+    public Localisable getCibleAffichage() { return cibleAffichage; }
+    public boolean isFlashRougeActif() { return flashRougeActif; }
+
+    public List<int[]> getPendingFloatingTexts() { return pendingFloatingTexts; }
+    public void clearPendingFloatingTexts() { pendingFloatingTexts.clear(); }
+
+
+    /** ---------- [Getters & Setters - Système & Métier] ---------- **/
 
     public Joueur getJoueur() { return joueur; }
     public CycleJourNuit getLeCycleJourNuit() { return leCycleJourNuit; }
@@ -98,38 +102,22 @@ public class Modele {
     public GestionnaireShop getGestionnaireShop() { return gestionnaireShop; }
     public GestionnaireBatiments getGestionnaireBatiments() { return gestionnaireBatiments; }
     public GestionnaireSorts getGestionnaireSorts() { return gestionnaireSorts; }
+    public boolean getPartieTerminee() { return partieTerminee; }
+
     public void preparerSort(Item sort) { this.sortEnAttente = sort; }
     public Item getSortEnAttente() { return this.sortEnAttente; }
     public void setSortEnAttente() { this.sortEnAttente = null; }
-    public boolean getPartieTerminee() { return partieTerminee; }
 
     public TypeConstruction getModeConstruction() { return modeConstruction; }
     public void setModeConstruction(TypeConstruction mode) { this.modeConstruction = mode; }
     public void annulerConstruction() { this.modeConstruction = TypeConstruction.AUCUN; }
 
-    //méthode pour récuperer les textes flottants à afficher
-    public List<int[]> getPendingFloatingTexts() {
-        return pendingFloatingTexts;
-    }
-    //méthode pour vider la liste des textes flottants après les avoir affichés
-    public void clearPendingFloatingTexts() {
-        pendingFloatingTexts.clear();
-    }
+
+    /** ---------- [Méthodes Publiques - Core Loop & Événements] ---------- **/
 
     /**
-     * Stoppe tous les processus actifs du jeu lors d'un Game Over.
+     * Stoppe les processus et marque la partie comme terminée.
      */
-    private void stopperTousLesThreadsDuJeu() {
-        if (leCycleJourNuit != null && leCycleJourNuit.isAlive()) leCycleJourNuit.interrupt();
-        if (updateJN != null && updateJN.getMonstres() != null) {
-            for (Monstre m : updateJN.getMonstres()) {
-                if (m != null && m.isAlive()) m.interrupt();
-            }
-        }
-        if (gestionnaireBatiments != null) gestionnaireBatiments.stopperTousLesThreads();
-        if (joueur != null) joueur.stopperReparation();
-    }
-
     public void declencherGameOver() {
         if (!partieTerminee) {
             partieTerminee = true;
@@ -138,16 +126,22 @@ public class Modele {
     }
 
     /**
-     * Utilitaire de mise à l'échelle pour le rendu (ex: Minimap).
+     * Réinitialisation complète du jeu après un Game Over.
      */
-    public double map(int debut, int fin, double valDebut, double valFin, double val){
-        return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
+    public void reinitialiserJeu() {
+        stopperTousLesThreadsDuJeu();
+        this.partieTerminee = false;
+        this.hudPageActuelle = 1;
+        this.joueur = new Joueur(this);
+        this.gestionnaireBatiments = new GestionnaireBatiments(this);
+        this.gestionnaireShop = new GestionnaireShop(this);
+        this.updateJN = new UpdateJN(this);
+        this.leCycleJourNuit = new CycleJourNuit(this.updateJN);
+        this.cibleAffichage = joueur;
     }
 
-    public Localisable getCibleAffichage() { return cibleAffichage; }
-
     /**
-     * Vérifie quelle entité est survolée par le curseur.
+     * Met à jour la cible d'affichage selon la position du curseur en monde.
      */
     public void verifierSurvol(double sourisMondeX, double sourisMondeY) {
         List<Localisable> ciblesPotentielles = new ArrayList<>();
@@ -164,7 +158,8 @@ public class Modele {
     }
 
     /**
-     * Gère la détection de collision et l'application des dégâts lors d'une attaque.
+     * Calcule et applique les dégâts d'une attaque selon un cône de visée.
+     * * @param angleAttaque - L'angle (en radians) vers lequel le joueur attaque
      */
     public void joueurAttaque(double angleAttaque) {
         double portee = joueur.getArmeEquipee().getPortee();
@@ -181,6 +176,7 @@ public class Modele {
             double vecteurMonstreY = m.getY() - positionY;
             double distance = Math.hypot(vecteurMonstreX, vecteurMonstreY);
 
+            // Vérifie si le monstre est dans la portée et dans le cône de l'arme
             if (distance <= portee) {
                 double normX = vecteurMonstreX / distance;
                 double normY = vecteurMonstreY / distance;
@@ -189,26 +185,59 @@ public class Modele {
 
                 if (produitScalaire >= seuilCosinus) {
                     m.perdreHp(joueur.getArmeEquipee().getDegats() + joueur.getAttack());
-
                 }
             }
         }
     }
 
     /**
-     * Gère la récompense dans le cas de la mort d'un monstre
-     * @param m
+     * Gère la récompense (drop) lors de l'élimination d'un monstre.
+     * * @param m - Le monstre éliminé
      */
     public void monstreMort(Monstre m) {
         joueur.addPieces(m.getDrop());
-        // Ajout d'un texte flottant pour voir les pièces récoltés vive la richesse (après on remplace 10 par la qt d'or)
         pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), m.getDrop()});
-
     }
 
     /**
-     * Utilitaires de recherche d'entités pour les bâtiments.
+     * Débloque la mécanique de minage et active les bâtiments associés.
      */
+    public void debloquerMinage() {
+        joueur.setaPioche(true);
+        gestionnaireBatiments.activerLaMine();
+    }
+
+    /**
+     * Compétence spéciale : Élimine tous les monstres présents et active un effet visuel.
+     */
+    public void declencherArmageddon() {
+        this.flashRougeActif = true;
+        List<Monstre> monstres = updateJN.getMonstres();
+
+        for (int i = monstres.size() - 1; i >= 0; i--) {
+            Monstre m = monstres.get(i);
+            joueur.addPieces(m.getDrop());
+            pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), m.getDrop()});
+            m.interrupt();
+            monstres.remove(i);
+        }
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(400);
+                this.flashRougeActif = false;
+                System.out.println("Flash rouge désactivé.");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
+
+        System.out.println("Armageddon déclenché : Terrain nettoyé !");
+    }
+
+
+    /** ---------- [Méthodes Publiques - Recherche Spatiale] ---------- **/
+
     public Monstre batTrouverMonstre(Batiment b) {
         for (Monstre m : updateJN.getMonstres()) {
             if (Math.hypot(m.getX() - b.getX(), m.getY() - b.getY()) <= b.getRange()) return m;
@@ -224,7 +253,6 @@ public class Modele {
     public Monstre batTrouverMonstreMortier(Mortier m) {
         for (Monstre monstre : updateJN.getMonstres()) {
             double distance = Math.hypot(monstre.getX() - m.getX(), monstre.getY() - m.getY());
-            // Condition cruciale : Le monstre doit être ENTRE la portée min et la portée max
             if (distance >= m.getMinRange() && distance <= m.getRange()) {
                 return monstre;
             }
@@ -232,156 +260,29 @@ public class Modele {
         return null;
     }
 
-    /**
-     * Réinitialisation complète du jeu.
-     */
-    public void reinitialiserJeu() {
-        stopperTousLesThreadsDuJeu();
-        this.partieTerminee = false;
-        this.hudPageActuelle = 1;
-        this.joueur = new Joueur(this);
-        this.gestionnaireBatiments = new GestionnaireBatiments(this);
-        this.gestionnaireShop = new GestionnaireShop(this);
-        this.updateJN = new UpdateJN(this);
-        this.leCycleJourNuit = new CycleJourNuit(this.updateJN);
-        this.cibleAffichage = joueur;
-    }
 
-    // ==========================================================
-    // --- MOTEUR DE COLLISION RECTANGULAIRE (Théorème SAT) ---
-    // ==========================================================
+    /** ---------- [Méthodes Publiques - Moteur de Construction (RTS)] ---------- **/
 
     /**
-     * Calcule les coordonnées exactes des 4 coins d'un rectangle en tenant compte de sa rotation.
-     * x, y : Centre du rectangle. w, h : Largeur et Hauteur. angle : Rotation en radians.
-     */
-    private double[][] getCoinsRectangle(double cx, double cy, double w, double h, double angle) {
-        double cos = Math.cos(angle);
-        double sin = Math.sin(angle);
-        double[][] coins = new double[4][2];
-
-        // Demi-largeur et demi-hauteur depuis le centre
-        double hw = w / 2.0;
-        double hh = h / 2.0;
-
-        // Les 4 coins relatifs au centre (avant rotation)
-        double[][] relatifs = {
-                {-hw, -hh}, {hw, -hh}, {hw, hh}, {-hw, hh}
-        };
-
-        for (int i = 0; i < 4; i++) {
-            double rx = relatifs[i][0];
-            double ry = relatifs[i][1];
-            // Application de la matrice de rotation 2D et translation vers (cx, cy)
-            coins[i][0] = cx + (rx * cos - ry * sin);
-            coins[i][1] = cy + (rx * sin + ry * cos);
-        }
-        return coins;
-    }
-
-    /**
-     * Vérifie si le joueur entre en collision avec la HITBOX d'un bâtiment solide.
-     * @param testX La future position X du joueur.
-     * @param testY La future position Y du joueur.
-     * @return true si la position chevauche la Hitbox d'un bâtiment (hors Abatis).
-     */
-    public boolean collisionAvecBatimentSolide(double testX, double testY) {
-        // Le joueur est un carré de taille J_TAILLE x J_TAILLE
-        double[][] coinsJoueur = getCoinsRectangle(testX, testY, Constantes.J_TAILLE, Constantes.J_TAILLE, 0);
-
-        for (Batiment b : gestionnaireBatiments.getBatiments()) {
-            // EXCEPTION : Le joueur passe à travers l'Abatis, on l'ignore de la détection
-            if (b instanceof Abatis) {
-                continue;
-            }
-
-            // On utilise la Hitbox de combat (et non l'encombrement global)
-            // IMPORTANT : On applique le décalage 2.5D (offset Y) pour cibler la BASE du bâtiment
-            double centreHitboxY = b.getY() + b.getOffsetYHitbox();
-
-            double[][] coinsHitbox = getCoinsRectangle(
-                    b.getX(),
-                    centreHitboxY,
-                    b.getLargeurHitbox(),
-                    b.getHauteurHitbox(),
-                    b.getAngleRotation()
-            );
-
-            // Si le polygone du joueur touche le polygone du bâtiment, c'est un mur !
-            if (chevauchementPolygones(coinsJoueur, coinsHitbox)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Vérifie si deux rectangles (droits ou orientés) se chevauchent.
-     * poly1 et poly2 sont les tableaux des 4 coins générés par getCoinsRectangle().
-     */
-    private boolean chevauchementPolygones(double[][] poly1, double[][] poly2) {
-        double[][][] polygones = {poly1, poly2};
-        for (int i = 0; i < polygones.length; i++) {
-            double[][] polygone = polygones[i];
-            for (int i1 = 0; i1 < polygone.length; i1++) {
-                int i2 = (i1 + 1) % polygone.length;
-                double p1X = polygone[i1][0];
-                double p1Y = polygone[i1][1];
-                double p2X = polygone[i2][0];
-                double p2Y = polygone[i2][1];
-
-                // Calcul de la normale (l'axe sur lequel on va projeter)
-                double normalX = p2Y - p1Y;
-                double normalY = p1X - p2X;
-
-                // Projection du premier polygone
-                double minA = Double.POSITIVE_INFINITY;
-                double maxA = Double.NEGATIVE_INFINITY;
-                for (double[] p : poly1) {
-                    double proj = normalX * p[0] + normalY * p[1];
-                    if (proj < minA) minA = proj;
-                    if (proj > maxA) maxA = proj;
-                }
-
-                // Projection du deuxième polygone
-                double minB = Double.POSITIVE_INFINITY;
-                double maxB = Double.NEGATIVE_INFINITY;
-                for (double[] p : poly2) {
-                    double proj = normalX * p[0] + normalY * p[1];
-                    if (proj < minB) minB = proj;
-                    if (proj > maxB) maxB = proj;
-                }
-
-                // Si on trouve un axe où les projections ne se touchent pas, c'est qu'il n'y a pas de collision !
-                if (maxA < minB || maxB < minA) {
-                    return false;
-                }
-            }
-        }
-        return true; // Aucune ligne de séparation trouvée : les rectangles se chevauchent.
-    }
-
-    /**
-     * Vérifie si un bâtiment peut être construit à une position donnée en utilisant des rectangles.
-     * @param x Coordonnée X du centre.
-     * @param y Coordonnée Y du centre.
-     * @param w Largeur du rectangle d'encombrement.
-     * @param h Hauteur du rectangle d'encombrement.
-     * @param angle Angle de rotation en radians.
-     * @return true si l'emplacement est libre.
+     * Vérifie si un emplacement est valide pour placer un bâtiment (collisions map/entités).
+     * * @param x - Coordonnée X centrale
+     * @param y - Coordonnée Y centrale
+     * @param w - Largeur de l'encombrement
+     * @param h - Hauteur de l'encombrement
+     * @param angle - Angle de rotation
+     * @return true si la place est libre
      */
     public boolean peutConstruireIci(double x, double y, double w, double h, double angle) {
-        // 1. Calculer les coins du futur bâtiment (le fantôme)
         double[][] coinsNouveau = getCoinsRectangle(x, y, w, h, angle);
 
-        // 2. Vérifie si le bâtiment est dans les limites de la carte
+        // Limites de carte
         for (double[] coin : coinsNouveau) {
             if (coin[0] < 0 || coin[0] > LARGEUR_MAP || coin[1] < 0 || coin[1] > HAUTEUR_MAP) {
                 return false;
             }
         }
 
-        // 3. Vérifie si l'emplacement est déjà occupé par un autre bâtiment
+        // Collision avec bâtiments existants
         for (Batiment b : gestionnaireBatiments.getBatiments()) {
             double[][] coinsExistant = getCoinsRectangle(
                     b.getX(),
@@ -395,8 +296,7 @@ public class Modele {
             }
         }
 
-        // 4. Vérifie si l'emplacement est trop proche du joueur
-        // On traite le joueur comme un rectangle de J_TAILLE x J_TAILLE pour la collision SAT
+        // Collision avec le joueur
         double[][] coinsJoueur = getCoinsRectangle(joueur.getX(), joueur.getY(), J_TAILLE, J_TAILLE, 0);
         if (chevauchementPolygones(coinsNouveau, coinsJoueur)) {
             return false;
@@ -406,41 +306,23 @@ public class Modele {
     }
 
     /**
-     * Valide l'achat et place le bâtiment sur la carte si le joueur a les ressources ET la place.
-     *
-     * @param x Coordonnée X du clic
-     * @param y Coordonnée Y du clic
-     * @return true si la construction a réussi, false sinon (pour déclencher un feedback visuel)
-     */
-    /**
-     * Tente de placer définitivement le bâtiment sur la carte.
-     * @param x Coordonnée X de la souris.
-     * @param y Coordonnée Y de la souris.
-     * @return true si la construction a réussi.
+     * Valide les ressources et place le bâtiment sur la carte.
+     * * @param x - Coordonnée X de la tentative
+     * @param y - Coordonnée Y de la tentative
+     * @return true si la construction est effectuée avec succès
      */
     public boolean finaliserConstruction(double x, double y) {
-        // --- CAS : TOUR ---
         if (modeConstruction == TypeConstruction.TOUR) {
-            if (joueur.aAssezDeRessources(COUT_TOUR) &&
-                    peutConstruireIci(x, y, TOUR_LARGEUR_ENC, TOUR_HAUTEUR_ENC, 0)) {
-
+            if (joueur.aAssezDeRessources(COUT_TOUR) && peutConstruireIci(x, y, TOUR_LARGEUR_ENC, TOUR_HAUTEUR_ENC, 0)) {
                 joueur.consommerListeRessources(COUT_TOUR);
                 Tower t = new Tower((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
-
-                /*if (!(joueur.aAssezDeRessources(COUT_TOUR))) {
-                    annulerConstruction();
-                }*/
                 return true;
             }
             return false;
         }
-        // --- CAS : TENTE ---
         else if (modeConstruction == TypeConstruction.TENTE) {
-            if (joueur.aAssezDeRessources(COUT_TENTE) &&
-                    peutConstruireIci(x, y, TENTE_LARGEUR_ENC, TENTE_HAUTEUR_ENC, 0) &&
-                    !gestionnaireBatiments.aDejaUneTente()) {
-
+            if (joueur.aAssezDeRessources(COUT_TENTE) && peutConstruireIci(x, y, TENTE_LARGEUR_ENC, TENTE_HAUTEUR_ENC, 0) && !gestionnaireBatiments.aDejaUneTente()) {
                 joueur.consommerListeRessources(COUT_TENTE);
                 TenteDeSoin t = new TenteDeSoin((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(t);
@@ -449,33 +331,22 @@ public class Modele {
             }
             return false;
         }
-        // --- CAS : ABATIS ---
         else if (modeConstruction == TypeConstruction.ABATIS) {
             double angle = rotationAbatis ? -ABATIS_ANGLE_RAD : ABATIS_ANGLE_RAD;
 
-            if (joueur.aAssezDeRessources(COUT_ABATIS) &&
-                    peutConstruireIci(x, y, ABATIS_LARGEUR, ABATIS_HAUTEUR, angle)) {
-
+            if (joueur.aAssezDeRessources(COUT_ABATIS) && peutConstruireIci(x, y, ABATIS_LARGEUR, ABATIS_HAUTEUR, angle)) {
                 joueur.consommerListeRessources(COUT_ABATIS);
                 Abatis a = new Abatis((int)x, (int)y, gestionnaireBatiments, rotationAbatis);
                 gestionnaireBatiments.ajouterBatiment(a);
-
-                /*if (!(joueur.aAssezDeRessources(COUT_ABATIS))) {
-                    annulerConstruction();
-                }*/
                 return true;
             }
             return false;
         }
-
-        if (modeConstruction == TypeConstruction.MORTIER) {
-            if (joueur.aAssezDeRessources(COUT_MORTIER) &&
-                    peutConstruireIci(x, y, MORTIER_LARGEUR_ENC, MORTIER_HAUTEUR_ENC, 0)) {
-
+        else if (modeConstruction == TypeConstruction.MORTIER) {
+            if (joueur.aAssezDeRessources(COUT_MORTIER) && peutConstruireIci(x, y, MORTIER_LARGEUR_ENC, MORTIER_HAUTEUR_ENC, 0)) {
                 joueur.consommerListeRessources(COUT_MORTIER);
                 Mortier m = new Mortier((int)x, (int)y, gestionnaireBatiments);
                 gestionnaireBatiments.ajouterBatiment(m);
-                //annulerConstruction();
                 return true;
             }
             return false;
@@ -483,46 +354,128 @@ public class Modele {
         return false;
     }
 
-    /**
-     * Action à appeler lors de l'achat de la pioche.
-     */
-    public void debloquerMinage() {
-        // 1. On marque l'état sur le joueur
-        joueur.setaPioche(true);
 
-        // 2. On demande au gestionnaire d'activer les mines existantes
-        gestionnaireBatiments.activerLaMine();
-    }
+    /** ---------- [Méthodes Publiques - Moteur Physique (Collision & SAT)] ---------- **/
 
     /**
-     * Supprime instantanément tous les monstres du terrain.
+     * Vérifie si les prochaines coordonnées du joueur chevauchent la Hitbox d'un bâtiment solide.
+     * * @param testX - Future coordonnée X du joueur
+     * @param testY - Future coordonnée Y du joueur
+     * @return true s'il y a collision
      */
-    public void declencherArmageddon() {
-        this.flashRougeActif = true;
-        List<Monstre> monstres = updateJN.getMonstres();
+    public boolean collisionAvecBatimentSolide(double testX, double testY) {
+        double[][] coinsJoueur = getCoinsRectangle(testX, testY, Constantes.J_TAILLE, Constantes.J_TAILLE, 0);
 
-        // 1. On élimine tous les monstres
-        for (int i = monstres.size() - 1; i >= 0; i--) {
-            Monstre m = monstres.get(i);
-            joueur.addPieces(m.getDrop());
-            pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), m.getDrop()});
-            m.interrupt();
-            monstres.remove(i);
-        }
-
-        // 2. On lance UN SEUL thread pour éteindre le flash après la boucle
-        new Thread(() -> {
-            try {
-                Thread.sleep(400); // Temps du flash
-                this.flashRougeActif = false;
-                System.out.println("Flash rouge désactivé.");
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+        for (Batiment b : gestionnaireBatiments.getBatiments()) {
+            if (b instanceof Abatis) {
+                continue; // L'Abatis ne bloque pas les mouvements du joueur
             }
-        }).start();
 
-        System.out.println("Armageddon déclenché : Terrain nettoyé !");
+            // Décalage pour simuler la collision avec la base 2.5D du bâtiment
+            double centreHitboxY = b.getY() + b.getOffsetYHitbox();
+
+            double[][] coinsHitbox = getCoinsRectangle(
+                    b.getX(),
+                    centreHitboxY,
+                    b.getLargeurHitbox(),
+                    b.getHauteurHitbox(),
+                    b.getAngleRotation()
+            );
+
+            if (chevauchementPolygones(coinsJoueur, coinsHitbox)) {
+                return true;
+            }
+        }
+        return false;
     }
-    public boolean isFlashRougeActif() { return flashRougeActif; }
 
+    /**
+     * Utilitaire de mapping linéaire pour les échelles (ex: calculs Minimap).
+     */
+    public double map(int debut, int fin, double valDebut, double valFin, double val){
+        return (val - debut) * (valFin - valDebut) / (fin - debut) + valDebut;
+    }
+
+
+    /** ---------- [Méthodes Privées - Sous-systèmes] ---------- **/
+
+    /**
+     * Met fin à l'exécution de tous les sous-processus liés au cycle ou aux entités.
+     */
+    private void stopperTousLesThreadsDuJeu() {
+        if (leCycleJourNuit != null && leCycleJourNuit.isAlive()) leCycleJourNuit.interrupt();
+        if (updateJN != null && updateJN.getMonstres() != null) {
+            for (Monstre m : updateJN.getMonstres()) {
+                if (m != null && m.isAlive()) m.interrupt();
+            }
+        }
+        if (gestionnaireBatiments != null) gestionnaireBatiments.stopperTousLesThreads();
+        if (joueur != null) joueur.stopperReparation();
+    }
+
+    /**
+     * Implémentation du théorème de l'Axe de Séparation (SAT) pour détecter la collision.
+     */
+    private boolean chevauchementPolygones(double[][] poly1, double[][] poly2) {
+        double[][][] polygones = {poly1, poly2};
+        for (int i = 0; i < polygones.length; i++) {
+            double[][] polygone = polygones[i];
+            for (int i1 = 0; i1 < polygone.length; i1++) {
+                int i2 = (i1 + 1) % polygone.length;
+                double p1X = polygone[i1][0];
+                double p1Y = polygone[i1][1];
+                double p2X = polygone[i2][0];
+                double p2Y = polygone[i2][1];
+
+                double normalX = p2Y - p1Y;
+                double normalY = p1X - p2X;
+
+                double minA = Double.POSITIVE_INFINITY;
+                double maxA = Double.NEGATIVE_INFINITY;
+                for (double[] p : poly1) {
+                    double proj = normalX * p[0] + normalY * p[1];
+                    if (proj < minA) minA = proj;
+                    if (proj > maxA) maxA = proj;
+                }
+
+                double minB = Double.POSITIVE_INFINITY;
+                double maxB = Double.NEGATIVE_INFINITY;
+                for (double[] p : poly2) {
+                    double proj = normalX * p[0] + normalY * p[1];
+                    if (proj < minB) minB = proj;
+                    if (proj > maxB) maxB = proj;
+                }
+
+                // S'il existe un axe sans chevauchement, il n'y a pas collision
+                if (maxA < minB || maxB < minA) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Calcule la matrice de points (les 4 coins) d'un rectangle orienté.
+     */
+    private double[][] getCoinsRectangle(double cx, double cy, double w, double h, double angle) {
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        double[][] coins = new double[4][2];
+
+        double hw = w / 2.0;
+        double hh = h / 2.0;
+
+        double[][] relatifs = {
+                {-hw, -hh}, {hw, -hh}, {hw, hh}, {-hw, hh}
+        };
+
+        for (int i = 0; i < 4; i++) {
+            double rx = relatifs[i][0];
+            double ry = relatifs[i][1];
+            coins[i][0] = cx + (rx * cos - ry * sin);
+            coins[i][1] = cy + (rx * sin + ry * cos);
+        }
+        return coins;
+    }
 }
