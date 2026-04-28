@@ -5,16 +5,25 @@ import java.awt.*;
 
 import static Modele.Constantes.IMAGE_ARMURE_LEGERE;
 
+/**
+ * Implémentation concrète de l'Armure Légère.
+ * Offre une protection modérée avec un impact minime sur la mobilité du joueur.
+ */
 public class ArmureLegere extends Armure {
+
+    /** ---------- [Constructeurs] ---------- **/
+
     public ArmureLegere() {
         super(
                 "Armure légère",
                 5,
                 IMAGE_ARMURE_LEGERE,
                 -2,
-                Map.of(0, 5, 1, 5) // 0 = Bois, 1 = Pierre
+                Map.of(0, 5, 1, 5)
         );
     }
+
+    /** ---------- [Méthodes Héritées] ---------- **/
 
     @Override
     public int getReduction() {

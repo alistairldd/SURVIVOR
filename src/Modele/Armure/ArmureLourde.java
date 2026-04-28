@@ -5,16 +5,25 @@ import java.util.Map;
 
 import static Modele.Constantes.IMAGE_ARMURE_LOURDE;
 
+/**
+ * Implémentation concrète de l'Armure Lourde.
+ * Offre une protection élevée au prix d'un ralentissement important du joueur.
+ */
 public class ArmureLourde extends Armure {
+
+    /** ---------- [Constructeurs] ---------- **/
+
     public ArmureLourde() {
         super(
                 "Armure lourde",
                 10,
                 IMAGE_ARMURE_LOURDE,
                 -10,
-                Map.of(2, 20, 1, 10) // 2 = Fer, 1 = Pierre
+                Map.of(2, 20, 1, 10)
         );
     }
+
+    /** ---------- [Méthodes Héritées] ---------- **/
 
     @Override
     public int getReduction() {
