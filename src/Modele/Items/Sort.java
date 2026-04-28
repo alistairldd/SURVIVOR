@@ -18,8 +18,8 @@ public abstract class Sort extends Item implements Runnable {
     protected double porteeMax;
     protected int degats;
 
-    public Sort(String nom, int effet, Image image, int prix, double x, double y, double dirX, double dirY) {
-        super(nom, effet, image, prix);
+    public Sort(String nom, int prix, Image image, int effet, double x, double y, double dirX, double dirY) {
+        super(nom, prix, image, effet);
         this.positionX = x;
         this.positionY = y;
         this.directionX = dirX;
@@ -43,10 +43,17 @@ public abstract class Sort extends Item implements Runnable {
     @Override
     public void run() {
         try {
-            while (actif && distanceParcourue < porteeMax) {
+            // La boucle continue tant que le sort est dans les limites de la carte
+            while (actif) {
                 positionX += directionX * vitesse;
                 positionY += directionY * vitesse;
-                distanceParcourue += vitesse;
+
+                // Vérification des bords de la map
+                if (positionX < 0 || positionX > LARGEUR_MAP ||
+                        positionY < 0 || positionY > HAUTEUR_MAP) {
+                    actif = false; // Le sort touche un bord et s'éteint
+                }
+
                 Thread.sleep(16); // ~60 FPS
             }
         } catch (InterruptedException e) {

@@ -290,6 +290,11 @@ public class Joueur implements Localisable {
             modele.getGestionnaireSorts().ajouterSort(sort);
             removeFromInventaire(item);
         }
+        if (item instanceof SortTempete) {
+            SortTempete sort = new SortTempete(this.positionX, this.positionY, directionX, directionY);
+            modele.getGestionnaireSorts().ajouterSort(sort);
+            removeFromInventaire(item);
+        }
     }
 
 

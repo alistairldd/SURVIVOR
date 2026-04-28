@@ -3,6 +3,7 @@ package Modele;
 import Modele.Items.Item;
 import Modele.Items.Sort;
 import Modele.Items.SortFeu;
+import Modele.Items.SortTempete;
 import Modele.Monstres.Monstre;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ public class GestionnaireSorts {
         this.modele = modele;
     }
 
-    public void ajouterSort(SortFeu sort) {
+    public void ajouterSort(Sort sort) {
             sortsActifs.add(sort);
     }
 
@@ -27,27 +28,34 @@ public class GestionnaireSorts {
      * Détruit le sort et endommage le monstre en cas de collision.
      */
     public void verifierCollisions(List<Monstre> monstres) {
-        // 1. Créer une copie pour éviter les modifications concurrentes
         List<Sort> sortsCopie = new ArrayList<>(sortsActifs);
 
         for (Sort sort : sortsCopie) {
             if (!sort.isActif()) continue;
 
-            // 2. Vérifier chaque monstre
-            for (Monstre monstre : new ArrayList<>(monstres)) {
+            for (Monstre monstre : monstres) {
                 if (monstre.getHp() <= 0) continue;
 
-                // 3. Calculer la distance
                 double dX = sort.getX() - monstre.getX();
                 double dY = sort.getY() - monstre.getY();
                 double distance = Math.hypot(dX, dY);
 
-                // 4. Collision détectée
-                if (distance < 30) { // 30 = rayon du sort + rayon du monstre
-                    monstre.prendreDegats(sort.getEffet());
-                    sort.desactiver(); // Désactiver le sort
-                    sortsActifs.remove(sort);
-                    break; // Passer au sort suivant
+
+                    // On applique l'effet (dégâts ou recul)
+                    if (sort instanceof SortTempete) {
+                        if (distance < Constantes.TEMPETE_RANGE){
+                        double force =200;
+                        double pushX = (monstre.getX() - sort.getX()) / distance;
+                        double pushY = (monstre.getY() - sort.getY()) / distance;
+                        monstre.setPositionX(monstre.getX() + pushX * force);
+                        monstre.setPositionY(monstre.getY() + pushY * force);
+                    }}
+
+                    if (sort instanceof SortFeu){
+                        if (distance < Constantes.FEU_RANGE) {
+                        monstre.prendreDegats(sort.getEffet());
+
+                    }
                 }
             }
         }

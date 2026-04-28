@@ -2,6 +2,8 @@ package Vue.VueSort;
 
 import Modele.Items.Sort;
 import Modele.Items.SortFeu;
+import Modele.Items.SortTempete;
+
 import java.awt.*;
 
 /**
@@ -10,11 +12,8 @@ import java.awt.*;
  */
 public class VueSort {
 
-
-    private static final int TAILLE_SORT = 20;
-    private static final Color COULEUR_SORT = new Color(255, 100, 0, 200);
     private final VueSortFeu vueSortFeu = new VueSortFeu();
-
+    private final VueSortTempete vueSortTempete = new VueSortTempete();
     /**
      * Dessine un sort à l'écran selon son type.
      * @param g Le contexte graphique
@@ -28,6 +27,9 @@ public class VueSort {
 
         if (sort instanceof SortFeu) {
             vueSortFeu.dessiner(g, (SortFeu) sort, cameraX, cameraY);
+        }
+        if (sort instanceof SortTempete) { // Nouveau bloc pour la tempête
+            vueSortTempete.dessiner(g, (SortTempete) sort, cameraX, cameraY);
         }
 
         g2d.dispose();

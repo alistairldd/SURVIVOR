@@ -163,6 +163,12 @@ public final class Constantes {
     public static final int VITESSE = 10;
     public static final int HP_JOUEUR = 100;
 
+    // Effet des sorts
+    public static final int FEU_RANGE = 50;
+    public static final int TEMPETE_RANGE = 250; // Rayon de la tempête
+    public static final int TEMPETE_KNOCKBACK_FORCE = 200; // Distance de recul
+
+
 
 
     /*** ---Map--- ***/
@@ -454,7 +460,11 @@ public final class Constantes {
 
     public static Image IMAGE_SORT_FEU = null;
 
+    public static  Image IMAGE_SORT_TEMPETE = null;
+
     public static Image IMAGE_BOULE_FEU = null;
+
+    public static Image IMAGE_TEMPETE = null;
 
     public static Image IMAGE_NUKE = null;
 
@@ -494,9 +504,14 @@ public final class Constantes {
             // Charger l'image du sort de feu
             IMAGE_SORT_FEU = ImageIO.read(new File("src/images/items/SortFeu.png"));
 
+            // Charger l'image du sort de tempete
+            IMAGE_SORT_TEMPETE= ImageIO.read(new File("src/images/items/SortTempete.png"));
+
             // Charger l'image de la boule de feu
             IMAGE_BOULE_FEU= ImageIO.read(new File("src/images/items/BouleDeFeu.png"));
 
+            // Charger l'image de la tempete
+            IMAGE_TEMPETE= ImageIO.read(new File("src/images/items/Tempete.png"));
             // Charger l'image de la nuke
             IMAGE_NUKE = ImageIO.read(new File("src/images/items/Nuke.png"));
         } catch (Exception e) {

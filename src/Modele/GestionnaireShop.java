@@ -61,6 +61,7 @@ public class GestionnaireShop {
         PotionVitesse pvi = new PotionVitesse();
         PotionVieGrande pvGrande = new PotionVieGrande();
         SortFeu sortFeu = new SortFeu();
+        SortTempete sortTempete = new SortTempete();
         Armageddon armageddon = new Armageddon();
 
         Pioche pioche = new Pioche();
@@ -71,6 +72,7 @@ public class GestionnaireShop {
         objets.add(pvi);
         objets.add(pvGrande);
         objets.add(sortFeu);
+        objets.add(sortTempete);
         objets.add(armageddon);
     }
 
