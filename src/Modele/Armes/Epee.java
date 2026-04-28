@@ -1,31 +1,17 @@
 package Modele.Armes;
 
 import java.util.Map;
-
 import static Modele.Constantes.IMAGE_EPEE;
 
 /**
- * Implémentation concrète d'une arme : l'Épée.
- * Elle hérite de la classe abstraite Arme et définit ses propres statistiques
- * (dégâts moyens, courte portée, balayage large, cadence modérée).
+ * Implémentation de l'Épée standard.
+ * Équilibre entre dégâts, portée et cadence de frappe.
  */
 public class Epee extends Arme {
 
-    /**
-     * Constructeur par défaut de l'Épée.
-     * Fait appel au constructeur de la classe parente (super) pour injecter ses constantes.
-     */
-
+    /** ---------- [Constructeurs] ---------- **/
 
     public Epee() {
-        // Appelle le constructeur de "Arme" avec les valeurs :
-        // Nom: "Epee"
-        // Dégâts: 10
-        // Portée: 100 pixels
-        // Cadence: 500 millisecondes (0.5s entre chaque coup)
-        // Angle: PI/3 radians (environ 60 degrés, crée un cône d'attaque assez large)
-        // Image: IMAGE_EPEE (chargée depuis les ressources)
-        // Ressources nécessaires: "Fer:10" (exige 10 unités de fer
         super(
                 "Epee",
                 15,
@@ -33,41 +19,16 @@ public class Epee extends Arme {
                 500,
                 Math.PI / 3,
                 IMAGE_EPEE,
-                Map.of(2, 10) // 2 = Fer
+                Map.of(2, 10)
         );
     }
 
-    // Récupère la valeur des dégâts définis dans la classe parente
-    @Override
-    public int getDegats() {
-        return super.getDegats();
-    }
+    /** ---------- [Méthodes Héritées] ---------- **/
 
-    // Récupère la valeur de la portée définie dans la classe parente
-    @Override
-    public int getPortee() {
-        return super.getPortee();
-    }
-
-    // Récupère la cadence de frappe définie dans la classe parente
-    @Override
-    public int getCadence() {
-        return super.getCadence();
-    }
-
-    // Récupère le nom défini dans la classe parente
-    @Override
-    public String getNom() {
-        return super.getNom();
-    }
-
-    @Override
-    public double getAngle() {
-        return super.getAngle();
-    }
-
-    @Override
-    public Map<Integer, Integer> getRessourcesNecessaires() {
-        return super.getRessourcesNecessaires();
-    }
+    @Override public int getDegats() { return super.getDegats(); }
+    @Override public int getPortee() { return super.getPortee(); }
+    @Override public int getCadence() { return super.getCadence(); }
+    @Override public String getNom() { return super.getNom(); }
+    @Override public double getAngle() { return super.getAngle(); }
+    @Override public Map<Integer, Integer> getRessourcesNecessaires() { return super.getRessourcesNecessaires(); }
 }

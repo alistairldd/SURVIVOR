@@ -1,10 +1,15 @@
 package Modele.Armes;
 
 import java.util.Map;
-
 import static Modele.Constantes.IMAGE_LANCE;
 
+/**
+ * Implémentation de la Lance.
+ * Arme d'estoc offrant une grande portée mais avec un angle de frappe très étroit.
+ */
 public class Lance extends Arme{
+
+    /** ---------- [Constructeurs] ---------- **/
 
     public Lance() {
         super(
@@ -12,39 +17,18 @@ public class Lance extends Arme{
                 40,
                 150,
                 1000,
-                Math.PI / 12, // Angle d'attaque plus étroit que l'épée, reflétant la nature plus précise et linéaire de la lance
-                IMAGE_LANCE, // Image non définie pour l'instant
-                Map.of(0, 20, 1, 10) // Coût en ressources pour fabriquer la lance (0 = Bois, 1 = Pierre)
+                Math.PI / 12,
+                IMAGE_LANCE,
+                Map.of(0, 20, 1, 10)
         );
     }
 
-    @Override
-    public int getDegats() {
-        return super.getDegats();
-    }
+    /** ---------- [Méthodes Héritées] ---------- **/
 
-    @Override
-    public int getPortee() {
-        return super.getPortee();
-    }
-
-    @Override
-    public int getCadence() {
-        return super.getCadence();
-    }
-
-    @Override
-    public String getNom() {
-        return super.getNom();
-    }
-
-    @Override
-    public double getAngle() {
-        return super.getAngle();
-    }
-
-    @Override
-    public Map<Integer, Integer> getRessourcesNecessaires() {
-        return super.getRessourcesNecessaires();
-    }
+    @Override public int getDegats() { return super.getDegats(); }
+    @Override public int getPortee() { return super.getPortee(); }
+    @Override public int getCadence() { return super.getCadence(); }
+    @Override public String getNom() { return super.getNom(); }
+    @Override public double getAngle() { return super.getAngle(); }
+    @Override public Map<Integer, Integer> getRessourcesNecessaires() { return super.getRessourcesNecessaires(); }
 }

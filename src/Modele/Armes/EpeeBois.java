@@ -1,9 +1,16 @@
 package Modele.Armes;
 
 import java.util.Map;
-
 import static Modele.Constantes.IMAGE_EPEEBOIS;
+
+/**
+ * Implémentation de l'Épée en Bois.
+ * Arme primitive, très peu coûteuse mais avec des statistiques limitées.
+ */
 public class EpeeBois extends Arme {
+
+    /** ---------- [Constructeurs] ---------- **/
+
     public EpeeBois() {
         super(
                 "EpeeBois",
@@ -11,41 +18,17 @@ public class EpeeBois extends Arme {
                 80,
                 700,
                 Math.PI / 3,
-                IMAGE_EPEEBOIS, // Image à définir pour l'épée en bois
-                Map.of(0, 10) // Ressources nécessaires pour fabriquer l'épée en bois (0 = Bois)
+                IMAGE_EPEEBOIS,
+                Map.of(0, 10)
         );
     }
-    // Récupère la valeur des dégâts définis dans la classe parente
-    @Override
-    public int getDegats() {
-        return super.getDegats();
-    }
 
-    // Récupère la valeur de la portée définie dans la classe parente
-    @Override
-    public int getPortee() {
-        return super.getPortee();
-    }
+    /** ---------- [Méthodes Héritées] ---------- **/
 
-    // Récupère la cadence de frappe définie dans la classe parente
-    @Override
-    public int getCadence() {
-        return super.getCadence();
-    }
-
-    // Récupère le nom défini dans la classe parente
-    @Override
-    public String getNom() {
-        return super.getNom();
-    }
-
-    @Override
-    public double getAngle() {
-        return super.getAngle();
-    }
-
-    @Override
-    public Map<Integer, Integer> getRessourcesNecessaires() {
-        return super.getRessourcesNecessaires();
-    }
+    @Override public int getDegats() { return super.getDegats(); }
+    @Override public int getPortee() { return super.getPortee(); }
+    @Override public int getCadence() { return super.getCadence(); }
+    @Override public String getNom() { return super.getNom(); }
+    @Override public double getAngle() { return super.getAngle(); }
+    @Override public Map<Integer, Integer> getRessourcesNecessaires() { return super.getRessourcesNecessaires(); }
 }
