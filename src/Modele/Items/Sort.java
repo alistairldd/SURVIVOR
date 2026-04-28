@@ -18,8 +18,8 @@ public abstract class Sort extends Item implements Runnable {
     protected double porteeMax;
     protected int degats;
 
-    public Sort(String nom, int prix, Image image, int effet, double x, double y, double dirX, double dirY) {
-        super(nom, prix, image, effet);
+    public Sort(String nom, int effet, Image image, int prix, double x, double y, double dirX, double dirY) {
+        super(nom, effet, image, prix);
         this.positionX = x;
         this.positionY = y;
         this.directionX = dirX;

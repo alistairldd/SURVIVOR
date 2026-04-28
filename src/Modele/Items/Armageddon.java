@@ -8,6 +8,6 @@ public class Armageddon extends Item {
         super("Armageddon",
                 0,
                 IMAGE_NUKE,
-                200); // Prix élevé pour cet objet puissant
+                1000); // Prix élevé pour cet objet puissant
     }
 }
