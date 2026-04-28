@@ -7,83 +7,70 @@ import java.awt.*;
 import static Modele.Constantes.IMAGE_OGRE;
 
 /**
- * Implémentation concrète d'un ennemi : l'ogre.
- * Hérite de la classe abstraite Monstre et définit ses statistiques de combat.
+ * Implémentation concrète d'un ennemi lourd : l'Ogre.
+ * Lent mais possède un grand nombre de PV et une force de frappe élevée.
  */
-
 public class Ogre extends Monstre {
 
-    // Référence au gestionnaire de monstres
+    /** ---------- [Propriétés] ---------- **/
+
     private final GestionnaireMonstres gestionnaireMonstres;
 
-    // Variable pour gérer l'animation de l'ogre
+    /** ---------- [Constructeurs] ---------- **/
 
-    /**
-     * Crée un Ogre à des coordonnées précises (généralement fournies par le GestionnaireMonstres).
-     *
-     * @param x Coordonnée d'apparition horizontale.
-     * @param y Coordonnée d'apparition verticale.
-     */
     public Ogre(int x, int y, GestionnaireMonstres gestionnaireMonstres) {
-        // Appelle le constructeur parent (Monstre) en lui injectant les statistiques de cette espèce :
-        // Nom: "Ogre"
-        // PV: 300
-        // Attaque: 15 points de dégâts
-        // Portée: 50 pixels
-        // Vitesse: 4 pixels par déplacement
-        // Drop: 10 pièces en récompense
         super("Ogre", 300, 15, 50, 4, 10);
 
-        // Initialise la position de départ avec les coordonnées fournies
         this.x = x;
         this.y = y;
-
         this.gestionnaireMonstres = gestionnaireMonstres;
-        this.start(); // Démarre le thread du monstre pour qu'il commence à agir immédiatement après sa création
+        this.start();
     }
 
-    @Override
-    public void run() {
-        // On définit le pas de temps (50ms exprimé en secondes)
-        double dt = 0.05;
-        // Boucle de comportement du monstre
-        while (true) {
-
-            try {
-                if (marche) {
-                    animation += 1; // Incrémente l'animation pour faire bouger le monstre
-                    if (animation % 10 == 0) {
-                        animationMarche = !animationMarche;
-                    }
-                } else {
-                    animationAtt += 1; // Incrémente l'animation d'attaque pour faire bouger le monstre
-                    if (animationAtt % 10 == 0) {
-                        animationAttaque = !animationAttaque;
-                    }
-
-                }
-                this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this), dt);
-                Thread.sleep(50); // Petite pause pour ne pas surcharger le processeur
-                if (this.getHp() <= 0) {
-                    // Demande la suppression visuelle et logique de la carte
-                    gestionnaireMonstres.supprimerMonstre(this);
-                    gestionnaireMonstres.incrementerMonstresMorts();
-                    // Interrompt la boucle infinie pour terminer le thread proprement
-                    break;
-                }
-            } catch (InterruptedException e) {
-                // Capture de l'interruption
-                System.out.println("Debug : Le thread du " + this.getNom() + " a bien été tué.");
-
-                // Sécurité : arrête le thread en cas d'interruption externe pour éviter un thread zombie
-                break;
-            }
-        }
-    }
+    /** ---------- [Accesseurs] ---------- **/
 
     @Override
     public Image getImage() {
         return IMAGE_OGRE;
     }
-}
 
+    /** ---------- [Méthodes Héritées - Boucle de Vie (Thread)] ---------- **/
+
+    /**
+     * Gère la boucle comportementale autonome de l'Ogre (Déplacement, Animation, Mort).
+     */
+    @Override
+    public void run() {
+        double dt = 0.05;
+
+        while (true) {
+            try {
+                // Gestion de la bascule d'animation (Marche / Attaque)
+                if (marche) {
+                    animation += 1;
+                    if (animation % 10 == 0) {
+                        animationMarche = !animationMarche;
+                    }
+                } else {
+                    animationAtt += 1;
+                    if (animationAtt % 10 == 0) {
+                        animationAttaque = !animationAttaque;
+                    }
+                }
+
+                this.mettreAJourPosition(gestionnaireMonstres.trouverCible(this), dt);
+                Thread.sleep(50);
+
+                // Conditions de décès
+                if (this.getHp() <= 0) {
+                    gestionnaireMonstres.supprimerMonstre(this);
+                    gestionnaireMonstres.incrementerMonstresMorts();
+                    break;
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Debug : Le thread du " + this.getNom() + " a bien été tué.");
+                break;
+            }
+        }
+    }
+}
