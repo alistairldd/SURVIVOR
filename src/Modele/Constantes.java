@@ -23,7 +23,7 @@ public final class Constantes {
     /** ---------- [Paramètres du Moteur et Cycle Temporel] ---------- **/
 
     public final static int FPS = 60;
-    public final static int DUREE_CYCLE_JOUR = 90; // Secondes réelles
+    public final static int DUREE_CYCLE_JOUR = 9; // Secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120; // Secondes réelles
 
     public final static int TICKS_PAR_CYCLE_JOUR = DUREE_CYCLE_JOUR * FPS;

@@ -66,7 +66,11 @@ public class ControleurSouris implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mousePressed(MouseEvent e) {
-
+        //Si le jeu n'est pas démarré, le premier clic lance la partie
+        if (!modele.isJeuDemarre()) {
+            modele.demarrerJeu();
+            return; // On arrête là pour ne pas construire/tirer accidentellement
+        }
         // Vérification des interactions avec le HUD (Inventaire/Équipement)
         if (e.getSource() == vue.getVueHUD().getPageEtat()) {
             String action = vue.getVueHUDEquipement().getActionAuClic(e.getX(), e.getY());

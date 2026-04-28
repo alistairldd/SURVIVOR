@@ -47,7 +47,7 @@ public class Modele {
     private Item sortEnAttente = null;
     private TypeConstruction modeConstruction = TypeConstruction.AUCUN;
     private boolean partieTerminee = false;
-
+    private boolean jeuDemarre = false;
 
     /** ---------- [Constructeurs] ---------- **/
 
@@ -92,6 +92,9 @@ public class Modele {
 
     public List<int[]> getPendingFloatingTexts() { return pendingFloatingTexts; }
     public void clearPendingFloatingTexts() { pendingFloatingTexts.clear(); }
+
+    public boolean isJeuDemarre() { return jeuDemarre; }
+    public void demarrerJeu() { this.jeuDemarre = true; }
 
 
     /** ---------- [Getters & Setters - Système & Métier] ---------- **/

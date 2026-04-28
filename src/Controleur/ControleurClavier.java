@@ -47,6 +47,10 @@ public class ControleurClavier implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
+        if (!modele.isJeuDemarre()) {
+            modele.demarrerJeu();
+            return;
+        }
         Joueur joueur = modele.getJoueur();
         double camX = joueur.getX();
         double camY = joueur.getY();

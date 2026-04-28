@@ -135,6 +135,26 @@ public class Vue extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
+        // --- ÉCRAN D'ACCUEIL ---
+        if (!modele.isJeuDemarre()) {
+            // Tu peux dessiner ta map en fond pour faire joli
+            vueCarte.dessiner(g2d);
+
+            // Un voile sombre par-dessus
+            g2d.setColor(new Color(0, 0, 0, 150));
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+
+            // Le texte
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(new Font("Arial", Font.BOLD, 50));
+            g2d.drawString("SURVIVOR", getWidth()/2 - 150, getHeight()/2 - 50);
+
+            g2d.setFont(new Font("Arial", Font.PLAIN, 20));
+            g2d.drawString("Cliquez ou appuyez sur une touche pour commencer", getWidth()/2 - 220, getHeight()/2 + 50);
+
+            return; // TRÈS IMPORTANT : On arrête le dessin ici tant que ce n'est pas démarré !
+        }
+
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 

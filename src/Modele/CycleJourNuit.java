@@ -77,6 +77,11 @@ public class CycleJourNuit extends Thread {
         updateJN.changeJour();
 
         while (true) {
+            // Le bloqueur d'attente
+            if (!updateJN.getModele().isJeuDemarre()) {
+                try { Thread.sleep(100); } catch (InterruptedException e) {}
+                continue; // On zappe le reste de la boucle et on re-vérifie dans 100ms
+            }
             // Arrêt sécurisé du thread en cas de Game Over
             if (updateJN.getModele().getPartieTerminee()) {
                 Thread.currentThread().interrupt();
