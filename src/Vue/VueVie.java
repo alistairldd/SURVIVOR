@@ -106,12 +106,12 @@ public class VueVie {
                 }
                 int offsetCentrageY = (tailleImage - hauteurProp) / 2;
 
-                g2d.setColor(Color.DARK_GRAY);
+                g2d.setColor(new Color(0, 0, 0, 20));
                 g2d.fillRect(xOffset, yCourant, tailleImage, tailleImage);
                 // Dessine l'image redimensionnée pour remplir le cadre de 100x100
                 g2d.drawImage(img, xOffset, yCourant + offsetCentrageY, tailleImage, hauteurProp, null);
 
-                g2d.setColor(Color.WHITE);
+                g2d.setColor(Color.BLACK);
                 g2d.drawRect(xOffset, yCourant, tailleImage, tailleImage);
                 } else {
 

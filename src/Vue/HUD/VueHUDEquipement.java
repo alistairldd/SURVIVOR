@@ -179,7 +179,7 @@ public class VueHUDEquipement {
         g2d.fillRect(x, y, TailleIconeArmure, TailleIconeArmure);
         g2d.fillRect(x + TailleIconeArmure + 10, y, TAILLE_ICONE, TAILLE_ICONE);
 
-        Armure armure          = j.getArmurePrincipale();
+        Armure armure           = j.getArmurePrincipale();
         Armure armureSecondaire = j.getArmureSecondaire();
 
         if (armure != null) {

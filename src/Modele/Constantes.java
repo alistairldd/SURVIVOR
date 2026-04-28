@@ -454,7 +454,9 @@ public final class Constantes {
 
     public static Image IMAGE_SORT_FEU = null;
 
-    public  static Image IMAGE_BOULE_FEU = null;
+    public static Image IMAGE_BOULE_FEU = null;
+
+    public static Image IMAGE_NUKE = null;
 
     static {
         try {
@@ -493,7 +495,10 @@ public final class Constantes {
             IMAGE_SORT_FEU = ImageIO.read(new File("src/images/items/SortFeu.png"));
 
             // Charger l'image de la boule de feu
-            IMAGE_BOULE_FEU= ImageIO.read(new File("src/images/items/Boule_de_Feu.png"));
+            IMAGE_BOULE_FEU= ImageIO.read(new File("src/images/items/BouleDeFeu.png"));
+
+            // Charger l'image de la nuke
+            IMAGE_NUKE = ImageIO.read(new File("src/images/items/Nuke.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
