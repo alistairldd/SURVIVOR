@@ -1,20 +1,32 @@
 package Modele.Items;
 
 import java.awt.*;
-import java.util.List;
 import java.util.Objects;
 
+/**
+ * Classe abstraite définissant tout objet stockable dans l'inventaire du joueur
+ * (Consommables, Pièces de quête, Sorts, etc.).
+ * Gère l'identification, le coût en boutique et l'effet générique.
+ */
+public abstract class Item {
 
-public abstract class Item{
-    // Nom affiché de l'armure
+    /** ---------- [Propriétés] ---------- **/
+
     private String nom;
-    // Quantité de points de vie ajoutés au joueur lorsqu'il équipe cette armure
     private int effet;
-    // Image représentant l'arme (optionnel, peut être utilisé pour l'affichage)
     private Image image;
-    // Liste des ressources nécessaires pour acheter / fabriquer l'armure
     private int prix;
 
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Initialise les propriétés de base d'un Item.
+     *
+     * @param nom - Le nom d'affichage de l'objet
+     * @param effet - La valeur numérique de son action principale (PV rendus, dégâts, etc.)
+     * @param image - L'icône affichée dans l'interface
+     * @param prix - Le coût en pièces d'or dans la boutique
+     */
     public Item(String nom, int effet, Image image, int prix) {
         this.nom = nom;
         this.effet = effet;
@@ -22,23 +34,30 @@ public abstract class Item{
         this.prix = prix;
     }
 
-    // Retourne le bonus de l'item (ex: points de vie ajoutés au joueur)
+    /** ---------- [Accesseurs / Getters] ---------- **/
+
     public int getEffet() {
         return effet;
     }
 
-    // Retourne le nom de l'armure
     public String getNom() {
         return nom;
     }
 
-    // Retourne l'image de l'armure
-    public Image getImage() {return image;}
+    public Image getImage() {
+        return image;
+    }
 
-    // Retourne la liste des ressources nécessaires pour acheter / fabriquer l'armure
-    public Integer getPrix() {return prix;}
+    public Integer getPrix() {
+        return prix;
+    }
 
+    /** ---------- [Méthodes Utilitaires (Surcharge)] ---------- **/
 
+    /**
+     * Redéfinition de l'égalité basée strictement sur le nom de l'objet.
+     * Permet le regroupement et la recherche d'items identiques dans l'inventaire.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,6 +70,4 @@ public abstract class Item{
     public int hashCode() {
         return Objects.hash(nom);
     }
-
 }
-

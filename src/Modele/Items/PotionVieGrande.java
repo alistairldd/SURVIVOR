@@ -1,19 +1,21 @@
 package Modele.Items;
 
-import java.awt.*;
-import java.util.List;
-
-import static Modele.Constantes.IMAGE_POTION_DE_VIE;
 import static Modele.Constantes.IMAGE_POTION_GRANDE_VIE;
 
-public class PotionVieGrande extends Item{
+/**
+ * Consommable de soin majeur.
+ * Restaure une grande quantité de Points de Vie (HP) au joueur.
+ */
+public class PotionVieGrande extends Item {
+
+    /** ---------- [Constructeurs] ---------- **/
 
     public PotionVieGrande() {
-        super("Grande potion de Vie",
+        super(
+                "Grande potion de Vie",
                 40,
                 IMAGE_POTION_GRANDE_VIE,
                 50
         );
     }
-
 }

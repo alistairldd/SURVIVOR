@@ -2,12 +2,19 @@ package Modele.Items;
 
 import static Modele.Constantes.IMAGE_POTION_VITESSE;
 
-public class PotionVitesse extends Item{
+/**
+ * Consommable de mobilité temporaire.
+ * Augmente la vitesse de déplacement du joueur.
+ */
+public class PotionVitesse extends Item {
+
+    /** ---------- [Constructeurs] ---------- **/
 
     public PotionVitesse() {
-        super("Potion de Vitesse",
+        super(
+                "Potion de Vitesse",
                 5,
-                IMAGE_POTION_VITESSE, // Image à définir
+                IMAGE_POTION_VITESSE,
                 20
         );
     }

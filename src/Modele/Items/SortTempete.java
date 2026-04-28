@@ -1,20 +1,27 @@
 package Modele.Items;
 
-import Modele.Constantes;
-
 import static Modele.Constantes.*;
 
+/**
+ * Projectile magique lourd (Sort de tempête).
+ * Plus lent qu'une boule de feu, mais applique un effet de recul (Knockback).
+ */
 public class SortTempete extends Sort {
 
-    // Constructeur pour le lancement du sort (appelé par le Gestionnaire de Sorts)
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Instanciation lors du TIR.
+     */
     public SortTempete(double x, double y, double dirX, double dirY) {
-        // "Sort de Tempête", dégâts, image, prix, positionInit, direction
         super("Sort de Tempête", 100, IMAGE_SORT_TEMPETE, TEMPETE_KNOCKBACK_FORCE, x, y, dirX, dirY);
-        this.vitesse = 4.0;    // Plus lent qu'une boule de feu pour simuler une tempête lourde
-        this.porteeMax = 400.0; // Portée plus courte
+        this.vitesse = 4.0;
+        this.porteeMax = 400.0;
     }
 
-    // Constructeur pour l'inventaire (utilisé par le Shop)
+    /**
+     * Instanciation pour l'INVENTAIRE.
+     */
     public SortTempete() {
         super("Sort de Tempête", 100, IMAGE_SORT_TEMPETE, 300);
     }
