@@ -11,11 +11,12 @@ import java.io.IOException;
 import static Modele.Constantes.*;
 
 /**
- * Première page du HUD affichant l'état du joueur (Vie, Stats).
- * Allégée de l'affichage des instructions qui sont désormais gérées
- * en Overlay par la Vue principale.
+ * Première page du HUD affichant l'état consolidé du joueur (Santé, Équipement, Stocks).
+ * Centralise les rendus vitaux et orchestre l'extension verticale du panneau.
  */
 public class VueHUDPageEtat extends JPanel {
+
+    /** ---------- [Propriétés] ---------- **/
 
     private Modele modele;
     private VueVie vueVie;
@@ -23,62 +24,60 @@ public class VueHUDPageEtat extends JPanel {
     private VueHUDEquipement vueHUDEquipement;
     private VueJourNuit vueJourNuit;
 
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Initialise la page d'État et déploie les sous-vues dédiées.
+     *
+     * @param modele - Instance du modèle métier
+     */
     public VueHUDPageEtat(Modele modele) {
         this.modele = modele;
-        // Transparence pour laisser transparaître la couleur de fond du HUD (Jour/Nuit)
         this.setOpaque(false);
 
-        // Instanciation de nos sous-vues restantes
         this.vueVie = new VueVie(modele);
         this.vueJourNuit = new VueJourNuit(modele);
         this.vueHUDInventaire = new VueHUDInventaire();
         this.vueHUDEquipement = new VueHUDEquipement();
 
-        // Taille de départ
         this.setPreferredSize(new Dimension(LARGEUR_HUD, 600));
     }
 
+    /** ---------- [Accesseurs] ---------- **/
+
+    public VueHUDEquipement getVueHUDEquipement() {
+        return vueHUDEquipement;
+    }
+
+    /** ---------- [Méthodes Protégées - Cycle de Rendu] ---------- **/
+
+    /**
+     * Coordonne le rendu visuel en cascade, chaque sous-composant transmettant
+     * son encombrement final (Y) pour le composant suivant.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2d = (Graphics2D) g;
 
-
-        // Point de départ (POI initial)
         int y = 20;
 
-
-
-        // On dessine en cascade en récupérant le nouveau point bas à chaque fois
         try {
             y = vueVie.dessiner(g, y, (int) (getWidth() * 0.9), 20);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         y = vueHUDEquipement.dessiner(g, y, modele.getJoueur());
 
+        y += 30;
 
-
-        y+=30;
-
-        // On utilise exactement les mêmes appels que dans VueHUDPageAction
         y = vueHUDInventaire.dessiner(g, y, modele, modele.getJoueur());
-        // (L'appel à vueHUDInstructions a été supprimé ici)
 
-        //y += 1000; // test scroll conservé
-
-        // --- Redimensionnement dynamique (Trailing Stop) ---
-        // Si le contenu dépasse la taille du panneau, on agrandit le panneau pour activer le scroll
+        // Ajustement automatique du conteneur en cas de dépassement pour activer le scroll
         if (y > getPreferredSize().height) {
             this.setPreferredSize(new Dimension(getWidth(), y + 20));
-            this.revalidate(); // Prévient le JScrollPane du changement de taille
+            this.revalidate();
         }
-    }
-
-    public VueHUDEquipement getVueHUDEquipement() {
-        return vueHUDEquipement;
     }
 }
