@@ -83,6 +83,7 @@ public class GestionnaireMonstres {
      */
     public void genererMonstre(int numeroNuit) {
         try {
+            if (numeroNuit > 10) numeroNuit = 10;
             String contenu = new String(Files.readAllBytes(Paths.get("src/Modele/Monstres/monstreNuit.json")));
 
             JsonArray nuits = JsonParser.parseString(contenu).getAsJsonArray();

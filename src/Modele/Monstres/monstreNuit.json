@@ -33,6 +33,41 @@
       "slimeMutant" : 25,
       "ogre" : 20,
       "gobelin" : 40
+  },
+  {
+    "id": 6,
+    "slime": 75,
+    "slimeMutant": 38,
+    "ogre": 30,
+    "gobelin": 60
+  },
+  {
+    "id": 7,
+    "slime": 113,
+    "slimeMutant": 57,
+    "ogre": 45,
+    "gobelin": 90
+  },
+  {
+    "id": 8,
+    "slime": 170,
+    "slimeMutant": 86,
+    "ogre": 68,
+    "gobelin": 135
+  },
+  {
+    "id": 9,
+    "slime": 255,
+    "slimeMutant": 129,
+    "ogre": 102,
+    "gobelin": 203
+  },
+  {
+    "id": 10,
+    "slime": 383,
+    "slimeMutant": 194,
+    "ogre": 153,
+    "gobelin": 305
   }
 
 ]
