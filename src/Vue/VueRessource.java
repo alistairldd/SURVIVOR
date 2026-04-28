@@ -9,17 +9,25 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Utilitaires de dessin pour les ressources tombées au sol.
- * Associe visuellement un ID de matériau (Modèle) à une couleur (Vue).
+ * Utilitaires de rendu des ressources présentes au sol.
+ * Cette vue traduit les types métiers de ressources en représentations
+ * graphiques homogènes dans le monde principal et dans la minimap.
  */
 public class VueRessource {
+
+    /** ---------- [Propriétés - Sprites] ---------- **/
+
     private BufferedImage imageFer;
     private BufferedImage imageOr;
     private BufferedImage imagePierre;
     private BufferedImage imageBois;
 
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Charge les images associées aux différents types de ressources.
+     */
     public VueRessource() {
-        // Importe les images des ressources
         try {
             this.imageFer = ImageIO.read(new File("src/images/ressources/Fer.png"));
             this.imageOr = ImageIO.read(new File("src/images/ressources/Or.png"));
@@ -30,52 +38,45 @@ public class VueRessource {
             e.printStackTrace();
             System.out.println("Erreur : Impossible de charger l'image.");
         }
-
     }
 
+    /** ---------- [Méthodes Publiques - Rendu] ---------- **/
+
     /**
-     * Dessine l'objet ressource (cercle coloré ou sprite).
-     * @param g Contexte graphique principal ou minimap.
-     * @param r L'instance de la ressource contenant son ID (Type).
-     * @param x Coordonnée X en double (sera castée en int pour le dessin).
-     * @param y Coordonnée Y en double (sera castée en int pour le dessin).
-     * @param minimap Définit si l'objet doit être dessiné en taille réduite.
+     * Dessine une ressource à la position demandée.
+     * La méthode adapte sa taille selon le contexte d'affichage afin de conserver
+     * un bon compromis entre lisibilité dans le monde et densité sur la minimap.
+     *
+     * @param g - Contexte graphique cible
+     * @param r - Ressource à afficher
+     * @param x - Coordonnée X de rendu
+     * @param y - Coordonnée Y de rendu
+     * @param minimap - Indique si le rendu doit être compacté pour la minimap
      */
     public void dessinerRessource(Graphics g, Ressource r, double x, double y, boolean minimap) {
-        // Dictionnaire visuel : associe un type (0, 1, 2, 3) à un code couleur précis (RGB)
-        // 0 (Bois) -> Marron
-        // 1 (Pierre) -> Gris clair
-        // 2 (Fer) -> Gris argent/métallique
-        // 3 (Or) -> Jaune/Doré
-
-        // Diamètre de l'objet sur la carte
         int taille = 50;
 
-        if (minimap){
-            // Si on dessine sur la minimap, on réduit la taille des ressources à de minuscules points de 4 pixels
+        if (minimap) {
             taille = 16;
         }
 
-        // Récupère l'identifiant du matériau
         int type = r.getType();
-
-        // Transtypage des coordonnées pour le moteur de rendu graphique
         int drawX = (int) x;
         int drawY = (int) y;
 
-        // On dessine aux coordonnées x, y fournies par la Vue principale (qui a déjà appliqué la translation de Caméra)
+        // Le rendu est centré sur la position logique de la ressource pour rester cohérent avec les autres entités.
         switch (type) {
-            case 0: // Bois
-                g.drawImage(imageBois, drawX-taille/2, drawY-taille/2, taille, taille, null);
+            case 0:
+                g.drawImage(imageBois, drawX - taille / 2, drawY - taille / 2, taille, taille, null);
                 break;
-            case 1: // Pierre
-                g.drawImage(imagePierre, drawX-taille/2, drawY-taille/2, taille, taille, null);
+            case 1:
+                g.drawImage(imagePierre, drawX - taille / 2, drawY - taille / 2, taille, taille, null);
                 break;
-            case 2: // Fer
-                g.drawImage(imageFer, drawX-taille/2, drawY-taille/2, taille, taille, null);
+            case 2:
+                g.drawImage(imageFer, drawX - taille / 2, drawY - taille / 2, taille, taille, null);
                 break;
-            case 3: // Or
-                g.drawImage(imageOr, drawX-taille/2, drawY-taille/2, taille, taille, null);
+            case 3:
+                g.drawImage(imageOr, drawX - taille / 2, drawY - taille / 2, taille, taille, null);
                 break;
         }
     }

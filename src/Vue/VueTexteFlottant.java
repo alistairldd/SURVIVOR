@@ -7,113 +7,141 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Système de textes flottants animés (feedback visuel d'erreur).
- * Chaque texte apparaît en rouge au point de clic, monte progressivement
- * et disparaît en fondu — inspiré des jeux type Boom Beach.
- *
- * Cycle de vie d'un texte : Apparition → Montée + Fondu → Suppression.
+ * Système de textes flottants animés.
+ * Il fournit un feedback visuel léger directement dans le monde de jeu,
+ * avec une animation courte de montée puis de disparition.
  */
 public class VueTexteFlottant {
 
-    // ---------------------------------------------------------------
-    // Entité interne : un texte flottant avec son propre état
-    // ---------------------------------------------------------------
+    /** ---------- [Classe Interne - Élément animé] ---------- **/
+
+    /**
+     * Représente un texte flottant autonome avec son propre état d'animation.
+     */
     private static class TexteFlottant {
 
-        // Paramètres visuels
-        private static final Font FONT_TEXTE  = new Font("Arial", Font.BOLD, 18);
+        /** ---------- [Constantes de rendu] ---------- **/
 
-        // Paramètres d'animation (par frame, ~60 fps)
-        private static final double VITESSE_MONTEE  = 0.9;  // pixels/frame
-        private static float  VITESSE_FONDU   = 0.02f; // alpha/frame
+        private static final Font FONT_TEXTE = new Font("Arial", Font.BOLD, 18);
+        private static final double VITESSE_MONTEE = 0.9;
+        private static float VITESSE_FONDU = 0.02f;
+
+        /** ---------- [Propriétés] ---------- **/
 
         private Color couleur;
 
         final String texte;
         double x;
         double y;
-        float  alpha;
+        float alpha;
+
+        /** ---------- [Constructeurs] ---------- **/
 
         /**
+         * Initialise un texte flottant dans l'espace monde.
          *
-         * @param texte Message à afficher (ex. "Impossible !", "Rechargement…")
-         * @param x Coordonnée X dans l'espace monde (pas écran)
-         * @param y Coordonnée Y dans l'espace monde (pas écran)
+         * @param texte - Message à afficher
+         * @param x - Coordonnée X monde
+         * @param y - Coordonnée Y monde
+         * @param couleur - Couleur du texte, utilisée aussi pour adapter certains timings visuels
          */
         TexteFlottant(String texte, double x, double y, Color couleur) {
             this.texte = texte;
-            this.x     = x;
-            this.y     = y;
+            this.x = x;
+            this.y = y;
             this.alpha = 1.0f;
             this.couleur = couleur;
-            if (couleur.equals(Color.YELLOW)){
-                VITESSE_FONDU = 0.1f; // Plus rapide pour le jaune (affichage pieces)
+
+            // Les messages de gain doivent disparaître plus vite pour ne pas encombrer l'écran.
+            if (couleur.equals(Color.YELLOW)) {
+                VITESSE_FONDU = 0.1f;
             }
         }
 
-        /** Avance l'animation d'une frame. */
+        /** ---------- [Méthodes d'instance - Cycle de vie] ---------- **/
+
+        /**
+         * Fait progresser l'animation d'une frame.
+         * Le texte monte légèrement tout en perdant progressivement son opacité.
+         */
         void miseAJour() {
-            y     -= VITESSE_MONTEE;
+            y -= VITESSE_MONTEE;
             alpha -= VITESSE_FONDU;
         }
 
-        // retourne true si le texte est complètement transparent (disparu)
+        /**
+         * Indique si l'animation est terminée et que l'élément peut être retiré.
+         *
+         * @return true lorsque le texte est devenu totalement transparent
+         */
         boolean estTermine() {
             return alpha <= 0f;
         }
 
-        /** Dessine le texte avec son ombre portée. */
+        /**
+         * Dessine le texte à son état courant.
+         *
+         * @param g2d - Contexte graphique principal
+         */
         void dessiner(Graphics2D g2d) {
-
             g2d.setFont(FONT_TEXTE);
-            FontMetrics fm   = g2d.getFontMetrics();
+
+            FontMetrics fm = g2d.getFontMetrics();
             Rectangle2D rect = fm.getStringBounds(texte, g2d);
-            int textX = (int) x - (int) (rect.getWidth()  / 2);
+
+            // Le texte est centré sur son point d'ancrage pour un positionnement plus naturel.
+            int textX = (int) x - (int) (rect.getWidth() / 2);
             int textY = (int) y;
 
             AlphaComposite oldComposite = (AlphaComposite) g2d.getComposite();
             g2d.setColor(couleur);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)); // Appliquer la transparence
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             g2d.drawString(texte, textX, textY);
             g2d.setComposite(oldComposite);
         }
     }
 
-    // ---------------------------------------------------------------
-    // Gestionnaire de la liste de textes actifs
-    // ---------------------------------------------------------------
-    private final List<TexteFlottant> textes = new ArrayList<>();
+    /** ---------- [Propriétés - Gestionnaire] ---------- **/
+
+    private final List textes = new ArrayList<>();
+
+    /** ---------- [Méthodes Publiques - Gestion] ---------- **/
 
     /**
-     * Ajoute un nouveau texte flottant en rouge.
+     * Ajoute un nouveau texte flottant à afficher dans le monde.
      *
-     * @param texte   Message à afficher (ex. "Impossible !", "Rechargement…")
-     * @param mondeX  Coordonnée X dans l'espace monde (pas écran)
-     * @param mondeY  Coordonnée Y dans l'espace monde (pas écran)
+     * @param texte - Message à afficher
+     * @param mondeX - Coordonnée X monde
+     * @param mondeY - Coordonnée Y monde
+     * @param couleur - Couleur du feedback
      */
     public void ajouter(String texte, double mondeX, double mondeY, Color couleur) {
         textes.add(new TexteFlottant(texte, mondeX, mondeY, couleur));
     }
 
     /**
-     * Met à jour tous les textes actifs et supprime ceux qui ont disparu.
-     * À appeler une fois par frame, dans paintComponent.
+     * Met à jour tous les textes actifs et supprime ceux dont l'animation est terminée.
+     * Cette méthode est conçue pour être appelée une fois par frame.
      */
     public void miseAJour() {
-        Iterator<TexteFlottant> it = textes.iterator();
+        Iterator it = textes.iterator();
         while (it.hasNext()) {
-            TexteFlottant t = it.next();
+            TexteFlottant t = (TexteFlottant) it.next();
             t.miseAJour();
+
             if (t.estTermine()) it.remove();
         }
     }
 
     /**
-     * Dessine tous les textes actifs.
-     * Doit être appelé APRÈS la translation caméra (espace monde).
+     * Dessine l'ensemble des textes actifs.
+     * L'appel doit être fait dans le repère monde, après application de la caméra.
+     *
+     * @param g2d - Contexte graphique principal
      */
     public void dessiner(Graphics2D g2d) {
-        for (TexteFlottant t : textes) {
+        for (Object texte : textes) {
+            TexteFlottant t = (TexteFlottant) texte;
             t.dessiner(g2d);
         }
     }

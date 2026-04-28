@@ -3,36 +3,37 @@ package Vue;
 import Modele.Joueur;
 
 import java.awt.*;
+
 import static Modele.Constantes.*;
 
 /**
  * Responsable du dessin du personnage principal.
- * Traduit les coordonnées absolues du Modèle en une représentation visuelle basique (cercle).
+ * Cette vue fournit un rendu minimal centré sur les coordonnées logiques du joueur.
  */
 public class VueJoueur {
 
-    // Constructeur de la classe VueJoueur
+    /** ---------- [Constructeurs] ---------- **/
+
     public VueJoueur() {
     }
 
+    /** ---------- [Méthodes Publiques - Rendu] ---------- **/
+
     /**
-     * Dessine le joueur sur le contexte graphique.
-     * @param g2d Le pinceau 2D (qui a déjà reçu la translation de caméra de la Vue principale).
-     * @param joueur L'instance du joueur pour lire sa position exacte.
+     * Dessine le joueur sur le contexte graphique courant.
+     * Le rendu est centré sur la position monde du joueur afin de rester cohérent
+     * avec les autres entités manipulées par la vue principale.
+     *
+     * @param g2d - Contexte graphique ayant déjà reçu la transformation caméra
+     * @param joueur - Instance du joueur à afficher
      */
-    // Méthode pour dessiner le joueur sur la carte
     public void dessiner(Graphics g2d, Joueur joueur) {
-        // Récupère les vraies coordonnées monde depuis le modèle
         double posX = joueur.getX();
         double posY = joueur.getY();
 
-        // Définit la couleur de base de l'avatar (noir)
         g2d.setColor(Color.black);
 
-        // Dessine un disque plein.
-        // On soustrait la moitié de la taille (TAILLE/2) aux positions X et Y pour que
-        // les coordonnées (posX, posY) représentent le CENTRE du joueur, et non son coin en haut à gauche.
-        g2d.fillOval((int) posX - J_TAILLE/2, (int) posY - J_TAILLE/2 , J_TAILLE, J_TAILLE);
+        // Les coordonnées du modèle représentent le centre logique de l'entité, pas son coin supérieur gauche.
+        g2d.fillOval((int) posX - J_TAILLE / 2, (int) posY - J_TAILLE / 2, J_TAILLE, J_TAILLE);
     }
-
 }
