@@ -5,17 +5,29 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Overlay d'interface gérant le bouton d'aide et le popup des commandes.
- * Le popup s'adapte désormais dynamiquement à la taille du texte contenu.
+ * Panneau d'Overlay affichant un bouton d'aide et un panneau d'instructions pop-up.
+ * Ce composant flottant superpose le jeu et calcule ses dimensions de manière
+ * dynamique en fonction du contenu textuel.
  */
 public class VueHUDInstructions extends JPanel {
 
-    private Modele modele;
-    private JButton btnAide;
+    /** ---------- [Constantes] ---------- **/
 
     public static final int BTN_SIZE = 50;
     public static final int MARGIN = 20;
 
+    /** ---------- [Propriétés] ---------- **/
+
+    private Modele modele;
+    private JButton btnAide;
+
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Initialise le conteneur en mode transparent et instancie le bouton d'aide.
+     *
+     * @param modele - Référence au modèle pour gérer l'état d'affichage des instructions
+     */
     public VueHUDInstructions(Modele modele) {
         this.modele = modele;
         this.setOpaque(false);
@@ -24,6 +36,11 @@ public class VueHUDInstructions extends JPanel {
         initButton();
     }
 
+    /** ---------- [Méthodes Privées - Configuration] ---------- **/
+
+    /**
+     * Crée et configure le bouton interactif ouvrant/fermant le panneau d'aide.
+     */
     private void initButton() {
         btnAide = new JButton();
         btnAide.setFocusable(false);
@@ -40,11 +57,15 @@ public class VueHUDInstructions extends JPanel {
         this.add(btnAide);
     }
 
+    /** ---------- [Méthodes Publiques - Layout] ---------- **/
+
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
         btnAide.setBounds(MARGIN, height - BTN_SIZE - MARGIN, BTN_SIZE, BTN_SIZE);
     }
+
+    /** ---------- [Méthodes Protégées - Rendu] ---------- **/
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -55,7 +76,6 @@ public class VueHUDInstructions extends JPanel {
         int h = getHeight();
         int btnY = h - BTN_SIZE - MARGIN;
 
-        // --- DESSIN DU BOUTON ---
         g2d.setColor(new Color(50, 50, 50, 200));
         g2d.fillRoundRect(MARGIN, btnY, BTN_SIZE, BTN_SIZE, 10, 10);
         g2d.setColor(Color.WHITE);
@@ -65,35 +85,39 @@ public class VueHUDInstructions extends JPanel {
         g2d.setFont(new Font("Monospaced", Font.BOLD, 25));
         g2d.drawString("?", MARGIN + 18, btnY + 35);
 
-        // --- DESSIN DU POPUP DYNAMIQUE ---
         if (modele.isInstructionsOuvert()) {
             drawInstructionPopup(g2d, h);
         }
     }
 
+    /** ---------- [Méthodes Privées - Sous-Rendu] ---------- **/
+
+    /**
+     * Dessine dynamiquement le panneau d'instructions. Calcule automatiquement
+     * l'encombrement nécessaire basé sur la police et le contenu.
+     *
+     * @param g2d - Contexte graphique 2D
+     * @param screenHeight - Hauteur totale de l'écran pour l'ancrage bas
+     */
     private void drawInstructionPopup(Graphics2D g2d, int screenHeight) {
-        // 1. DÉFINITION DU CONTENU
         String title = "COMMANDES SYSTÈME";
         String[] instructions = {
                 "• CLIC DROIT   : Déplacement",
                 "• CLIC GAUCHE  : Attaque",
                 "• R            : Extraction Mine",
-                "• T            : Construction d'une tour",
                 "• P            : Afficher PVs",
                 "• C            : Afficher la portée",
                 "• ESPACE       : Changer d'arme",
                 "• FLÈCHES      : Switch HUD Pages"
         };
 
-        // 2. CALCULS DE DIMENSIONS DYNAMIQUES
         Font titleFont = new Font("Segoe UI", Font.BOLD, 16);
         Font textFont = new Font("Segoe UI", Font.PLAIN, 13);
         int lineSpacing = 22;
         int paddingSide = 25;
-        int paddingTop = 50; // Espace pour le titre
+        int paddingTop = 50;
         int paddingBottom = 20;
 
-        // Mesurer la largeur nécessaire (basée sur la ligne la plus longue)
         g2d.setFont(textFont);
         FontMetrics fm = g2d.getFontMetrics();
         int maxWidth = g2d.getFontMetrics(titleFont).stringWidth(title);
@@ -104,11 +128,9 @@ public class VueHUDInstructions extends JPanel {
         int width = maxWidth + (paddingSide * 2);
         int height = paddingTop + (instructions.length * lineSpacing) + paddingBottom;
 
-        // Calcul de la position (s'élève vers le haut selon la taille)
         int x = MARGIN;
         int y = screenHeight - BTN_SIZE - MARGIN - height - 10;
 
-        // 3. RENDU DU CADRE
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.90f));
         g2d.setColor(new Color(25, 25, 25));
         g2d.fillRoundRect(x, y, width, height, 15, 15);
@@ -118,7 +140,6 @@ public class VueHUDInstructions extends JPanel {
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(x, y, width, height, 15, 15);
 
-        // 4. RENDU DU TEXTE
         g2d.setColor(Color.WHITE);
         g2d.setFont(titleFont);
         g2d.drawString(title, x + paddingSide, y + 35);
@@ -128,6 +149,4 @@ public class VueHUDInstructions extends JPanel {
             g2d.drawString(instructions[i], x + paddingSide, y + paddingTop + (i * lineSpacing) + 15);
         }
     }
-
-
 }

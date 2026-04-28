@@ -10,32 +10,44 @@ import java.util.Objects;
 import static Modele.Constantes.*;
 
 /**
- * Gère l'affichage textuel et graphique des bâtiments dans le HUD.
- * Calcule les positions Y pour l'alignement des boutons Swing.
+ * Gestionnaire du rendu des bâtiments dans le HUD.
+ * Affiche dynamiquement les options de construction, leurs coûts et leurs icônes,
+ * tout en mémorisant leurs coordonnées d'affichage pour la détection de clics (Boutons Swing).
  */
 public class VueHUDBat {
 
-    // Coordonnées Y de chaque bâtiment pour le placement des boutons
+    /** ---------- [Propriétés - Mémorisation Spatiale] ---------- **/
+
     private int yTour;
     private int yTente;
     private int yAbatis;
-    private int yMortier; // NOUVEAU
+    private int yMortier;
 
-    // Getters pour les coordonnées Y
+    /** ---------- [Accesseurs - Getters] ---------- **/
+
     public int getYTour(){return yTour;}
     public int getYTente(){return yTente;}
     public int getyAbatis(){return yAbatis;}
-    public int getyMortier(){return yMortier;} // NOUVEAU
+    public int getyMortier(){return yMortier;}
 
-    // Setters pour les coordonnées Y
+    /** ---------- [Accesseurs - Setters] ---------- **/
+
     public void setyTour(int y){yTour = y;}
     public void setyTente(int y){yTente = y;}
     public void setyAbatis(int y){yAbatis = y;}
-    public void setyMortier(int y){yMortier = y;} // NOUVEAU
+    public void setyMortier(int y){yMortier = y;}
+
+    /** ---------- [Méthodes Publiques - Moteur de Rendu] ---------- **/
 
     /**
-     * Dessine les informations de construction.
-     * @return La coordonnée Y finale après dessin.
+     * Construit la section complète des bâtiments constructibles.
+     * Aligne les éléments textuels et graphiques et met à jour les coordonnées Y de référence.
+     *
+     * @param g - Contexte graphique 2D
+     * @param yDebut - Coordonnée Y initiale du bloc
+     * @param modele - Le modèle central pour l'état du cycle temporel
+     * @param joueur - Le joueur courant (utilisé pour les vérifications de ressources internes)
+     * @return La coordonnée Y finale après le rendu du bloc complet
      */
     public int dessiner(Graphics g, int yDebut, Modele modele, Joueur joueur) {
         int yCourant = yDebut;
@@ -47,7 +59,6 @@ public class VueHUDBat {
         g2d.setColor(couleurTexte);
         g2d.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // --- TITRE ---
         g2d.drawString("CONSTRUCTIONS", xOffset, yCourant);
 
         g2d.setFont(new Font("Arial", Font.BOLD, 12));
@@ -62,16 +73,14 @@ public class VueHUDBat {
         yCourant += 30;
 
         ArrayList<String> iterBat = new ArrayList<String>();
-
         iterBat.add("• Tour de défense");
         iterBat.add("• Tente de soin");
         iterBat.add("• Abatis");
-        iterBat.add("• Mortier"); // NOUVEAU
+        iterBat.add("• Mortier");
 
         for (String bat : iterBat) {
             yCourant = dessinerBatimentSelectionne(g2d, yCourant, bat, couleurTexte, modele);
 
-            // Mémorisation des positions pour les boutons
             if (Objects.equals(bat, "• Tour de défense")) {
                 setyTour(yCourant);
             }
@@ -82,7 +91,7 @@ public class VueHUDBat {
                 setyAbatis(yCourant);
             }
             else if (Objects.equals(bat, "• Mortier")) {
-                setyMortier(yCourant); // NOUVEAU
+                setyMortier(yCourant);
             }
         }
 
@@ -90,10 +99,16 @@ public class VueHUDBat {
     }
 
     /**
-     * Dessine les détails d'un bâtiment (Nom, Coût, Icône).
+     * Dessine la carte individuelle d'un bâtiment (Nom, Coût détaillé, Icône de présentation).
+     *
+     * @param g2d - Contexte graphique 2D
+     * @param yCourant - Coordonnée Y de départ pour ce bâtiment
+     * @param bat - Identifiant textuel du bâtiment
+     * @param couleurTexte - Couleur adaptative selon le cycle jour/nuit
+     * @param modele - Le modèle central pour vérifier les contraintes d'unicité (ex: Tente)
+     * @return La nouvelle coordonnée Y après avoir dessiné cet élément
      */
     public int dessinerBatimentSelectionne(Graphics2D g2d, int yCourant, String bat, Color couleurTexte, Modele modele){
-
         int TAILLE_ICONE_BAT = TAILLE_ICONE * 3;
         String cout;
         Image img;
@@ -116,28 +131,24 @@ public class VueHUDBat {
             cout = "(Cout: 20 Bois)";
             img = IMAGE_ABATIS_1;
         }
-        // NOUVEAU : Cas du Mortier
         else if (Objects.equals(bat, "• Mortier")) {
-            cout = "(Cout: 5 Bois, 4 Pierre, 10 Fer, 3 Or)"; //
-            img = IMAGE_MORTIER; //
+            cout = "(Cout: 5 Bois, 4 Pierre, 10 Fer, 3 Or)";
+            img = IMAGE_MORTIER;
         }
         else {
             cout = "(Cout inconnu)";
             img = null;
         }
 
-        // Nom du bâtiment
         yCourant += 30;
         g2d.setFont(new Font("Arial", Font.BOLD, 13));
         g2d.setColor(couleurTexte);
         g2d.drawString(bat, xOffset + 5, yCourant);
 
-        // Coût du bâtiment
         yCourant += 15;
         g2d.setFont(new Font("Arial", Font.ITALIC, 11));
         g2d.drawString(cout, xOffset + 15, yCourant);
 
-        // Image du bâtiment
         if (img != null) {
             dessinerImage(g2d, xOffset + 15, yCourant + 10, img, TAILLE_ICONE_BAT);
         }
@@ -146,6 +157,16 @@ public class VueHUDBat {
         return yCourant;
     }
 
+    /**
+     * Utilitaire de rendu calculant le ratio de mise à l'échelle pour inscrire
+     * une image au centre d'un cadre défini, sans déformation.
+     *
+     * @param g2d - Contexte graphique 2D
+     * @param x - Position X du cadre
+     * @param y - Position Y du cadre
+     * @param imgBat - Image source à dessiner
+     * @param taille - Dimension du cadre conteneur
+     */
     public void dessinerImage(Graphics2D g2d, int x, int y, Image imgBat, int taille) {
         int imgW = imgBat.getWidth(null);
         int imgH = imgBat.getHeight(null);
