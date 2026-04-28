@@ -9,60 +9,74 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Gère le rendu visuel (particules et zone d'effet) lorsqu'une réparation est en cours.
+ * Gère le rendu visuel d'une réparation en cours.
+ * Combine une zone de soin au sol et un système de particules pour rendre
+ * l'action de réparation perceptible sans interface supplémentaire.
  */
 public class VueEffetSoin {
 
-    private Modele modele;
-    private ArrayList<VueParticuleSoin> particules;
+    /** ---------- [Propriétés] ---------- **/
 
+    private Modele modele;
+    private ArrayList particules;
+
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Initialise le gestionnaire visuel des effets de soin liés au modèle courant.
+     *
+     * @param modele - Modèle de jeu fournissant le joueur et la cible en réparation
+     */
     public VueEffetSoin(Modele modele) {
         this.modele = modele;
         this.particules = new ArrayList<>();
     }
 
+    /** ---------- [Méthodes Publiques - Cycle de vie] ---------- **/
+
     /**
-     * Calcule la nouvelle position des particules et en génère de nouvelles si le soin est actif.
-     * À appeler à chaque "tick" graphique de ton jeu.
+     * Met à jour les particules existantes et en génère de nouvelles tant qu'une
+     * réparation est active.
+     * Le rayon de génération tient compte de la taille réelle du bâtiment pour que
+     * l'effet visuel épouse correctement son encombrement.
      */
     public void miseAJour() {
         Joueur joueur = modele.getJoueur();
         Batiment cible = modele.getJoueur().getBatimentEnReparation();
 
-        // Si une réparation est en cours, on fait "poper" de nouvelles particules (ex: 2 par rafraîchissement)
         if (cible != null) {
-            // NOUVEAU : On calcule le rayon dynamique pour l'apparition des particules
             int dimensionMax = Math.max(cible.getLargeurHitbox(), cible.getHauteurHitbox());
             int rayonDynamique = cible.getHealingRange() + (dimensionMax / 2);
 
+            // Plusieurs particules par tick évitent un rendu trop pauvre pendant l'animation.
             for (int i = 0; i < 2; i++) {
                 particules.add(new VueParticuleSoin(cible.getX(), cible.getY(), rayonDynamique));
             }
         }
 
-        // On fait vieillir et monter les particules existantes
-        Iterator<VueParticuleSoin> it = particules.iterator();
+        // Les particules sont mises à jour puis supprimées dès qu'elles sortent de leur cycle de vie.
+        Iterator it = particules.iterator();
         while (it.hasNext()) {
-            VueParticuleSoin p = it.next();
+            VueParticuleSoin p = (VueParticuleSoin) it.next();
             p.miseAJour();
-            // Si la particule a terminé son cycle de vie, on la supprime de la mémoire
             if (p.estMorte()) {
                 it.remove();
             }
         }
     }
 
+    /** ---------- [Méthodes Publiques - Rendu] ---------- **/
+
     /**
-     * Dessine le cercle d'aura vert et toutes les petites particules "+".
-     * @param g2d Le pinceau graphique principal
+     * Dessine l'aura de soin et les particules associées à la réparation courante.
+     *
+     * @param g2d - Contexte graphique principal
      */
     public void dessiner(Graphics2D g2d) {
         Joueur joueur = modele.getJoueur();
         Batiment cible = modele.getJoueur().getBatimentEnReparation();
 
-        // --- 1. Dessin de la zone de soin (Cercle vert au sol) ---
         if (cible != null) {
-            // NOUVEAU : On calcule le rayon dynamique pour le dessin du cercle
             int dimensionMax = Math.max(cible.getLargeurHitbox(), cible.getHauteurHitbox());
             int rayonDynamique = cible.getHealingRange() + (dimensionMax / 2);
 
@@ -70,29 +84,30 @@ public class VueEffetSoin {
             int cx = (int) cible.getX();
             int cy = (int) cible.getY();
 
-            // Fond très transparent (15% d'opacité)
+            // L'aura matérialise la zone effective du soin autour du bâtiment réparé.
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
             g2d.setColor(Color.GREEN);
             g2d.fillOval(cx - rayonDynamique, cy - rayonDynamique, diametre, diametre);
 
-            // Bordure un peu plus marquée (40% d'opacité)
+            // La bordure rend la lecture de la portée plus nette que le simple remplissage.
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
             g2d.setStroke(new BasicStroke(2));
             g2d.drawOval(cx - rayonDynamique, cy - rayonDynamique, diametre, diametre);
-            g2d.setStroke(new BasicStroke(1)); // Réinitialise l'épaisseur
+            g2d.setStroke(new BasicStroke(1));
         }
 
-        // --- 2. Dessin des particules flottantes ("+") ---
         g2d.setColor(Color.GREEN);
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
 
-        for (VueParticuleSoin p : particules) {
-            // Applique l'opacité individuelle calculée par la particule (effet de disparition)
+        for (Object particule : particules) {
+            VueParticuleSoin p = (VueParticuleSoin) particule;
+
+            // Chaque particule pilote sa propre opacité pour produire un fondu progressif.
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, p.getOpacite()));
             g2d.drawString("+", (int) p.getX(), (int) p.getY());
         }
 
-        // Sécurité : Remet l'opacité globale à 100% pour ne pas rendre le reste du jeu transparent
+        // Réinitialisation explicite pour éviter d'impacter les rendus suivants.
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
 }

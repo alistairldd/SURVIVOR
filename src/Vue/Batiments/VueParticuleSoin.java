@@ -1,50 +1,69 @@
 package Vue.Batiments;
 
 /**
- * Représente une petite particule visuelle (un "+") lors d'un soin.
- * Gère sa position et sa disparition progressive.
+ * Représente une petite particule visuelle de soin.
+ * Cette classe encapsule l'état minimal d'un élément éphémère affiché pendant
+ * une réparation afin de produire un feedback léger et répétable.
  */
 public class VueParticuleSoin {
+
+    /** ---------- [Propriétés] ---------- **/
 
     private double x;
     private double y;
     private int dureeVie;
     private int dureeVieMax;
 
+    /** ---------- [Constructeurs] ---------- **/
+
     /**
-     * Crée une nouvelle particule à une position aléatoire autour du centre.
+     * Crée une nouvelle particule à une position aléatoire autour du centre fourni.
+     * La dispersion spatiale et la durée de vie variable évitent un rendu mécanique
+     * lorsque plusieurs particules sont générées successivement.
+     *
+     * @param centreX - Coordonnée X du centre de génération
+     * @param centreY - Coordonnée Y du centre de génération
+     * @param rayonMax - Rayon maximal de dispersion autour du centre
      */
     public VueParticuleSoin(double centreX, double centreY, int rayonMax) {
-        // Apparition aléatoire dans le rayon du bâtiment
         this.x = centreX + (Math.random() * rayonMax * 2) - rayonMax;
         this.y = centreY + (Math.random() * rayonMax * 2) - rayonMax;
 
-        // Durée de vie aléatoire entre 20 et 40 "frames" (itérations d'affichage)
-        this.dureeVieMax = 20 + (int)(Math.random() * 20);
+        this.dureeVieMax = 20 + (int) (Math.random() * 20);
         this.dureeVie = this.dureeVieMax;
     }
 
+    /** ---------- [Méthodes Publiques - Cycle de vie] ---------- **/
+
     /**
-     * Fait monter la particule et réduit son espérance de vie.
+     * Fait évoluer la particule d'un tick d'animation.
+     * Le déplacement vertical suffit ici à rendre l'effet de soin vivant sans
+     * complexifier inutilement l'animation.
      */
     public void miseAJour() {
-        this.y -= 1.5; // Vitesse de montée en pixels
+        this.y -= 1.5;
         this.dureeVie--;
     }
 
     /**
-     * Vérifie si la particule doit être supprimée de la liste.
+     * Indique si la particule a terminé son cycle de vie et peut être retirée.
+     *
+     * @return true si la durée de vie restante est épuisée
      */
     public boolean estMorte() {
         return this.dureeVie <= 0;
     }
 
-    // --- Getters ---
+    /** ---------- [Getters] ---------- **/
+
     public double getX() { return x; }
+
     public double getY() { return y; }
 
     /**
-     * Calcule l'opacité actuelle (de 1.0f à 0.0f) pour l'effet de fondu (Fade-out).
+     * Calcule l'opacité courante de la particule pour produire un fondu progressif.
+     *
+     * @return opacité normalisée entre 0 et 1
      */
     public float getOpacite() {
         return Math.max(0.0f, (float) dureeVie / dureeVieMax);
