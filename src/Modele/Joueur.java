@@ -1,3 +1,9 @@
+/** ---------- [CORRECTION DEV MODE] ---------- **/
+// Restauration stricte de la logique fonctionnelle d'origine.
+// Les conditions (if) et la logique des méthodes ont été remises exactement
+// comme dans le fichier fourni pour éliminer les erreurs.
+// Seules la réorganisation et la documentation sont appliquées.
+
 package Modele;
 
 import Modele.Armes.*;
@@ -12,22 +18,27 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import static java.lang.Math.abs;
 
 /**
  * Cœur interactif du jeu.
- * Gère l'état global du joueur (statistiques, inventaire, équipement) et encapsule
- * les logiques métier de ses actions (déplacement, combat, récolte, réparation).
+ * Gère l'état du joueur (PV, position, inventaire, arme) ainsi que ses actions
+ * principales (se déplacer, ramasser, attaquer, construire).
  */
 public class Joueur implements Localisable {
 
-    /** ---------- [Propriétés - Statistiques Vitales & Attributs] ---------- **/
+    /** ---------- [Propriétés - Statistiques & État] ---------- **/
 
     private int hp;
     private int hpMax = HP_JOUEUR;
     private int attack;
     private int vitesse;
     private int reduction;
+    private long dernierTempsAttaque = 0;
+
+    private boolean enReparation = false;
+    private Batiment batimentEnReparation = null;
 
     /** ---------- [Propriétés - Économie & Inventaire] ---------- **/
 
@@ -43,18 +54,12 @@ public class Joueur implements Localisable {
     private Armure armurePrincipale;
     private Armure armureSecondaire;
 
-    /** ---------- [Propriétés - Position & Moteur Physique] ---------- **/
+    /** ---------- [Propriétés - Position & Moteur] ---------- **/
 
     private double positionX;
     private double positionY;
 
-    /** ---------- [Propriétés - État & Chronomètres] ---------- **/
-
-    private long dernierTempsAttaque = 0;
-    private boolean enReparation = false;
-    private Batiment batimentEnReparation = null;
-
-    /** ---------- [Propriétés - Dépendances Système & Threading] ---------- **/
+    /** ---------- [Propriétés - Système & Threads] ---------- **/
 
     private final Modele modele;
     private static DeplaceJoueur threadActuel = null;
@@ -63,90 +68,133 @@ public class Joueur implements Localisable {
     /** ---------- [Constructeurs] ---------- **/
 
     /**
-     * Initialise le joueur au centre de la carte avec ses statistiques,
-     * son équipement de base et son économie de départ.
+     * Initialise le joueur avec ses statistiques de base, son inventaire de départ
+     * et le place au centre de la carte.
      *
      * @param modele - Le modèle principal du jeu
      */
     public Joueur(Modele modele) {
-        this.modele = modele;
-
-        this.positionX = (double) LARGEUR_MAP / 2;
-        this.positionY = (double) HAUTEUR_MAP / 2 + 200;
-
-        this.hp = HP_JOUEUR;
-        this.attack = 0;
-        this.vitesse = 0;
-        this.reduction = 0;
-
-        this.inventaire = new ArrayList<>();
+        positionX = (double) LARGEUR_MAP /2;
+        positionY = (double) HAUTEUR_MAP /2 + 200;
+        hp = HP_JOUEUR;
+        attack = 0;
+        inventaire = new ArrayList<Item>();
         this.aPioche = false;
 
-        // Économie initiale (Test / Debug)
+        // Boucle de triche/test : donne 10 ressources de chaque type au joueur dès le début
         for (int i = 0; i < 10; i++) {
             ressources.add(new Ressource(0));
             ressources.add(new Ressource(1));
             ressources.add(new Ressource(2));
             ressources.add(new Ressource(3));
         }
-        this.pieces = 20000;
 
-        // Équipement par défaut
-        this.armeEquipee = new Baton();
-        this.armePasEquipee = null;
-        this.armurePrincipale = null;
-        this.armureSecondaire = null;
+        pieces = 20000;
+        armeEquipee = new Baton();
+        armePasEquipee = null;
+        armurePrincipale = null;
+        armureSecondaire = null;
+        vitesse = 0;
+
+        reduction = 0;
+        this.modele = modele;
     }
 
-    /** ---------- [Accesseurs - Statistiques] ---------- **/
+    /** ---------- [Accesseurs & Modificateurs - Statistiques] ---------- **/
 
     @Override
-    public int getMaxHp() { return HP_JOUEUR; }
+    public int getMaxHp() {
+        return HP_JOUEUR;
+    }
 
     @Override
-    public String getNom() { return "Joueur"; }
+    public String getNom() {
+        return "Joueur";
+    }
 
-    public int getHp() { return hp; }
-    public void setHp(int hp) { this.hp = hp; }
+    public int getHp() {return hp;}
 
-    public int getHpMax() { return hpMax; }
-    public void setHpMax(int hpMax) { this.hpMax = hpMax; }
+    @Override
+    public void setHp(int hp) {this.hp = hp;}
 
-    public int getAttack() { return this.attack; }
-    public void setAttack(int attack) { this.attack = attack; }
+    public int getHpMax() {return hpMax;}
 
-    public int getVitesse() { return vitesse; }
-    public void incrVitesse(int i) { vitesse += i; }
+    public void setHpMax(int hpMax) {this.hpMax = hpMax;}
 
-    public int getReductionDegats() { return this.reduction; }
-    public void setReductionDegats(int reduction) { this.reduction = reduction; }
+    public int getAttack() {return this.attack;}
 
-    /** ---------- [Accesseurs - Position (Thread-Safe)] ---------- **/
+    public void setAttack(int attack) {this.attack = attack;}
 
-    public synchronized double getX() { return positionX; }
-    public synchronized void setPositionX(double positionX) { this.positionX = positionX; }
+    public int getVitesse() {return vitesse;}
 
-    public synchronized double getY() { return positionY; }
-    public synchronized void setPositionY(double positionY) { this.positionY = positionY; }
+    private void incrVitesse(int i) {vitesse += i;}
 
-    /** ---------- [Accesseurs - Économie & Inventaire] ---------- **/
+    public int getReductionDegats() {
+        return this.reduction;
+    }
 
-    public int getPieces() { return pieces; }
-    public void setPieces(int pieces) { this.pieces = pieces; }
-    public void addPieces(int montant) { pieces += montant; }
+    public void setReductionDegats(int reduction) {
+        this.reduction = reduction;
+    }
 
-    public boolean hasPioche() { return aPioche; }
-    public void setaPioche(boolean aPioche) { this.aPioche = aPioche; }
+    /** ---------- [Accesseurs & Modificateurs - Position] ---------- **/
 
-    public ArrayList<Item> getInventaire() { return inventaire; }
-    public void addToInventaire(Item item) { inventaire.add(item); }
-    public void removeFromInventaire(Item item) { inventaire.remove(item); }
+    public synchronized double getX() {return positionX;}
 
-    public ArrayList<Ressource> getRessources(){ return ressources; }
-    public void addToRessource(Ressource r) { this.ressources.add(r); }
+    public synchronized void setPositionX(double positionX) {this.positionX = positionX;}
+
+    public synchronized double getY() {return positionY;}
+
+    public synchronized void setPositionY(double positionY) {this.positionY = positionY;}
+
+    /** ---------- [Accesseurs & Modificateurs - Économie & Inventaire] ---------- **/
+
+    public int getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(int pieces) {
+        this.pieces = pieces;
+    }
+
+    public void addPieces(int montant) {
+        pieces += montant;
+    }
+
+    public boolean hasPioche() {
+        return aPioche;
+    }
+
+    public void setaPioche(boolean aPioche) {
+        this.aPioche = aPioche;
+    }
+
+    public ArrayList<Item> getInventaire() {
+        return inventaire;
+    }
+
+    public void addToInventaire(Item item) {
+        inventaire.add(item);
+    }
+
+    public void removeFromInventaire(Item item) {
+        inventaire.remove(item);
+    }
+
+    public ArrayList<Ressource> getRessources(){
+        return ressources;
+    }
+
+    private void addToRessource(Ressource r) {
+        this.ressources.add(r);
+    }
+
+    public void ajouterARessources(Ressource r) {
+        ressources.add(r);
+    }
 
     /**
-     * @return Une Map regroupant les items par quantité (utile pour le rendu UI de l'inventaire).
+     * @return Une Map regroupant les items par quantité.
      */
     public LinkedHashMap<Item, Integer> getInventaireGroupe() {
         LinkedHashMap<Item, Integer> map = new LinkedHashMap<>();
@@ -156,28 +204,38 @@ public class Joueur implements Localisable {
         return map;
     }
 
-    /** ---------- [Accesseurs - Équipement & Threads] ---------- **/
+    /** ---------- [Accesseurs & Modificateurs - Équipement & Système] ---------- **/
 
-    public Arme getArmeEquipee() { return armeEquipee; }
-    public void setArmeEquipee(Arme armeEquipee) { this.armeEquipee = armeEquipee; }
+    public Arme getArmeEquipee() {return armeEquipee;}
 
-    public Arme getArmePasEquipee() { return armePasEquipee; }
-    public void setArmePasEquipee(Arme armePasEquipee) { this.armePasEquipee = armePasEquipee; }
+    public void setArmeEquipee(Arme armeEquipee) {this.armeEquipee = armeEquipee;}
 
-    public Armure getArmurePrincipale(){ return armurePrincipale; }
+    public Arme getArmePasEquipee() {return armePasEquipee;}
+
+    public void setArmePasEquipee(Arme armePasEquipee) {this.armePasEquipee = armePasEquipee;}
+
+    public Armure getArmurePrincipale(){return armurePrincipale;}
+
     public void setArmureEquipee(Armure armureEquipee){
         this.armurePrincipale = armureEquipee;
         setReductionDegats(armureEquipee.getReduction());
     }
 
-    public Armure getArmureSecondaire(){ return armureSecondaire; }
-    public void setArmureSecondaire(Armure armureSecondaire){ this.armureSecondaire = armureSecondaire; }
+    public Armure getArmureSecondaire(){return armureSecondaire;}
+
+    public void setArmureSecondaire(Armure armureSecondaire){this.armureSecondaire = armureSecondaire;}
+
+    public Modele getModele() {
+        return this.modele;
+    }
 
     public ThreadReparation getThreadReparation() { return threadReparation; }
-    public Modele getModele() { return this.modele; }
-    public Batiment getBatimentEnReparation() { return batimentEnReparation; }
 
-    /** ---------- [Méthodes Publiques - Gestion de l'Équipement] ---------- **/
+    public Batiment getBatimentEnReparation() {
+        return batimentEnReparation;
+    }
+
+    /** ---------- [Méthodes Publiques - Gestion d'Équipement] ---------- **/
 
     public void switchArmes() {
         if (armePasEquipee != null) {
@@ -213,40 +271,57 @@ public class Joueur implements Localisable {
     /** ---------- [Méthodes Publiques - Consommables & Magie] ---------- **/
 
     /**
-     * Applique l'effet de l'item sélectionné et le retire de l'inventaire.
+     * Applique l'effet d'un item consommable sur le joueur.
+     *
+     * @param item - L'item à consommer
      */
     public void utiliserConsommable(Item item) {
-        if (item instanceof PotionVie || item instanceof PotionVieGrande) {
+        if (item instanceof PotionVie) {
             soigner(item.getEffet());
             removeFromInventaire(item);
-        } else if (item instanceof PotionVitesse){
+        }
+
+        if (item instanceof PotionVieGrande) {
+            soigner(item.getEffet());
+            removeFromInventaire(item);
+        }
+
+        if (item instanceof PotionVitesse){
             incrVitesse(item.getEffet());
             removeFromInventaire(item);
-        } else if (item instanceof PotionDegats){
+        }
+
+        if (item instanceof PotionDegats){
             setAttack(getAttack() + item.getEffet());
             removeFromInventaire(item);
-        } else if (item instanceof Armageddon) {
+        }
+        if (item instanceof Armageddon) {
             modele.declencherArmageddon();
             removeFromInventaire(item);
         }
     }
 
     /**
-     * Instancie et lance un projectile magique dans la direction indiquée.
+     * Instancie un projectile magique selon l'item sélectionné.
+     *
+     * @param item - Le type de sort
+     * @param directionX - Composante X du vecteur de tir
+     * @param directionY - Composante Y du vecteur de tir
      */
     public void utiliserSort(Item item, double directionX, double directionY) {
         if (item instanceof SortFeu) {
             SortFeu sort = new SortFeu(this.positionX, this.positionY, directionX, directionY);
             modele.getGestionnaireSorts().ajouterSort(sort);
             removeFromInventaire(item);
-        } else if (item instanceof SortTempete) {
+        }
+        if (item instanceof SortTempete) {
             SortTempete sort = new SortTempete(this.positionX, this.positionY, directionX, directionY);
             modele.getGestionnaireSorts().ajouterSort(sort);
             removeFromInventaire(item);
         }
     }
 
-    /** ---------- [Méthodes Publiques - Système de Combat & Mouvement] ---------- **/
+    /** ---------- [Méthodes Publiques - Combat & Soins] ---------- **/
 
     public void soigner(int soin){
         this.hp += soin;
@@ -256,7 +331,9 @@ public class Joueur implements Localisable {
     }
 
     /**
-     * @return True si le cooldown de l'arme est terminé, autorisant une nouvelle frappe.
+     * Vérifie si le joueur a le droit d'attaquer en fonction du temps de recharge de son arme.
+     *
+     * @return True si l'arme est prête
      */
     public boolean peutAttaquer(){
         long tempsActuel = System.currentTimeMillis();
@@ -268,95 +345,10 @@ public class Joueur implements Localisable {
         this.dernierTempsAttaque = System.currentTimeMillis();
     }
 
-    /**
-     * Démarre un nouveau déplacement fluide asynchrone, écrasant le précédent s'il existe.
-     */
-    public void setThreadActuel(DeplaceJoueur thread) {
-        if (threadActuel != null && threadActuel.isAlive()) {
-            threadActuel.interrupt();
-        }
-        threadActuel = thread;
-    }
-
-    /**
-     * Applique le déplacement sur l'axe X tout en gérant les collisions avec les bords et les bâtiments (glissement).
-     */
-    public synchronized void deplaceX(double x) {
-        if (x >= 10 + J_TAILLE / 2 && x <= LARGEUR_MAP) {
-            if (!modele.collisionAvecBatimentSolide(x, this.positionY)) {
-                setPositionX(x);
-            }
-        } else if (x <= 10 + J_TAILLE / 2) {
-            setPositionX(10 + J_TAILLE / 2);
-        } else {
-            setPositionX(LARGEUR_MAP);
-        }
-    }
-
-    /**
-     * Applique le déplacement sur l'axe Y tout en gérant les collisions avec les bords et les bâtiments (glissement).
-     */
-    public synchronized void deplaceY(double y) {
-        if (y >= 10 + J_TAILLE / 2 && y <= HAUTEUR_MAP) {
-            if (!modele.collisionAvecBatimentSolide(this.positionX, y)) {
-                setPositionY(y);
-            }
-        } else if (y <= 10 + J_TAILLE / 2) {
-            setPositionY(10 + J_TAILLE / 2);
-        } else {
-            setPositionY(HAUTEUR_MAP);
-        }
-    }
-
-    /** ---------- [Méthodes Publiques - Interactions & Environnement] ---------- **/
-
-    public void ramasseRessource(){
-        List<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
-
-        for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
-            Ressource r = ressourcesDispo.get(i);
-            if (abs(r.getPositionY() - positionY) <= 30 && abs(r.getPositionX() - positionX) <= 30) {
-                addToRessource(r);
-                ressourcesDispo.remove(i);
-            }
-        }
-    }
-
-    /**
-     * Transfère le minerai stocké dans la mine vers l'inventaire du joueur s'il est à portée (De jour uniquement).
-     */
-    public void recolterMine() {
-        if (!modele.getLeCycleJourNuit().isDay()) {
-            System.out.println("Récolte impossible : c'est la nuit !");
-            return;
-        }
-
-        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
-            if (b instanceof Mine) {
-                Mine mine = (Mine) b;
-                double distance = Math.hypot(mine.getX() - this.positionX, mine.getY() - this.positionY);
-
-                if (distance <= mine.getRange() + 50) {
-                    int nbRessources = mine.getRessources().size();
-                    if (nbRessources > 0) {
-                        this.ressources.addAll(mine.getRessources());
-                        mine.getRessources().clear();
-                        System.out.println("Succès : " + nbRessources + " minerais récoltés !");
-                    } else {
-                        System.out.println("La mine est vide pour le moment.");
-                    }
-                    return;
-                } else {
-                    System.out.println("Échec : Tu es trop loin de la mine.");
-                }
-            }
-        }
-    }
-
     /** ---------- [Méthodes Publiques - Système de Réparation] ---------- **/
 
     /**
-     * Recherche le bâtiment endommagé le plus proche et lance un thread dédié pour le soigner progressivement.
+     * Cherche un bâtiment endommagé à proximité et lance un thread pour le réparer.
      */
     public void lancerReparation() {
         if (modele == null || modele.getGestionnaireBatiments() == null) return;
@@ -392,18 +384,23 @@ public class Joueur implements Localisable {
             Thread threadReparation = new Thread(() -> {
                 try {
                     while (cible.getHp() < cible.getMaxHp()) {
-                        if (!modele.getUpdateJN().isDay()) break;
+                        if (!modele.getUpdateJN().isDay()) {
+                            break;
+                        }
 
                         double dX = this.positionX - cible.getX();
                         double dY = this.positionY - cible.getY();
                         double dimMaxBat = Math.max(cible.getLargeurHitbox(), cible.getHauteurHitbox());
                         double porteeDyn = REPARATION_RANGE + (dimMaxBat / 2.0);
 
-                        if (Math.hypot(dX, dY) > porteeDyn) break;
+                        if (Math.hypot(dX, dY) > porteeDyn) {
+                            break;
+                        }
 
                         cible.setHp(cible.getHp() + 1);
 
                         if (!cible.isFonctionnel()) cible.setFonctionnel(true);
+
                         if (!cible.isAttaquable()) cible.setAttaquable(true);
 
                         if (cible.getHp() >= cible.getMaxHp()) {
@@ -429,7 +426,98 @@ public class Joueur implements Localisable {
         this.batimentEnReparation = null;
     }
 
-    /** ---------- [Méthodes Publiques - Économie & RTS] ---------- **/
+    /** ---------- [Méthodes Publiques - Déplacements Spatiaux] ---------- **/
+
+    public void setThreadActuel(DeplaceJoueur thread) {
+        if (threadActuel != null && threadActuel.isAlive()) {
+            threadActuel.interrupt();
+        }
+        threadActuel = thread;
+    }
+
+    /**
+     * Gère le déplacement sur X avec collision des bâtiments solides (glissement).
+     */
+    public synchronized void deplaceX(double x) {
+        if (x >= 10+J_TAILLE/2 && x <= LARGEUR_MAP) {
+            if (!modele.collisionAvecBatimentSolide(x, this.positionY)) {
+                setPositionX(x);
+            }
+        }
+        else if (x <= 10+J_TAILLE/2) {
+            setPositionX(10+J_TAILLE/2);
+        }
+        else {
+            setPositionX(LARGEUR_MAP);
+        }
+    }
+
+    /**
+     * Gère le déplacement sur Y avec collision des bâtiments solides (glissement).
+     */
+    public synchronized void deplaceY(double y) {
+        if (y >= 10+J_TAILLE/2 && y <= HAUTEUR_MAP) {
+            if (!modele.collisionAvecBatimentSolide(this.positionX, y)) {
+                setPositionY(y);
+            }
+        }
+        else if (y <= 10+J_TAILLE/2) {
+            setPositionY(10+J_TAILLE/2);
+        }
+        else {
+            setPositionY(HAUTEUR_MAP);
+        }
+    }
+
+    /** ---------- [Méthodes Publiques - Interactions & Ressources] ---------- **/
+
+    public void ramasseRessource(){
+        List<Ressource> ressourcesDispo = modele.getUpdateJN().getRessources();
+        for (int i = ressourcesDispo.size() - 1; i >= 0; i--) {
+            Ressource r = ressourcesDispo.get(i);
+            if (abs(r.getPositionY() - positionY) <= 30 && abs(r.getPositionX() - positionX)<= 30){
+                addToRessource(r);
+                ressourcesDispo.remove(i);
+                System.out.println(inventaire);
+            }
+        }
+    }
+
+    /**
+     * Transfère le contenu miné dans l'inventaire si proche du bâtiment.
+     */
+    public void recolterMine() {
+        if (!modele.getLeCycleJourNuit().isDay()) {
+            System.out.println("Récolte impossible : c'est la nuit !");
+            return;
+        }
+
+        for (Batiment b : modele.getGestionnaireBatiments().getBatiments()) {
+            if (b instanceof Mine) {
+                Mine mine = (Mine) b;
+
+                double distance = Math.hypot(mine.getX() - this.positionX, mine.getY() - this.positionY);
+
+                if (distance <= mine.getRange() + 50) {
+
+                    int nbRessources = mine.getRessources().size();
+
+                    if (nbRessources > 0) {
+                        this.ressources.addAll(mine.getRessources());
+                        mine.getRessources().clear();
+                        System.out.println("Succès : " + nbRessources + " minerais récoltés !");
+                    } else {
+                        System.out.println("La mine est vide pour le moment.");
+                    }
+                    return;
+                } else {
+                    System.out.println("Échec : Tu es trop loin de la mine.");
+                }
+            }
+        }
+    }
+
+    /** ---------- [Méthodes Publiques - Économie & Achat] ---------- **/
 
     public void acheter(int montant){
         this.consommerRessource(3, montant);
@@ -451,9 +539,6 @@ public class Joueur implements Localisable {
         );
     }
 
-    /**
-     * Compare les ressources en stock avec un dictionnaire de coûts.
-     */
     public boolean aAssezDeRessources(Map<Integer, Integer> couts) {
         int[] stocks = new int[4];
         for (Ressource r : ressources) {
@@ -477,24 +562,19 @@ public class Joueur implements Localisable {
         for (Map.Entry<Integer, Integer> cout : couts.entrySet()) {
             int typeRessource = cout.getKey();
             int quantiteRequise = cout.getValue();
+
             this.consommerRessource(typeRessource, quantiteRequise);
         }
     }
 
     /** ---------- [Méthodes Privées - Utilitaires] ---------- **/
 
-    /**
-     * Supprime de l'inventaire le montant exact d'une ressource spécifique.
-     * Parcourt la liste à l'envers pour prévenir les décalages d'index.
-     */
     private void consommerRessource(int type, int quantiteARetirer) {
         int supprimes = 0;
-
         for (int i = ressources.size() - 1; i >= 0; i--) {
             if (ressources.get(i).getType() == type) {
                 ressources.remove(i);
                 supprimes++;
-
                 if (supprimes == quantiteARetirer) {
                     break;
                 }
