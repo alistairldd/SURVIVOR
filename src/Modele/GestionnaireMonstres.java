@@ -15,68 +15,62 @@ import static Modele.Constantes.*;
 
 /**
  * Classe responsable de l'apparition (spawn), du stockage et du nettoyage des monstres.
- * Fonctionne en coordination avec le cycle temporel pour gérer les vagues d'ennemis.
+ * Elle agit comme une "usine" à monstres pendant la nuit et maintient la liste à jour
+ * pour que le Modèle puisse vérifier les collisions et les attaques.
  */
 public class GestionnaireMonstres {
 
     /** ---------- [Propriétés] ---------- **/
 
+    // Liste dynamique stockant tous les monstres actuellement en vie sur la carte
     private List<Monstre> monstres;
     private UpdateJN updateJN;
     private int nbMonstresMorts = 0;
 
     /** ---------- [Constructeurs] ---------- **/
 
-    /**
-     * Initialise le gestionnaire d'entités hostiles.
-     *
-     * @param updateJN - L'interface de communication avec la boucle temporelle du jeu
-     */
     public GestionnaireMonstres(UpdateJN updateJN) {
+        // Initialise la liste vide au démarrage
         this.monstres = new CopyOnWriteArrayList<>();
         this.updateJN = updateJN;
     }
 
     /** ---------- [Accesseurs / Getters] ---------- **/
 
+    // Retourne la liste complète des monstres actuels (utilisée par la vue pour les dessiner)
     public List<Monstre> getMonstres() {
         return monstres;
     }
 
+    // Getter pour le nombre de monstres morts, utile pour les statistiques ou les récompenses
     public int getNbMonstresMorts() {
         return nbMonstresMorts;
     }
 
     /** ---------- [Méthodes Publiques - Moteur Métier (Cycle de Vie)] ---------- **/
 
+    // Méthode pour incrémenter le compteur de monstres morts, appelée par les monstres eux-mêmes lorsqu'ils meurent
+    public void incrementerMonstresMorts() {
+        nbMonstresMorts++;
+    }
+
     /**
-     * Enregistre le décès d'une entité et assure la distribution des récompenses
-     * via la propagation de l'événement au modèle parent.
-     *
-     * @param m - Le monstre éliminé
+     * Retirer les monstres dont les PV sont tombés à zéro.
      */
     public void supprimerMonstre(Monstre m){
         updateJN.monstreMort(m);
         monstres.remove(m);
     }
 
-    public void incrementerMonstresMorts() {
-        nbMonstresMorts++;
-    }
-
     /**
-     * Purge intégrale des listes d'entités hostiles (Typiquement exécuté au lever du soleil).
+     * Supprime instantanément tous les monstres de la carte.
+     * Utilisé principalement au lever du jour pour nettoyer la carte.
      */
     public void clearMonstres() {
+        // Vide l'ArrayList
         monstres.clear();
     }
 
-    /**
-     * Interroge le moteur de résolution spatial pour trouver la cible valide la plus proche.
-     *
-     * @param m - L'entité hostile cherchant une cible
-     * @return La cible identifiée (Joueur ou Bâtiment), null si aucune cible n'est valide
-     */
     public Localisable trouverCible(Localisable m){
         return updateJN.monstreTrouverCible(m);
     }
@@ -84,14 +78,13 @@ public class GestionnaireMonstres {
     /** ---------- [Méthodes Publiques - Moteur de Spawn] ---------- **/
 
     /**
-     * Lit la configuration depuis un fichier JSON pour orchestrer le déploiement
-     * algorithmique d'une vague d'ennemis relative au niveau de difficulté (Nuit).
-     *
-     * @param numeroNuit - L'index de la nuit en cours dictant la difficulté de la vague
+     * Fait apparaître un nombre précis de monstres en fonction de la nuit aléatoirement sur les bords de la carte.
+     * @param numeroNuit Le nombre d'ennemis de la nuit à générer (appelé par UpdateJN à la tombée de la nuit).
      */
     public void genererMonstre(int numeroNuit) {
         try {
             String contenu = new String(Files.readAllBytes(Paths.get("src/Modele/Monstres/monstreNuit.json")));
+
             JsonArray nuits = JsonParser.parseString(contenu).getAsJsonArray();
 
             JsonObject nuitActuelle = null;
@@ -121,14 +114,9 @@ public class GestionnaireMonstres {
 
     /** ---------- [Méthodes Privées - Utilitaires de Spawn] ---------- **/
 
-    /**
-     * Instancie et place un groupe défini d'un type d'entité spécifique.
-     *
-     * @param type - L'identifiant de la classe d'ennemi ("Slime", "Ogre", etc.)
-     * @param quantite - Le nombre d'instances à générer
-     */
     private void genererTypeMonstre(String type, int quantite) {
         for (int i = 0; i < quantite; i++) {
+            // On calcule toujours une position aléatoire sur les bords de la map
             int[] pos = calculerPositionAleatoireBords();
 
             switch (type) {
@@ -148,34 +136,34 @@ public class GestionnaireMonstres {
         }
     }
 
-    /**
-     * Calcule un point d'apparition aléatoire strictly localisé
-     * sur les limites extérieures de la carte de jeu.
-     *
-     * @return Tableau contenant les coordonnées [X, Y] générées
-     */
     private int[] calculerPositionAleatoireBords() {
         int x, y;
-        int edge = (int) (Math.random() * 4);
+        // Génère un nombre entre 0 et 3 (inclus) pour choisir aléatoirement l'un des 4 bords de la carte
+        int edge = (int) (Math.random() * 4); // 0: haut, 1: droite, 2: bas, 3: gauche
 
+        // Applique les coordonnées en fonction du bord choisi
         switch (edge) {
-            case 0: // Bord Haut
+            case 0: // Haut
+                // X aléatoire sur toute la largeur, Y tout en haut (0)
                 x = (int) (Math.random() * LARGEUR_MAP);
                 y = 0;
                 break;
-            case 1: // Bord Droit
+            case 1: // Droite
+                // X collé à droite, Y aléatoire sur toute la hauteur
                 x = LARGEUR_MAP;
                 y = (int) (Math.random() * HAUTEUR_MAP);
                 break;
-            case 2: // Bord Bas
+            case 2: // Bas
+                // X aléatoire sur toute la largeur, Y tout en bas
                 x = (int) (Math.random() * LARGEUR_MAP);
                 y = HAUTEUR_MAP;
                 break;
-            case 3: // Bord Gauche
+            case 3: // Gauche
+                // X collé à gauche (0), Y aléatoire sur toute la hauteur
                 x = 0;
                 y = (int) (Math.random() * HAUTEUR_MAP);
                 break;
-            default:
+            default: // Sécurité (normalement inatteignable) : par défaut à gauche
                 x = 0;
                 y = (int) (Math.random() * HAUTEUR_MAP);
         }

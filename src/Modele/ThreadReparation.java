@@ -9,17 +9,23 @@ import static Modele.Constantes.*;
  */
 public class ThreadReparation extends Thread {
 
+    /** ---------- [Propriétés] ---------- **/
+
     private Joueur joueur;
     private Batiment batiment;
 
-
+    /** ---------- [Constructeurs] ---------- **/
 
     public ThreadReparation(Joueur joueur, Batiment batiment) {
         this.joueur = joueur;
         this.batiment = batiment;
     }
 
+    /** ---------- [Accesseurs] ---------- **/
+
     public Batiment getBatiment() { return batiment; }
+
+    /** ---------- [Méthodes Publiques - Boucle de Vie] ---------- **/
 
     @Override
     public void run() {

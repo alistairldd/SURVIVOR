@@ -9,6 +9,8 @@ import static Modele.Constantes.*;
  */
 public class Ressource {
 
+    /** ---------- [Propriétés] ---------- **/
+
     // Coordonnées en double pour permettre une interpolation fluide lors de l'aspiration
     private double positionX;
     private double positionY;
@@ -16,6 +18,8 @@ public class Ressource {
     private int type;
     // Indique si la ressource est en train de voler vers le joueur
     private boolean estAspiree;
+
+    /** ---------- [Constructeurs] ---------- **/
 
     /**
      * Constructeur par défaut utilisé pour la génération naturelle sur la carte.
@@ -59,12 +63,16 @@ public class Ressource {
         this.estAspiree = false;
     }
 
+    /** ---------- [Accesseurs / Getters & Setters] ---------- **/
+
     public double getPositionX() { return positionX; }
     public double getPositionY() { return positionY; }
     public int getType() { return type; }
 
     public boolean isEstAspiree() { return estAspiree; }
     public void setEstAspiree(boolean estAspiree) { this.estAspiree = estAspiree; }
+
+    /** ---------- [Méthodes Publiques - Animation] ---------- **/
 
     /**
      * Calcule le vecteur directionnel vers le joueur et déplace la ressource
