@@ -31,7 +31,7 @@ public class VueSortFeu {
 
         // 4. Application de la rotation
         g2d.translate(posX, posY); // On déplace le point de pivot au centre du sort
-        g2d.rotate(angle - Math.toRadians(60));         // On fait pivoter le "pinceau"
+        g2d.rotate(angle );         // On fait pivoter le "pinceau"
 
         // 5. Dessin de l'image
         if (IMAGE_BOULE_FEU != null) {
