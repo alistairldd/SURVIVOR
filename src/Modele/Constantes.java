@@ -22,6 +22,35 @@ public final class Constantes {
     public static final int TAILLE_MORTIER = 150;
     public static final int TAILLE_BATIMENT_MINIMAP = 6;
 
+
+    /*** ---Cycle Jour/Nuit--- ***/
+    // Constantes pour le cycle
+    // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
+    public final static int FPS = 60;
+    // Durée fixe d'une phase jour en secondes réelles
+    public final static int DUREE_CYCLE_JOUR = 90;
+    // Durée fixe d'une phase nuit en secondes réelles
+    public final static int DUREE_CYCLE_NUIT = 120;
+    // Nombre total de tours de boucle nécessaires pour terminer une phase entière
+    public final static int TICKS_PAR_CYCLE_JOUR = DUREE_CYCLE_JOUR * FPS;
+    public final static int TICKS_PAR_CYCLE_NUIT = DUREE_CYCLE_NUIT * FPS;
+
+    /*** ---Joueur--- ***/
+    // Vitesse de déplacement en pixels par itération de la boucle
+    public static final int VITESSE = 10;
+    public static final int HP_JOUEUR = 100;
+
+    // Effet des sorts
+    public static final int FEU_RANGE = 50;
+    public static final int TEMPETE_RANGE = 250; // Rayon de la tempête
+    public static final int TEMPETE_KNOCKBACK_FORCE = 200; // Distance de recul
+
+    /*** ---Map--- ***/
+    // Constante : Largeur totale de l'aire de jeu en pixels
+    public static final int LARGEUR_MAP = 3000;
+    // Constante : Hauteur totale de l'aire de jeu en pixels
+    public static final int HAUTEUR_MAP = 3000;
+
     /*** ---Bâtiments--- ***/
     // Paramètres d'équilibrage du soin
     public static int SOIN_BAT = 1; // Nombre de PV restaurés par itération
@@ -29,22 +58,20 @@ public final class Constantes {
     public static final int HP_TOWER = 100;
     public static final int HP_HQ = 300;
     public static final int HP_MINE = 100;
-    public static final int HP_DEFAUT = 100;
     public static final int HP_MORTIER = 200;
+    public static final int HP_DEFAUT = 100;
     public static final int REPARATION_RANGE = 50;
 
     /*--- Tower ---*/
     // Constante : Points de dégâts fixes infligés à chaque tir
     public static final int TOWER_BASE_DAMAGE = 20;
-
-    // Constante : Rayon d'action maximum (en pixels) de la tourelle
     public static final int TOWER_BASE_RANGE = 100;
-    public static final int MINE_BASE_RANGE = 100;
 
     /*--- Mine ---*/
     public static final int PROBA_PIERRE = 70; // 50% de chance d'obtenir de la pierre
     public static final int PROBA_FER = 25;   // 30% de chance d'obtenir du fer
     public static final int PROBA_OR = 5;    //
+    public static final int MINE_BASE_RANGE = 100;
 
     /*--- Tente de soin ---*/
     public static final int HEALING_POWER = 5; // Nombre de PV restaurés par tir de la tente de soin
@@ -53,10 +80,6 @@ public final class Constantes {
 
     /*--- Abatis (Remparts) ---*/
     public static final int HP_ABATIS = 500; // Sac à PV
-    public static final int TAILLE_ABATIS = 150; // Dimension de l'image pour le rendu
-    public static final double LARGEUR_HITBOX_ABATIS = 130.0; // Longueur physique du mur
-    public static final double HAUTEUR_HITBOX_ABATIS = 30.0; // Épaisseur du mur
-    public static final double ANGLE_ABATIS = Math.toRadians(29); // Inclinaison en radians
 
     /*--- Mortier ---*/
     public static final int MORTIER_MIN_RANGE = 150; // L'angle mort (trop près)
@@ -104,6 +127,8 @@ public final class Constantes {
     public static final int MINE_OFFSET_Y = -60;
 
     // Abatis (Spécial : Encombrement = Hitbox)
+
+    public static final int TAILLE_ABATIS = 150;
     public static final int ABATIS_LARGEUR = 150;
     public static final int ABATIS_HAUTEUR = 30;
     public static final int ABATIS_OFFSET_Y = 0; // Centré sur son point d'origine
@@ -145,37 +170,6 @@ public final class Constantes {
             2, 10,
             3, 3
     );
-
-    /*** ---Cycle Jour/Nuit--- ***/
-    // Constantes pour le cycle
-    // Nombre de rafraîchissements virtuels par seconde (détermine la vitesse d'écoulement du temps)
-    public final static int FPS = 60;
-    // Durée fixe d'une phase jour en secondes réelles
-    public final static int DUREE_CYCLE_JOUR = 30;
-    // Durée fixe d'une phase nuit en secondes réelles
-    public final static int DUREE_CYCLE_NUIT = 120;
-    // Nombre total de tours de boucle nécessaires pour terminer une phase entière
-    public final static int TICKS_PAR_CYCLE_JOUR = DUREE_CYCLE_JOUR * FPS;
-    public final static int TICKS_PAR_CYCLE_NUIT = DUREE_CYCLE_NUIT * FPS;
-
-    /*** ---Joueur--- ***/
-    // Vitesse de déplacement en pixels par itération de la boucle
-    public static final int VITESSE = 10;
-    public static final int HP_JOUEUR = 100;
-
-    // Effet des sorts
-    public static final int FEU_RANGE = 50;
-    public static final int TEMPETE_RANGE = 250; // Rayon de la tempête
-    public static final int TEMPETE_KNOCKBACK_FORCE = 200; // Distance de recul
-
-
-
-
-    /*** ---Map--- ***/
-    // Constante : Largeur totale de l'aire de jeu en pixels
-    public static final int LARGEUR_MAP = 3000;
-    // Constante : Hauteur totale de l'aire de jeu en pixels
-    public static final int HAUTEUR_MAP = 3000;
 
     /*** ---Ressources--- ***/
     // Tableau des identifiants de types de ressources (0 : bois, 1 : pierre, 2 : fer, 3: or)

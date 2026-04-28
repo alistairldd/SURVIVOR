@@ -68,7 +68,7 @@ public class VueHUDPageEtat extends JPanel {
         y = vueHUDInventaire.dessiner(g, y, modele, modele.getJoueur());
         // (L'appel à vueHUDInstructions a été supprimé ici)
 
-        y += 1000; // test scroll conservé
+        //y += 1000; // test scroll conservé
 
         // --- Redimensionnement dynamique (Trailing Stop) ---
         // Si le contenu dépasse la taille du panneau, on agrandit le panneau pour activer le scroll

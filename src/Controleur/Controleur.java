@@ -7,24 +7,26 @@ import javax.swing.*;
 
 /**
  * Classe principale du contrôleur orchestrant le lien entre la Vue et le Modèle.
- * Elle centralise l'initialisation et l'attachement des sous-contrôleurs (souris, clavier)
+ * Elle centralise l'initialisation et l'attachement des écouteurs et sous-contrôleurs
  * aux composants graphiques pour intercepter les actions de l'utilisateur.
  */
 public class Controleur {
 
+    /** ---------- [Propriétés] ---------- **/
+
     private Modele monModele;
     private Vue maVue;
 
+    /** ---------- [Constructeurs] ---------- **/
+
     /**
-     * Constructeur du contrôleur principal.
-     * Initialise le sous-contrôleur de souris et l'attache aux écouteurs de la vue principale.
-     * * @param modele L'instance du modèle contenant la logique métier (cœur du jeu).
-     * @param vue L'instance de la vue gérant l'affichage graphique.
+     * Initialise le contrôleur principal en établissant la liaison entre les données et l'interface.
+     *
+     * @param modele - L'instance du modèle contenant la logique métier et l'état de l'application
+     * @param vue - L'instance de la vue gérant le rendu visuel et l'interface utilisateur
      */
-    public Controleur(Modele modele, Vue vue){
+    public Controleur(Modele modele, Vue vue) {
         monModele = modele;
         maVue = vue;
-
-
     }
 }

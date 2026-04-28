@@ -1,9 +1,6 @@
 package Vue;
 
-import Modele.Batiments.HQ;
-import Modele.Batiments.Mine;
-import Modele.Batiments.TenteDeSoin;
-import Modele.Batiments.Tower;
+import Modele.Batiments.*;
 import Modele.Modele;
 import java.awt.*;
 
@@ -70,6 +67,14 @@ public class VueVie {
                 case TenteDeSoin ignored -> {
                     color = Color.PINK;
                     img = IMAGE_TENTE;
+                }
+                case Abatis ignored -> {
+                    color = Color.ORANGE;
+                    img = IMAGE_ABATIS_1;
+                }
+                case Mortier ignored -> {
+                    color = Color.CYAN;
+                    img = IMAGE_MORTIER;
                 }
                 case Monstre m -> {
                     color = Color.RED;
