@@ -13,46 +13,53 @@ import static Modele.Constantes.LARGEUR_TOP_JOUEUR_SOURCE;
 
 /**
  * Gère l'affichage dynamique de l'arme du joueur.
- * Calcule l'orientation de l'arme en temps réel pour qu'elle pointe toujours vers
- * le curseur de la souris, et applique les transformations visuelles lors des attaques (animations).
+ * Cette vue calcule l'orientation vers le curseur, affiche éventuellement
+ * la zone d'attaque et applique les offsets produits par l'animation d'attaque.
  */
 public class VueArme {
 
-    // Épaisseur visuelle de l'arme dessinée à l'écran
+    /** ---------- [Constantes de rendu] ---------- **/
+
     public static final int TAILLE = 10;
 
-    // Constantes pour le positionnement et le scalage de l'arme
-    // Distance à partir du joueur où commence le dessin de l'arme
     private static final int OFFSET_START_ARME = 10;
-    // Hauteur de l'arme pour le centrage vertical (demi-hauteur pour centrer)
     private static final int OFFSET_Y_ARME = 12;
-    // Ratio de scalage de la largeur de l'image par rapport à la portée
     private static final double RATIO_LARGEUR = 0.9;
 
-    // Référence au contrôleur pour lire la position (X,Y) en temps réel du curseur
+    /** ---------- [Propriétés - Dépendances] ---------- **/
+
     private final ControleurSouris controleurSouris;
     private Modele modele;
     private Vue vue;
 
-    // Angle supplémentaire ajouté artificiellement par le Thread d'animation lors d'un coup
-    private double angleOffsetAnimation = 0; // angle de décalage pour l'animation d'attaque
-    // translation animée pour la lance (sur l'axe X local après rotation)
-    private int translationOffsetAnimation = 0;
-    // Flag indiquant si une animation est en cours
-    private boolean enAnimation = false; // indique si l'animation d'attaque est en
-    // Flag pour afficher ou non la portée de l'arme (cône d'attaque)
-    private boolean affPortee = false; // affiche la portée de l'arme (c
+    /** ---------- [Propriétés - État d'affichage] ---------- **/
 
-    // Dimensions de l'image source de l'arme
+    private double angleOffsetAnimation = 0;
+    private int translationOffsetAnimation = 0;
+    private boolean enAnimation = false;
+    private boolean affPortee = false;
+
+    /** ---------- [Propriétés - Dimensions source] ---------- **/
+
     private int imgWidth;
     private int imgHeight;
 
-    // Constructeur de la classe VueArme
+    /** ---------- [Constructeurs] ---------- **/
+
+    /**
+     * Initialise la vue de l'arme et ses dépendances de rendu.
+     *
+     * @param controleurSouris - Contrôleur fournissant la position instantanée du curseur
+     * @param vue - Vue principale utilisée comme repère écran
+     * @param modele - Modèle donnant accès au joueur et à l'arme équipée
+     */
     public VueArme(ControleurSouris controleurSouris, Vue vue, Modele modele) {
         this.controleurSouris = controleurSouris;
         this.modele = modele;
         this.vue = vue;
     }
+
+    /** ---------- [Getters & Setters - État visuel] ---------- **/
 
     public boolean getAffPortee() {
         return affPortee;
@@ -62,18 +69,29 @@ public class VueArme {
         affPortee = b;
     }
 
-
-    // Injecte l'angle calculé par le Thread AnimationArme
+    /**
+     * Injecte l'offset angulaire calculé par l'animation d'attaque.
+     *
+     * @param offset - Rotation supplémentaire à appliquer localement à l'arme
+     */
     public void setAngleOffsetAnimation(double offset) {
         this.angleOffsetAnimation = offset;
     }
 
-    // Nouveau setter pour la translation de la lance
+    /**
+     * Injecte la translation locale utilisée notamment pour la lance.
+     *
+     * @param offset - Déplacement supplémentaire sur l'axe local de l'arme
+     */
     public void setTranslationOffsetAnimation(int offset) {
         this.translationOffsetAnimation = offset;
     }
 
-    // Verrouille ou déverrouille l'état d'animation
+    /**
+     * Verrouille ou libère l'état d'animation de l'arme.
+     *
+     * @param b - true si une animation d'attaque est en cours
+     */
     public void setEnAnimation(boolean b) {
         this.enAnimation = b;
     }
@@ -82,151 +100,129 @@ public class VueArme {
         return enAnimation;
     }
 
-
-
+    /** ---------- [Méthodes Publiques - Rendu] ---------- **/
 
     /**
-     * Dessine l'arme en appliquant les transformations de position et de rotation.
-     * @param g Le contexte graphique sur lequel dessiner.
+     * Dessine l'arme équipée dans l'espace monde en fonction du curseur et de l'état courant.
+     * Le rendu se fait dans un repère local centré sur le joueur puis orienté vers la souris,
+     * ce qui simplifie à la fois la visée, l'animation et l'affichage des portées.
+     *
+     * @param g - Contexte graphique principal
      */
-    // methode pour dessiner l'arme sur la carte
     public void dessiner(Graphics g) {
-        /*
-         * Cette méthode dessine l'arme du joueur en fonction de la position de la souris.
-         * L'arme est dessinée à une distance fixe du joueur, dans la direction de la souris.
-         * L'angle entre le joueur et la souris est calculé à l'aide de la fonction atan2, qui retourne l'angle en radians entre les deux points.
-         * Ensuite, les coordonnées de l'arme sont calculées en utilisant les fonctions cos et sin pour déterminer la position de l'arme par rapport au joueur.
-         * Enfin, l'arme est dessinée sous forme de rectangle gris à la position calculée.
-         */
-
-        // Crée une copie du contexte graphique pour ne pas affecter le reste des dessins avec nos rotations
         Graphics2D g2d = (Graphics2D) g.create();
 
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-
-        // Récupère les caractéristiques physiques de l'arme pour l'affichage (notamment sa longueur/portée)
         Arme armeEquipee = modele.getJoueur().getArmeEquipee();
         Image image = armeEquipee.getImage();
         int portee = armeEquipee.getPortee();
         double ouvertureCone = armeEquipee.getAngle();
 
-        // Récupérer la position du joueur (point d'origine de l'arme)
         int posJoueurX = (int) modele.getJoueur().getX();
         int posJoueurY = (int) modele.getJoueur().getY();
 
-        // Récupérer le centre exact de la fenêtre d'affichage (où se trouve visuellement le joueur)
         int centerX = vue.getWidth() / 2;
         int centerY = vue.getHeight() / 2;
 
-        // Récupérer les coordonnées brutes actuelles de la souris sur l'écran
         int mouseX = controleurSouris.getMX();
         int mouseY = controleurSouris.getMY();
 
-        // Calculer l'angle directionnel entre le centre de l'écran et la souris
+        // L'angle est calculé depuis le centre écran, car le joueur y reste visuellement centré par la caméra.
         double angle = Math.atan2(mouseY - centerY, mouseX - centerX);
-        double angleOffset = 0; // aucun décalage par défaut
+        double angleOffset = 0;
 
-        // Distance radiale pour ne pas dessiner l'arme DANS le joueur, mais juste à côté (dans sa main)
-        int rayon = 20; // distance entre le joueur et l'arme
+        int rayon = 20;
 
-
-        // Déplace le point d'origine du dessin (0,0) sur les coordonnées absolues du joueur
         g2d.translate(posJoueurX, posJoueurY);
-        // Pivote l'ensemble du calque autour de ce nouveau point (0,0) selon l'angle de la souris
         g2d.rotate(angle);
 
         if (affPortee) {
-            // Dessiner un cône semi-transparent pour représenter la zone d'attaque de l'arme
-
-
+            // La lance utilise une zone rectiligne, les autres armes une zone conique.
             if (Objects.equals(armeEquipee.getNom(), "Lance")) {
                 g2d.setColor(new Color(0, 150, 255, 60));
-                g2d.fillRect(0, -portee/8, (int) (portee*1.2), portee/4);
+                g2d.fillRect(0, -portee / 8, (int) (portee * 1.2), portee / 4);
 
                 g2d.setColor(new Color(0, 100, 255, 150));
-                g2d.drawRect(0, -portee/8, (int) (portee*1.2), portee/4);
+                g2d.drawRect(0, -portee / 8, (int) (portee * 1.2), portee / 4);
 
             } else {
                 g2d.setColor(new Color(0, 150, 255, 60));
-                // La méthode fillArc prend des degrés. On convertit l'ouverture (ex: PI/3 -> 60°)
                 int arcAngle = (int) Math.toDegrees(ouvertureCone);
 
-                // Pour que la souris soit pile au milieu du cône, on commence à dessiner
-                // à la moitié de l'angle en négatif (ex: de -30° à +30°)
+                // L'arc est recentré autour de la direction de visée pour que la souris pointe l'axe médian.
                 int startAngle = -arcAngle / 2;
 
-                // fillArc dessine dans un rectangle englobant. Pour un cercle de rayon "portee" centré sur (0,0),
-                // le coin supérieur gauche est à (-portee, -portee) et sa taille est (portee*2, portee*2)
                 g2d.fillArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
 
-                // Optionnel : un petit trait de contour bleu foncé pour faire plus propre
                 g2d.setColor(new Color(0, 100, 255, 150));
-
-                // Pour les autres armes, on dessine le contour de l'arc
-
                 g2d.drawArc(-portee, -portee, portee * 2, portee * 2, startAngle, arcAngle);
-                // On dessine aussi deux lignes pour relier le joueur au bord de l'arc
+
+                // Les deux rayons ferment visuellement le cône et rendent sa lecture plus nette.
                 g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle))));
                 g2d.drawLine(0, 0, (int) (portee * Math.cos(Math.toRadians(startAngle + arcAngle))), (int) (portee * Math.sin(Math.toRadians(startAngle + arcAngle))));
             }
         }
-        g2d.rotate(angleOffsetAnimation); // animation rotation (armes classiques)
-        // animation translation (lance)
+
+        // Les offsets d'animation sont appliqués dans le repère local déjà orienté vers la cible.
+        g2d.rotate(angleOffsetAnimation);
         g2d.translate(translationOffsetAnimation, 0);
 
-        // Dessiner l'arme (couleur générique grise)
         g2d.setColor(Color.GRAY);
 
-        // Scalage dynamique de l'image de l'arme basé sur la portée de l'arme
         if (image == null) {
-            // Si l'image de l'arme n'est pas chargée, dessiner un rectangle pour indiquer une erreur
+            // Rendu de secours si l'image d'arme n'est pas disponible.
             g2d.setColor(Color.BLACK);
             g2d.fillRect(rayon, -TAILLE / 2, portee - rayon, TAILLE);
         } else {
-            // Calculer les dimensions scalées basées sur la portée de l'arme
+            // Le sprite est redimensionné à partir de la portée pour que la sensation de longueur reste cohérente.
             int scaledWidth = (int) (portee * RATIO_LARGEUR);
             int scaledHeight = (int) ((scaledWidth * image.getHeight(null)) / (double) image.getWidth(null));
 
-            // Positionner l'image avec les constantes définies pour éviter les valeurs hardcodées
             int posX = OFFSET_START_ARME;
             int posY = getPosY(armeEquipee);
 
-            // Dessiner l'image avec les dimensions scalées
             g2d.drawImage(image, posX, posY, scaledWidth, scaledHeight, null);
         }
 
-
-        // Puisque le calque a été tourné, ce rectangle pointera naturellement vers la souris.
-        // On le décale de "rayon" sur l'axe X pour l'éloigner du corps, et on centre son épaisseur (Y = -TAILLE/2)
-        // g2d.fillRect(rayon,-TAILLE/2, portee-rayon, TAILLE); ça c'était pour le test au début
-
         g2d.translate(-translationOffsetAnimation, 0);
 
+        // Le haut du joueur est redessiné après l'arme pour préserver la superposition voulue de certains sprites.
         int offsetJoueur = -LARGEUR_TOP_JOUEUR_SOURCE / 2;
         g2d.drawImage(IMAGE_TOP_JOUEUR, offsetJoueur, offsetJoueur, 50, 50, null);
 
-
-        // Libère la mémoire et annule les translations/rotations pour les prochains dessins
         g2d.dispose();
     }
 
+    /** ---------- [Méthodes Privées - Ajustements de sprites] ---------- **/
+
+    /**
+     * Retourne l'offset vertical propre à l'arme équipée.
+     * Ces ajustements compensent les différences de cadrage entre sprites afin
+     * d'obtenir un point de tenue visuellement cohérent dans la main du joueur.
+     *
+     * @param armeEquipee - Arme actuellement affichée
+     * @return position Y locale du sprite dans le repère de l'arme
+     */
     private int getPosY(Arme armeEquipee) {
         int posY = -OFFSET_Y_ARME;
 
-        if (Objects.equals(armeEquipee.getNom(), "Baton")){
-            posY = -5; // ajustement spécifique pour le bâton
+        if (Objects.equals(armeEquipee.getNom(), "Baton")) {
+            posY = -5;
         }
-        if (Objects.equals(armeEquipee.getNom(), "Epee")){
-            posY = -15; // ajustement spécifique pour l'épée'
+
+        if (Objects.equals(armeEquipee.getNom(), "Epee")) {
+            posY = -15;
         }
-        if (Objects.equals(armeEquipee.getNom(), "Epee Lourde")){
-            posY = -25; // ajustement spécifique pour l'épée lourde'
+
+        if (Objects.equals(armeEquipee.getNom(), "Epee Lourde")) {
+            posY = -25;
         }
-        if (Objects.equals(armeEquipee.getNom(), "Lance")){
-            posY = -17; // ajustement spécifique pour lance'
+
+        if (Objects.equals(armeEquipee.getNom(), "Lance")) {
+            posY = -17;
         }
+
         return posY;
     }
-
 }

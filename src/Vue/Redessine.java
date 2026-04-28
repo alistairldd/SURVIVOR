@@ -5,55 +5,51 @@ import Vue.HUD.VueHUD;
 import static Modele.Constantes.*;
 
 /**
- * Moteur de rendu graphique (Game Loop d'affichage).
- * C'est un Thread autonome dont l'unique but est de forcer l'interface
- * à se redessiner en continu, garantissant une animation fluide (ex: déplacements, tirs)
- * indépendamment de la vitesse de calcul du Modèle.
+ * Moteur de rendu graphique.
+ * Ce thread force le rafraîchissement régulier de la vue monde et du HUD afin
+ * de maintenir une animation fluide indépendamment du reste des traitements.
  */
 public class Redessine extends Thread {
-    /* thread qui redessine l'affichage à intervalles réguliers
-     * il appelle la méthode repaint() de l'affichage pour déclencher le redessinage
-     * le délai entre chaque redessinage est défini par la constante DELAY
-     * le thread s'exécute en continu tant que l'application est ouverte*/
 
-    // Référence à la zone de dessin principale (le monde)
+    /** ---------- [Propriétés] ---------- **/
+
     private Vue vue;
-    // Référence au panneau d'interface utilisateur (panneau latéral)
     private VueHUD vueHUD;
 
+    /** ---------- [Constructeurs] ---------- **/
 
-    /*constructeur*/
     /**
-     * Initialise et démarre immédiatement la boucle de rendu.
-     * @param vue L'interface principale contenant la carte.
-     * @param modele Le modèle (non utilisé directement ici, mais passé par convention ou pour évolution future).
+     * Initialise la boucle de redessin et la démarre immédiatement.
+     *
+     * @param vue - Vue principale contenant la scène et l'accès au HUD
+     * @param modele - Modèle transmis par convention d'initialisation
      */
     public Redessine(Vue vue, Modele.Modele modele) {
-        // Enregistre les références des panneaux à rafraîchir
         this.vue = vue;
         this.vueHUD = vue.getVueHUD();
-        // Lance automatiquement l'exécution de la méthode run()
+
+        // Le thread démarre dès sa création pour brancher immédiatement la boucle de rendu.
         this.start();
     }
 
-    /*redéfinition de run*/
+    /** ---------- [Méthodes Publiques - Exécution] ---------- **/
+
     /**
-     * Boucle infinie d'affichage.
+     * Exécute la boucle de rafraîchissement graphique.
+     * Le monde et le HUD sont redessinés au même rythme pour éviter un décalage
+     * visuel entre la scène principale et les informations d'interface.
      */
     @Override
     public void run() {
-        // Tourne tant que le jeu n'est pas fermé
-        while(true){
-            // Demande au système Java Swing de nettoyer et rappeler paintComponent() sur le monde
+        while (true) {
             vue.repaint();
-            // Demande la même chose pour l'interface utilisateur latérale
             vueHUD.repaint();
 
             try {
-                // Met le thread en pause pendant 50ms pour cadencer l'affichage
+                // Le délai cadence l'affichage et évite de monopoliser inutilement le CPU.
                 Thread.sleep(REDESSINE_DELAY);
             } catch (InterruptedException e) {
-                // Relance une exception critique si le moteur de rendu plante
+                // Une interruption de cette boucle est considérée ici comme une rupture critique du rendu.
                 throw new RuntimeException(e);
             }
         }
