@@ -25,7 +25,7 @@ public class VueTexteFlottant {
 
         // Paramètres d'animation (par frame, ~60 fps)
         private static final double VITESSE_MONTEE  = 0.9;  // pixels/frame
-        private static final float  VITESSE_FONDU   = 0.1f; // alpha/frame  → ~55 frames ≈ 0.9 s
+        private static float  VITESSE_FONDU   = 0.02f; // alpha/frame
 
         private Color couleur;
 
@@ -36,9 +36,9 @@ public class VueTexteFlottant {
 
         /**
          *
-         * @param texte
-         * @param x
-         * @param y
+         * @param texte Message à afficher (ex. "Impossible !", "Rechargement…")
+         * @param x Coordonnée X dans l'espace monde (pas écran)
+         * @param y Coordonnée Y dans l'espace monde (pas écran)
          */
         TexteFlottant(String texte, double x, double y, Color couleur) {
             this.texte = texte;
@@ -46,6 +46,9 @@ public class VueTexteFlottant {
             this.y     = y;
             this.alpha = 1.0f;
             this.couleur = couleur;
+            if (couleur.equals(Color.YELLOW)){
+                VITESSE_FONDU = 0.1f; // Plus rapide pour le jaune (affichage pieces)
+            }
         }
 
         /** Avance l'animation d'une frame. */
@@ -54,6 +57,7 @@ public class VueTexteFlottant {
             alpha -= VITESSE_FONDU;
         }
 
+        // retourne true si le texte est complètement transparent (disparu)
         boolean estTermine() {
             return alpha <= 0f;
         }
@@ -67,10 +71,11 @@ public class VueTexteFlottant {
             int textX = (int) x - (int) (rect.getWidth()  / 2);
             int textY = (int) y;
 
+            AlphaComposite oldComposite = (AlphaComposite) g2d.getComposite();
             g2d.setColor(couleur);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)); // Appliquer la transparence
             g2d.drawString(texte, textX, textY);
-
+            g2d.setComposite(oldComposite);
         }
     }
 
