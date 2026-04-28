@@ -2,37 +2,28 @@ package Modele.Batiments;
 
 import Modele.GestionnaireBatiments;
 import Modele.Joueur;
-
-import java.util.Map;
-
 import static Modele.Constantes.*;
 
 /**
- * Bâtiment défensif automatisé (Tente de soin).
- * Hérite des propriétés d'un Batiment classique (HP, position) mais intègre
- * sa propre logique de soin et un système de ciblage.
+ * Bâtiment de soutien (Tente de soin).
+ * Restaure passivement les points de vie du joueur s'il est à proximité.
  */
 public class TenteDeSoin extends Batiment{
 
-    private int heal;
-    // Mémorise l'heure du dernier tir pour vérifier le cooldown (Le chronomètre interne de LA tour)
-    private long dernierTempsSoin = 0;
+    /** ---------- [Propriétés] ---------- **/
 
-    // Mémorisation de la cible pour la vue
+    private int heal;
+    private long dernierTempsSoin = 0;
     private Joueur joueur = null;
 
-    /**
-     * Construit une tente de soin à des coordonnées précises.
-     * @param x Coordonnée X de placement.
-     * @param y Coordonnée Y de placement.
-     */
+    /** ---------- [Constructeurs] ---------- **/
+
     public TenteDeSoin(int x, int y, GestionnaireBatiments gB) {
-        // Initialise la structure via le constructeur parent (Batiment)
         super(x, y, gB, TOWER_BASE_RANGE);
         this.hp = HP_TENTE;
-        // Applique les statistiques de soin par défaut
         this.range = HEALING_RANGE;
         this.heal = HEALING_POWER;
+
         this.largeurEncombrement = TENTE_LARGEUR_ENC;
         this.hauteurEncombrement = TENTE_HAUTEUR_ENC;
         this.largeurHitbox = TENTE_LARGEUR_HIT;
@@ -40,17 +31,36 @@ public class TenteDeSoin extends Batiment{
         this.offsetYHitbox = TENTE_OFFSET_Y;
     }
 
+    /** ---------- [Accesseurs] ---------- **/
+
+    @Override
     public int getRange() { return range; }
 
     public Joueur joueurCible() { return joueur; }
 
     public long getDernierTempsSoin() { return dernierTempsSoin; }
 
+    /** ---------- [Méthodes Publiques - Métier] ---------- **/
+
+    /**
+     * Applique les soins au joueur et actualise le chronomètre.
+     */
     public void soigner(Joueur joueur) {
         joueur.soigner(this.heal);
         this.dernierTempsSoin = System.currentTimeMillis();
     }
 
+    /** ---------- [Méthodes Héritées] ---------- **/
+
+    @Override
+    public int getMaxHp() { return 100; }
+
+    @Override
+    public String getNom() { return "Tente de soin"; }
+
+    /**
+     * Boucle de vérification de présence du joueur et d'application des soins.
+     */
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
@@ -63,8 +73,6 @@ public class TenteDeSoin extends Batiment{
                 try {
                     joueur = gBatiments.trouverJoueur(this);
 
-                    // CORRECTION ICI : Le bâtiment détecte le joueur, mais ne le soigne
-                    // que si ses PV actuels sont inférieurs à ses PV max.
                     if (joueur != null && joueur.getHp() < joueur.getHpMax()) {
                         this.soigner(joueur);
                     }
@@ -83,15 +91,5 @@ public class TenteDeSoin extends Batiment{
                 }
             }
         }
-    }
-
-    @Override
-    public int getMaxHp() {
-        return 100;
-    }
-
-    @Override
-    public String getNom() {
-        return "Tente de soin";
     }
 }

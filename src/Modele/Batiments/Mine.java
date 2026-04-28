@@ -11,47 +11,45 @@ import static Modele.Constantes.*;
 
 /**
  * Bâtiment de production automatisé (Mine).
- * Génère des ressources périodiquement. Se place aléatoirement sur la carte
- * tout en évitant les bordures et la position du Quartier Général (HQ).
+ * S'auto-place loin du HQ et génère des ressources minérales périodiquement.
  */
 public class Mine extends Batiment implements Localisable {
+
+    /** ---------- [Propriétés] ---------- **/
 
     private int range;
     private ArrayList<Ressource> ressources;
     private Random randomNumbers = new Random();
 
+    /** ---------- [Constructeurs] ---------- **/
+
     /**
-     * Construit une mine à des coordonnées aléatoires sécurisées.
+     * Initialise une mine en calculant dynamiquement une position de spawn sécurisée.
      */
     public Mine(GestionnaireBatiments gB) {
-        // 1. Initialisation temporaire en (0, 0) pour satisfaire la classe mère
         super(0, 0, gB, TOWER_BASE_RANGE);
 
-        // 2. Recherche d'une position de Spawn valide
-        int marge = 300; // Distance minimum des bords de la map
-        double distanceSecuriteHQ = 500.0; // Rayon d'exclusion autour du HQ (car le HQ est énorme)
+        int marge = 300;
+        double distanceSecuriteHQ = 500.0;
         boolean positionValide = false;
 
         HQ hq = gB.getHQ();
 
-        // Boucle de recherche : on tire des coordonnées au sort jusqu'à en trouver des bonnes
+        // Calcul du placement aléatoire sécurisé
         while (!positionValide) {
-            // X et Y bornés entre [marge] et [TAILLE_MAX - marge]
             this.x = marge + randomNumbers.nextInt(LARGEUR_MAP - 2 * marge);
             this.y = marge + randomNumbers.nextInt(HAUTEUR_MAP - 2 * marge);
 
-            // Si le HQ est bien présent sur la carte, on vérifie l'éloignement
             if (hq != null) {
                 double distance = Math.hypot(this.x - hq.getX(), this.y - hq.getY());
                 if (distance >= distanceSecuriteHQ) {
-                    positionValide = true; // Assez loin, on valide !
+                    positionValide = true;
                 }
             } else {
-                positionValide = true; // Sécurité si aucun HQ n'est trouvé
+                positionValide = true;
             }
         }
 
-        // 3. Initialisation des autres caractéristiques
         this.hp = HP_MINE;
         this.range = MINE_BASE_RANGE;
         this.largeurEncombrement = MINE_LARGEUR_ENC;
@@ -60,43 +58,53 @@ public class Mine extends Batiment implements Localisable {
         this.hauteurHitbox = MINE_HAUTEUR_HIT;
         this.offsetYHitbox = MINE_OFFSET_Y;
         this.ressources = new ArrayList<>();
-        this.attaquable = false; // La mine n'est pas attaquable, elle ne peut pas être détruite par les monstres
+        this.attaquable = false;
         this.setFonctionnel(false);
     }
 
+    /** ---------- [Accesseurs] ---------- **/
+
     public int getRange() { return range; }
 
-    public ArrayList<Ressource> getRessources() {
-        return ressources;
-    }
+    public ArrayList<Ressource> getRessources() { return ressources; }
+    public void setRessources(ArrayList<Ressource> ressources) { this.ressources = ressources; }
 
-    public void setRessources(ArrayList<Ressource> ressources) {
-        this.ressources = ressources;
-    }
+    /** ---------- [Méthodes Publiques - Métier] ---------- **/
 
+    /**
+     * Ajoute une nouvelle ressource au stockage interne selon des probabilités définies.
+     */
     public void genererRessources() {
         int tirage = (int) (Math.random() * 100);
         int typeChoisi;
 
         if (tirage < PROBA_PIERRE) {
-            typeChoisi = 1; // Pierre
+            typeChoisi = 1;
         }
         else if (tirage < PROBA_PIERRE + PROBA_FER) {
-            typeChoisi = 2; // Fer
+            typeChoisi = 2;
         }
         else {
-            typeChoisi = 3; // Or
+            typeChoisi = 3;
         }
 
         this.ressources.add(new Ressource(typeChoisi));
     }
 
+    /** ---------- [Méthodes Héritées] ---------- **/
+
+    @Override
+    public int getMaxHp() { return HP_MINE; }
+
+    @Override
+    public String getNom() { return "Mine"; }
+
+    /**
+     * Cycle de production autonome de la mine.
+     */
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
-
-
-            // Si les PV tombent à 0 ou moins, la mine disjoncte et arrête de produire
             if (this.hp <= 0 && isFonctionnel()) {
                 setFonctionnel(false);
             }
@@ -118,15 +126,5 @@ public class Mine extends Batiment implements Localisable {
                 }
             }
         }
-    }
-
-    @Override
-    public int getMaxHp() {
-        return HP_MINE;
-    }
-
-    @Override
-    public String getNom() {
-        return "Mine";
     }
 }

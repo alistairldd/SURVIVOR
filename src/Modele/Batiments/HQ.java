@@ -4,17 +4,17 @@ import Modele.GestionnaireBatiments;
 import static Modele.Constantes.*;
 
 /**
- * Représente le Quartier Général (HeadQuarters) du joueur.
- * C'est un bâtiment spécifique qui hérite des propriétés de base d'un Batiment.
+ * Représente le Quartier Général (HQ) du joueur.
+ * Bâtiment central dont la destruction provoque un Game Over.
  */
 public class HQ extends Batiment {
 
+    /** ---------- [Constructeurs] ---------- **/
+
     /**
-     * Constructeur par défaut.
-     * Place automatiquement le HQ exactement au centre géographique de la carte.
+     * Initialise le HQ au centre exact de la carte avec ses dimensions spécifiques.
      */
     public HQ(GestionnaireBatiments gB) {
-        // Appelle le constructeur parent (Batiment) en lui passant le centre de la Map calculé dynamiquement
         super(LARGEUR_MAP/2, HAUTEUR_MAP/2, gB, 0);
         this.hp = HP_HQ;
         this.largeurEncombrement = HQ_LARGEUR_ENC;
@@ -24,32 +24,30 @@ public class HQ extends Batiment {
         this.offsetYHitbox = HQ_OFFSET_Y;
     }
 
-    // Récupère la position horizontale sur la carte
+    /** ---------- [Méthodes Héritées] ---------- **/
+
+    @Override
     public double getX(){ return x; }
 
-    // Récupère la position verticale sur la carte
+    @Override
     public double getY(){ return y; }
 
     @Override
-    public int getMaxHp() {
-        return HP_HQ; // PV maximum du HQ
-    }
+    public int getMaxHp() { return HP_HQ; }
 
     @Override
-    public String getNom() {
-        return "HQ";
-    }
+    public String getNom() { return "HQ"; }
 
+    /**
+     * Gère l'état d'alimentation et de destruction du HQ.
+     */
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
-            // Si le QG tombe à 0 PV, il disjoncte (même si techniquement c'est souvent un Game Over,
-            // cette logique le protège de crashs si tu changes les règles plus tard)
             if (this.hp <= 0 && isFonctionnel()) {
                 setFonctionnel(false);
             }
 
-            // Si le QG est allumé
             if (isFonctionnel()) {
                 try {
                     Thread.sleep(BAT_DELAY);
@@ -58,7 +56,6 @@ public class HQ extends Batiment {
                     break;
                 }
             } else {
-                // Le QG est détruit : le Thread se repose
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {

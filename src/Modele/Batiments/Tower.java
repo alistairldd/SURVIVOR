@@ -2,40 +2,28 @@ package Modele.Batiments;
 
 import Modele.GestionnaireBatiments;
 import Modele.Monstres.Monstre;
-import Modele.Ressource;
-
-import java.util.Map;
-
 import static Modele.Constantes.*;
 
 /**
  * Bâtiment défensif automatisé (Tourelle).
- * Hérite des propriétés d'un Batiment classique (HP, position) mais intègre
- * sa propre logique de combat (portée, dégâts, cadence) et un système de ciblage
- * pour interagir avec le ThreadBatiments de manière indépendante.
+ * Scanne l'environnement et inflige des dégâts monocibles réguliers.
  */
 public class Tower extends Batiment{
 
-    // Dégâts effectifs de cette instance précise
-    private int damage;
-    // Mémorise l'heure du dernier tir pour vérifier le cooldown (Le chronomètre interne de LA tour)
-    private long dernierTempsAttaque = 0;
+    /** ---------- [Propriétés] ---------- **/
 
-    // Mémorisation de la cible pour la vue
-    // Stocke temporairement l'ennemi visé pour que la VueBatiment sache où dessiner le laser/projectile
+    private int damage;
+    private long dernierTempsAttaque = 0;
     private Monstre monstreCible = null;
-    /**
-     * Construit une tour défensive à des coordonnées précises.
-     * @param x Coordonnée X de placement.
-     * @param y Coordonnée Y de placement.
-     */
+
+    /** ---------- [Constructeurs] ---------- **/
+
     public Tower(int x, int y, GestionnaireBatiments gB) {
-        // Initialise la structure via le constructeur parent (Batiment)
         super(x, y, gB, TOWER_BASE_RANGE);
         this.hp = HP_TOWER;
-        // Applique les statistiques de combat par défaut
         this.range = TOWER_BASE_RANGE;
         this.damage = TOWER_BASE_DAMAGE;
+
         this.largeurEncombrement = TOUR_LARGEUR_ENC;
         this.hauteurEncombrement = TOUR_HAUTEUR_ENC;
         this.largeurHitbox = TOUR_LARGEUR_HIT;
@@ -43,36 +31,46 @@ public class Tower extends Batiment{
         this.offsetYHitbox = TOUR_OFFSET_Y;
     }
 
-    // Récupère la portée de la tour (utilisé par la vue pour dessiner le cercle de portée)
+    /** ---------- [Accesseurs pour la Vue] ---------- **/
+
+    @Override
     public int getRange() { return range; }
 
-    // Getters pour la vue (pour dessiner le laser)
-    // Retourne l'ennemi actuellement visé
     public Monstre getMonstreCible() { return monstreCible; }
-    // Retourne le timestamp du dernier tir (permet à la vue de savoir combien de temps afficher le laser)
+
     public long getDernierTempsAttaque() { return dernierTempsAttaque; }
 
+    /** ---------- [Méthodes Publiques - Métier] ---------- **/
+
     /**
-     * Logique de tir autonome de la tour.
-     * Appelée en boucle par le ThreadBatiments, elle scanne les monstres proches,
-     * vérifie son cooldown, et tire sur le premier ennemi à portée.
-     * @param monstre le monstre dans la porté.
+     * Applique les dégâts à la cible et met à jour le chronomètre d'attaque.
+     *
+     * @param monstre - L'entité ennemie ciblée
      */
     public void attaquer(Monstre monstre) {
         monstre.perdreHp(this.damage);
         this.dernierTempsAttaque = System.currentTimeMillis();
     }
 
+    /** ---------- [Méthodes Héritées] ---------- **/
+
+    @Override
+    public int getMaxHp() { return HP_TOWER; }
+
+    @Override
+    public String getNom() { return "Tour"; }
+
+    /**
+     * Boucle d'acquisition de cible et de tir en rafale.
+     */
     @Override
     public void run() {
         while (!gBatiments.getPartieTerminee()) {
-            // Si les PV tombent à 0 ou moins, le bâtiment ne fait plus rien
             if (this.hp <= 0 && isFonctionnel()) {
                 setFonctionnel(false);
                 setAttaquable(false);
             }
 
-            // Si le bâtiment est allumé (soit neuf, soit réparé à 100%)
             if (isFonctionnel()) {
                 try {
                     monstreCible = gBatiments.trouverCible(this);
@@ -82,11 +80,9 @@ public class Tower extends Batiment{
                     Thread.sleep(TOWER_DELAY);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    break; // On quitte la boucle proprement si le jeu s'arrête
+                    break;
                 }
             } else {
-                // Le bâtiment est détruit : le Thread ne meurt pas mais se repose (500ms)
-                // en attendant que le joueur finisse sa réparation.
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -96,15 +92,4 @@ public class Tower extends Batiment{
             }
         }
     }
-
-    @Override
-    public int getMaxHp() {
-        return HP_TOWER;
-    }
-
-    @Override
-    public String getNom() {
-        return "Tour";
-    }
-
 }
