@@ -7,17 +7,27 @@ import Modele.Items.SortTempete;
 import java.awt.*;
 
 /**
- * Responsable du dessin de tous les sorts sur la carte.
- * Gère les différents types de sorts en déléguant au type approprié.
+ * Orchestrateur graphique des projectiles magiques.
+ * Agit comme une fabrique de rendu (Pattern Strategy léger) en déléguant
+ * le dessin spécifique de chaque sort à sa classe de vue dédiée.
  */
 public class VueSort {
 
+    /** ---------- [Propriétés - Sous-Vues] ---------- **/
+
     private final VueSortFeu vueSortFeu = new VueSortFeu();
     private final VueSortTempete vueSortTempete = new VueSortTempete();
+
+    /** ---------- [Méthodes Publiques - Rendu] ---------- **/
+
     /**
-     * Dessine un sort à l'écran selon son type.
-     * @param g Le contexte graphique
-     * @param sort Le sort à afficher
+     * Intercepte l'instance générique du sort, prépare le contexte graphique
+     * avec anticrénelage, puis délègue le dessin selon le type réel (RTTI).
+     *
+     * @param g - Le contexte graphique principal (Graphics)
+     * @param sort - L'instance du sort à afficher
+     * @param cameraX - Le décalage X lié à la position de la caméra
+     * @param cameraY - Le décalage Y lié à la position de la caméra
      */
     public void dessiner(Graphics g, Sort sort, double cameraX, double cameraY) {
         if (sort == null || !sort.isActif()) return;
@@ -28,12 +38,10 @@ public class VueSort {
         if (sort instanceof SortFeu) {
             vueSortFeu.dessiner(g, (SortFeu) sort, cameraX, cameraY);
         }
-        if (sort instanceof SortTempete) { // Nouveau bloc pour la tempête
+        if (sort instanceof SortTempete) {
             vueSortTempete.dessiner(g, (SortTempete) sort, cameraX, cameraY);
         }
 
         g2d.dispose();
     }
-
-
 }
