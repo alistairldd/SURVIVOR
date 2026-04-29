@@ -71,27 +71,5 @@ public class VueCarte {
         g2d.setColor(Color.RED);
         g2d.drawRect(0, 0, LARGEUR_MAP, HAUTEUR_MAP);
 
-        // Ces arbres de bordure servent surtout de masque visuel pour éviter une limite de carte trop brute.
-        int deb = -900;
-        int fin = LARGEUR_MAP + 900;
-        int haut = -600;
-        int bas = HAUTEUR_MAP - (ARBRE1.getHeight() / 2);
-
-        for (int h = haut; h < 0; h += ARBRE1.getHeight()) {
-            for (int i = deb; i < fin; i += ARBRE1.getWidth()) {
-                int i2 = i + ARBRE1.getWidth() / 2;
-
-                g2d.drawImage(ARBRE1, i, h, ARBRE1.getWidth(), ARBRE1.getHeight(), null);
-                g2d.drawImage(ARBRE2, i2, h, ARBRE2.getWidth(), ARBRE2.getHeight(), null);
-
-                g2d.drawImage(ARBRE1, i, bas, ARBRE1.getWidth(), ARBRE1.getHeight(), null);
-                g2d.drawImage(ARBRE2, i2, bas, ARBRE2.getWidth(), ARBRE2.getHeight(), null);
-            }
-        }
-
-        for (int i = 0; i < HAUTEUR_MAP; i += 100) {
-            g2d.drawImage(ARBRE1, 10 - 50, 10 + i, 50, 50, null);
-            g2d.drawImage(ARBRE1, 10 + LARGEUR_MAP, 10 + i, 50, 50, null);
-        }
     }
 }
