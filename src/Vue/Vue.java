@@ -392,7 +392,7 @@ public class Vue extends JPanel {
         g2d.drawString(message, x, y);
 
         g2d.setFont(new Font("Arial", Font.BOLD, 40));
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(Color.WHITE);
         message = "Nombre de nuits passées : " + modele.getUpdateJN().getNbNuit();
         x = (getWidth() - g2d.getFontMetrics().stringWidth(message)) / 2;
         y += g2d.getFontMetrics().getHeight() + 20;

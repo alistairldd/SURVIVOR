@@ -221,6 +221,7 @@ public class Modele {
             Monstre m = monstres.get(i);
             joueur.addPieces(m.getDrop());
             pendingFloatingTexts.add(new int[]{(int) m.getX(), (int) m.getY(), m.getDrop()});
+            updateJN.getMonGestionnaireMonstres().incrementerMonstresMorts();
             m.interrupt();
             monstres.remove(i);
         }
