@@ -1,5 +1,6 @@
 package Vue;
 
+import Modele.ResourceLoader;
 import Modele.Ressource;
 
 import javax.imageio.ImageIO;
@@ -7,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Utilitaires de rendu des ressources présentes au sol.
@@ -29,10 +31,10 @@ public class VueRessource {
      */
     public VueRessource() {
         try {
-            this.imageFer = ImageIO.read(new File("src/images/ressources/Fer.png"));
-            this.imageOr = ImageIO.read(new File("src/images/ressources/Or.png"));
-            this.imagePierre = ImageIO.read(new File("src/images/ressources/Pierre.png"));
-            this.imageBois = ImageIO.read(new File("src/images/ressources/Bois.png"));
+            this.imageFer = ResourceLoader.load("/images/ressources/Fer.png", 0);
+            this.imageOr = ResourceLoader.load("/images/ressources/Or.png",0);
+            this.imagePierre = ResourceLoader.load("/images/ressources/Pierre.png",0);
+            this.imageBois = ResourceLoader.load("/images/ressources/Bois.png",0);
 
         } catch (IOException e) {
             e.printStackTrace();

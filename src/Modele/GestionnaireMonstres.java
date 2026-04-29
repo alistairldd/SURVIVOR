@@ -5,6 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -84,7 +86,17 @@ public class GestionnaireMonstres {
     public void genererMonstre(int numeroNuit) {
         try {
             if (numeroNuit > 10) numeroNuit = 10;
-            String contenu = new String(Files.readAllBytes(Paths.get("src/Modele/Monstres/monstreNuit.json")));
+
+            InputStream is = Monstre.class.getResourceAsStream("/Modele/Monstres/monstreNuit.json");
+
+            if (is == null) {
+                throw new RuntimeException("Le JSON n'est pas dans le JAR !");
+            }
+
+            String contenu;
+            try (java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A")) {
+                contenu = s.hasNext() ? s.next() : "";
+            }
 
             JsonArray nuits = JsonParser.parseString(contenu).getAsJsonArray();
 

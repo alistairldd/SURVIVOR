@@ -210,11 +210,11 @@ public final class Constantes {
 
     static {
         try {
-            IMAGE_FOND_MAP = ImageIO.read(new File("src/images/carte/herbe.png"));
-            ARBRE1 = ImageIO.read(new File("src/images/carte/arbre1.png"));
-            ARBRE2 = ImageIO.read(new File("src/images/carte/arbre2.png"));
-            ARBRE3 = ImageIO.read(new File("src/images/carte/arbre3.png"));
-            ARBRE4 = ImageIO.read(new File("src/images/carte/arbre4.png"));
+            IMAGE_FOND_MAP = ResourceLoader.load("/images/carte/herbe.png", 1);
+            ARBRE1 = ResourceLoader.load("/images/carte/arbre1.png",1);
+            ARBRE2 = ResourceLoader.load("/images/carte/arbre2.png",1);
+            ARBRE3 = ResourceLoader.load("/images/carte/arbre3.png",1);
+            ARBRE4 = ResourceLoader.load("/images/carte/arbre4.png",1);
             LISTE_ARBRES = List.of(ARBRE1, ARBRE2, ARBRE3, ARBRE4);
         } catch (Exception e) {
             System.err.println("Erreur chargement map/décors: " + e.getMessage());
@@ -241,20 +241,20 @@ public final class Constantes {
 
     static {
         try {
-            IMAGE_HQ = chargerEtRedimensionner("src/images/batiments/HQ.png", TAILLE_HQ);
-            IMAGE_HQ_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/HQ_endommage.png", TAILLE_HQ);
-            IMAGE_TOUR = chargerEtRedimensionner("src/images/batiments/tour.png", TAILLE_TOUR);
-            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tour_endommage.png", TAILLE_TOUR);
-            IMAGE_MINE = chargerEtRedimensionner("src/images/batiments/mine.png", TAILLE_MINE);
-            IMAGE_TENTE = chargerEtRedimensionner("src/images/batiments/tente.png", TAILLE_TENTE);
-            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/tente_endommage.png", TAILLE_TENTE);
-            IMAGE_ABATIS_1 = chargerEtRedimensionner("src/images/batiments/abatis_1.png", TAILLE_ABATIS);
-            IMAGE_ABATIS_2 = chargerEtRedimensionner("src/images/batiments/abatis_2.png", TAILLE_ABATIS);
-            IMAGE_ABATIS_1_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/abatis_1_endommage.png", TAILLE_ABATIS);
-            IMAGE_ABATIS_2_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/abatis_2_endommage.png", TAILLE_ABATIS);
-            IMAGE_MORTIER = chargerEtRedimensionner("src/images/batiments/mortier.png", TAILLE_MORTIER);
-            IMAGE_MORTIER_ENDOMMAGE = chargerEtRedimensionner("src/images/batiments/mortier_endommage.png", TAILLE_MORTIER);
-            IMAGE_MORTIER_PROJECTILE = chargerEtRedimensionner("src/images/batiments/mortier_projectile.png", 50);
+            IMAGE_HQ = chargerEtRedimensionner("/images/batiments/HQ.png", TAILLE_HQ);
+            IMAGE_HQ_ENDOMMAGE = chargerEtRedimensionner("/images/batiments/HQ_endommage.png", TAILLE_HQ);
+            IMAGE_TOUR = chargerEtRedimensionner("/images/batiments/tour.png", TAILLE_TOUR);
+            IMAGE_TOUR_ENDOMMAGE = chargerEtRedimensionner("/images/batiments/tour_endommage.png", TAILLE_TOUR);
+            IMAGE_MINE = chargerEtRedimensionner("/images/batiments/mine.png", TAILLE_MINE);
+            IMAGE_TENTE = chargerEtRedimensionner("/images/batiments/tente.png", TAILLE_TENTE);
+            IMAGE_TENTE_ENDOMMAGE = chargerEtRedimensionner("/images/batiments/tente_endommage.png", TAILLE_TENTE);
+            IMAGE_ABATIS_1 = chargerEtRedimensionner("/images/batiments/abatis_1.png", TAILLE_ABATIS);
+            IMAGE_ABATIS_2 = chargerEtRedimensionner("/images/batiments/abatis_2.png", TAILLE_ABATIS);
+            IMAGE_ABATIS_1_ENDOMMAGE = chargerEtRedimensionner("/images/batiments/abatis_1_endommage.png", TAILLE_ABATIS);
+            IMAGE_ABATIS_2_ENDOMMAGE = chargerEtRedimensionner("/images/batiments/abatis_2_endommage.png", TAILLE_ABATIS);
+            IMAGE_MORTIER = chargerEtRedimensionner("/images/batiments/mortier.png", TAILLE_MORTIER);
+            IMAGE_MORTIER_ENDOMMAGE = chargerEtRedimensionner("/images/batiments/mortier_endommage.png", TAILLE_MORTIER);
+            IMAGE_MORTIER_PROJECTILE = chargerEtRedimensionner("/images/batiments/mortier_projectile.png", 50);
         } catch (Exception e) {
             System.err.println("ERREUR chargement images bâtiments.");
         }
@@ -269,9 +269,9 @@ public final class Constantes {
 
     static {
         try {
-            IMAGE_JOUEUR = ImageIO.read(new File("src/images/perso.png"));
-            IMAGE_JOUEUR_ARMURE = ImageIO.read(new File("src/images/perso_armure.png"));
-            IMAGE_TOP_JOUEUR = ImageIO.read(new File("src/images/perso_topview.png"));
+            IMAGE_JOUEUR = ResourceLoader.load("/images/perso.png");
+            IMAGE_JOUEUR_ARMURE = ResourceLoader.load("/images/perso_armure.png");
+            IMAGE_TOP_JOUEUR = ResourceLoader.load("/images/perso_topview.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -294,7 +294,7 @@ public final class Constantes {
     static {
         // Chargement Slimes
         try {
-            BufferedImage plancheSlimes = ImageIO.read(new File("src/images/monstres/slime.png"));
+            BufferedImage plancheSlimes = ResourceLoader.load("/images/monstres/slime.png",1);
             int[] slimesX = {111, 85, 88, 1051, 1031, 1030};
             int[] slimesY = {70, 651, 1263, 69, 651, 1266};
             for (int i = 0; i < 5; i++) {
@@ -302,7 +302,7 @@ public final class Constantes {
                 IMAGES_SLIMES.add(sprite.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
             }
 
-            BufferedImage plancheMutants = ImageIO.read(new File("src/images/monstres/slime_mutant.png"));
+            BufferedImage plancheMutants = ResourceLoader.load("/images/monstres/slime_mutant.png",1);
             int[] mutantsX = {150, 1038, 164, 1039, 166, 1022};
             int[] mutantsY = {70, 68, 658, 656, 1276, 1270};
             for (int i = 0; i < 5; i++) {
@@ -313,27 +313,27 @@ public final class Constantes {
 
         // Chargement Ogres
         try {
-            IMAGE_OGRE = ImageIO.read(new File("src/images/monstres/ogre.png"));
-            IMAGE_OGRE_G = ImageIO.read(new File("src/images/monstres/ogreGauche.png"));
-            IMAGE_OGRE_GM = ImageIO.read(new File("src/images/monstres/ogreGaucheM.png"));
-            IMAGE_OGRE_D = ImageIO.read(new File("src/images/monstres/ogreDroit.png"));
-            IMAGE_OGRE_DM = ImageIO.read(new File("src/images/monstres/ogreDroitM.png"));
-            IMAGE_OGRE_ATTAQUE_G = ImageIO.read(new File("src/images/monstres/ogreAttaqueG.png"));
-            IMAGE_OGRE_ATTAQUE_D = ImageIO.read(new File("src/images/monstres/ogreAttaqueD.png"));
-            IMAGE_OGRE_ATTAQUE_GH = ImageIO.read(new File("src/images/monstres/ogreAttaqueGH.png"));
-            IMAGE_OGRE_ATTAQUE_DH = ImageIO.read(new File("src/images/monstres/ogreAttaqueDH.png"));
+            IMAGE_OGRE = ResourceLoader.load("/images/monstres/ogre.png",1);
+            IMAGE_OGRE_G = ResourceLoader.load("/images/monstres/ogreGauche.png",1);
+            IMAGE_OGRE_GM = ResourceLoader.load("/images/monstres/ogreGaucheM.png",1);
+            IMAGE_OGRE_D = ResourceLoader.load("/images/monstres/ogreDroit.png",1);
+            IMAGE_OGRE_DM = ResourceLoader.load("/images/monstres/ogreDroitM.png",1);
+            IMAGE_OGRE_ATTAQUE_G = ResourceLoader.load("/images/monstres/ogreAttaqueG.png",1);
+            IMAGE_OGRE_ATTAQUE_D = ResourceLoader.load("/images/monstres/ogreAttaqueD.png",1);
+            IMAGE_OGRE_ATTAQUE_GH = ResourceLoader.load("/images/monstres/ogreAttaqueGH.png",1);
+            IMAGE_OGRE_ATTAQUE_DH = ResourceLoader.load("/images/monstres/ogreAttaqueDH.png",1);
         } catch (Exception e) { System.err.println("Erreur Ogres !"); }
 
         // Chargement Gobelins
         try {
-            IMAGE_GOB_G = ImageIO.read(new File("src/images/monstres/gobGauche.png"));
-            IMAGE_GOB_GM = ImageIO.read(new File("src/images/monstres/gobGaucheM.png"));
-            IMAGE_GOB_D = ImageIO.read(new File("src/images/monstres/gobDroit.png"));
-            IMAGE_GOB_DM = ImageIO.read(new File("src/images/monstres/gobDroitM.png"));
-            IMAGE_GOB_ATTAQUE_G = ImageIO.read(new File("src/images/monstres/gobAttaqueG.png"));
-            IMAGE_GOB_ATTAQUE_D = ImageIO.read(new File("src/images/monstres/gobAttaqueD.png"));
-            IMAGE_GOB_ATTAQUE_GH = ImageIO.read(new File("src/images/monstres/gobAttaqueGH.png"));
-            IMAGE_GOB_ATTAQUE_DH = ImageIO.read(new File("src/images/monstres/gobAttaqueDH.png"));
+            IMAGE_GOB_G = ResourceLoader.load("/images/monstres/gobGauche.png",1);
+            IMAGE_GOB_GM = ResourceLoader.load("/images/monstres/gobGaucheM.png",1);
+            IMAGE_GOB_D = ResourceLoader.load("/images/monstres/gobDroit.png",1);
+            IMAGE_GOB_DM = ResourceLoader.load("/images/monstres/gobDroitM.png",1);
+            IMAGE_GOB_ATTAQUE_G = ResourceLoader.load("/images/monstres/gobAttaqueG.png",1);
+            IMAGE_GOB_ATTAQUE_D = ResourceLoader.load("/images/monstres/gobAttaqueD.png",1);
+            IMAGE_GOB_ATTAQUE_GH = ResourceLoader.load("/images/monstres/gobAttaqueGH.png",1);
+            IMAGE_GOB_ATTAQUE_DH = ResourceLoader.load("/images/monstres/gobAttaqueDH.png",1);
         } catch (Exception e) { System.err.println("Erreur Gobelins !"); }
     }
 
@@ -363,27 +363,27 @@ public final class Constantes {
 
     static {
         try {
-            IMAGE_BATON = ImageIO.read(new File("src/images/equipement/Baton.png"));
-            IMAGE_EPEEBOIS = ImageIO.read(new File("src/images/equipement/EpeeBois.png"));
-            IMAGE_EPEE = ImageIO.read(new File("src/images/equipement/Epee.png"));
-            IMAGE_HACHE = ImageIO.read(new File("src/images/equipement/Hache.png"));
-            IMAGE_LANCE = ImageIO.read(new File("src/images/equipement/Lance.png"));
-            IMAGE_EPEE_LOURDE = ImageIO.read(new File("src/images/equipement/EpeeLourde.png"));
+            IMAGE_BATON = ResourceLoader.load("/images/equipement/Baton.png");
+            IMAGE_EPEEBOIS = ResourceLoader.load("/images/equipement/EpeeBois.png");
+            IMAGE_EPEE = ResourceLoader.load("/images/equipement/Epee.png");
+            IMAGE_HACHE = ResourceLoader.load("/images/equipement/Hache.png");
+            IMAGE_LANCE = ResourceLoader.load("/images/equipement/Lance.png");
+            IMAGE_EPEE_LOURDE = ResourceLoader.load("/images/equipement/EpeeLourde.png");
 
-            IMAGE_ARMURE_LEGERE = ImageIO.read(new File("src/images/equipement/ArmureLegere.png"));
-            IMAGE_ARMURE_LOURDE = ImageIO.read(new File("src/images/equipement/ArmureLourde.png"));
+            IMAGE_ARMURE_LEGERE = ResourceLoader.load("/images/equipement/ArmureLegere.png");
+            IMAGE_ARMURE_LOURDE = ResourceLoader.load("/images/equipement/ArmureLourde.png");
 
-            IMAGE_POTION_DE_VIE = ImageIO.read(new File("src/images/items/PotionDeVie.png"));
-            IMAGE_POTION_VITESSE = ImageIO.read(new File("src/images/items/PotionVitesse.png"));
-            IMAGE_POTION_DEGATS = ImageIO.read(new File("src/images/items/PotionDegats.png"));
-            IMAGE_POTION_GRANDE_VIE = ImageIO.read(new File("src/images/items/GrandePotionVie.png"));
-            IMAGE_PIOCHE = ImageIO.read(new File("src/images/items/Pioche.png"));
+            IMAGE_POTION_DE_VIE = ResourceLoader.load("/images/items/PotionDeVie.png");
+            IMAGE_POTION_VITESSE = ResourceLoader.load("/images/items/PotionVitesse.png");
+            IMAGE_POTION_DEGATS = ResourceLoader.load("/images/items/PotionDegats.png");
+            IMAGE_POTION_GRANDE_VIE = ResourceLoader.load("/images/items/GrandePotionVie.png");
+            IMAGE_PIOCHE = ResourceLoader.load("/images/items/Pioche.png");
 
-            IMAGE_SORT_FEU = ImageIO.read(new File("src/images/items/SortFeu.png"));
-            IMAGE_SORT_TEMPETE= ImageIO.read(new File("src/images/items/SortTempete.png"));
-            IMAGE_BOULE_FEU= ImageIO.read(new File("src/images/items/BouleDeFeu.png"));
-            IMAGE_TEMPETE= ImageIO.read(new File("src/images/items/Tempete.png"));
-            IMAGE_NUKE = ImageIO.read(new File("src/images/items/Nuke.png"));
+            IMAGE_SORT_FEU = ResourceLoader.load("/images/items/SortFeu.png");
+            IMAGE_SORT_TEMPETE= ResourceLoader.load("/images/items/SortTempete.png");
+            IMAGE_BOULE_FEU= ResourceLoader.load("/images/items/BouleDeFeu.png");
+            IMAGE_TEMPETE= ResourceLoader.load("/images/items/Tempete.png");
+            IMAGE_NUKE = ResourceLoader.load("/images/items/Nuke.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -397,12 +397,12 @@ public final class Constantes {
      * en préservant un lissage visuel.
      */
     private static Image chargerEtRedimensionner(String chemin, int taille) throws IOException {
-        File fichier = new File(chemin);
-        if (!fichier.exists()) {
+        BufferedImage img = ResourceLoader.load(chemin,1);
+        if (img == null) {
             System.out.println("Attention : Fichier manquant -> " + chemin);
             return null;
         }
-        BufferedImage img = ImageIO.read(fichier);
+
         return img.getScaledInstance(taille, taille, Image.SCALE_SMOOTH);
     }
 }

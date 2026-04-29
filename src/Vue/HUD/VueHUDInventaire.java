@@ -5,6 +5,8 @@ import Modele.Joueur;
 import Modele.Modele;
 import Modele.Ressource;
 
+import Modele.ResourceLoader;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
@@ -58,11 +60,10 @@ public class VueHUDInventaire {
         // Rendu ligne par ligne (Icône + Texte + Quantité)
         for (int i = 0; i < noms.length; i++) {
             try {
-                // Lecture disque directe (à optimiser potentiellement hors contraintes)
-                Image img = ImageIO.read(new File("src/images/ressources/" + noms[i] + ".png"));
+                Image img = ResourceLoader.load("/images/ressources/" + noms[i] + ".png");
                 g2d.drawImage(img, xOffset, yCourant - 14, 16, 16, null);
             } catch (Exception e) {
-                System.out.println("Erreur de chargement de l'image pour " + noms[i] + ": " + e.getMessage());
+                System.out.println("Erreur de chargement de l'image pour /images/ressources/" + noms[i] + ".png");
             }
             g2d.drawString(noms[i] + " : " + compteurs[i], xOffset + 20, yCourant);
             yCourant += 20;

@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import Modele.ResourceLoader;
+
 import static Modele.Constantes.*;
 
 /**
@@ -38,8 +40,8 @@ public class VueJourNuit {
     public VueJourNuit(Modele modele) {
         this.modele = modele;
         try {
-            lune = ImageIO.read(new File("src/images/LUNE.png"));
-            soleil = ImageIO.read(new File("src/images/SOLEIL.png"));
+            lune = ResourceLoader.load("/images/LUNE.png", 0);
+            soleil = ResourceLoader.load("/images/SOLEIL.png",0);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Erreur : Impossible de charger l'image.");
