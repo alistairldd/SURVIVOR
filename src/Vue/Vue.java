@@ -215,6 +215,19 @@ public class Vue extends JPanel {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         }
 
+        if (modele.getSortEnAttente() != null) {
+            // Affichage d'un texte d'instruction
+            g2d.setColor(Color.WHITE);
+            g2d.drawString("Sort prêt : " + modele.getSortEnAttente().getNom(), (int)camX, (int)camY+120);
+
+            // Dessiner l'image du sort
+            Image imgSort = modele.getSortEnAttente().getImage();
+            if (imgSort != null) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+                g2d.drawImage(imgSort, (int)camX, (int)camY, 100, 100, null);
+            }
+        }
+
         // --- PASSE 3 : FANTÔME DE CONSTRUCTION (RTS) ---
         dessinerFantomeConstruction(g2d);
 
