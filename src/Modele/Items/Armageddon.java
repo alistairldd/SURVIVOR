@@ -1,6 +1,6 @@
 package Modele.Items;
 
-import static Modele.Constantes.IMAGE_NUKE;
+import static Modele.Constantes.*;
 
 /**
  * Consommable ultime déclenchant un effet de nettoyage total (Wipe) de la carte.
@@ -15,7 +15,7 @@ public class Armageddon extends Item {
                 "Armageddon",
                 0,
                 IMAGE_NUKE,
-                1000
+                PRIX_ARMAGEDDON
         );
     }
 }

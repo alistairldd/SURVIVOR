@@ -89,7 +89,7 @@ public class Joueur implements Localisable {
             ressources.add(new Ressource(3));
         }
 
-        pieces = 20000;
+        pieces = 10;
         armeEquipee = new Baton();
         armePasEquipee = null;
         armurePrincipale = null;
@@ -184,6 +184,8 @@ public class Joueur implements Localisable {
     public ArrayList<Ressource> getRessources(){
         return ressources;
     }
+
+    public void setRessources(ArrayList<Ressource> ressources){ this.ressources = ressources; }
 
     private void addToRessource(Ressource r) {
         this.ressources.add(r);

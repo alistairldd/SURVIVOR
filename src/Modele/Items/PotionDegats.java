@@ -1,6 +1,6 @@
 package Modele.Items;
 
-import static Modele.Constantes.IMAGE_POTION_DEGATS;
+import static Modele.Constantes.*;
 
 /**
  * Consommable offensif temporaire.
@@ -15,7 +15,7 @@ public class PotionDegats extends Item {
                 "Potion de Dégâts",
                 5,
                 IMAGE_POTION_DEGATS,
-                20
+                PRIX_POTION_DEGATS
         );
     }
 }

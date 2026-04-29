@@ -1,6 +1,6 @@
 package Modele.Items;
 
-import static Modele.Constantes.IMAGE_PIOCHE;
+import static Modele.Constantes.*;
 
 /**
  * Objet utilitaire débloquant la mécanique de minage passif (Bâtiment Mine).
@@ -19,7 +19,7 @@ public class Pioche extends Item {
                 "Pioche",
                 0,
                 IMAGE_PIOCHE,
-                30
+                PRIX_PIOCHE
         );
         this.utilisee = false;
     }

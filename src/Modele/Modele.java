@@ -115,6 +115,18 @@ public class Modele {
     public void setModeConstruction(TypeConstruction mode) { this.modeConstruction = mode; }
     public void annulerConstruction() { this.modeConstruction = TypeConstruction.AUCUN; }
 
+    public void cheatMode(){
+        this.joueur.setPieces(999999);
+        ArrayList<Ressource> r = new ArrayList<>();
+        for (int i = 0; i < 999999; i++) {
+            r.add(new Ressource(0));
+            r.add(new Ressource(1));
+            r.add(new Ressource(2));
+            r.add(new Ressource(3));
+        }
+        this.joueur.setRessources(r) ;
+    }
+
 
     /** ---------- [Méthodes Publiques - Core Loop & Événements] ---------- **/
 

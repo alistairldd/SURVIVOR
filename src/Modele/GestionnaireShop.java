@@ -203,6 +203,7 @@ public class GestionnaireShop {
             }
             if (i instanceof Item) {
                 j.addToInventaire(i);
+                i.inflation();
             }
         } else {
             System.out.println("Pas assez d'or pour cet objet !");

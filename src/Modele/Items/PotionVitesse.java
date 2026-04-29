@@ -1,6 +1,6 @@
 package Modele.Items;
 
-import static Modele.Constantes.IMAGE_POTION_VITESSE;
+import static Modele.Constantes.*;
 
 /**
  * Consommable de mobilité temporaire.
@@ -15,7 +15,7 @@ public class PotionVitesse extends Item {
                 "Potion de Vitesse",
                 5,
                 IMAGE_POTION_VITESSE,
-                20
+                PRIX_POTION_VITESSE
         );
     }
 }
