@@ -29,15 +29,8 @@ java -version
 
 ---
 
-## Mettre à jour Java (Windows)
+## Mettre à jour Java / Installer Java (Windows)
 
 ```bash
 winget install Oracle.JDK.21
 ```
-
----
-
-## Installer Java
-
-Si Java n'est pas installé sur votre machine :  
-[https://www.java.com/fr/download/](https://www.java.com/fr/download/)
