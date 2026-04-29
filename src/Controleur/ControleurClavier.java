@@ -12,6 +12,8 @@ import Modele.GestionnaireShop;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Contrôleur dédié à la gestion des événements du clavier.
@@ -24,11 +26,55 @@ public class ControleurClavier implements KeyListener {
     private Modele modele;
     private Vue vue;
 
+    private static final int[] SEQUENCE_CHEAT = {
+            KeyEvent.VK_LEFT,
+            KeyEvent.VK_LEFT,
+            KeyEvent.VK_RIGHT,
+            KeyEvent.VK_RIGHT,
+            KeyEvent.VK_UP,
+            KeyEvent.VK_DOWN,
+            KeyEvent.VK_UP,
+            KeyEvent.VK_DOWN,
+            KeyEvent.VK_B,
+            KeyEvent.VK_A
+    };
+
+    private Deque<Integer> historiqueTouches = new ArrayDeque<>();
+
     /** ---------- [Constructeurs] ---------- **/
 
     public ControleurClavier(Vue vue, Modele modele) {
         this.modele = modele;
         this.vue = vue;
+    }
+
+    /**
+     * Enregistre les dernières touches pressées et vérifie la séquence de triche.
+     *
+     * @param keyCode - Code de la touche pressée
+     * @return true si la séquence est respectée dans l'ordre exact, false sinon
+     */
+    private boolean cheatCodeSaisi(int keyCode) {
+        historiqueTouches.addLast(keyCode);
+
+        if (historiqueTouches.size() > SEQUENCE_CHEAT.length) {
+            historiqueTouches.removeFirst();
+        }
+
+        if (historiqueTouches.size() != SEQUENCE_CHEAT.length) {
+            return false;
+        }
+
+        int index = 0;
+        for (int touche : historiqueTouches) {
+            if (touche != SEQUENCE_CHEAT[index]) {
+                return false;
+            }
+            index++;
+        }
+
+        historiqueTouches.clear();
+        return true;
     }
 
     /** ---------- [Méthodes Héritées - KeyListener] ---------- **/
@@ -47,10 +93,15 @@ public class ControleurClavier implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
+        if (cheatCodeSaisi(e.getKeyCode())) {
+            modele.cheatMode();
+        }
+
         if (!modele.isJeuDemarre()) {
             modele.demarrerJeu();
             return;
         }
+
         Joueur joueur = modele.getJoueur();
         double camX = joueur.getX();
         double camY = joueur.getY();
@@ -64,10 +115,20 @@ public class ControleurClavier implements KeyListener {
                     if (!vue.getVueArme().getEnAnimation()) {
                         modele.getJoueur().switchArmes();
                     } else {
-                        vue.afficherTexteErreur("Impossible de changer d'arme pendant une attaque !", camX, camY - (double) vue.getHeight() / 16, Color.RED);
+                        vue.afficherTexteErreur(
+                                "Impossible de changer d'arme pendant une attaque !",
+                                camX,
+                                camY - (double) vue.getHeight() / 16,
+                                Color.RED
+                        );
                     }
                 } else {
-                    vue.afficherTexteErreur("Aucune autre arme à équiper !", camX, camY - (double) vue.getHeight() / 16, Color.RED);
+                    vue.afficherTexteErreur(
+                            "Aucune autre arme à équiper !",
+                            camX,
+                            camY - (double) vue.getHeight() / 16,
+                            Color.RED
+                    );
                 }
             }
         }

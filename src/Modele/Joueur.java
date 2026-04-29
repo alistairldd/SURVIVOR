@@ -185,6 +185,8 @@ public class Joueur implements Localisable {
         return ressources;
     }
 
+    public void setRessources(ArrayList<Ressource> ressources){ this.ressources = ressources; }
+
     private void addToRessource(Ressource r) {
         this.ressources.add(r);
     }
