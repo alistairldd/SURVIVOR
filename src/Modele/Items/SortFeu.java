@@ -1,6 +1,6 @@
 package Modele.Items;
 
-import static Modele.Constantes.IMAGE_SORT_FEU;
+import static Modele.Constantes.*;
 
 /**
  * Projectile magique standard (Boule de feu).
@@ -14,7 +14,7 @@ public class SortFeu extends Sort {
      * Instanciation lors du TIR.
      */
     public SortFeu(double x, double y, double dirX, double dirY) {
-        super("Boule de Feu", 100, IMAGE_SORT_FEU, 500, x, y, dirX, dirY);
+        super("Boule de Feu", PRIX_SORTS_FEU, IMAGE_SORT_FEU, 500, x, y, dirX, dirY);
         this.vitesse = 6.0;
     }
 
@@ -22,6 +22,6 @@ public class SortFeu extends Sort {
      * Instanciation pour l'INVENTAIRE.
      */
     public SortFeu() {
-        super("Boule de Feu", 200, IMAGE_SORT_FEU, 500);
+        super("Boule de Feu", PRIX_SORTS_FEU, IMAGE_SORT_FEU, 500);
     }
 }

@@ -23,7 +23,7 @@ public final class Constantes {
     /** ---------- [Paramètres du Moteur et Cycle Temporel] ---------- **/
 
     public final static int FPS = 60;
-    public final static int DUREE_CYCLE_JOUR = 9; // Secondes réelles
+    public final static int DUREE_CYCLE_JOUR = 90; // Secondes réelles
     public final static int DUREE_CYCLE_NUIT = 120; // Secondes réelles
 
     public final static int TICKS_PAR_CYCLE_JOUR = DUREE_CYCLE_JOUR * FPS;
@@ -107,15 +107,15 @@ public final class Constantes {
 
 
     /** ---------- [Équilibrage : Économie & Couts (Format : Bois, Pierre, Fer, Or)] ---------- **/
-
-    public static final int prixArmureLegere = 10;
-    public static final int prixArmuresLourde = 20;
-
-    public static final int[] PRIX_EPEE_ACIEREE = {0, 0, 10, 5};
-    public static final int[] PRIX_ARMURE = {0, 15, 5, 0};
-    public static final int[] PRIX_ARMURE_LOURDE = {0, 20, 10, 0};
-    public static final int[] PRIX_EPEE_AMELIOREE = {10, 0, 0, 5};
-    public static final int[] PRIX_POTION = {5, 5, 0, 0};
+    // Couts Boutique
+    public static final int PRIX_ARMAGEDDON = 5000;
+    public static final int PRIX_PIOCHE = 30;
+    public static final int PRIX_POTION_DEGATS = 100;
+    public static final int PRIX_POTION_VIE = 20;
+    public static final int PRIX_POTION_VIE_GRANDE = 50;
+    public static final int PRIX_POTION_VITESSE = 75;
+    public static final int PRIX_SORTS_FEU = 100;
+    public static final int PRIX_SORTS_TEMPETE = 75;
 
     // Maps de couts pour les constructions
     public static final Map<Integer, Integer> COUT_TOUR = Map.of(0, 4, 1, 4, 2, 2, 3, 1);

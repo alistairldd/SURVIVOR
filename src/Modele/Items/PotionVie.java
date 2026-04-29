@@ -1,6 +1,6 @@
 package Modele.Items;
 
-import static Modele.Constantes.IMAGE_POTION_DE_VIE;
+import static Modele.Constantes.*;
 
 /**
  * Consommable de soin basique.
@@ -15,7 +15,7 @@ public class PotionVie extends Item {
                 "Potion de Vie",
                 15,
                 IMAGE_POTION_DE_VIE,
-                20
+                PRIX_POTION_VIE
         );
     }
 }
