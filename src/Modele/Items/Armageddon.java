@@ -15,7 +15,7 @@ public class Armageddon extends Item {
                 "Armageddon",
                 0,
                 IMAGE_NUKE,
-                1000
+                5000
         );
     }
 }

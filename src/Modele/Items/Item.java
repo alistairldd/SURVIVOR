@@ -66,6 +66,8 @@ public abstract class Item {
         return Objects.equals(nom, item.nom);
     }
 
+    public void inflation(){ this.prix += (int) ((double) this.prix * (20./100)); }
+
     @Override
     public int hashCode() {
         return Objects.hash(nom);

@@ -116,9 +116,9 @@ public class Modele {
     public void annulerConstruction() { this.modeConstruction = TypeConstruction.AUCUN; }
 
     public void cheatMode(){
-        this.joueur.setPieces(99999);
+        this.joueur.setPieces(999999);
         ArrayList<Ressource> r = new ArrayList<>();
-        for (int i = 0; i < 99999; i++) {
+        for (int i = 0; i < 999999; i++) {
             r.add(new Ressource(0));
             r.add(new Ressource(1));
             r.add(new Ressource(2));

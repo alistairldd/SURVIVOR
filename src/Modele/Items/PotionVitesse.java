@@ -15,7 +15,7 @@ public class PotionVitesse extends Item {
                 "Potion de Vitesse",
                 5,
                 IMAGE_POTION_VITESSE,
-                20
+                75
         );
     }
 }

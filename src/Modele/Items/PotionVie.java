@@ -15,7 +15,7 @@ public class PotionVie extends Item {
                 "Potion de Vie",
                 15,
                 IMAGE_POTION_DE_VIE,
-                15
+                20
         );
     }
 }

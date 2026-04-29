@@ -89,7 +89,7 @@ public class Joueur implements Localisable {
             ressources.add(new Ressource(3));
         }
 
-        pieces = 20000;
+        pieces = 10;
         armeEquipee = new Baton();
         armePasEquipee = null;
         armurePrincipale = null;

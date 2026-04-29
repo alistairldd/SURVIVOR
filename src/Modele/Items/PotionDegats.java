@@ -15,7 +15,7 @@ public class PotionDegats extends Item {
                 "Potion de Dégâts",
                 5,
                 IMAGE_POTION_DEGATS,
-                20
+                100
         );
     }
 }

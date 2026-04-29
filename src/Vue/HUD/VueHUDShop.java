@@ -157,7 +157,7 @@ public class VueHUDShop {
             Item item = (Item) obj;
             nom = item.getNom();
             stats = "Effet : " + item.getEffet();
-            ressourcesStr = "Prix : " + item.getPrix() + " Or";
+            ressourcesStr = "Prix : " + item.getPrix() + " Pièces";
             img = item.getImage();
             peutAcheter = joueur.getPieces() >= item.getPrix();
         }
