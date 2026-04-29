@@ -61,7 +61,7 @@ public class Vue extends JPanel {
         this.modele = modele;
 
         // 1. Configuration de la Frame principale
-        maFenetre = new JFrame("Survivor - Trading Engine Edition");
+        maFenetre = new JFrame("Survivor");
         maFenetre.setPreferredSize(new Dimension(LARGEUR, HAUTEUR));
         maFenetre.setExtendedState(JFrame.MAXIMIZED_BOTH);
         maFenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -225,6 +225,8 @@ public class Vue extends JPanel {
             if (imgSort != null) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
                 g2d.drawImage(imgSort, (int)camX, (int)camY, 100, 100, null);
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
             }
         }
 
