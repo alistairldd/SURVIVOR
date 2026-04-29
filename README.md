@@ -5,7 +5,7 @@ Final projet for the course PCII ; We are making a survivor like game.
 
 # Lancement du jeu
 
-Dans le dossier du projet, vous trouverez un fichier **`SURVIVOR.jar`**.  
+Dans le dossier du projet, vous trouverez en release : **`SURVIVOR.jar`**.  
 Si vous avez Java installé sur votre machine, **il vous suffit simplement de double-cliquer dessus**.
 
 Si cela ne fonctionne pas, ouvrez un terminal et lancez :
