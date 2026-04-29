@@ -189,8 +189,8 @@ public class VueHUDShop {
 
                 g2d.drawImage(
                         img,
-                        xOffset + (TAILLE_IMG - drawW) / 2,
-                        y + (TAILLE_IMG - drawH) / 2,
+                        xOffset + 5 + (TAILLE_IMG - drawW) / 2,
+                        y + 5 + (TAILLE_IMG - drawH) / 2,
                         drawW,
                         drawH,
                         null
